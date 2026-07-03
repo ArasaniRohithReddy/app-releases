@@ -4,6 +4,15 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.9] — 2026-07-03
+
+### Fixed
+- **"Check for updates" could wrongly say "You're on the latest version" when it actually failed**
+  (GitHub's unauthenticated API allows only 60 requests/hour; when hit it returned HTTP 403 and the
+  check treated that as up-to-date). It now **falls back to the `releases.atom` feed** (not
+  API-rate-limited) so checks keep working, and reports a real error if GitHub can't be reached
+  instead of claiming you're up to date.
+
 ## [1.0.8] — 2026-07-03
 
 ### Added
@@ -125,6 +134,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.9]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.9
 [1.0.8]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.8
 [1.0.7]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.7
 [1.0.6]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.6
