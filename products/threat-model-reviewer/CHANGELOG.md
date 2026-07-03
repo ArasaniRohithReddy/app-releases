@@ -4,6 +4,13 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.10] — 2026-07-03
+
+### Fixed
+- **Literal `\u2026` / `\u2014` shown in the UI** (on the **Analyze gaps with Copilot** /
+  **Prioritize with Copilot** buttons and a couple of tooltips): C#-style Unicode escapes were
+  embedded in XAML where they aren't interpreted. They now render as proper `…` and `—`.
+
 ## [1.0.9] — 2026-07-03
 
 ### Fixed
@@ -134,6 +141,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.10]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.10
 [1.0.9]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.9
 [1.0.8]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.8
 [1.0.7]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.7
