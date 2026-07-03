@@ -4,6 +4,19 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.8] — 2026-07-03
+
+### Added
+- **Sign in to GitHub Copilot from inside the app — no external CLI required.** The **Sign in to
+  Copilot** button opens a dialog that runs GitHub's **OAuth device flow** (the same flow and client
+  the Copilot CLI uses): shows a one-time code, you approve it in the browser, and the app connects.
+  Token stored DPAPI-encrypted per-user.
+
+### Changed
+- **Layered Copilot auth (best UX first):** uses your existing Copilot CLI / `gh` sign-in
+  automatically when present; only offers the in-app device-flow sign-in if you're not already
+  signed in.
+
 ## [1.0.7] — 2026-07-03
 
 ### Added
@@ -112,6 +125,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.8]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.8
 [1.0.7]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.7
 [1.0.6]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.6
 [1.0.5]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.5

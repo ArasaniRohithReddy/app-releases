@@ -14,13 +14,15 @@ fixes, critique, gap analysis). You can also point at an OpenAI-compatible endpo
 
 ### The AI buttons are greyed out / the header says "Not signed in to GitHub Copilot". How do I fix it?
 The AI features run on **your GitHub Copilot seat**, so you need an **active Copilot
-subscription** (Individual, Business, or Enterprise) **and** to be signed in. The app uses the
-bundled **GitHub Copilot CLI** and your logged-in user — there's **no token to paste**. To sign in,
-do any one of:
+subscription** (Individual, Business, or Enterprise) **and** to be signed in — **no token to paste.**
+The app uses your existing Copilot CLI / `gh` sign-in if you have one; otherwise sign in right in
+the app. To sign in, do any one of:
 
-- Click **"Sign in to Copilot"** in the header — a window opens and runs the GitHub sign-in
-  (browser / device-code). Finish it and the app reconnects and lists your models.
-- Run **`gh auth login`** (GitHub CLI) and sign in.
+- Click **"Sign in to Copilot"** in the header — a dialog shows a one-time code; click **Copy code
+  & open GitHub**, approve it in your browser, and the app reconnects and lists your models. This is
+  the GitHub **device flow** (same client the Copilot CLI uses) — **no external CLI needed.**
+- Already signed in via the **Copilot CLI** (`copilot login`) or **GitHub CLI** (`gh auth login`)?
+  The app uses that automatically — nothing to do.
 - Set an environment variable `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, or `GITHUB_TOKEN` to a
   **fine-grained PAT (v2) with the "Copilot Requests" permission** *(classic `ghp_` tokens aren't
   supported)*.

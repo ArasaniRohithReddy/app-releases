@@ -77,18 +77,24 @@ The AI features (explanations, drafted fixes, critique, DFD extraction) run on *
 Copilot seat** — so they need an **active Copilot subscription** (Individual, Business, or
 Enterprise) and you must be **signed in**. The deterministic review needs none of this.
 
-**How the app authenticates.** It uses the bundled **GitHub Copilot CLI** and your *logged-in
-user* (the GitHub Copilot SDK's `UseLoggedInUser`) — there is **no token to paste into the app**.
-When you're signed in, the header shows a green dot and *"GitHub Copilot ready — N models"*. If not,
-it shows *"Not signed in to GitHub Copilot"* with a **Sign in to Copilot** button.
+**How the app authenticates (in priority order).** No token to paste:
+
+1. **Your existing GitHub Copilot CLI / `gh` sign-in** — if you've run `copilot login` or
+   `gh auth login`, the app uses that automatically (the GitHub Copilot SDK's `UseLoggedInUser`).
+   This is the smoothest path — nothing to do.
+2. **In-app sign-in** — if you're *not* already signed in, the header shows *"Not signed in to
+   GitHub Copilot"* with a **Sign in to Copilot** button that runs the **GitHub device flow** (the
+   same one, and same client, the Copilot CLI uses) right inside the app.
+
+When you're signed in, the header shows a green dot and *"GitHub Copilot ready — N models"*.
 
 **Ways to sign in (any one):**
 
-1. **In-app (easiest):** click **"Sign in to Copilot"** in the header. A window opens and runs the
-   GitHub sign-in (a browser/device-code flow); complete it, and the app reconnects and lists your
-   models automatically.
-2. **GitHub CLI:** if you have the GitHub CLI, run `gh auth login` and sign in — the app picks that
-   up.
+1. **In-app (easiest):** click **"Sign in to Copilot"** in the header. A dialog shows a one-time
+   code — click **"Copy code & open GitHub"**, approve it in your browser, and the app reconnects
+   and lists your models automatically. **No external CLI needed.**
+2. **GitHub Copilot CLI / GitHub CLI:** if you already use them, run `copilot login` or
+   `gh auth login` — the app picks that up (path 1 above).
 3. **Environment variable (headless / automation):** set one of `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`,
    or `GITHUB_TOKEN` to a **fine-grained personal access token (v2) with the "Copilot Requests"
    permission**. *(Classic `ghp_` tokens are not supported.)*
@@ -97,8 +103,8 @@ Prefer not to use Copilot? Open **AI provider** in the header to point at an Ope
 endpoint (Azure OpenAI / OpenAI / local), or simply don't use the AI buttons — the verdict, score,
 and findings are computed deterministically without AI.
 
-> The token is stored by the GitHub Copilot CLI in your OS credential store (not by this app, and
-> never in the repo).
+> Tokens are stored securely per-user (the CLI uses your OS credential store; the in-app device
+> sign-in stores its token DPAPI-encrypted). Never in the repo.
 
 ## Uninstalling
 
