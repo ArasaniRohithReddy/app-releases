@@ -12,6 +12,21 @@ Copilot only powers the optional, advisory enrichments (explain, deep analysis, 
 fixes, critique, gap analysis). You can also point at an OpenAI-compatible endpoint via
 **AI provider** in the header.
 
+### The AI buttons are greyed out / the header says "Not signed in to GitHub Copilot". How do I fix it?
+The AI features run on **your GitHub Copilot seat**, so you need an **active Copilot
+subscription** (Individual, Business, or Enterprise) **and** to be signed in. The app uses the
+bundled **GitHub Copilot CLI** and your logged-in user — there's **no token to paste**. To sign in,
+do any one of:
+
+- Click **"Sign in to Copilot"** in the header — a window opens and runs the GitHub sign-in
+  (browser / device-code). Finish it and the app reconnects and lists your models.
+- Run **`gh auth login`** (GitHub CLI) and sign in.
+- Set an environment variable `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, or `GITHUB_TOKEN` to a
+  **fine-grained PAT (v2) with the "Copilot Requests" permission** *(classic `ghp_` tokens aren't
+  supported)*.
+
+When you're connected, the header shows a green dot and *"GitHub Copilot ready — N models"*.
+
 ### Is my threat model sent anywhere?
 The deterministic review is **100% local**. AI features send only **minimal, redacted**
 context (finding text, a DFD summary) to **your** Copilot seat — never the raw `.tm7`, and

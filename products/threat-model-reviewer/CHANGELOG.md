@@ -4,6 +4,19 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.7] — 2026-07-03
+
+### Added
+- **In-app "Sign in to GitHub Copilot".** When you're not signed in, the header says so and shows a
+  **Sign in to Copilot** button that runs the bundled GitHub Copilot CLI's sign-in (browser /
+  device-code), then reconnects and lists your models. No token to paste.
+
+### Changed
+- Clearer prerequisites: the AI features need an **active GitHub Copilot subscription** and being
+  signed in (in-app button, `gh auth login`, or a `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` /
+  `GITHUB_TOKEN` fine-grained PAT with the "Copilot Requests" permission). The deterministic review
+  needs none of this.
+
 ## [1.0.6] — 2026-07-03
 
 ### Added
@@ -99,6 +112,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.7]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.7
 [1.0.6]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.6
 [1.0.5]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.5
 [1.0.4]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.4

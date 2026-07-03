@@ -5,6 +5,18 @@ Tool `.tm7`** threat models (and OWASP Threat Dragon `.json`). The **verdict and
 score are deterministic** — computed by a rubric engine, never by AI. GitHub Copilot is
 optional and only ever *advisory*.
 
+## Before you start (prerequisites)
+
+- **To review, fix, score, and export:** nothing extra — it all runs locally and offline.
+- **To use the AI features** (explain, deep analysis, draft fixes, critique, gap analysis, DFD
+  extraction): an **active GitHub Copilot subscription** (Individual, Business, or Enterprise) and
+  being **signed in**. The app uses the bundled **GitHub Copilot CLI** and your logged-in seat —
+  **no token to paste.** If the header shows *"Not signed in to GitHub Copilot"*, click
+  **Sign in to Copilot** (or run `gh auth login`, or set `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` /
+  `GITHUB_TOKEN` to a fine-grained PAT with the "Copilot Requests" permission). When connected, the
+  header shows a green dot and *"GitHub Copilot ready — N models"*. See **INSTALL.md → Signing in to
+  GitHub Copilot** for details.
+
 ## Open a model
 
 - Click **Open .tm7** in the header, or

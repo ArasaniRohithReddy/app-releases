@@ -18,6 +18,11 @@ explains and drafts fixes you review).
 
 No .NET install needed (self-contained). → **[Install instructions](INSTALL.md)**
 
+> **AI features** (explain, draft fixes, critique, gap analysis) need an **active GitHub Copilot
+> subscription** and being signed in — click **"Sign in to Copilot"** in the app (or use
+> `gh auth login`). The **deterministic review** (verdict, score, findings, exports) needs none of
+> this and works fully offline. See **[Install instructions → Signing in to GitHub Copilot](INSTALL.md#signing-in-to-github-copilot)**.
+
 ## What it does
 
 - **Review** a `.tm7` → a stamped **NOT READY / READY-WITH-NOTES** verdict, a **0–100 review

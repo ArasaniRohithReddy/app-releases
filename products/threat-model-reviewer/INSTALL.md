@@ -9,8 +9,10 @@ attached to every release on the
 - **Windows 10 (1809 / build 17763) or Windows 11**, 64-bit (x64).
 - ~400 MB free disk space.
 - **No .NET install needed** — every download is self-contained (the .NET runtime is bundled).
-- **Optional:** a **GitHub Copilot** subscription, only if you want the AI features. The
-  app uses your signed-in seat; the deterministic review works fully offline without it.
+- **Optional:** an **active GitHub Copilot subscription** (Individual, Business, or Enterprise),
+  only if you want the AI features. The app uses your signed-in seat (see
+  [Signing in to GitHub Copilot](#signing-in-to-github-copilot)); the deterministic review
+  (verdict, score, findings) works fully **without** it.
 
 ---
 
@@ -69,16 +71,34 @@ certificate is in place, the warning disappears for everyone — no change neede
 
 ---
 
-## Signing in to GitHub Copilot (optional)
+## Signing in to GitHub Copilot
 
-The first time you use an AI feature, the app uses your **GitHub Copilot** seat:
+The AI features (explanations, drafted fixes, critique, DFD extraction) run on **your GitHub
+Copilot seat** — so they need an **active Copilot subscription** (Individual, Business, or
+Enterprise) and you must be **signed in**. The deterministic review needs none of this.
 
-- If you're already signed in to Copilot on this machine (e.g. via the GitHub CLI or an
-  IDE), it's picked up automatically.
-- Otherwise, follow the in-app prompt to sign in.
-- Prefer not to use Copilot? Open **AI provider** in the header to point at an
-  OpenAI-compatible endpoint (Azure OpenAI / OpenAI / local), or just don't use the AI
-  buttons — the verdict, score, and findings are computed deterministically without AI.
+**How the app authenticates.** It uses the bundled **GitHub Copilot CLI** and your *logged-in
+user* (the GitHub Copilot SDK's `UseLoggedInUser`) — there is **no token to paste into the app**.
+When you're signed in, the header shows a green dot and *"GitHub Copilot ready — N models"*. If not,
+it shows *"Not signed in to GitHub Copilot"* with a **Sign in to Copilot** button.
+
+**Ways to sign in (any one):**
+
+1. **In-app (easiest):** click **"Sign in to Copilot"** in the header. A window opens and runs the
+   GitHub sign-in (a browser/device-code flow); complete it, and the app reconnects and lists your
+   models automatically.
+2. **GitHub CLI:** if you have the GitHub CLI, run `gh auth login` and sign in — the app picks that
+   up.
+3. **Environment variable (headless / automation):** set one of `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`,
+   or `GITHUB_TOKEN` to a **fine-grained personal access token (v2) with the "Copilot Requests"
+   permission**. *(Classic `ghp_` tokens are not supported.)*
+
+Prefer not to use Copilot? Open **AI provider** in the header to point at an OpenAI-compatible
+endpoint (Azure OpenAI / OpenAI / local), or simply don't use the AI buttons — the verdict, score,
+and findings are computed deterministically without AI.
+
+> The token is stored by the GitHub Copilot CLI in your OS credential store (not by this app, and
+> never in the repo).
 
 ## Uninstalling
 
