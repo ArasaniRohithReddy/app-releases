@@ -4,6 +4,14 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.5] — 2026-07-03
+
+### Fixed
+- **"Analyze gaps with Copilot" and "Prioritize with Copilot" buttons stayed greyed out** on the
+  Overview tab even after a model was loaded (a missing change-notification left them stuck
+  disabled). Both now enable as soon as a `.tm7` is reviewed. These are independent advisory
+  actions — using "Draft with Copilot" in the Fix tab never disabled them.
+
 ## [1.0.4] — 2026-06-28
 
 ### Changed
@@ -83,6 +91,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.5]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.5
 [1.0.4]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.4
 [1.0.3]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.3
 [1.0.2]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.2
