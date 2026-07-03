@@ -4,6 +4,19 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.11] — 2026-07-03
+
+### Added
+- **"Deep analysis for all" button** on the Findings tab (beside "Explain all with Copilot"): runs
+  the full deep analysis (DREAD, mitigation plan, attack tree, verification tests) for **every**
+  finding at once, stored per-finding and reused in exports. Confirms first (each finding is several
+  premium requests). Advisory — the verdict stays deterministic.
+
+### Changed
+- **Consistent button styling/sizing across the app** (coverage-panel button text, the Diagram /
+  Create / chat compact buttons, and the AI-provider & review-options dialogs now use the app's
+  shared button styles instead of ad-hoc sizes / raw system buttons).
+
 ## [1.0.10] — 2026-07-03
 
 ### Fixed
@@ -141,6 +154,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.11]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.11
 [1.0.10]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.10
 [1.0.9]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.9
 [1.0.8]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.8
