@@ -4,6 +4,14 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.6] — 2026-07-03
+
+### Added
+- **Choose the fix source for *all* fixes at once.** The Fix tab now has a **"Use for all:
+  Built-in / Copilot"** control that switches every fix to the deterministic built-in content or to
+  the Copilot draft in one click — alongside the existing **"Draft with Copilot"** button
+  (generates the drafts) and the **per-row** Built-in / Copilot radios (individual override).
+
 ## [1.0.5] — 2026-07-03
 
 ### Fixed
@@ -91,6 +99,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[1.0.6]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.6
 [1.0.5]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.5
 [1.0.4]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.4
 [1.0.3]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.3
