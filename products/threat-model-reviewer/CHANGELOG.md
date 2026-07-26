@@ -4,6 +4,41 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] — 2026-07-26
+
+The 2.0 line opens with a correctness release: models you fix in the app now reliably
+reopen in the Microsoft Threat Modeling Tool, Copilot's advisory text renders properly,
+and a whole-app audit (run with Claude Opus 4.8 + Opus 5) hardened every write path.
+
+### Fixed
+- **App-fixed `.tm7` files now open in the Microsoft Threat Modeling Tool.** Two defects made
+  TMT reject a saved model as *"could not be deserialized / may be corrupted"*: the threat
+  `State` was written as `"Needs Investigation"` (TMT's `ThreatState` enum only accepts
+  `NeedsInvestigation`), and whole-model threats wrote empty `Guid` fields. Both are fixed and
+  verified against TMT's own serializer.
+- **Fixed a TMT dashboard crash** (*"an item with the same key has already been added"*). TMT
+  identifies a threat by `TypeId + Source + Flow + Target`; several distinct threats added to one
+  element/category (e.g. OWASP-LLM risks) now get distinct TypeIds so they never collide.
+- **The `--baseline` Create path no longer produces corrupt files** (an XML declaration/encoding
+  mismatch); carried KnowledgeBase and multi-line names are preserved byte-for-byte.
+- **Copilot output now renders as formatted text** — the critique, per-finding guidance, and
+  mitigation plan show real **bold**, *italic*, `code`, and bullet lists instead of literal
+  Markdown symbols.
+
+### Changed
+- **Whole-app correctness audit.** Hardened AI-response handling (malformed/partial JSON no longer
+  crashes; AI failures never abort the deterministic report or verdict), fixed a triage-state parser
+  that could mark open threats as mitigated, made model parsing/diff/critique robust to duplicate or
+  blank element ids, stopped a portable-update helper from hanging invisibly, neutralized CSV
+  formula-injection in exports, and ensured the bundled Copilot runtime is never orphaned on exit.
+- Newly added diagram elements now default **in scope** (a cloned template could previously make them
+  out-of-scope and change the deterministic result).
+
+### Notes
+- **Verdict and 0–100 review score remain 100% deterministic.** Copilot is advisory only.
+- Known follow-ups: diagram-edit responsiveness on very large models, and published update-asset
+  checksums, are planned for a later 2.x release.
+
 ## [1.0.11] — 2026-07-03
 
 ### Added
