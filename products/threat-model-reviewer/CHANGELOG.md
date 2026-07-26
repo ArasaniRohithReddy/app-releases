@@ -4,6 +4,23 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] — 2026-07-27
+
+### Changed
+- **Diagram edits no longer freeze the UI on large models.** Adding, renaming, deleting, or connecting
+  elements — and the **Save changes** / **Reset** diagram commands — now run the re-parse and re-review on a
+  background thread, so the app stays responsive on big threat models.
+
+### Fixed
+- **CLI:** a dangling or unknown option (e.g. a trailing `--model` with no value) now reports a clear error
+  and exits with code 1 instead of being mistaken for the input file path; an invalid `--issues-format` is
+  rejected with the list of valid choices.
+
+### Security
+- The in-app device-flow GitHub token is now passed directly to the Copilot SDK instead of being set as a
+  process-wide environment variable, so it can no longer be inherited by other processes the app launches
+  (browser, `cmd`, the Threat Modeling Tool).
+
 ## [2.0.0] — 2026-07-26
 
 The 2.0 line opens with a correctness release: models you fix in the app now reliably
