@@ -206,15 +206,17 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
-[1.0.11]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.11
-[1.0.10]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.10
-[1.0.9]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.9
-[1.0.8]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.8
-[1.0.7]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.7
-[1.0.6]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.6
-[1.0.5]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.5
-[1.0.4]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.4
-[1.0.3]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.3
-[1.0.2]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.2
-[1.0.1]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.1
-[1.0.0]: https://github.com/Rohithreddy7123/app-releases/releases/tag/threat-model-reviewer-v1.0.0
+[2.0.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.1
+[2.0.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.0
+[1.0.11]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.11
+[1.0.10]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.10
+[1.0.9]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.9
+[1.0.8]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.8
+[1.0.7]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.7
+[1.0.6]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.6
+[1.0.5]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.5
+[1.0.4]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.4
+[1.0.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.3
+[1.0.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.2
+[1.0.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.1
+[1.0.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.0
