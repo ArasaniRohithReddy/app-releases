@@ -57,7 +57,7 @@ would. Clear the gating findings (the Fix tab automates most) and the verdict fl
 
 ### A finding looks wrong / too noisy.
 Open an issue with the check ID and a sanitized snippet:
-<https://github.com/Rohithreddy7123/app-releases/issues>. Many checks are advisory and use
+<https://github.com/ArasaniRohithReddy/app-releases/issues>. Many checks are advisory and use
 deliberately tight triggers; we tune them from real reports.
 
 ### Can I add my own organization's checks?
@@ -68,4 +68,4 @@ var engine = RubricEngine.WithAdditionalChecks(new[] { new MyOrgPolicyCheck() })
 
 ### How do I report a bug or request a feature?
 Use the issue templates at
-<https://github.com/Rohithreddy7123/app-releases/issues/new/choose>.
+<https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose>.

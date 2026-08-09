@@ -4,6 +4,23 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] — 2026-08-09
+
+### Changed
+- **Canonical project home is now `ArasaniRohithReddy`.** Following the repository transfer, every link
+  and identifier the app carries now points to the new owner: the **in-app update check**, the **About**
+  dialog and **Help** menu links (releases, install & user guide, FAQ, issues, security, license), the
+  SARIF report's `informationUri`, and the installer/package **publisher**, URLs, and **code-signing
+  identity** (`CN=ArasaniRohithReddy`). The old `Rohithreddy7123` URLs still resolve via GitHub's
+  automatic redirect, but the app no longer relies on it — existing installs are offered this update
+  through that redirect and are canonical afterwards.
+
+### Notes
+- **No change to behavior, the verdict, or the 0–100 review score** — this is an identity/branding
+  release. The score and verdict remain 100% deterministic; Copilot stays advisory only.
+- The MSIX package identity changed with the publisher, so an existing **MSIX** install updates
+  side-by-side; **MSI**, **Setup.exe**, and **portable** users update normally (in-app from v1.0.4+).
+
 ## [2.0.1] — 2026-07-27
 
 ### Changed
@@ -59,57 +76,67 @@ and a whole-app audit (run with Claude Opus 4.8 + Opus 5) hardened every write p
 ## [1.0.11] — 2026-07-03
 
 ### Added
-- **"Deep analysis for all" button** on the Findings tab (beside "Explain all with Copilot"): runs
-  the full deep analysis (DREAD, mitigation plan, attack tree, verification tests) for **every**
-  finding at once, stored per-finding and reused in exports. Confirms first (each finding is several
-  premium requests). Advisory — the verdict stays deterministic.
+- **"Deep analysis for all" button** on the Findings tab, beside "Explain all with Copilot". It runs
+  the full deep analysis (DREAD, mitigation plan, attack tree, and verification tests) for **every**
+  finding at once, stored per-finding and reusable in exports. Because each finding is several
+  premium requests, it asks for confirmation (showing the estimated cost) first. Advisory only — the
+  verdict stays deterministic.
 
 ### Changed
-- **Consistent button styling/sizing across the app** (coverage-panel button text, the Diagram /
-  Create / chat compact buttons, and the AI-provider & review-options dialogs now use the app's
-  shared button styles instead of ad-hoc sizes / raw system buttons).
+- **Consistent button styling & sizing across the app.** Buttons now use one of three deliberate
+  tiers (default / compact / inline) instead of ad-hoc per-button sizes: the coverage-panel buttons
+  match the standard text size; the Diagram, Create, and chat action buttons share one compact size;
+  and the AI-provider and review-options dialogs now use the app's shared button styles (rounded
+  chrome, hover/focus states) rather than raw system buttons.
 
 ## [1.0.10] — 2026-07-03
 
 ### Fixed
-- **Literal `\u2026` / `\u2014` shown in the UI** (on the **Analyze gaps with Copilot** /
-  **Prioritize with Copilot** buttons and a couple of tooltips): C#-style Unicode escapes were
-  embedded in XAML where they aren't interpreted. They now render as proper `…` and `—`.
+- **Literal `\u2026` / `\u2014` shown in the UI.** A few labels/tooltips had C#-style Unicode escapes
+  embedded in XAML (where they aren't interpreted), so an ellipsis appeared as the raw text
+  `\u2026` (e.g. on the **Analyze gaps with Copilot** and **Prioritize with Copilot** buttons) and an
+  em-dash as `\u2014` (a couple of tooltips and the diagram-assistant title). All are now rendered as
+  proper `…` and `—`.
 
 ## [1.0.9] — 2026-07-03
 
 ### Fixed
-- **"Check for updates" could wrongly say "You're on the latest version" when it actually failed**
-  (GitHub's unauthenticated API allows only 60 requests/hour; when hit it returned HTTP 403 and the
-  check treated that as up-to-date). It now **falls back to the `releases.atom` feed** (not
-  API-rate-limited) so checks keep working, and reports a real error if GitHub can't be reached
-  instead of claiming you're up to date.
+- **"Check for updates" could wrongly say "You're on the latest version" when it actually failed.**
+  GitHub's unauthenticated API has a 60-requests/hour limit; when it was hit (HTTP 403), the check
+  treated the failure as "up to date." Now:
+  - it **falls back to the `releases.atom` feed** (served from github.com, **not** subject to that
+    API rate limit) so the check keeps working — reconstructing the download links from the release
+    tag; and
+  - if it genuinely **can't reach GitHub**, it says so ("Couldn't reach GitHub… try again later")
+    instead of claiming you're up to date.
 
 ## [1.0.8] — 2026-07-03
 
 ### Added
-- **Sign in to GitHub Copilot from inside the app — no external CLI required.** The **Sign in to
-  Copilot** button opens a dialog that runs GitHub's **OAuth device flow** (the same flow and client
-  the Copilot CLI uses): shows a one-time code, you approve it in the browser, and the app connects.
-  Token stored DPAPI-encrypted per-user.
+- **Sign in to GitHub Copilot from inside the app — no external CLI required.** If you're not
+  already signed in, the **Sign in to Copilot** button now opens an in-app dialog that runs GitHub's
+  **OAuth device flow** (the same flow and client the GitHub Copilot CLI uses): it shows a one-time
+  code, you approve it in your browser, and the app connects and lists your models. The token is
+  stored DPAPI-encrypted per-user.
 
 ### Changed
-- **Layered Copilot auth (best UX first):** uses your existing Copilot CLI / `gh` sign-in
-  automatically when present; only offers the in-app device-flow sign-in if you're not already
-  signed in.
+- **Copilot authentication is now layered (best UX first):** the app uses your **existing GitHub
+  Copilot CLI / `gh` sign-in** automatically when present, and only offers the in-app device-flow
+  sign-in if you're not already signed in. Either way, the deterministic review needs no sign-in.
 
 ## [1.0.7] — 2026-07-03
 
 ### Added
-- **In-app "Sign in to GitHub Copilot".** When you're not signed in, the header says so and shows a
-  **Sign in to Copilot** button that runs the bundled GitHub Copilot CLI's sign-in (browser /
-  device-code), then reconnects and lists your models. No token to paste.
+- **In-app "Sign in to GitHub Copilot".** When the AI features aren't available because you're not
+  signed in, the header now says so clearly and shows a **Sign in to Copilot** button that runs the
+  bundled GitHub Copilot CLI's sign-in (browser / device-code) — then reconnects and lists your
+  models automatically. No token to paste.
 
 ### Changed
-- Clearer prerequisites: the AI features need an **active GitHub Copilot subscription** and being
-  signed in (in-app button, `gh auth login`, or a `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` /
-  `GITHUB_TOKEN` fine-grained PAT with the "Copilot Requests" permission). The deterministic review
-  needs none of this.
+- Clearer prerequisites everywhere: the AI features need an **active GitHub Copilot subscription**
+  and being signed in (via the in-app button, `gh auth login`, or a `COPILOT_GITHUB_TOKEN` /
+  `GH_TOKEN` / `GITHUB_TOKEN` fine-grained PAT with the "Copilot Requests" permission). Documented in
+  the README, install guide, user guide, and FAQ. The deterministic review still needs none of this.
 
 ## [1.0.6] — 2026-07-03
 
@@ -117,15 +144,17 @@ and a whole-app audit (run with Claude Opus 4.8 + Opus 5) hardened every write p
 - **Choose the fix source for *all* fixes at once.** The Fix tab now has a **"Use for all:
   Built-in / Copilot"** control that switches every fix to the deterministic built-in content or to
   the Copilot draft in one click — alongside the existing **"Draft with Copilot"** button
-  (generates the drafts) and the **per-row** Built-in / Copilot radios (individual override).
+  (generates the drafts) and the **per-row** Built-in / Copilot radios (individual override). So you
+  can pick the source globally or per fix.
 
 ## [1.0.5] — 2026-07-03
 
 ### Fixed
 - **"Analyze gaps with Copilot" and "Prioritize with Copilot" buttons stayed greyed out** on the
-  Overview tab even after a model was loaded (a missing change-notification left them stuck
-  disabled). Both now enable as soon as a `.tm7` is reviewed. These are independent advisory
-  actions — using "Draft with Copilot" in the Fix tab never disabled them.
+  Overview tab even after a model was loaded. Their enable-state wasn't being re-evaluated when the
+  review completed (a missing change-notification), so they were stuck disabled. Both now enable as
+  soon as a `.tm7` is reviewed, exactly like the other Copilot buttons. (These are independent,
+  advisory actions — using "Draft with Copilot" in the Fix tab never disabled them.)
 
 ## [1.0.4] — 2026-06-28
 
@@ -134,9 +163,8 @@ and a whole-app audit (run with Claude Opus 4.8 + Opus 5) hardened every write p
   *inside the app*, with a progress bar, instead of opening a browser. It automatically picks the
   installer that matches how you installed (MSI, Inno `-setup.exe`, portable `.zip`, or MSIX),
   then offers **Install &amp; restart**: the app closes, updates in place, and reopens on the new
-  version. A **What's new** link still opens the full release notes, and the browser download
-  remains as a fallback. (The in-app updater ships *in* v1.0.4, so updates *after* this one
-  install in-app.)
+  version. A **What's new** link still opens the full release notes in the browser, and the
+  browser download remains as a fallback when no matching installer is found.
 
 ## [1.0.3] — 2026-06-28
 
@@ -206,6 +234,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.0
 [2.0.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.1
 [2.0.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.0
 [1.0.11]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.11

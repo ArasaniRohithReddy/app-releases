@@ -8,7 +8,7 @@ explains and drafts fixes you review).
 
 ## Download
 
-**[⬇ Latest release](https://github.com/Rohithreddy7123/app-releases/releases)** — pick one:
+**[⬇ Latest release](https://github.com/ArasaniRohithReddy/app-releases/releases)** — pick one:
 
 | Download | Use it if… |
 | --- | --- |
@@ -54,4 +54,4 @@ the raw `.tm7`.
 ## Issues
 
 Found a bug or have an idea?
-**[Open an issue](https://github.com/Rohithreddy7123/app-releases/issues/new/choose)**.
+**[Open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose)**.

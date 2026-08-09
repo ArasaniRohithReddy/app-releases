@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: 📖 Documentation
-    url: https://github.com/Rohithreddy7123/app-releases/tree/main/products
+    url: https://github.com/ArasaniRohithReddy/app-releases/tree/main/products
     about: Install guides, user guides, and FAQs for each app.
   - name: 🔒 Report a security vulnerability
-    url: https://github.com/Rohithreddy7123/app-releases/security/advisories/new
+    url: https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new
     about: Please report security issues privately, not as a public issue.

@@ -2,7 +2,7 @@
 
 Threat Model Reviewer is a **Windows desktop application**. Three download options are
 attached to every release on the
-**[releases page](https://github.com/Rohithreddy7123/app-releases/releases)** — pick one.
+**[releases page](https://github.com/ArasaniRohithReddy/app-releases/releases)** — pick one.
 
 ## System requirements
 
@@ -115,4 +115,4 @@ and findings are computed deterministically without AI.
 ## Troubleshooting
 
 See [FAQ.md](FAQ.md). Still stuck? Open an issue:
-<https://github.com/Rohithreddy7123/app-releases/issues>.
+<https://github.com/ArasaniRohithReddy/app-releases/issues>.
