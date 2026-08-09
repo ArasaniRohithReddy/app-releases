@@ -4,7 +4,7 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
-## [2.1.0] — 2026-08-09
+## [2.0.2] — 2026-08-09
 
 ### Changed
 - **Canonical project home is now `ArasaniRohithReddy`.** Following the repository transfer, every link
@@ -234,7 +234,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
-[2.1.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.0
+[2.0.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.2
 [2.0.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.1
 [2.0.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.0
 [1.0.11]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.11
