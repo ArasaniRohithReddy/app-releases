@@ -1,7 +1,8 @@
 # User Guide
 
-Threat Model Reviewer reviews, fixes, analyzes, and creates **Microsoft Threat Modeling
-Tool `.tm7`** threat models (and OWASP Threat Dragon `.json`). The **verdict and 0–100
+Threat Model Reviewer reviews, fixes and analyzes **Microsoft Threat Modeling
+Tool `.tm7`** threat models (and OWASP Threat Dragon `.json`). Model creation is currently in
+**beta**. The **verdict and 0–100
 score are deterministic** — computed by a rubric engine, never by AI. GitHub Copilot is
 optional and only ever *advisory*.
 
@@ -60,10 +61,12 @@ justifications, and fill out-of-scope reasons. For each item pick **Built-in** o
 (draft the specifics with your seat). Review the preview, then **Apply & Save** a corrected
 `.tm7` that re-opens cleanly in the Microsoft Threat Modeling Tool.
 
-### Create
+### Create — beta (not in the current build)
 A guided wizard (components → flows → boundaries) that generates a `.tm7` with a STRIDE
 baseline. You can also describe a system or load an architecture / IaC / OpenAPI / Mermaid
-document and let Copilot extract a DFD you review before generating.
+document and let Copilot extract a DFD you review before generating. **This tab is in beta and
+is hidden in the current release** — it will be enabled in a future update. Today's build
+focuses on reviewing, fixing and analyzing existing models.
 
 ## How AI is used (and not used)
 

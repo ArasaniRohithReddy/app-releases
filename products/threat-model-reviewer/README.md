@@ -1,6 +1,6 @@
 # Threat Model Reviewer
 
-A **Windows desktop tool** that reviews, fixes, analyzes, and creates **Microsoft Threat
+A **Windows desktop tool** that reviews, fixes and analyzes **Microsoft Threat
 Modeling Tool `.tm7`** threat models (and OWASP Threat Dragon `.json`), powered by your own
 **GitHub Copilot** seat. It catches the issues a Microsoft SDL reviewer would bounce back
 **before** you submit — and the **verdict is deterministic** (never produced by AI; AI only

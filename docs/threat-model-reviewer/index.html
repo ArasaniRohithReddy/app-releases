@@ -6,8 +6,8 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
-  <title>Threat Model Reviewer — review, fix &amp; create Microsoft .tm7 threat models</title>
-  <meta name="description" content="A Windows desktop tool that reviews, fixes, analyzes and creates Microsoft Threat Modeling Tool (.tm7) threat models before you submit for SDL review. Deterministic 0–100 score and verdict — AI never decides it. Powered by your GitHub Copilot seat." />
+  <title>Threat Model Reviewer — review, fix &amp; analyze Microsoft .tm7 threat models</title>
+  <meta name="description" content="A Windows desktop tool that reviews, fixes and analyzes Microsoft Threat Modeling Tool (.tm7) threat models before you submit for SDL review. Deterministic 0–100 score and verdict — AI never decides it. Powered by your GitHub Copilot seat." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -218,7 +218,7 @@
     .sec-head h2 { font-size: var(--step-3); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 .6rem; text-wrap: balance; }
     .sec-head p { font-size: var(--step-1); color: var(--ink-2); margin: 0; text-wrap: pretty; }
 
-    /* Pillars: Review / Fix / Create */
+    /* Pillars: Review / Fix / Analyze */
     .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
     @media (max-width: 820px) { .pillars { grid-template-columns: 1fr; } }
     .pillar { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
@@ -226,6 +226,11 @@
     .pillar .icn svg { width: 22px; height: 22px; }
     .pillar h3 { margin: 0 0 .4rem; font-size: var(--step-1); letter-spacing: -.01em; }
     .pillar p { margin: 0; color: var(--muted); font-size: var(--step-0); }
+    /* Roadmap / beta note under the pillars */
+    .roadmap { margin-top: 1.3rem; display: flex; gap: .9rem; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.3rem; }
+    .roadmap .badge { flex: none; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); background: var(--accent-tint); padding: .25rem .6rem; border-radius: 999px; margin-top: .15rem; }
+    .roadmap p { margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.55; }
+    .roadmap strong { color: var(--ink); }
 
     /* Feature grid */
     .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; }
@@ -320,7 +325,7 @@
         <div>
           <span class="eyebrow"><span class="dot"></span> Windows desktop app · powered by GitHub Copilot</span>
           <h1 class="title">Ship threat models that pass SDL review the first time.</h1>
-          <p class="lede">Threat Model Reviewer reviews, fixes, analyzes and creates Microsoft Threat Modeling Tool <code>.tm7</code> models — catching what a Microsoft SDL reviewer would bounce back, before you submit.</p>
+          <p class="lede">Threat Model Reviewer reviews, fixes and analyzes Microsoft Threat Modeling Tool <code>.tm7</code> models — catching what a Microsoft SDL reviewer would bounce back, before you submit.</p>
           <div class="cta-row">
             <a class="btn btn-primary" id="hero-download" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>
@@ -372,10 +377,14 @@
             <p>Apply built-in or Copilot-drafted fixes — added threats, triage, justifications, out-of-scope reasons — with round-trip write-back to a valid <code>.tm7</code> that reopens in the Threat Modeling Tool.</p>
           </article>
           <article class="pillar">
-            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <h3>Create</h3>
-            <p>Build a new model from a guided wizard or let Copilot extract a data-flow diagram from a description or an OpenAPI spec — then review and harden it in the same pass.</p>
+            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2"/></svg></div>
+            <h3>Analyze</h3>
+            <p>Go deeper on any finding — DREAD scoring, attack trees, mitigation plans and verification tests — then export to HTML, PDF, SARIF or GitHub / Azure DevOps / Jira work items.</p>
           </article>
+        </div>
+        <div class="roadmap">
+          <span class="badge">Beta</span>
+          <p><strong>Create is coming.</strong> Building a new model from a guided wizard — and having Copilot draft a data-flow diagram from a description, an architecture image or an OpenAPI spec — is in <strong>beta</strong> and rolling out in a future release. Today's build focuses on reviewing, fixing and analyzing existing <code>.tm7</code> models.</p>
         </div>
       </div>
     </section>
