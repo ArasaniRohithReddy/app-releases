@@ -4,6 +4,18 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.0.3] — 2026-08-09
+
+### Changed
+- **Product copy now matches the shipped feature set.** The header subtitle, About dialog, package
+  description and docs previously said the app also *creates* threat models, but model **creation is in
+  beta and hidden in the current build**. Everywhere now reads "review, fix & analyze", and the Create
+  capability (guided wizard + Copilot DFD extraction from a description, image or OpenAPI spec) is clearly
+  labelled **beta / coming soon**. No functional change — the Create and Assistant tabs were already hidden.
+
+### Notes
+- The **verdict** and **0–100 review score** remain 100% deterministic; Copilot stays advisory.
+
 ## [2.0.2] — 2026-08-09
 
 ### Changed
@@ -234,6 +246,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.0.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.3
 [2.0.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.2
 [2.0.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.1
 [2.0.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.0
