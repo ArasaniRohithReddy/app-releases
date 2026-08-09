@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Threat Model Reviewer — review, fix &amp; create Microsoft .tm7 threat models</title>
+  <meta name="description" content="A Windows desktop tool that reviews, fixes, analyzes and creates Microsoft Threat Modeling Tool (.tm7) threat models before you submit for SDL review. Deterministic 0–100 score and verdict — AI never decides it. Powered by your GitHub Copilot seat." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/" />
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Threat Model Reviewer" />
+  <meta property="og:description" content="Catch the issues a Microsoft SDL reviewer would bounce back — before you submit. Deterministic verdict &amp; 0–100 score, powered by your GitHub Copilot seat." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- Inline SVG favicon: shield + check -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Cpath d='M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M11.5 16.2l3.1 3.1 6-6.4' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+  <style>
+    :root {
+      /* Palette — light, editorial-technical. One indigo brand accent; verdict colors used only for meaning. */
+      --bg:        #FBFBFD;
+      --surface:   #FFFFFF;
+      --surface-2: #F4F5F8;
+      --ink:       #14161C;
+      --ink-2:     #3A3F4C;
+      --muted:     #5A5F70;
+      --line:      #E4E6ED;
+      --accent:    #4F46E5;
+      --accent-600:#4338CA;
+      --accent-tint:#EEF0FE;
+      --on-accent: #FFFFFF;
+      --ok:        #157347;
+      --ok-tint:   #E6F4EC;
+      --warn:      #B45309;
+      --warn-tint: #FBF0E1;
+      --danger:    #C5221F;
+      --danger-tint:#FBE9E8;
+
+      --radius:    14px;
+      --radius-sm: 10px;
+      --shadow:    0 1px 2px rgba(20,22,28,.05);
+      --maxw:      1120px;
+
+      --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      --mono: "Cascadia Code", "Cascadia Mono", "SF Mono", ui-monospace, Consolas, "Liberation Mono", monospace;
+
+      /* Fluid type scale */
+      --step--1: clamp(.80rem, .77rem + .12vw, .875rem);
+      --step-0:  clamp(.95rem, .91rem + .18vw, 1.0625rem);
+      --step-1:  clamp(1.12rem, 1.05rem + .3vw, 1.3rem);
+      --step-2:  clamp(1.4rem, 1.25rem + .6vw, 1.85rem);
+      --step-3:  clamp(1.9rem, 1.6rem + 1.3vw, 2.85rem);
+      --step-4:  clamp(2.35rem, 1.9rem + 2.4vw, 3.9rem);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:        #0F1116;
+        --surface:   #171A22;
+        --surface-2: #1C2029;
+        --ink:       #EDEEF2;
+        --ink-2:     #C6C9D4;
+        --muted:     #9AA0B0;
+        --line:      #2A2F3A;
+        --accent:    #8A83F6;
+        --accent-600:#A29BFF;
+        --accent-tint:#1B1D33;
+        --on-accent: #0F1116;
+        --ok:        #4ADE80;
+        --ok-tint:   #12251B;
+        --warn:      #FBBF57;
+        --warn-tint: #2A2113;
+        --danger:    #F87171;
+        --danger-tint:#2A1717;
+        --shadow:    0 1px 2px rgba(0,0,0,.4);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: var(--step-0);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: clamp(1.1rem, 4vw, 2.5rem); }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    :focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+    .skip {
+      position: absolute; left: -999px; top: 0; background: var(--accent); color: var(--on-accent);
+      padding: .6rem 1rem; border-radius: 0 0 var(--radius-sm) 0; z-index: 100; font-weight: 600;
+    }
+    .skip:focus { left: 0; }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font: inherit; font-weight: 600; font-size: var(--step-0);
+      padding: .72rem 1.15rem; border-radius: var(--radius-sm);
+      border: 1px solid transparent; cursor: pointer;
+      transition: background-color .16s ease, border-color .16s ease, transform .16s ease, color .16s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { text-decoration: none; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--accent); color: var(--on-accent); }
+    .btn-primary:hover { background: var(--accent-600); }
+    .btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-ghost { background: transparent; color: var(--ink-2); padding: .5rem .7rem; }
+    .btn-ghost:hover { color: var(--accent); }
+    .btn svg { width: 1.05em; height: 1.05em; flex: none; }
+
+    /* ---------- Header ---------- */
+    header.site {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: saturate(180%) blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; gap: 1rem; min-height: 62px; }
+    .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; }
+    .brand:hover { text-decoration: none; }
+    .brand .mark { width: 28px; height: 28px; flex: none; }
+    .nav .spacer { flex: 1; }
+    .nav-links { display: flex; align-items: center; gap: .3rem; }
+    .nav-links a { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
+    .nav-links a:hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
+    @media (max-width: 760px) { .nav-links.secondary { display: none; } }
+
+    /* ---------- Hero ---------- */
+    .hero { padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem); }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+    @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: var(--step--1); font-weight: 600; color: var(--accent);
+      background: var(--accent-tint); padding: .35rem .7rem; border-radius: 999px; margin-bottom: 1.1rem;
+    }
+    .eyebrow .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); }
+
+    h1.title { font-size: var(--step-4); line-height: 1.06; letter-spacing: -.03em; margin: 0 0 1.1rem; text-wrap: balance; }
+    .lede { font-size: var(--step-1); color: var(--ink-2); margin: 0 0 1.6rem; max-width: 34ch; text-wrap: pretty; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+    .meta-line { margin-top: 1.4rem; color: var(--muted); font-size: var(--step--1); display: flex; flex-wrap: wrap; gap: .4rem .9rem; }
+    .meta-line .chip { font-family: var(--mono); background: var(--surface-2); border: 1px solid var(--line); padding: .15rem .55rem; border-radius: 7px; color: var(--ink-2); }
+
+    /* Verdict card (pure CSS depiction of the product's real output) */
+    .result-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.4rem 1.5rem; box-shadow: var(--shadow);
+    }
+    .result-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.15rem; }
+    .result-top .label { font-size: var(--step--1); font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+    .pill { font-size: var(--step--1); font-weight: 700; padding: .3rem .7rem; border-radius: 999px; }
+    .pill.ready { background: var(--warn-tint); color: var(--warn); }
+    .score-row { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .3rem; }
+    .score-num { font-size: clamp(3rem, 8vw, 4.2rem); font-weight: 800; line-height: 1; letter-spacing: -.04em; color: var(--ok); }
+    .score-den { font-size: var(--step-1); color: var(--muted); font-weight: 600; }
+    .score-grade { margin-left: auto; align-self: center; font-weight: 700; color: var(--ok); background: var(--ok-tint); padding: .25rem .7rem; border-radius: 8px; font-size: var(--step--1); }
+    .bar { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin: .2rem 0 1.2rem; }
+    .bar > i { display: block; height: 100%; width: 92%; background: var(--ok); border-radius: 999px; }
+    .find-row { display: flex; align-items: center; gap: .6rem; padding: .55rem 0; border-top: 1px solid var(--line); font-size: var(--step--1); color: var(--ink-2); }
+    .find-row .sev { width: .6rem; height: .6rem; border-radius: 50%; flex: none; }
+    .sev.high { background: var(--danger); } .sev.med { background: var(--warn); } .sev.low { background: var(--muted); }
+    .find-row .id { font-family: var(--mono); color: var(--muted); }
+
+    /* ---------- Sections ---------- */
+    section { padding-block: clamp(2.6rem, 6vw, 5rem); }
+    section.alt { background: var(--surface-2); border-block: 1px solid var(--line); }
+    .sec-head { max-width: 62ch; margin-bottom: clamp(1.6rem, 3vw, 2.6rem); }
+    .sec-head h2 { font-size: var(--step-3); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 .6rem; text-wrap: balance; }
+    .sec-head p { font-size: var(--step-1); color: var(--ink-2); margin: 0; text-wrap: pretty; }
+
+    /* Pillars: Review / Fix / Create */
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+    @media (max-width: 820px) { .pillars { grid-template-columns: 1fr; } }
+    .pillar { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
+    .pillar .icn { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-tint); color: var(--accent); display: grid; place-items: center; margin-bottom: 1rem; }
+    .pillar .icn svg { width: 22px; height: 22px; }
+    .pillar h3 { margin: 0 0 .4rem; font-size: var(--step-1); letter-spacing: -.01em; }
+    .pillar p { margin: 0; color: var(--muted); font-size: var(--step-0); }
+
+    /* Feature grid */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; }
+    .feature { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem 1.4rem; }
+    .feature h3 { margin: 0 0 .45rem; font-size: var(--step-0); font-weight: 700; display: flex; align-items: center; gap: .55rem; }
+    .feature h3 .tick { color: var(--accent); flex: none; }
+    .feature p { margin: 0; color: var(--muted); font-size: var(--step--1); line-height: 1.55; }
+    .feature .kbd { font-family: var(--mono); font-size: .82em; background: var(--surface-2); border: 1px solid var(--line); padding: .05rem .35rem; border-radius: 5px; color: var(--ink-2); }
+
+    /* Download */
+    .dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.1rem; }
+    .dl-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem; }
+    .dl-card.recommended { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+    .dl-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
+    .dl-card h3 { margin: 0; font-size: var(--step-1); letter-spacing: -.01em; }
+    .dl-card .tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); background: var(--accent-tint); padding: .2rem .5rem; border-radius: 999px; }
+    .dl-card p { margin: .1rem 0 1.2rem; color: var(--muted); font-size: var(--step--1); flex: 1; }
+    .dl-card .btn { justify-content: center; }
+    .dl-size { font-family: var(--mono); font-size: var(--step--1); color: var(--muted); margin-top: .55rem; text-align: center; }
+    .dl-note { margin-top: 1.4rem; color: var(--muted); font-size: var(--step--1); }
+
+    /* Callout band (determinism / privacy) */
+    .callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+    @media (max-width: 760px) { .callouts { grid-template-columns: 1fr; } }
+    .callout { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
+    .callout h3 { margin: 0 0 .5rem; font-size: var(--step-1); display: flex; align-items: center; gap: .55rem; letter-spacing: -.01em; }
+    .callout h3 svg { width: 1.2em; height: 1.2em; color: var(--accent); flex: none; }
+    .callout p { margin: 0; color: var(--ink-2); font-size: var(--step-0); }
+
+    /* Docs links */
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .9rem; }
+    .doc-link { display: flex; align-items: center; gap: .7rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem 1.15rem; color: var(--ink); font-weight: 600; }
+    .doc-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .doc-link svg { width: 1.15em; height: 1.15em; color: var(--accent); flex: none; }
+    .doc-link .arrow { margin-left: auto; color: var(--muted); }
+
+    .note {
+      margin-top: 1.6rem; background: var(--warn-tint); border: 1px solid color-mix(in srgb, var(--warn) 25%, var(--line));
+      border-radius: var(--radius-sm); padding: 1rem 1.2rem; color: var(--ink-2); font-size: var(--step--1);
+    }
+    .note strong { color: var(--ink); }
+
+    /* Footer */
+    footer.site { border-top: 1px solid var(--line); padding-block: 2.4rem; color: var(--muted); font-size: var(--step--1); }
+    .foot-grid { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; }
+    .foot-links { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; }
+    .foot-links a { color: var(--ink-2); }
+
+    .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Threat Model Reviewer — home">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Threat Model Reviewer
+      </a>
+      <div class="spacer"></div>
+      <nav class="nav-links secondary" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#docs">Docs</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md">Changelog</a>
+      </nav>
+      <div class="nav-links">
+        <a class="btn-ghost btn" href="https://github.com/ArasaniRohithReddy/app-releases" aria-label="GitHub repository">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <a class="btn btn-primary" href="#download">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <span id="top"></span>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> Windows desktop app · powered by GitHub Copilot</span>
+          <h1 class="title">Ship threat models that pass SDL review the first time.</h1>
+          <p class="lede">Threat Model Reviewer reviews, fixes, analyzes and creates Microsoft Threat Modeling Tool <code>.tm7</code> models — catching what a Microsoft SDL reviewer would bounce back, before you submit.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" id="hero-download" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>
+              Download for Windows
+            </a>
+            <a class="btn btn-secondary" href="#features">See what it does</a>
+          </div>
+          <div class="meta-line">
+            <span class="chip" id="version-chip">v2.0.1</span>
+            <span>Windows 10/11 · x64</span>
+            <span>Self-contained — no .NET install</span>
+          </div>
+        </div>
+
+        <aside class="result-card" aria-label="Example review result">
+          <div class="result-top">
+            <span class="label">Review verdict</span>
+            <span class="pill ready">READY WITH NOTES</span>
+          </div>
+          <div class="score-row">
+            <span class="score-num">92</span>
+            <span class="score-den">/ 100</span>
+            <span class="score-grade">Grade A</span>
+          </div>
+          <div class="bar"><i></i></div>
+          <div class="find-row"><span class="sev high"></span><span class="id">B3</span><span>Add Elevation-of-Privilege threat to “API → Database”</span></div>
+          <div class="find-row"><span class="sev med"></span><span class="id">C2</span><span>“Not Applicable” threat needs a justification</span></div>
+          <div class="find-row"><span class="sev low"></span><span class="id">A6</span><span>Out-of-scope element missing a reason</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Pillars -->
+    <section class="alt" id="what" aria-labelledby="what-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="what-h">One tool for the whole threat-model lifecycle</h2>
+          <p>Deterministic analysis you can trust, with optional Copilot help that stays advisory.</p>
+        </div>
+        <div class="pillars">
+          <article class="pillar">
+            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+            <h3>Review</h3>
+            <p>Open a <code>.tm7</code> and get a stamped <strong>NOT&nbsp;READY / READY&nbsp;WITH&nbsp;NOTES</strong> verdict, a 0–100 score, and a prioritized findings list mapped to OWASP, MITRE, CWE and Microsoft Learn.</p>
+          </article>
+          <article class="pillar">
+            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg></div>
+            <h3>Fix</h3>
+            <p>Apply built-in or Copilot-drafted fixes — added threats, triage, justifications, out-of-scope reasons — with round-trip write-back to a valid <code>.tm7</code> that reopens in the Threat Modeling Tool.</p>
+          </article>
+          <article class="pillar">
+            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
+            <h3>Create</h3>
+            <p>Build a new model from a guided wizard or let Copilot extract a data-flow diagram from a description or an OpenAPI spec — then review and harden it in the same pass.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" aria-labelledby="features-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="features-h">Built to match a real SDL bar</h2>
+          <p>Around 70 deterministic checks run entirely on your machine — the same issues a reviewer would flag, surfaced before you submit.</p>
+        </div>
+        <div class="features">
+          <div class="feature"><h3><span class="tick">✓</span> STRIDE-per-element coverage</h3><p>Every element and interaction checked for the STRIDE categories it should address, with a threats-by-interaction breakdown.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> AI &amp; agentic surface</h3><p>Dedicated checks for the <span class="kbd">OWASP LLM Top 10 (2025)</span>, OWASP Agentic threats and MITRE ATLAS on AI/LLM components.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Triage &amp; mitigation quality</h3><p>Flags untriaged threats, “Not Applicable / Mitigated” without justification, and open high-priority work.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Structure &amp; hygiene</h3><p>Completeness, identity &amp; boundaries, data protection, network, logging/detection, deprecated crypto, supply chain and mismodeled stencils.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Coverage scorecards</h3><p>STRIDE matrix and a Framework coverage view (OWASP Top 10 + STRIDE) so gaps are obvious at a glance.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Exports for every workflow</h3><p>HTML, PDF, Markdown, CSV, JSON and SARIF, plus ready-to-file work items for <span class="kbd">GitHub</span>, <span class="kbd">Azure DevOps</span> and <span class="kbd">Jira</span>.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Copilot enrichments</h3><p>Explain findings, deep DREAD/attack-tree analysis, draft fixes, whole-model critique and gap analysis — each advisory, never changing the verdict.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Also reads Threat Dragon</h3><p>Parses OWASP Threat Dragon <span class="kbd">.json</span> models too, so mixed toolchains work in one place.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download -->
+    <section class="alt" id="download" aria-labelledby="dl-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="dl-h">Download</h2>
+          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.0.1</span>.</p>
+        </div>
+        <div class="dl-grid">
+          <div class="dl-card recommended">
+            <div class="dl-head"><h3>Portable</h3><span class="tag">Recommended</span></div>
+            <p>Extract the <code>.zip</code> and run — nothing to install, easy to remove.</p>
+            <a class="btn btn-primary" data-dl="portable" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .zip</a>
+            <span class="dl-size" data-size="portable"></span>
+          </div>
+          <div class="dl-card">
+            <div class="dl-head"><h3>Installer (MSI)</h3></div>
+            <p>Standard installer — choose all-users or just-me at install time.</p>
+            <a class="btn btn-secondary" data-dl="msi" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msi</a>
+            <span class="dl-size" data-size="msi"></span>
+          </div>
+          <div class="dl-card">
+            <div class="dl-head"><h3>Setup (.exe)</h3></div>
+            <p>Per-user installer with a Start-Menu shortcut and uninstall — no admin needed.</p>
+            <a class="btn btn-secondary" data-dl="setup" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download setup.exe</a>
+            <span class="dl-size" data-size="setup"></span>
+          </div>
+          <div class="dl-card">
+            <div class="dl-head"><h3>MSIX</h3><span class="tag">Experimental</span></div>
+            <p>Packaged install — trust the <code>publisher.cer</code> first. AI may be limited under MSIX.</p>
+            <a class="btn btn-secondary" data-dl="msix" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msix</a>
+            <span class="dl-size" data-size="msix"></span>
+            <div class="dl-size"><a data-dl="cer" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">publisher.cer</a></div>
+          </div>
+        </div>
+        <p class="dl-note">On v1.0.4 or later the app updates itself — click <strong>Download &amp; install</strong> on the in-app banner, then <strong>Install &amp; restart</strong>. All downloads and every asset are also on the <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">Releases page</a>.</p>
+        <div class="note">
+          <strong>SmartScreen note:</strong> builds are signed, but with a self-signed certificate for now, so Windows SmartScreen may warn on first run — choose <strong>More info → Run anyway</strong>. A CA/EV certificate is planned to remove the warning for everyone.
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust: determinism + privacy -->
+    <section aria-labelledby="trust-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="trust-h">The score is yours to trust</h2>
+          <p>The parts that decide readiness are fully deterministic and run locally. Copilot only assists.</p>
+        </div>
+        <div class="callouts">
+          <div class="callout">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6l8-4z"/></svg> Deterministic verdict</h3>
+            <p>The NOT&nbsp;READY / READY-WITH-NOTES verdict, the 0–100 score and the findings come from a fixed rubric engine — <strong>never</strong> from AI. Copilot only explains findings and drafts fixes you choose to apply, so the same model always scores the same way.</p>
+          </div>
+          <div class="callout">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Private by design</h3>
+            <p>The deterministic review runs entirely on your machine. Copilot features send only minimal, <strong>redacted</strong> context — finding text and a data-flow summary — to your own Copilot seat, never the raw <code>.tm7</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Docs -->
+    <section class="alt" id="docs" aria-labelledby="docs-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="docs-h">Documentation</h2>
+          <p>Everything you need to install, use and troubleshoot the app.</p>
+        </div>
+        <div class="docs-grid">
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/INSTALL.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/FAQ.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ &amp; troubleshooting<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow">→</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="#top" style="font-size:1rem">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Threat Model Reviewer
+        </a>
+        <div style="margin-top:.5rem">Docs &amp; release assets are MIT-licensed.</div>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">Releases</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report a vulnerability</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/LICENSE">License</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // Progressive enhancement: pull the latest release from the GitHub API and wire up direct download
+    // links + the live version. If anything fails, the static links to /releases/latest already work.
+    (function () {
+      var REPO = "ArasaniRohithReddy/app-releases";
+      var LATEST_PAGE = "https://github.com/" + REPO + "/releases/latest";
+
+      function matcher(name) {
+        var n = name.toLowerCase();
+        if (n.endsWith("-portable.zip") || (n.endsWith(".zip") && n.indexOf("portable") > -1)) return "portable";
+        if (n.endsWith(".msi")) return "msi";
+        if (n.endsWith("-setup.exe") || (n.endsWith(".exe") && n.indexOf("setup") > -1)) return "setup";
+        if (n.endsWith(".msix")) return "msix";
+        if (n.endsWith(".cer")) return "cer";
+        return null;
+      }
+      function mb(bytes) { return bytes ? (bytes / 1e6).toFixed(0) + " MB" : ""; }
+
+      fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(function (rel) {
+          // Version chips
+          var ver = (rel.tag_name || "").replace("threat-model-reviewer-", "");
+          if (ver) {
+            if (ver[0] !== "v") ver = "v" + ver;
+            ["version-chip", "version-chip-2"].forEach(function (id) {
+              var el = document.getElementById(id); if (el) el.textContent = ver;
+            });
+          }
+          // Direct asset links + sizes
+          var byKind = {};
+          (rel.assets || []).forEach(function (a) {
+            var k = matcher(a.name || "");
+            if (k && !byKind[k]) byKind[k] = a;
+          });
+          Object.keys(byKind).forEach(function (k) {
+            var a = byKind[k];
+            document.querySelectorAll('[data-dl="' + k + '"]').forEach(function (el) { el.href = a.browser_download_url; });
+            document.querySelectorAll('[data-size="' + k + '"]').forEach(function (el) { el.textContent = mb(a.size); });
+          });
+          // Hero button → the recommended (portable) asset when available
+          var hero = document.getElementById("hero-download");
+          if (hero && byKind.portable) hero.href = byKind.portable.browser_download_url;
+          else if (hero) hero.href = LATEST_PAGE;
+        })
+        .catch(function () { /* keep the static /releases/latest links */ });
+    })();
+  </script>
+</body>
+</html>
