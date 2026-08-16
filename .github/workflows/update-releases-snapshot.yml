@@ -1,0 +1,71 @@
+name: update-releases-snapshot
+
+# Keeps the Pages releases page working even when GitHub's API is unavailable or
+# rate-limited (60 requests/hour per IP for anonymous callers — easily exhausted from a
+# corporate NAT). Each product's releases page loads a same-origin snapshot first, then
+# refreshes from the live API. This workflow regenerates that snapshot whenever a release
+# changes, so it can never go stale.
+
+on:
+  release:
+    types: [published, edited, unpublished, deleted, released]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'   # weekly safety net, in case an event was ever missed
+
+permissions:
+  contents: write
+
+concurrency:
+  group: releases-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate snapshots
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # product tag-prefix  ->  destination file
+          declare -A PRODUCTS=(
+            ["threat-model-reviewer-v"]="docs/threat-model-reviewer/releases/releases.json"
+          )
+
+          all=$(gh api -H "Accept: application/vnd.github.html+json" \
+                  "repos/${GITHUB_REPOSITORY}/releases?per_page=100" --paginate)
+
+          for prefix in "${!PRODUCTS[@]}"; do
+            dest="${PRODUCTS[$prefix]}"
+            mkdir -p "$(dirname "$dest")"
+            echo "$all" | jq -c --arg p "$prefix" '
+              [ .[]
+                | select(.draft == false)
+                | select(.tag_name | startswith($p))
+                | {
+                    tag_name, name, published_at, prerelease, body_html,
+                    assets: [ .assets[] | { name, size, download_count, browser_download_url } ]
+                  }
+              ] | sort_by(.published_at) | reverse
+            ' > "$dest"
+            echo "$dest -> $(jq 'length' "$dest") releases, $(du -h "$dest" | cut -f1)"
+          done
+
+      - name: Commit if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "Snapshot already up to date."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: refresh releases snapshot for the Pages site [skip ci]"
+          git push

@@ -444,33 +444,44 @@
     document.getElementById("filter").addEventListener("input", updateCount);
 
     // ---- load ------------------------------------------------------------
-    function useData(json) {
+    // Strategy: render the same-origin snapshot first so the page always works — no rate limit,
+    // no CORS, instant paint — then refresh from the GitHub API so it stays current between
+    // releases. Only if BOTH fail do we show the fallback state.
+    var rendered = false;
+
+    function useData(json, isLive) {
       var rels = (json || []).filter(function (r) {
         return !r.draft && (r.tag_name || "").indexOf(PREFIX) === 0;
       });
+      if (!rels.length) return false;
       rels.sort(function (a, b) { return new Date(b.published_at) - new Date(a.published_at); });
       render(rels);
+      rendered = true;
+      if (isLive) { try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(json)); } catch (e) {} }
+      return true;
     }
 
-    try {
-      var cached = sessionStorage.getItem(CACHE_KEY);
-      if (cached) { useData(JSON.parse(cached)); }
-    } catch (e) { /* ignore */ }
+    // 1. same-origin snapshot (committed alongside this page)
+    var snapshot = fetch("./releases.json", { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error("snapshot " + r.status); return r.json(); })
+      .then(function (j) { if (!rendered) useData(j, false); })
+      .catch(function () { /* fall through to the API */ });
 
-    fetch("https://api.github.com/repos/" + REPO + "/releases?per_page=100",
-          { headers: { Accept: "application/vnd.github.html+json" } })
-      .then(function (r) {
-        if (r.status === 403) throw new Error("GitHub's API rate limit was reached from this network.");
-        if (!r.ok) throw new Error("GitHub returned HTTP " + r.status + ".");
-        return r.json();
-      })
-      .then(function (json) {
-        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(json)); } catch (e) { /* quota */ }
-        useData(json);
-      })
-      .catch(function (err) {
-        if (!list.querySelector(".rel")) showError(err && err.message ? err.message : "The release list couldn't be fetched.");
-      });
+    // 2. live refresh from the GitHub API
+    snapshot.then(function () {
+      return fetch("https://api.github.com/repos/" + REPO + "/releases?per_page=100",
+                   { headers: { Accept: "application/vnd.github.html+json" } })
+        .then(function (r) {
+          if (r.status === 403) throw new Error("GitHub's API rate limit was reached from this network.");
+          if (!r.ok) throw new Error("GitHub returned HTTP " + r.status + ".");
+          return r.json();
+        })
+        .then(function (json) { useData(json, true); })
+        .catch(function (err) {
+          // The snapshot already covers the user; only surface an error if nothing rendered.
+          if (!rendered) showError(err && err.message ? err.message : "The release list couldn't be fetched.");
+        });
+    });
   })();
   </script>
 
