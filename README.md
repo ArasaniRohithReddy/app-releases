@@ -28,7 +28,7 @@ Threat Dragon (`.json`) — catching the issues a Microsoft SDL reviewer would s
 you submit. The readiness verdict and 0–100 score are **deterministic** and computed entirely on
 your machine; GitHub Copilot is advisory only. *(Model authoring is in beta.)*
 
-| | |
+| Resource | Link |
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/) |
 | **Download** | [Latest release](https://github.com/ArasaniRohithReddy/app-releases/releases/latest) — MSI · portable ZIP · setup.exe · MSIX |
@@ -75,7 +75,7 @@ every network destination and on-disk storage path, and confirms that no telemet
 
 ## Support
 
-| | |
+| Need | Where to go |
 | --- | --- |
 | **Bug or feature request** | [Open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose) — it will ask which application it concerns |
 | **Support policy & severities** | [SUPPORT.md](SUPPORT.md) |

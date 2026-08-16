@@ -32,7 +32,7 @@ This tool applies the same bar **locally, in seconds**, before submission.
 
 ## What it does
 
-| | |
+| Capability | What it gives you |
 | --- | --- |
 | **Review** | Open a `.tm7` and get a stamped **NOT READY / READY WITH NOTES** verdict, a **0–100 score with a letter grade**, and a prioritized findings list — from ~70 deterministic checks, each citing STRIDE, OWASP, MITRE ATT&CK/ATLAS, CWE or Microsoft Learn. |
 | **Fix** | Build a previewable remediation plan — add missing threats, triage, draft justifications, fill out-of-scope reasons — with built-in or Copilot-drafted wording, then **save a corrected `.tm7` that reopens cleanly in the Threat Modeling Tool**. |

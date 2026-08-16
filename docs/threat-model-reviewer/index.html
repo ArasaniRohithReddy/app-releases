@@ -151,7 +151,7 @@
       :root:not([data-theme="light"]) .theme-toggle .sun { display: none; }
       :root:not([data-theme="light"]) .theme-toggle .moon { display: block; }
     }
-    .back-link { display: inline-flex; align-items: center; gap: .4rem; color: var(--ink-2); font-weight: 500; font-size: var(--step--1); padding: .5rem .7rem; border-radius: 8px; }
+    .back-link { display: inline-flex; align-items: center; gap: .4rem; color: var(--ink-2); font-weight: 500; font-size: var(--step--1); padding: .5rem .7rem; border-radius: 8px; white-space: nowrap; flex: none; }
     .back-link:hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
     .back-link svg { width: .95em; height: .95em; flex: none; }
 
@@ -163,16 +163,17 @@
       border-bottom: 1px solid var(--line);
     }
     .nav { display: flex; align-items: center; gap: 1rem; min-height: 62px; }
-    .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; }
+    .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; white-space: nowrap; flex: none; }
     .brand:hover { text-decoration: none; }
     .brand .mark { width: 28px; height: 28px; flex: none; }
     .nav .spacer { flex: 1; }
-    .nav-links { display: flex; align-items: center; gap: .3rem; }
+    .nav-links { display: flex; align-items: center; gap: .3rem; flex: none; }
     .nav-links a:not(.btn) { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
     .nav-links a:not(.btn):hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
-    @media (max-width: 900px) { .nav-links.secondary { display: none; } }
+    @media (max-width: 1080px) { .nav-links.secondary { display: none; } }
     @media (max-width: 620px) { .nav .gh-btn { display: none; } .back-link .bl-text { display: none; } }
-    @media (max-width: 480px) { .nav .dl-btn { display: none; } }
+    @media (max-width: 700px) { .nav .dl-btn { display: none; } }
+    @media (max-width: 400px) { .nav .brand-text { display: none; } }
 
     /* ---------- Hero ---------- */
     .hero { padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem); }
@@ -184,7 +185,9 @@
       font-size: var(--step--1); font-weight: 600; color: var(--accent);
       background: var(--accent-tint); padding: .35rem .7rem; border-radius: 999px; margin-bottom: 1.1rem;
     }
-    .eyebrow .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); }
+    .eyebrow { white-space: nowrap; }
+    .eyebrow .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); flex: none; }
+    @media (max-width: 420px) { .eyebrow .eb-more { display: none; } }
 
     h1.title { font-size: var(--step-4); line-height: 1.06; letter-spacing: -.03em; margin: 0 0 1.1rem; text-wrap: balance; }
     .lede { font-size: var(--step-1); color: var(--ink-2); margin: 0 0 1.6rem; max-width: 34ch; text-wrap: pretty; }
@@ -197,9 +200,9 @@
       background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
       padding: 1.4rem 1.5rem; box-shadow: var(--shadow);
     }
-    .result-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.15rem; }
+    .result-top { display: flex; align-items: center; justify-content: space-between; gap: .6rem 1rem; margin-bottom: 1.15rem; flex-wrap: wrap; }
     .result-top .label { font-size: var(--step--1); font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
-    .pill { font-size: var(--step--1); font-weight: 700; padding: .3rem .7rem; border-radius: 999px; }
+    .pill { font-size: var(--step--1); font-weight: 700; padding: .3rem .7rem; border-radius: 999px; white-space: nowrap; }
     .pill.ready { background: var(--warn-tint); color: var(--warn); }
     .score-row { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .3rem; }
     .score-num { font-size: clamp(3rem, 8vw, 4.2rem); font-weight: 800; line-height: 1; letter-spacing: -.04em; color: var(--ok); }
@@ -294,7 +297,7 @@
       </a>
       <a class="brand" href="#top" aria-label="Threat Model Reviewer — home">
         <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Threat Model Reviewer
+        <span class="brand-text">Threat Model Reviewer</span>
       </a>
       <div class="spacer"></div>
       <nav class="nav-links secondary" aria-label="Primary">
@@ -325,7 +328,7 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <span class="eyebrow"><span class="dot"></span> Windows desktop app · powered by GitHub Copilot</span>
+          <span class="eyebrow"><span class="dot"></span> Windows desktop app<span class="eb-more"> · powered by GitHub Copilot</span></span>
           <h1 class="title">Ship threat models that pass SDL review the first time.</h1>
           <p class="lede">Threat Model Reviewer reviews, fixes and analyzes Microsoft Threat Modeling Tool <code>.tm7</code> models — catching what a Microsoft SDL reviewer would bounce back, before you submit.</p>
           <div class="cta-row">

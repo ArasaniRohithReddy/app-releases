@@ -40,7 +40,7 @@ There are **three** possible outbound destinations. Nothing else is contacted.
 
 ### 3.1 Update check — automatic, disableable
 
-| | |
+| Property | Detail |
 | --- | --- |
 | **Destination** | `https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases` (falls back to the public `releases.atom` feed on `github.com` if the API is rate-limited) |
 | **When** | Once at application start, and when you click **Check for updates** |
@@ -50,7 +50,7 @@ There are **three** possible outbound destinations. Nothing else is contacted.
 
 ### 3.2 GitHub Copilot — only when you invoke an AI feature
 
-| | |
+| Property | Detail |
 | --- | --- |
 | **Destination** | GitHub Copilot, through the bundled GitHub Copilot CLI runtime, authenticated as **your** signed-in seat |
 | **When** | Only on an explicit action: *Explain*, *Deep analysis*, *Critique*, *Framework-gap analysis*, *Draft fix*, *Prioritize interactions* |
@@ -64,7 +64,7 @@ There are **three** possible outbound destinations. Nothing else is contacted.
 If you prefer to keep inference inside your own boundary, the provider seam accepts any
 OpenAI-compatible endpoint — **Azure OpenAI**, a private gateway, or a locally hosted model.
 
-| | |
+| Property | Detail |
 | --- | --- |
 | **Destination** | The base URL **you** enter. There is no default and no vendor endpoint. |
 | **Credential** | Stored locally and DPAPI-encrypted; sent only to your endpoint as a bearer token. |
