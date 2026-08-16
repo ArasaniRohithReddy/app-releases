@@ -61,8 +61,11 @@ The MSIX is signed with a **self-signed** certificate, so you must trust it firs
 
 The downloads are **Authenticode-signed**, but with a **self-signed** certificate for now —
 so Microsoft Defender SmartScreen may still show *"Windows protected your PC"* on first run.
-That's expected; click **More info → Run anyway**. The app is safe (the source is reviewed
-and the deterministic engine runs locally).
+That's expected. The warning is about the certificate's **trust chain**, not about the app's
+behavior. Verify it yourself before running — check the signature and hash with
+`Get-AuthenticodeSignature` and `Get-FileHash` (see
+[SECURITY.md](../../SECURITY.md#code-signing)) — and note that the deterministic review runs
+entirely on your machine.
 
 SmartScreen only stops warning when the binaries are signed with a certificate from a
 **trusted Certificate Authority** (ideally **EV**, or **Azure Trusted Signing**). That

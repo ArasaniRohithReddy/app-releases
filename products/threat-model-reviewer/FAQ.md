@@ -35,9 +35,12 @@ context (finding text, a DFD summary) to **your** Copilot seat — never the raw
 secrets are stripped by a redaction pass first.
 
 ### Windows SmartScreen says "Windows protected your PC".
-The portable `.exe` and installer aren't Authenticode-signed yet, so SmartScreen warns
-until reputation builds. Click **More info → Run anyway**. (Production code-signing is
-planned.)
+The portable `.exe` and the installers **are** Authenticode-signed — but for now with a
+**self-signed** certificate that Windows doesn't chain-trust, so SmartScreen may warn on first
+run. Click **More info → Run anyway**. A self-signed certificate never accrues SmartScreen
+reputation; the warning clears for everyone only once signing moves to a **CA-issued/EV**
+certificate or **Azure Trusted Signing**, which is planned. You can verify the signature and hash
+yourself first — see [SECURITY.md](../../SECURITY.md#code-signing).
 
 ### The MSIX won't install / AI features don't work in the MSIX.
 - Install the included **`ThreatModelReviewer-publisher.cer`** into **Trusted People**
@@ -61,10 +64,13 @@ Open an issue with the check ID and a sanitized snippet:
 deliberately tight triggers; we tune them from real reports.
 
 ### Can I add my own organization's checks?
-Yes — implement `IRubricCheck` and compose it:
-```csharp
-var engine = RubricEngine.WithAdditionalChecks(new[] { new MyOrgPolicyCheck() });
-```
+Not from a released build today. The rubric engine is designed for it — checks implement an
+`IRubricCheck` interface and compose with the defaults via
+`RubricEngine.WithAdditionalChecks(...)` — but that extension point is only reachable when
+building from source, and the source repository is private. A supported way to load
+organization-specific checks into the shipped app and CLI is on the roadmap. If you need a
+particular check, please [open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose)
+describing the policy — several built-in checks started exactly that way.
 
 ### How do I report a bug or request a feature?
 Use the issue templates at

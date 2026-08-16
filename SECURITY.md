@@ -4,8 +4,8 @@ Threat Model Reviewer is a **defensive** security tool that handles highly sensi
 threat models. This policy covers how to report a vulnerability, how the product handles data, how
 it is built and signed, and which versions receive fixes.
 
-- **Data handling in full detail:** [docs/DATA-HANDLING.md](products/threat-model-reviewer/DATA-HANDLING.md)
-- **Managed/offline deployment:** [docs/ENTERPRISE-DEPLOYMENT.md](products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md)
+- **Data handling in full detail:** [Data handling & privacy](products/threat-model-reviewer/DATA-HANDLING.md)
+- **Managed/offline deployment:** [Enterprise deployment](products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md)
 
 ## Reporting a vulnerability
 
@@ -52,7 +52,7 @@ Threat models are sensitive, so the application is designed to keep them local:
   anonymous GitHub release check, which can be disabled.
 
 Every network destination, storage path and redaction rule is enumerated in
-**[docs/DATA-HANDLING.md](products/threat-model-reviewer/DATA-HANDLING.md)**.
+**[Data handling & privacy](products/threat-model-reviewer/DATA-HANDLING.md)**.
 
 ## Security of the product itself
 
@@ -69,7 +69,7 @@ defensively:
 | **Token leakage to child processes** | Since v2.0.1 the device-flow token is passed directly to the Copilot SDK rather than being set as a process-wide environment variable. |
 | **Untrusted update payloads** | Update packages download over HTTPS from the official release hub, are Authenticode-signed, and install paths are validated against traversal. |
 | **Report/export injection** | CSV and issue exports are neutralized against formula-injection (`=`, `+`, `-`, `@` prefixes). |
-| **Supply chain** | A small, pinned dependency set (see [docs/THIRD-PARTY-NOTICES.md](products/threat-model-reviewer/THIRD-PARTY-NOTICES.md)) with automated update PRs via Dependabot. |
+| **Supply chain** | A small, pinned dependency set (see [Third-party notices](products/threat-model-reviewer/THIRD-PARTY-NOTICES.md)) with automated update PRs via Dependabot. |
 
 The deterministic core has **no AI dependency**, so no model output can alter a verdict, a score,
 or the contents written back to a `.tm7` without explicit user approval of each change.

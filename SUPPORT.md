@@ -69,4 +69,7 @@ See [SECURITY.md](SECURITY.md#supported-versions) for the security-fix policy.
 
 ## Contributing a fix
 
-Pull requests and detailed bug reports are welcome — see [CONTRIBUTING.md](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose).
+Detailed bug reports and feature requests are welcome — please
+[open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose). The
+application source is maintained privately, so external code contributions aren't accepted, but
+well-scoped reports directly shape what gets fixed and built next.

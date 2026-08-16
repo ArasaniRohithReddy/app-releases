@@ -15,7 +15,7 @@
   <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Threat Model Reviewer" />
-  <meta property="og:description" content="Catch the issues a Microsoft SDL reviewer would bounce back — before you submit. Deterministic verdict &amp; 0–100 score, powered by your GitHub Copilot seat." />
+  <meta property="og:description" content="Catch the issues a Microsoft SDL reviewer would bounce back — before you submit. Deterministic verdict &amp; 0–100 score computed locally — AI never decides it." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/" />
   <meta name="twitter:card" content="summary" />
 
@@ -336,7 +336,7 @@
             <a class="btn btn-secondary" href="#features">See what it does</a>
           </div>
           <div class="meta-line">
-            <span class="chip" id="version-chip">v2.0.2</span>
+            <span class="chip" id="version-chip">v2.0.3</span>
             <span>Windows 10/11 · x64</span>
             <span>Self-contained — no .NET install</span>
           </div>
@@ -356,6 +356,7 @@
           <div class="find-row"><span class="sev high"></span><span class="id">B3</span><span>Add Elevation-of-Privilege threat to “API → Database”</span></div>
           <div class="find-row"><span class="sev med"></span><span class="id">C2</span><span>“Not Applicable” threat needs a justification</span></div>
           <div class="find-row"><span class="sev low"></span><span class="id">A6</span><span>Out-of-scope element missing a reason</span></div>
+          <p style="margin:.9rem 0 0; font-size:var(--step--1); color:var(--muted); line-height:1.5">Severity is not the same as gating — only must-fix findings block readiness.</p>
         </aside>
       </div>
     </section>
@@ -386,7 +387,7 @@
         </div>
         <div class="roadmap">
           <span class="badge">Beta</span>
-          <p><strong>Create is coming.</strong> Building a new model from a guided wizard — and having Copilot draft a data-flow diagram from a description, an architecture image or an OpenAPI spec — is in <strong>beta</strong> and rolling out in a future release. Today's build focuses on reviewing, fixing and analyzing existing <code>.tm7</code> models.</p>
+          <p><strong>Create is in beta.</strong> Guided authoring — and having Copilot draft a data-flow diagram from a description, an architecture image or an OpenAPI spec — is <strong>available today in the CLI</strong>, and hidden in the desktop build while the interface is finished. Today's app focuses on reviewing, fixing and analyzing existing <code>.tm7</code> models.</p>
         </div>
       </div>
     </section>
@@ -416,7 +417,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.0.2</span>.</p>
+          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.0.3</span>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
