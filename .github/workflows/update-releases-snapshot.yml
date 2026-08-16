@@ -11,7 +11,10 @@ on:
     types: [published, edited, unpublished, deleted, released]
   workflow_dispatch:
   schedule:
-    - cron: '17 6 * * 1'   # weekly safety net, in case an event was ever missed
+    # Release events proved unreliable for 'edited' activity, so this is the real guarantee:
+    # the snapshot is never more than a few hours behind, and the page also refreshes from the
+    # live API on every load, so the snapshot only ever backstops rate-limited visitors.
+    - cron: '17 */6 * * *'
 
 permissions:
   contents: write
