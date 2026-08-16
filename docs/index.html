@@ -100,6 +100,7 @@
 
     /* Buttons */
     .btn { display: inline-flex; align-items: center; gap: .5rem; font: inherit; font-weight: 600; font-size: var(--step-0); padding: .72rem 1.15rem; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; transition: background-color .16s ease, border-color .16s ease, transform .16s ease, color .16s ease; white-space: nowrap; }
+    .btn { min-height: 40px; }   /* keeps icon-only buttons a comfortable tap target on mobile */
     .btn:hover { text-decoration: none; }
     .btn:active { transform: translateY(1px); }
     .btn-primary { background: var(--btn); color: var(--on-btn); }
@@ -289,6 +290,10 @@
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
             <div><h3>Issues welcome</h3><p>Bugs, ideas and vulnerability reports all go to this public repo's issue tracker.</p></div>
+          </div>
+          <div class="fact">
+            <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+            <div><h3>Enterprise ready</h3><p>Silent install for Intune, SCCM and Group Policy, documented data handling, and no telemetry.</p></div>
           </div>
         </div>
       </div>

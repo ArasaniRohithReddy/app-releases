@@ -125,6 +125,7 @@
       transition: background-color .16s ease, border-color .16s ease, transform .16s ease, color .16s ease;
       white-space: nowrap;
     }
+    .btn { min-height: 40px; }   /* keeps icon-only buttons a comfortable tap target on mobile */
     .btn:hover { text-decoration: none; }
     .btn:active { transform: translateY(1px); }
     .btn-primary { background: var(--btn); color: var(--on-btn); }
@@ -253,7 +254,7 @@
     .dl-note { margin-top: 1.4rem; color: var(--muted); font-size: var(--step--1); }
 
     /* Callout band (determinism / privacy) */
-    .callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+    .callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.1rem; }
     @media (max-width: 760px) { .callouts { grid-template-columns: 1fr; } }
     .callout { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
     .callout h3 { margin: 0 0 .5rem; font-size: var(--step-1); display: flex; align-items: center; gap: .55rem; letter-spacing: -.01em; }
@@ -299,6 +300,7 @@
       <nav class="nav-links secondary" aria-label="Primary">
         <a href="#features">Features</a>
         <a href="#download">Download</a>
+        <a href="#enterprise">Enterprise</a>
         <a href="#docs">Docs</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md">Changelog</a>
       </nav>
@@ -466,12 +468,40 @@
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Private by design</h3>
             <p>The deterministic review runs entirely on your machine. Copilot features send only minimal, <strong>redacted</strong> context — finding text and a data-flow summary — to your own Copilot seat, never the raw <code>.tm7</code>.</p>
           </div>
+          <div class="callout">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg> No telemetry</h3>
+            <p>No analytics, no usage tracking, no vendor endpoint. The only request the app makes on its own is an anonymous release check — and that can be switched off, after which it works <strong>fully offline</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enterprise -->
+    <section class="alt" id="enterprise" aria-labelledby="ent-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="ent-h">Built for enterprise rollout</h2>
+          <p>Everything a security review and a deployment team need, documented up front.</p>
+        </div>
+        <div class="features">
+          <div class="feature"><h3><span class="tick">✓</span> Security &amp; privacy review</h3><p>Every network destination, on-disk storage path and redaction rule is enumerated — plus how to verify the claims yourself with a proxy or offline run.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Silent, managed installation</h3><p>MSI with per-machine or per-user scope, documented <span class="kbd">UpgradeCode</span> and silent switches for <span class="kbd">Intune</span>, <span class="kbd">SCCM</span> and <span class="kbd">Group Policy</span>.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Air-gapped &amp; offline</h3><p>Update checks can be disabled fleet-wide, after which the app makes no outbound request. The full review keeps working with no network at all.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Keep inference in your tenant</h3><p>Use GitHub Copilot, or point the provider at <span class="kbd">Azure OpenAI</span> or a self-hosted OpenAI-compatible endpoint. Credentials are DPAPI-encrypted locally.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> CI/CD gating</h3><p>The CLI runs the same deterministic engine headlessly and exits <span class="kbd">2</span> when a model is not ready, so a pipeline can block on threat-model readiness. SARIF uploads to code scanning.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Signed &amp; auditable</h3><p>Every artifact is Authenticode-signed and verifiable with <span class="kbd">Get-AuthenticodeSignature</span>. Licenses for every bundled component are published.</p></div>
+        </div>
+        <div class="docs-grid" style="margin-top:1.4rem">
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/DATA-HANDLING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Data handling &amp; privacy<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Enterprise deployment<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/SECURITY.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Security policy<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/THIRD-PARTY-NOTICES.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg> Third-party notices<span class="arrow">→</span></a>
         </div>
       </div>
     </section>
 
     <!-- Docs -->
-    <section class="alt" id="docs" aria-labelledby="docs-h">
+    <section id="docs" aria-labelledby="docs-h">
       <div class="wrap">
         <div class="sec-head">
           <h2 id="docs-h">Documentation</h2>
