@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Releases — Threat Model Reviewer</title>
+  <meta name="description" content="Every release of Threat Model Reviewer: downloads, release notes, asset sizes and verification guidance. Windows 10/11 x64, self-contained." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Threat Model Reviewer — Releases" />
+  <meta property="og:description" content="Every release: downloads, notes, asset sizes and verification guidance." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Cpath d='M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M11.5 16.2l3.1 3.1 6-6.4' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+  <style>
+    :root {
+      --bg:#FBFBFD; --surface:#FFFFFF; --surface-2:#F4F5F8;
+      --ink:#14161C; --ink-2:#3A3F4C; --muted:#5A5F70; --line:#E4E6ED;
+      --accent:#4F46E5; --accent-600:#4338CA; --accent-tint:#EEF0FE; --on-accent:#FFFFFF;
+      --btn:#4F46E5; --btn-hover:#4338CA; --on-btn:#FFFFFF;
+      --ok:#157347; --ok-tint:#E6F4EC; --warn:#B45309; --warn-tint:#FBF0E1;
+      --danger:#C5221F; --danger-tint:#FBE9E8;
+      --radius:14px; --radius-sm:10px;
+      --shadow:0 1px 2px rgba(20,22,28,.05);
+      --maxw:1080px;
+      --font:"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      --mono:"Cascadia Code", "Cascadia Mono", "SF Mono", ui-monospace, Consolas, "Liberation Mono", monospace;
+      --step--1: clamp(.80rem, .77rem + .12vw, .875rem);
+      --step-0:  clamp(.95rem, .91rem + .18vw, 1.0625rem);
+      --step-1:  clamp(1.12rem, 1.05rem + .3vw, 1.3rem);
+      --step-2:  clamp(1.4rem, 1.25rem + .6vw, 1.85rem);
+      --step-3:  clamp(1.9rem, 1.6rem + 1.3vw, 2.85rem);
+      --step-4:  clamp(2.35rem, 1.9rem + 2.4vw, 3.9rem);
+    }
+    :root[data-theme="dark"] {
+      --bg:#0F1116; --surface:#171A22; --surface-2:#1C2029;
+      --ink:#EDEEF2; --ink-2:#C6C9D4; --muted:#9AA0B0; --line:#2A2F3A;
+      --accent:#8A83F6; --accent-600:#A29BFF; --accent-tint:#1B1D33; --on-accent:#0F1116;
+      --btn:#5B54E8; --btn-hover:#4F46E5; --on-btn:#FFFFFF;
+      --ok:#4ADE80; --ok-tint:#12251B; --warn:#FBBF57; --warn-tint:#2A2113;
+      --danger:#F87171; --danger-tint:#2A1717;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:#0F1116; --surface:#171A22; --surface-2:#1C2029;
+        --ink:#EDEEF2; --ink-2:#C6C9D4; --muted:#9AA0B0; --line:#2A2F3A;
+        --accent:#8A83F6; --accent-600:#A29BFF; --accent-tint:#1B1D33; --on-accent:#0F1116;
+        --btn:#5B54E8; --btn-hover:#4F46E5; --on-btn:#FFFFFF;
+        --ok:#4ADE80; --ok-tint:#12251B; --warn:#FBBF57; --warn-tint:#2A2113;
+        --danger:#F87171; --danger-tint:#2A1717;
+        --shadow:0 1px 2px rgba(0,0,0,.4);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:var(--step-0); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    .wrap { width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem); }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; text-underline-offset:3px; }
+    :focus-visible { outline:2.5px solid var(--accent); outline-offset:2px; border-radius:4px; }
+    .skip { position:absolute; left:-999px; top:0; background:var(--btn); color:var(--on-btn); padding:.6rem 1rem; border-radius:0 0 var(--radius-sm) 0; z-index:100; font-weight:600; }
+    .skip:focus { left:0; }
+
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font:inherit; font-weight:600; font-size:var(--step-0); padding:.72rem 1.15rem; border-radius:var(--radius-sm); border:1px solid transparent; cursor:pointer; white-space:nowrap; min-height:40px; transition:background-color .16s ease,border-color .16s ease,color .16s ease,transform .16s ease; }
+    .btn:hover { text-decoration:none; }
+    .btn:active { transform:translateY(1px); }
+    .btn-primary { background:var(--btn); color:var(--on-btn); }
+    .btn-primary:hover { background:var(--btn-hover); }
+    .btn-secondary { background:var(--surface); color:var(--ink); border-color:var(--line); }
+    .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+    .btn-ghost { background:transparent; color:var(--ink-2); padding:.5rem .7rem; }
+    .btn-ghost:hover { color:var(--accent); }
+    .btn svg { width:1.05em; height:1.05em; flex:none; }
+
+    .theme-toggle { background:transparent; border:1px solid var(--line); color:var(--ink-2); width:40px; height:40px; padding:0; border-radius:9px; display:inline-grid; place-items:center; cursor:pointer; transition:color .16s ease,border-color .16s ease,background-color .16s ease; }
+    .theme-toggle:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-tint); }
+    .theme-toggle svg { width:1.15rem; height:1.15rem; }
+    .theme-toggle .moon { display:none; }
+    :root[data-theme="dark"] .theme-toggle .sun { display:none; }
+    :root[data-theme="dark"] .theme-toggle .moon { display:block; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .sun { display:none; }
+      :root:not([data-theme="light"]) .theme-toggle .moon { display:block; }
+    }
+
+    /* Header */
+    header.site { position:sticky; top:0; z-index:50; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line); }
+    .nav { display:flex; align-items:center; gap:1rem; min-height:62px; }
+    .back-link { display:inline-flex; align-items:center; gap:.4rem; color:var(--ink-2); font-weight:500; font-size:var(--step--1); padding:.5rem .7rem; border-radius:8px; white-space:nowrap; flex:none; }
+    .back-link:hover { color:var(--accent); background:var(--accent-tint); text-decoration:none; }
+    .back-link svg { width:.95em; height:.95em; flex:none; }
+    .brand { display:inline-flex; align-items:center; gap:.6rem; font-weight:700; color:var(--ink); font-size:1.06rem; letter-spacing:-.01em; white-space:nowrap; flex:none; }
+    .brand:hover { text-decoration:none; }
+    .brand .mark { width:28px; height:28px; flex:none; }
+    .nav .spacer { flex:1; }
+    .nav-links { display:flex; align-items:center; gap:.3rem; flex:none; }
+    @media (max-width:620px){ .nav .gh-btn{display:none;} .back-link .bl-text{display:none;} }
+    @media (max-width:400px){ .nav .brand-text{display:none;} }
+
+    /* Hero */
+    .hero { padding-block:clamp(2.4rem,6vw,4rem) clamp(1.2rem,3vw,2rem); }
+    .eyebrow { display:inline-flex; align-items:center; gap:.5rem; font-size:var(--step--1); font-weight:600; color:var(--accent); background:var(--accent-tint); padding:.35rem .75rem; border-radius:999px; margin-bottom:1rem; white-space:nowrap; }
+    .eyebrow .dot { width:.5rem; height:.5rem; border-radius:50%; background:var(--accent); flex:none; }
+    h1.title { font-size:var(--step-3); line-height:1.08; letter-spacing:-.03em; margin:0 0 .8rem; text-wrap:balance; }
+    .lede { font-size:var(--step-1); color:var(--ink-2); margin:0; max-width:62ch; text-wrap:pretty; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin-top:1.2rem; color:var(--muted); font-size:var(--step--1); align-items:center; }
+    .chip { font-family:var(--mono); background:var(--surface-2); border:1px solid var(--line); padding:.15rem .55rem; border-radius:7px; color:var(--ink-2); white-space:nowrap; }
+
+    section { padding-block:clamp(1.4rem,3vw,2.2rem); }
+    .sec-head { margin-bottom:1.2rem; display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+    .sec-head h2 { font-size:var(--step-2); line-height:1.15; letter-spacing:-.02em; margin:0; }
+
+    /* Release card */
+    .rel { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:1.4rem clamp(1.1rem,3vw,1.6rem); box-shadow:var(--shadow); margin-bottom:1.1rem; }
+    .rel.latest { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-tint); }
+    .rel-head { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; margin-bottom:.35rem; }
+    .rel-ver { font-size:var(--step-1); font-weight:700; letter-spacing:-.01em; margin:0; }
+    .badge { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:.2rem .55rem; border-radius:999px; white-space:nowrap; }
+    .badge.latest { background:var(--ok-tint); color:var(--ok); }
+    .badge.pre { background:var(--warn-tint); color:var(--warn); }
+    .rel-date { color:var(--muted); font-size:var(--step--1); white-space:nowrap; }
+    .rel-sub { color:var(--muted); font-size:var(--step--1); margin:0 0 1rem; }
+
+    /* Download grid */
+    .dl-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:.8rem; margin:1rem 0 .4rem; }
+    .dl-item { display:flex; flex-direction:column; gap:.5rem; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:.9rem; }
+    .dl-item .nm { display:flex; align-items:center; gap:.5rem; font-weight:600; font-size:var(--step--1); }
+    .dl-item .nm svg { width:1.05em; height:1.05em; color:var(--accent); flex:none; }
+    .dl-item .meta { color:var(--ink-2); font-size:var(--step--1); font-family:var(--mono); white-space:nowrap; }
+    .dl-item .hint { color:var(--muted); font-size:var(--step--1); margin-top:-.25rem; }
+    .dl-item .btn { width:100%; }
+    .tag-rec { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); background:var(--accent-tint); padding:.12rem .4rem; border-radius:999px; white-space:nowrap; }
+
+    /* Asset table (all files) */
+    details.assets { margin-top:.9rem; border-top:1px solid var(--line); padding-top:.7rem; }
+    details.assets > summary, details.notes > summary { cursor:pointer; font-weight:600; font-size:var(--step--1); color:var(--ink-2); list-style:none; display:flex; align-items:center; gap:.45rem; padding:.35rem 0; min-height:32px; }
+    details > summary::-webkit-details-marker { display:none; }
+    details > summary::before { content:"▸"; color:var(--muted); transition:transform .15s ease; display:inline-block; }
+    details[open] > summary::before { transform:rotate(90deg); }
+    details > summary:hover { color:var(--accent); }
+    .tbl-wrap { overflow-x:auto; }
+    table.files { width:100%; border-collapse:collapse; margin-top:.5rem; font-size:var(--step--1); }
+    table.files th, table.files td { text-align:left; padding:.5rem .6rem; border-bottom:1px solid var(--line); white-space:nowrap; }
+    table.files th { color:var(--muted); font-weight:600; }
+    table.files td.f { font-family:var(--mono); }
+    table.files tr:last-child td { border-bottom:0; }
+
+    /* Release notes (GitHub-rendered HTML, scoped) */
+    details.notes { margin-top:.5rem; }
+    .notes-body { border-top:1px solid var(--line); margin-top:.5rem; padding-top:.9rem; color:var(--ink-2); font-size:var(--step-0); overflow-wrap:anywhere; }
+    .notes-body h1, .notes-body h2 { font-size:var(--step-1); color:var(--ink); margin:1.2rem 0 .5rem; letter-spacing:-.01em; }
+    .notes-body h1:first-child, .notes-body h2:first-child { margin-top:0; }
+    .notes-body h4 { font-size:var(--step-1); color:var(--ink); margin:1.2rem 0 .5rem; letter-spacing:-.01em; }
+    .notes-body h4:first-child { margin-top:0; }
+    .notes-body h5, .notes-body h6 { font-size:var(--step-0); color:var(--ink); margin:1rem 0 .4rem; }
+    .notes-body p { margin:.5rem 0; }
+    .notes-body ul, .notes-body ol { margin:.5rem 0; padding-left:1.3rem; }
+    .notes-body li { margin:.28rem 0; }
+    .notes-body code { font-family:var(--mono); font-size:.88em; background:var(--surface-2); border:1px solid var(--line); padding:.05rem .32rem; border-radius:5px; }
+    .notes-body pre { background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:.8rem 1rem; overflow-x:auto; }
+    .notes-body pre code { background:none; border:0; padding:0; }
+    .notes-body blockquote { margin:.7rem 0; padding:.1rem 0 .1rem 1rem; border-left:3px solid var(--line); color:var(--muted); }
+    .notes-body table { width:100%; border-collapse:collapse; margin:.7rem 0; font-size:var(--step--1); display:block; overflow-x:auto; }
+    .notes-body th, .notes-body td { border:1px solid var(--line); padding:.45rem .6rem; text-align:left; }
+    .notes-body th { background:var(--surface-2); color:var(--ink); }
+    .notes-body img { max-width:100%; height:auto; }
+    .notes-body hr { border:0; border-top:1px solid var(--line); margin:1rem 0; }
+    .notes-body a { overflow-wrap:anywhere; }
+
+    /* Filter */
+    .filter-row { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+    .filter-row input { font:inherit; font-size:var(--step--1); padding:.5rem .8rem; min-height:40px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface); color:var(--ink); min-width:0; width:min(240px,52vw); }
+    .filter-row input::placeholder { color:var(--muted); }
+    .filter-row input:focus-visible { border-color:var(--accent); }
+    .count { color:var(--muted); font-size:var(--step--1); white-space:nowrap; }
+
+    /* States */
+    .state { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:1.6rem; text-align:center; color:var(--ink-2); }
+    .state.warn { background:var(--warn-tint); border-color:color-mix(in srgb,var(--warn) 25%,var(--line)); }
+    .state h3 { margin:0 0 .4rem; font-size:var(--step-1); color:var(--ink); }
+    .state p { margin:0 auto 1rem; max-width:56ch; font-size:var(--step--1); }
+    .skel { height:190px; border-radius:var(--radius); background:linear-gradient(90deg,var(--surface-2) 25%,var(--line) 37%,var(--surface-2) 63%); background-size:400% 100%; animation:sh 1.3s ease infinite; margin-bottom:1.1rem; }
+    @keyframes sh { 0%{background-position:100% 50%} 100%{background-position:0 50%} }
+    @media (prefers-reduced-motion: reduce) { .skel { animation:none; } }
+
+    .note { margin-top:1.2rem; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:1rem 1.2rem; color:var(--ink-2); font-size:var(--step--1); }
+    .note strong { color:var(--ink); }
+    .note code { font-family:var(--mono); font-size:.9em; background:var(--surface); border:1px solid var(--line); padding:.05rem .32rem; border-radius:5px; overflow-wrap:anywhere; }
+
+    footer.site { border-top:1px solid var(--line); padding-block:2.2rem; color:var(--muted); font-size:var(--step--1); margin-top:1.5rem; }
+    .foot-grid { display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between; }
+    .foot-links { display:flex; flex-wrap:wrap; gap:.3rem 1.2rem; }
+    .foot-links a { color:var(--ink-2); }
+    .visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site">
+    <div class="wrap nav">
+      <a class="back-link" href="../" aria-label="Back to Threat Model Reviewer">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M9.7 3.3a1 1 0 010 1.4L6.4 8l3.3 3.3a1 1 0 11-1.4 1.4l-4-4a1 1 0 010-1.4l4-4a1 1 0 011.4 0z"/></svg>
+        <span class="bl-text">Overview</span>
+      </a>
+      <a class="brand" href="../" aria-label="Threat Model Reviewer">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="brand-text">Threat Model Reviewer</span>
+      </a>
+      <div class="spacer"></div>
+      <div class="nav-links">
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+        <a class="btn btn-ghost gh-btn" href="https://github.com/ArasaniRohithReddy/app-releases/releases" aria-label="Releases on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow"><span class="dot"></span> Threat Model Reviewer</span>
+        <h1 class="title">Releases</h1>
+        <p class="lede">Every published build, with its release notes, downloads and file sizes. All packages are self-contained and Authenticode-signed — no .NET runtime required.</p>
+        <div class="hero-meta">
+          <span class="chip" id="hm-latest">—</span>
+          <span id="hm-count">Loading releases…</span>
+          <span id="hm-updated"></span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="all-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="all-h">All releases</h2>
+          <div class="filter-row">
+            <label class="visually-hidden" for="filter">Filter releases by version</label>
+            <input id="filter" type="search" placeholder="Filter by version, e.g. 2.0" autocomplete="off" />
+            <span class="count" id="count" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div id="list">
+          <div class="skel"></div><div class="skel"></div>
+        </div>
+
+        <div class="note">
+          <strong>Verify before you deploy.</strong> Every artifact is Authenticode-signed. Confirm the signature and record the hash:
+          <code>Get-AuthenticodeSignature .\&lt;file&gt;</code> and <code>Get-FileHash .\&lt;file&gt; -Algorithm SHA256</code>.
+          Signing currently uses a self-signed certificate, so SmartScreen may warn on first run — see the
+          <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/SECURITY.md#code-signing">security policy</a>.
+          For managed rollout, see <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md">enterprise deployment</a>.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="../" style="font-size:1rem">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="brand-text">Threat Model Reviewer</span>
+        </a>
+        <div style="margin-top:.5rem">Docs &amp; release assets are MIT-licensed.</div>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="../">Overview</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/INSTALL.md">Install</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md">Changelog</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">On GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    var REPO = "ArasaniRohithReddy/app-releases";
+    var PREFIX = "threat-model-reviewer-v";
+    var RELEASES_URL = "https://github.com/" + REPO + "/releases";
+    var CACHE_KEY = "tmr-releases-v1";
+    var list = document.getElementById("list");
+
+    // ---- helpers ---------------------------------------------------------
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+    function mb(b) {
+      if (!b && b !== 0) return "";
+      if (b < 1024) return b + " B";
+      if (b < 1048576) return (b / 1024).toFixed(0) + " KB";
+      return (b / 1048576).toFixed(1) + " MB";
+    }
+    function fmtDate(iso) {
+      if (!iso) return "";
+      var d = new Date(iso);
+      if (isNaN(d)) return "";
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    }
+    // Classify an asset filename into a package kind.
+    function kindOf(name) {
+      var n = (name || "").toLowerCase();
+      if (n.indexOf("portable") > -1 && n.slice(-4) === ".zip") return "portable";
+      if (n.slice(-4) === ".msi") return "msi";
+      if (n.slice(-4) === ".exe") return "setup";
+      if (n.slice(-5) === ".msix") return "msix";
+      if (n.slice(-4) === ".cer") return "cer";
+      return null;
+    }
+    var KIND = {
+      msi:      { label: "Installer (MSI)", hint: "Per-machine or per-user", rec: true },
+      portable: { label: "Portable (ZIP)",  hint: "Extract and run" },
+      setup:    { label: "Setup (.exe)",    hint: "Per-user, no admin" },
+      msix:     { label: "MSIX",            hint: "Packaged (experimental)" },
+      cer:      { label: "Publisher cert",  hint: "Trust before MSIX install" }
+    };
+    var ORDER = ["msi", "portable", "setup", "msix", "cer"];
+    var ICON = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>';
+
+    function versionOf(tag) { return (tag || "").indexOf(PREFIX) === 0 ? tag.slice(PREFIX.length) : (tag || ""); }
+
+    // ---- rendering -------------------------------------------------------
+    function renderRelease(rel, isLatest) {
+      var ver = versionOf(rel.tag_name);
+      var assets = rel.assets || [];
+      var byKind = {};
+      assets.forEach(function (a) { var k = kindOf(a.name); if (k && !byKind[k]) byKind[k] = a; });
+
+      var dl = ORDER.filter(function (k) { return byKind[k]; }).map(function (k) {
+        var a = byKind[k], meta = KIND[k];
+        return '<div class="dl-item">' +
+            '<span class="nm">' + ICON + esc(meta.label) +
+              (meta.rec ? ' <span class="tag-rec">Recommended</span>' : '') + '</span>' +
+            '<span class="meta">' + esc(mb(a.size)) + '</span>' +
+            '<span class="hint">' + esc(meta.hint) + '</span>' +
+            '<a class="btn ' + (meta.rec ? 'btn-primary' : 'btn-secondary') + '" href="' + esc(a.browser_download_url) + '">Download</a>' +
+          '</div>';
+      }).join("");
+
+      var rows = assets.map(function (a) {
+        return '<tr><td class="f"><a href="' + esc(a.browser_download_url) + '">' + esc(a.name) + '</a></td>' +
+               '<td>' + esc(mb(a.size)) + '</td>' +
+               '<td>' + (a.download_count > 0 ? esc(a.download_count) : "—") + '</td></tr>';
+      }).join("");
+
+      var notes = rel.body_html || (rel.body ? "<pre>" + esc(rel.body) + "</pre>" : "");
+      var notesBlock = notes
+        ? '<details class="notes"' + (isLatest ? " open" : "") + '><summary>Release notes</summary>' +
+          '<div class="notes-body">' + notes + '</div></details>'
+        : '<p class="rel-sub">No release notes were published for this version.</p>';
+
+      return '<article class="rel' + (isLatest ? " latest" : "") + '" data-ver="' + esc(ver.toLowerCase()) + '">' +
+          '<div class="rel-head">' +
+            '<h3 class="rel-ver">v' + esc(ver) + '</h3>' +
+            (isLatest ? '<span class="badge latest">Latest</span>' : '') +
+            (rel.prerelease ? '<span class="badge pre">Pre-release</span>' : '') +
+            '<span class="rel-date">' + esc(fmtDate(rel.published_at)) + '</span>' +
+          '</div>' +
+          (dl ? '<div class="dl-grid">' + dl + '</div>' : '<p class="rel-sub">No downloadable packages were attached to this release.</p>') +
+          (rows ? '<details class="assets"><summary>All files (' + assets.length + ')</summary>' +
+                  '<div class="tbl-wrap"><table class="files"><thead><tr><th>File</th><th>Size</th><th>Downloads</th></tr></thead>' +
+                  '<tbody>' + rows + '</tbody></table></div></details>' : '') +
+          notesBlock +
+        '</article>';
+    }
+
+    function render(rels) {
+      if (!rels.length) { showError("No releases found for this application yet."); return; }
+      list.innerHTML = rels.map(function (r, i) { return renderRelease(r, i === 0); }).join("");
+      var ver = versionOf(rels[0].tag_name);
+      document.getElementById("hm-latest").textContent = "v" + ver;
+      document.getElementById("hm-count").textContent = rels.length + " release" + (rels.length === 1 ? "" : "s") + " published";
+      var d = fmtDate(rels[0].published_at);
+      document.getElementById("hm-updated").textContent = d ? "Latest: " + d : "";
+      updateCount();
+      // Open external links from rendered notes in a new tab, safely.
+      list.querySelectorAll(".notes-body a[href]").forEach(function (a) {
+        if (/^https?:/i.test(a.getAttribute("href"))) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+      });
+      // GitHub's rendered notes start their own <h1>. Each card already owns an <h3>, so demote
+      // note headings to h4+ — otherwise the page exposes one <h1> per release and the document
+      // outline becomes unusable for screen readers.
+      list.querySelectorAll(".notes-body").forEach(function (body) {
+        ["h4", "h3", "h2", "h1"].forEach(function (tag) {
+          var to = { h1: "h4", h2: "h4", h3: "h5", h4: "h6" }[tag];
+          body.querySelectorAll(tag).forEach(function (old) {
+            var el = document.createElement(to);
+            el.innerHTML = old.innerHTML;
+            if (old.id) el.id = old.id;
+            old.parentNode.replaceChild(el, old);
+          });
+        });
+      });
+    }
+
+    function showError(msg) {
+      list.innerHTML = '<div class="state warn"><h3>Couldn\'t load releases here</h3>' +
+        '<p>' + esc(msg) + ' Every download is still available on GitHub.</p>' +
+        '<a class="btn btn-primary" href="' + RELEASES_URL + '">View releases on GitHub</a></div>';
+      document.getElementById("hm-count").textContent = "Releases unavailable";
+    }
+
+    function updateCount() {
+      var q = (document.getElementById("filter").value || "").trim().toLowerCase();
+      var cards = list.querySelectorAll(".rel"), shown = 0;
+      cards.forEach(function (c) {
+        var hit = !q || (c.getAttribute("data-ver") || "").indexOf(q) > -1;
+        c.style.display = hit ? "" : "none";
+        if (hit) shown++;
+      });
+      var el = document.getElementById("count");
+      if (!cards.length) { el.textContent = ""; return; }
+      el.textContent = q ? shown + " of " + cards.length + " shown" : cards.length + " releases";
+      var none = list.querySelector(".no-match");
+      if (q && shown === 0) {
+        if (!none) {
+          none = document.createElement("div");
+          none.className = "state no-match";
+          none.innerHTML = "<h3>No matching version</h3><p>Nothing matches that filter. Clear it to see every release.</p>";
+          list.appendChild(none);
+        }
+      } else if (none) { none.remove(); }
+    }
+    document.getElementById("filter").addEventListener("input", updateCount);
+
+    // ---- load ------------------------------------------------------------
+    function useData(json) {
+      var rels = (json || []).filter(function (r) {
+        return !r.draft && (r.tag_name || "").indexOf(PREFIX) === 0;
+      });
+      rels.sort(function (a, b) { return new Date(b.published_at) - new Date(a.published_at); });
+      render(rels);
+    }
+
+    try {
+      var cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) { useData(JSON.parse(cached)); }
+    } catch (e) { /* ignore */ }
+
+    fetch("https://api.github.com/repos/" + REPO + "/releases?per_page=100",
+          { headers: { Accept: "application/vnd.github.html+json" } })
+      .then(function (r) {
+        if (r.status === 403) throw new Error("GitHub's API rate limit was reached from this network.");
+        if (!r.ok) throw new Error("GitHub returned HTTP " + r.status + ".");
+        return r.json();
+      })
+      .then(function (json) {
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(json)); } catch (e) { /* quota */ }
+        useData(json);
+      })
+      .catch(function (err) {
+        if (!list.querySelector(".rel")) showError(err && err.message ? err.message : "The release list couldn't be fetched.");
+      });
+  })();
+  </script>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var mq = window.matchMedia("(prefers-color-scheme: dark)");
+      var btn = document.getElementById("theme-toggle");
+      function current() { return root.getAttribute("data-theme") || (mq.matches ? "dark" : "light"); }
+      function label() { if (btn) btn.setAttribute("aria-label", current() === "dark" ? "Switch to light theme" : "Switch to dark theme"); }
+      function apply(t) { root.setAttribute("data-theme", t); try { localStorage.setItem("theme", t); } catch (e) {} label(); }
+      label();
+      if (btn) btn.addEventListener("click", function () { apply(current() === "dark" ? "light" : "dark"); });
+      if (mq.addEventListener) mq.addEventListener("change", function () {
+        try { if (!localStorage.getItem("theme")) { root.removeAttribute("data-theme"); label(); } } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>

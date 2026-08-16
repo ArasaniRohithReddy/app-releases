@@ -170,7 +170,7 @@
     .nav-links { display: flex; align-items: center; gap: .3rem; flex: none; }
     .nav-links a:not(.btn) { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
     .nav-links a:not(.btn):hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
-    @media (max-width: 1080px) { .nav-links.secondary { display: none; } }
+    @media (max-width: 1260px) { .nav-links.secondary { display: none; } }
     @media (max-width: 620px) { .nav .gh-btn { display: none; } .back-link .bl-text { display: none; } }
     @media (max-width: 700px) { .nav .dl-btn { display: none; } }
     @media (max-width: 400px) { .nav .brand-text { display: none; } }
@@ -303,6 +303,7 @@
       <nav class="nav-links secondary" aria-label="Primary">
         <a href="#features">Features</a>
         <a href="#download">Download</a>
+        <a href="./releases/">Releases</a>
         <a href="#enterprise">Enterprise</a>
         <a href="#docs">Docs</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md">Changelog</a>
@@ -449,7 +450,7 @@
             <div class="dl-size"><a data-dl="cer" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">publisher.cer</a></div>
           </div>
         </div>
-        <p class="dl-note">On v1.0.4 or later the app updates itself — click <strong>Download &amp; install</strong> on the in-app banner, then <strong>Install &amp; restart</strong>. All downloads and every asset are also on the <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">Releases page</a>.</p>
+        <p class="dl-note">On v1.0.4 or later the app updates itself — click <strong>Download &amp; install</strong> on the in-app banner, then <strong>Install &amp; restart</strong>. Every version, its notes and all files are on the <a href="./releases/">releases page</a>.</p>
         <div class="note">
           <strong>SmartScreen note:</strong> builds are signed, but with a self-signed certificate for now, so Windows SmartScreen may warn on first run — choose <strong>More info → Run anyway</strong>. A CA/EV certificate is planned to remove the warning for everyone.
         </div>
@@ -515,6 +516,7 @@
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/INSTALL.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/FAQ.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ &amp; troubleshooting<span class="arrow">→</span></a>
+          <a class="doc-link" href="./releases/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> All releases<span class="arrow">→</span></a>
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow">→</span></a>
         </div>
       </div>

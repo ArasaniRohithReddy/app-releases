@@ -31,7 +31,7 @@ your machine; GitHub Copilot is advisory only. *(Model authoring is in beta.)*
 | Resource | Link |
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/) |
-| **Download** | [Latest release](https://github.com/ArasaniRohithReddy/app-releases/releases/latest) — MSI · portable ZIP · setup.exe · MSIX |
+| **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/) — every version, notes and files · or [latest on GitHub](https://github.com/ArasaniRohithReddy/app-releases/releases/latest) |
 | **Documentation** | [Overview](products/threat-model-reviewer/) · [Install](products/threat-model-reviewer/INSTALL.md) · [User guide](products/threat-model-reviewer/USER-GUIDE.md) · [FAQ](products/threat-model-reviewer/FAQ.md) · [Changelog](products/threat-model-reviewer/CHANGELOG.md) |
 | **For enterprises** | [Data handling & privacy](products/threat-model-reviewer/DATA-HANDLING.md) · [Enterprise deployment](products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md) · [Third-party notices](products/threat-model-reviewer/THIRD-PARTY-NOTICES.md) |
 | **Platform** | Windows 10/11 x64 · self-contained (no .NET install) |
@@ -41,9 +41,11 @@ your machine; GitHub Copilot is advisory only. *(Model authoring is in beta.)*
 
 ## Download
 
-Use the **[website](https://arasanirohithreddy.github.io/app-releases/)**, which always links the
-latest build, or go directly to **[Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)**
-and choose the package you want.
+Browse every version — with its release notes, file sizes and direct downloads — on the
+**[releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)**.
+The **[website](https://arasanirohithreddy.github.io/app-releases/)** always links the latest build,
+and the raw **[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)** list
+remains available.
 
 Release tags are product-prefixed — `‹app›-v‹x.y.z›`, for example
 `threat-model-reviewer-v2.0.3`.

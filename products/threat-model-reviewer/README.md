@@ -94,6 +94,7 @@ Every build is **self-contained** — no .NET runtime required. Step-by-step: **
 | **[DATA-HANDLING.md](DATA-HANDLING.md)** | **Security & privacy review** — network egress, storage, redaction, no telemetry |
 | **[ENTERPRISE-DEPLOYMENT.md](ENTERPRISE-DEPLOYMENT.md)** | **IT administrators** — silent install, Intune/SCCM/GPO, air-gapped, CI/CD |
 | **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)** | License compliance |
+| **[Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)** | Every version — notes, downloads and file sizes |
 | **[CHANGELOG.md](CHANGELOG.md)** | Full release history |
 
 ## Support
