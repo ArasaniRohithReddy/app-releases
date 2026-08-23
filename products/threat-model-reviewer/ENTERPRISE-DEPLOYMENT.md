@@ -1,6 +1,6 @@
 # Enterprise Deployment
 
-*Applies to Threat Model Reviewer v2.0.3 and later.*
+*Applies to Threat Model Reviewer v2.1.0 and later.*
 
 This guide covers packaged, unattended rollout of Threat Model Reviewer to managed Windows
 estates — Microsoft Intune, Configuration Manager (SCCM), Group Policy, or a scripted
@@ -41,10 +41,10 @@ Useful for detection rules, upgrade logic and uninstall automation:
 
 ```powershell
 # Per-machine (all users) — requires elevation
-msiexec /i "ThreatModelReviewer-v2.0.3-x64.msi" ALLUSERS=1 /qn /norestart /l*v install.log
+msiexec /i "ThreatModelReviewer-v2.1.0-x64.msi" ALLUSERS=1 /qn /norestart /l*v install.log
 
 # Per-user (no elevation)
-msiexec /i "ThreatModelReviewer-v2.0.3-x64.msi" ALLUSERS="" /qn /norestart
+msiexec /i "ThreatModelReviewer-v2.1.0-x64.msi" ALLUSERS="" /qn /norestart
 
 # Upgrade in place — same command as install; the UpgradeCode handles removal of the old build
 
@@ -63,13 +63,13 @@ msiexec /x "{7E2D9A14-3C5B-4F8E-A1D6-9B0C2E4F6A38}" /qn /norestart
 ### Setup.exe (Inno Setup)
 
 ```powershell
-ThreatModelReviewer-v2.0.3-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG="install.log"
+ThreatModelReviewer-v2.1.0-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG="install.log"
 ```
 
 ### Portable ZIP
 
 ```powershell
-Expand-Archive .\ThreatModelReviewer-v2.0.3-win-x64-portable.zip -DestinationPath 'C:\Program Files\ThreatModelReviewer'
+Expand-Archive .\ThreatModelReviewer-v2.1.0-win-x64-portable.zip -DestinationPath 'C:\Program Files\ThreatModelReviewer'
 # Launch: C:\Program Files\ThreatModelReviewer\ThreatModelReviewer.exe
 ```
 
@@ -81,7 +81,7 @@ No registry writes, no uninstall entry — remove the folder to uninstall.
    (`IntuneWinAppUtil.exe -c <folder> -s <msi> -o <out>`).
 2. **Install command**
    ```
-   msiexec /i "ThreatModelReviewer-v2.0.3-x64.msi" ALLUSERS=1 /qn /norestart
+   msiexec /i "ThreatModelReviewer-v2.1.0-x64.msi" ALLUSERS=1 /qn /norestart
    ```
 3. **Uninstall command**
    ```
@@ -89,7 +89,7 @@ No registry writes, no uninstall entry — remove the folder to uninstall.
    ```
 4. **Install behaviour:** *System* (for per-machine) — or *User* if deploying per-user.
 5. **Detection rule:** MSI product code, or a file rule on
-   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.0.3.0**.
+   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.1.0.0**.
 6. **Requirements:** Windows 10 1809+ / Windows 11, x64.
 7. **Return codes:** `0` success, `3010` soft reboot (not expected), `1602` user cancelled,
    `1603` fatal error — inspect the MSI log.
@@ -160,8 +160,8 @@ Options for managed estates:
 Validate any download before mass deployment:
 
 ```powershell
-Get-AuthenticodeSignature .\ThreatModelReviewer-v2.0.3-x64.msi | Format-List Status, SignerCertificate
-Get-FileHash .\ThreatModelReviewer-v2.0.3-x64.msi -Algorithm SHA256
+Get-AuthenticodeSignature .\ThreatModelReviewer-v2.1.0-x64.msi | Format-List Status, SignerCertificate
+Get-FileHash .\ThreatModelReviewer-v2.1.0-x64.msi -Algorithm SHA256
 ```
 
 Record the hash from your first download and compare it across distribution points. *(Publishing

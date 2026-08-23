@@ -40,7 +40,7 @@ The portable `.exe` and the installers **are** Authenticode-signed — but for n
 run. Click **More info → Run anyway**. A self-signed certificate never accrues SmartScreen
 reputation; the warning clears for everyone only once signing moves to a **CA-issued/EV**
 certificate or **Azure Trusted Signing**, which is planned. You can verify the signature and hash
-yourself first — see [SECURITY.md](../../SECURITY.md#code-signing).
+yourself first — see [SECURITY.md](../SECURITY.md#code-signing).
 
 ### The MSIX won't install / AI features don't work in the MSIX.
 - Install the included **`ThreatModelReviewer-publisher.cer`** into **Trusted People**
@@ -54,9 +54,18 @@ Keep the extracted folder intact — `ThreatModelReviewer.exe` needs the files b
 including `runtimes\win-x64\native\copilot.exe`. Don't copy the `.exe` out on its own.
 
 ### Why is the verdict NOT READY even though the score is high?
-The score measures **maturity**; readiness is a separate **gate**. Any must-fix (gating)
-finding — e.g. an un-triaged threat — forces NOT READY, just like a Microsoft SDL reviewer
-would. Clear the gating findings (the Fix tab automates most) and the verdict flips.
+Because they measure different things, and this is intended. The score measures **maturity** —
+how complete and thorough the model is. Readiness is a separate **gate**: a single must-fix
+(gating) finding — e.g. an un-triaged threat — forces NOT READY, exactly as a Microsoft SDL
+reviewer would. A high score with a NOT READY verdict is the most common result for a *good*
+model that has a few specific blockers. Clear the gating findings (the Fix tab automates most)
+and the verdict flips to READY WITH NOTES.
+
+### Is FAIL different from NOT READY?
+No — they are the same fact under two names. `Band == Fail` is *defined as*
+`Verdict == NotReady`, so the score can never cause FAIL on its own; the band only
+distinguishes **PASS** (score ≥ 85) from **CONDITIONAL** once there are no gating findings.
+FAIL is the machine-readable name used in exports and CI.
 
 ### A finding looks wrong / too noisy.
 Open an issue with the check ID and a sanitized snippet:

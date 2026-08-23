@@ -2,9 +2,9 @@
 
 Threat Model Reviewer incorporates the third-party components listed below. This file is provided
 for license-compliance review. Threat Model Reviewer itself is licensed under the
-[MIT License](../../LICENSE).
+[MIT License](../LICENSE).
 
-*Accurate as of v2.0.3. Versions are the package references declared in the solution; license
+*Accurate as of v2.1.0. Versions are the package references declared in the solution; license
 identifiers are taken from each package's own metadata.*
 
 ---
@@ -14,7 +14,7 @@ identifiers are taken from each package's own metadata.*
 | Component | Version | License | Project |
 | --- | --- | --- | --- |
 | **.NET 10** (self-contained runtime & libraries) | 10.0 | MIT | <https://github.com/dotnet/runtime> |
-| **GitHub.Copilot.SDK** — GitHub Copilot integration, includes the bundled Copilot CLI runtime | 1.0.2 | MIT | <https://github.com/github/copilot-sdk> |
+| **GitHub.Copilot.SDK** — GitHub Copilot integration, includes the bundled Copilot CLI runtime | 1.0.11 | MIT | <https://github.com/github/copilot-sdk> |
 | **CommunityToolkit.Mvvm** — MVVM primitives for the desktop UI | 8.4.2 | MIT | <https://github.com/CommunityToolkit/dotnet> |
 | **PDFsharp** — native PDF report generation | 6.2.4 | MIT | <https://docs.pdfsharp.net/> |
 | **Microsoft.OpenApi.Readers** — OpenAPI/Swagger parsing for model authoring | 1.6.22 | MIT | <https://github.com/microsoft/OpenAPI.NET> |

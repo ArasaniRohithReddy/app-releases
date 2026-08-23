@@ -23,9 +23,14 @@ optional and only ever *advisory*.
 - Click **Open .tm7** in the header, or
 - Launch the app with a path (`ThreatModelReviewer.exe "C:\path\Model.tm7"`), or "Open with".
 
-The header shows the **verdict** (NOT READY / READY WITH NOTES), the **review score**, the
-**band**, the model name, and counts. Toggle **Strict SDL bar** to make borderline SDL
-items gating.
+The header shows one **verdict** — NOT READY or READY WITH NOTES — with the **review score**
+as supporting detail. They answer different questions. The **score (0–100)** measures
+*maturity*: how thoroughly the model is built. The **verdict** is a *gate*: any must-fix
+(gating) finding forces NOT READY no matter how high the score, so a well-built model can
+legitimately score 88/100 and still be NOT READY — "thorough work, but specific blockers".
+The **band** (PASS / CONDITIONAL / FAIL) appears in exports and CI only; FAIL is simply the
+machine-readable name for NOT READY. Toggle **Strict SDL bar** to make borderline SDL items
+gating.
 
 ## The tabs
 
@@ -77,4 +82,13 @@ focuses on reviewing, fixing and analyzing existing models.
 
 ## Exit codes (CLI)
 
-`review`: `0` = ready-with-notes, `2` = not ready, `1` = error.
+Uniform across every verb, so a pipeline can gate on them:
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Succeeded, and nothing is gating |
+| `1` | The command could not run — bad usage, or missing/unreadable input |
+| `2` | Ran fine, but the result gates: NOT READY, a serious comparison regression, or insecure IaC |
+
+`generate` returns `0` even though its output is NOT READY by construction, because every generated
+threat is deliberately left as *needs investigation* for an owner to triage.

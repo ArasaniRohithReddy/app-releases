@@ -4,6 +4,88 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] — 2026-08-23
+
+This release is mostly **new engine capability, reachable from the CLI**. The desktop UI for these
+features lands next; everything below is available today via `ThreatModelReviewer.Cli`.
+
+The **verdict** and **0–100 review score** remain 100% deterministic. Copilot stays advisory, and
+several of the additions below exist specifically to keep it that way — the assistant answers from
+computed facts rather than inference, and generation lets a language model touch prose only, never
+structure.
+
+### Added
+
+- **`compare` — what changed between two revisions.** Matches elements, flows, boundaries and threats
+  by stable identity rather than list position, so a rename is reported as a rename instead of a
+  delete plus an add. Reports rubric deltas including pass→fail transitions, threat state changes,
+  and a posture summary that makes regressions impossible to miss. Exits `2` on a serious regression
+  so CI can block on it.
+- **`generate` — build a `.tm7` from a described system.** Deterministic STRIDE enumeration keyed on
+  element kinds, boundary crossings and flow properties. Every generated threat is recorded as
+  *Needs Investigation*: this is an enumerated starting point, not a completed review, and the output
+  says so. Generating twice from one spec produces byte-identical output.
+- **`ingest` — read what teams already have.** Documents (Word, PowerPoint, Excel, PDF, CSV, Markdown,
+  JSON, YAML), diagrams (Excalidraw, draw.io including its compressed form, Mermaid, Visio, Graphviz),
+  and infrastructure as code (ARM, Bicep, Terraform). Diagrams are mapped to data-flow-diagram
+  candidates; anything the mapper cannot classify confidently is flagged for a human rather than
+  guessed at. Infrastructure ingestion extracts deterministic **security facts** — TLS enforcement,
+  public network access, identity type, key-vault protection, firewall rules — each with a file and
+  line citation, and exits `2` when it finds insecure configuration.
+- **`sdl` — the artifacts a reviewer actually asks for.** A full threat model document (Markdown and
+  HTML), the threat register (CSV and JSON), an assumptions and out-of-scope log, a traceability
+  matrix, and a manifest recording tool version, rubric version and the source model's identity and
+  hash, so a reviewer can verify every file and reproduce the deterministic content.
+- **`ask` — answers with no AI and no network.** Common questions (score, verdict, unmitigated counts,
+  which flows cross a boundary, why a model is not ready) are answered exactly from a computed fact
+  sheet, with the supporting check ids cited. Questions needing judgement are declined rather than
+  guessed at.
+- **`policy` — organisation policy, with disclosure that cannot be switched off.** Validate a policy,
+  list the check ids one may reference, or apply one to a review. Waivers require a reason, an owner
+  and an expiry; an expired waiver stops applying and becomes a finding of its own. Applying a policy
+  always prints the unpoliced result beside the policed one, plus every suppression and the policy's
+  hash — a policy can tune the rubric, but it can never quietly hide a failure. Ships `default`,
+  `strict` and a worked `enterprise-exceptions` preset.
+- **`history` — local review history and score trends.** Append-only, on this machine only, never
+  transmitted. File paths are hashed rather than stored by default, and AI prompts and responses are
+  never recorded.
+- **Model Context Protocol support**, shipped disabled. Every server must be enabled individually and
+  carries a plain-English disclosure of what it can see; secrets are held in the existing DPAPI-backed
+  store rather than written into configuration.
+- **Close the open threat model** (Ctrl+W), with an unsaved-changes guard and a full reset of document
+  state. Previously a model could only be replaced, never closed.
+- **Microsoft Threat Modeling Tool stencil artwork in the diagram view**, extracted at run time from
+  the user's own MTMT installation. The artwork is Microsoft's and is deliberately never redistributed
+  with this app.
+- **File attachments in the Edit with Copilot panel**, so an architecture diagram or document can be
+  handed over directly instead of described in prose. Vision-only content is gated on the selected
+  model actually supporting vision.
+
+### Changed
+
+- **GitHub Copilot SDK 1.0.2 → 1.0.11**, which moves the bundled Copilot runtime to CLI 1.0.79.
+  Verified with a live probe, not just a clean compile. Note that the available model list is served
+  by the GitHub API and is *not* gated by the SDK version — both runtimes return the same models.
+- **Fluent 2 design foundation**, with the whole app re-skinned onto shared design tokens.
+- Test host updated to Microsoft.NET.Test.Sdk 18.9.0 and coverlet.collector 10.0.1.
+
+### Fixed
+
+- **A shipping WCAG contrast failure.** The score and band chips used colours that failed AA against
+  their own background (2.78:1 and 4.29:1). All three states now pass (5.64:1, 4.55:1, 6.40:1).
+- **An unreadable model dropdown**, which rendered the raw record text
+  (`AiModel { Id = …, SupportsVision = True }`) inside a 190px control.
+- **A gap in the archive guard.** A crafted Office file whose central directory under-reported an
+  entry's size passed inspection and then silently truncated content. Such a mismatch is now detected
+  and rejected.
+- **Ingestion of shared file extensions.** `.md` is also a diagram extension, because markdown can
+  embed a Mermaid block, so plain markdown was being rejected as "not a diagram". Shared extensions
+  now fall back to document extraction.
+- **A load-sensitive test** that waited a fixed interval for an asynchronous progress callback and
+  failed on a busy machine.
+- Documentation corrected on the relationship between the score, the verdict and the CI band: the
+  **FAIL** band and the **NOT READY** verdict are the same outcome, not two independent ones.
+
 ## [2.0.3] — 2026-08-09
 
 ### Changed
@@ -12,6 +94,21 @@ project aims to follow [Semantic Versioning](https://semver.org/).
   beta and hidden in the current build**. Everywhere now reads "review, fix & analyze", and the Create
   capability (guided wizard + Copilot DFD extraction from a description, image or OpenAPI spec) is clearly
   labelled **beta / coming soon**. No functional change — the Create and Assistant tabs were already hidden.
+  The `create` and `openapi` commands remain available in the CLI.
+
+### Added
+- **Enterprise-grade documentation set**, for security review and managed rollout:
+  - **Data handling & privacy** — every network destination and on-disk path, the secret redaction
+    applied before any AI prompt, and confirmation that no telemetry or analytics are collected.
+  - **Enterprise deployment** — silent-install switches, MSI `UpgradeCode` / Inno `AppId` for detection
+    rules, Intune / Configuration Manager / Group Policy guidance, disabling update checks fleet-wide,
+    air-gapped operation, VDI notes, and CI/CD gating with the CLI.
+  - **Third-party notices** — full component inventory with licenses.
+  - **Support policy** — severity definitions and response targets.
+  - **Code of conduct**, `CODEOWNERS` and Dependabot configuration.
+- **Security policy expanded** with vulnerability-response targets, a supported-versions table, and the
+  controls protecting the tool itself (untrusted-file parsing, prompt-injection detection, DPAPI
+  credential storage, export formula-injection neutralization, supply chain).
 
 ### Notes
 - The **verdict** and **0–100 review score** remain 100% deterministic; Copilot stays advisory.
@@ -246,6 +343,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.0
 [2.0.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.3
 [2.0.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.2
 [2.0.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.1

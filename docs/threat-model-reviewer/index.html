@@ -302,7 +302,8 @@
       <div class="spacer"></div>
       <nav class="nav-links secondary" aria-label="Primary">
         <a href="#features">Features</a>
-        <a href="#download">Download</a>
+                <a href="#whats-new">New in 2.1</a>
+                <a href="#download">Download</a>
         <a href="./releases/">Releases</a>
         <a href="#enterprise">Enterprise</a>
         <a href="#docs">Docs</a>
@@ -340,7 +341,7 @@
             <a class="btn btn-secondary" href="#features">See what it does</a>
           </div>
           <div class="meta-line">
-            <span class="chip" id="version-chip">v2.0.3</span>
+            <span class="chip" id="version-chip">v2.1.0</span>
             <span>Windows 10/11 · x64</span>
             <span>Self-contained — no .NET install</span>
           </div>
@@ -416,12 +417,32 @@
       </div>
     </section>
 
+    <!-- New in 2.1 -->
+    <section class="alt" id="whats-new" aria-labelledby="whats-new-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="whats-new-h">New in 2.1 — seven engines, on the command line</h2>
+          <p>These ship today through <span class="kbd">ThreatModelReviewer.Cli</span>, which is where they do the most good: this is the work a pipeline should run on every pull request. The desktop surfaces for them are being built next.</p>
+        </div>
+        <div class="features">
+          <div class="feature"><h3><span class="tick">✓</span> Compare two revisions</h3><p>Matches by stable identity, so a rename reads as a rename rather than a delete plus an add. Reports rubric deltas, threat state changes and a posture summary — and exits non-zero on a serious regression.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Generate a model</h3><p>Deterministic STRIDE enumeration from a described system. The same input always produces byte-identical output, and every threat lands as <em>Needs Investigation</em> — an enumerated starting point, never a finished review.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Ingest what you already have</h3><p>Word, PowerPoint, Excel, PDF, CSV, Markdown; Excalidraw, draw.io, Mermaid, Visio, Graphviz; and ARM, Bicep and Terraform.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Security facts from infrastructure</h3><p>TLS enforcement, public network access, identity type, key-vault protection and firewall rules — each read straight from your IaC with a file and line citation.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> SDL-ready artifact bundle</h3><p>Threat model document, threat register, assumptions log, traceability matrix, and a manifest recording tool and rubric versions plus the source model's hash, so a reviewer can verify every file.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Ask, answered without AI</h3><p>Score, verdict, unmitigated counts, which flows cross a boundary, why a model is not ready — answered exactly from computed facts with the check ids cited. No model call, so no hallucinated number can contradict the engine.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Organisation policy</h3><p>Tune the rubric to your risk appetite. Waivers need a reason, an owner and an expiry, and applying a policy always prints the unpoliced result beside the policed one — it can adjust the bar, never quietly hide a failure.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Local review history</h3><p>Score trends over time, append-only and on your machine only. Paths are hashed by default and AI prompts are never recorded.</p></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Download -->
     <section class="alt" id="download" aria-labelledby="dl-h">
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.0.3</span>.</p>
+          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.1.0</span>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
