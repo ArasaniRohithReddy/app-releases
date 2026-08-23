@@ -4,6 +4,80 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.3] — 2026-08-24
+
+Appearance and reach: the app can now be themed, questions can be asked without leaving
+the tab you're on, and comparing two revisions is legible.
+
+### Added
+- **Light, Dark and Match Windows themes** (Help → Appearance). The choice is remembered,
+  applies immediately without a restart, and System follows Windows as it changes.
+- **A floating Ask panel.** A launcher in the bottom-left opens a compact chat over any tab,
+  so a question no longer costs you your place. It is the same conversation as the Ask tab:
+  maximising hands the history over rather than starting again.
+- **"Use open model" on both Compare fields**, plus a swap button. Comparing the open model
+  against an older revision is as common as the reverse, and only the baseline supported it.
+
+### Changed
+- The Compare tab leads with the verdict and separates what got worse from what got better,
+  instead of stacking dense lists of long strings.
+- Overview statistics sit on an even four-column grid; eight tiles previously broke 5 + 3 and
+  left a gap.
+
+### Fixed
+- Interactions without a name printed their endpoints twice in "Threats by interaction".
+- Closing a model now dismisses the floating Ask panel, which otherwise stayed open over the
+  empty state with nothing left to answer about.
+
+### Internal
+- Every colour in the app now resolves through a semantic token — 114 hard-coded values in the
+  main window, 26 white backgrounds across the dialogs, and 43 literals chosen in view models.
+  Guards were added for each way this fails quietly: the two palettes must define the same
+  tokens and differ on the core surfaces, no themed brush may be bound with `StaticResource`
+  (which resolves once and then ignores a theme change), and no colour may be hard-coded.
+  The diagram is exempt by design: it renders a document, not app chrome.
+
+## [2.1.2] — 2026-08-23
+
+Fixes found by driving the app before shipping rather than trusting a green test suite.
+
+### Fixed
+
+- **The History tab was empty even after a review.** Two separate faults. The recorder was never
+  called — the store, query layer, privacy controls and tab were all complete and all tested, and
+  nothing invoked them, so the feature did nothing while every test passed. And once recording
+  worked, the tab still showed nothing until you noticed the **Refresh** button. Reviewing a model
+  now records it, and opening the tab loads it.
+- **The assistant showed its own Markdown.** Answers are written in Markdown and were bound straight
+  to text, so readers saw `**NOT READY**` and literal dashes — the most important line in an answer
+  was the hardest to read. It now uses the renderer the app already had.
+- **The test suite wrote into the real history store.** Wiring the recorder into model loading meant
+  any test that opened a model recorded a review, filling a developer's History tab with fixtures.
+  The history root now honours `THREATMODELREVIEWER_HISTORY_ROOT`, which the tests redirect to a
+  temp folder — and which administrators can use to move history off a roaming profile.
+- **Compare's Explain and Export buttons looked broken.** They are correctly disabled until a
+  comparison exists, but said nothing; they now explain themselves while disabled. The path boxes
+  also accept a dropped `.tm7`.
+- **A documented claim was untrue.** The docs said `generate` produces a NOT READY model "by
+  construction". It does not: a generated model reports READY WITH NOTES with zero gating findings,
+  because the rubric counts *Needs Investigation* as triaged. The docs now describe what actually
+  happens, and why a generated model still is not a reviewed one.
+- **The framework coverage matrix was labelled "OWASP Top 10 (2021)"** while listing the 2025
+  categories updated in 2.1.1.
+
+### Added
+
+- **Feature wiring tests.** The History bug could not be caught by unit tests — every part passed in
+  isolation; the gap was between the code existing and the code running. These assert that each
+  capability is reachable from a surface a user can drive: every Core engine referenced by the app or
+  CLI, every advertised tab present and not collapsed, every CLI verb dispatchable, the recorder
+  actually invoked, and the assistant rendering Markdown. They cannot prove a feature is correct,
+  only that it is not orphaned.
+
+### Notes
+- The **verdict** and **0–100 review score** remain 100% deterministic; Copilot stays advisory.
+- 1231 automated tests.
+
 ## [2.1.1] — 2026-08-23
 
 A follow-up to 2.1.0 fixing three things that stopped users seeing any of it, plus a
@@ -410,6 +484,8 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.3
+[2.1.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.2
 [2.1.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.1
 [2.1.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.0
 [2.0.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.3
