@@ -4,6 +4,73 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.1] — 2026-08-23
+
+A follow-up to 2.1.0 fixing three things that stopped users seeing any of it, plus a
+correction to the standards the rubric cites.
+
+### Fixed
+
+- **In-app update could produce an unusable installer.** Downloads were only size-checked when
+  a length was known. On the release-atom fallback — taken whenever the anonymous GitHub API is
+  rate-limited at 60 requests an hour — every asset size is reported as `0`, so if the server also
+  omitted `Content-Length` nothing was verified at all. A truncated transfer or an error page was
+  moved into place and handed to `msiexec`, which reported *"This installation package could not be
+  opened"* — an error that says nothing about the download. Every download is now format-checked
+  before it runs (an MSI must start with the OLE compound-file signature, a zip with `PK`, an
+  executable with `MZ`) and the failure names the real cause. The published 2.1.0 MSI was never
+  faulty; only the download path was.
+- **The header could collapse and hide the tab strip.** The identity block sat in a star-width
+  column beside a content-sized command cluster. Adding the Close button in 2.1.0 tipped it over:
+  the cluster claimed the row, the star column collapsed to a few pixels, and the title wrapped one
+  character per line down the left edge, pushing the tabs off screen. Rebuilt as a single compact
+  strip — roughly 50px — in which nothing can wrap; the open model's name trims with an ellipsis.
+- **The verdict was printed twice.** The CI band is FAIL precisely when the verdict is NOT READY,
+  so showing them as separate chips read as two independent failures, and previously put a green
+  grade pill beside a red FAIL. They are now one chip.
+- **Markdown was rejected as "not a diagram".** `.md` is registered as a diagram extension because
+  markdown can embed Mermaid, so plain prose never reached the document reader. Shared extensions
+  now fall back correctly, and markdown containing a diagram is still read as one.
+
+### Changed
+
+- **Compare, Ask and History are now in the app, not just the CLI.** 2.1.0 shipped these engines
+  with no way to reach them outside a terminal.
+  - **Compare** — pick two revisions (or use the model you already have open as the baseline) and see
+    what changed, what got worse, and what got better, with the score and verdict movement. *Explain
+    with Copilot* adds a plain-English read of the change; the numbers are computed before Copilot is
+    asked and never change. Exports to HTML, Markdown or CSV.
+  - **Ask** — an assistant scoped to the open threat model. Common questions are answered straight
+    from the model's own numbers with **no AI call at all**, so no answer can contradict the review;
+    each reply says which of the two it was. Open-ended questions go to Copilot grounded in the same
+    facts, with the supporting check ids cited.
+  - **History** — every review you run, recorded locally, with score trends per model. The tab states
+    where the data lives and can open that folder, because "it never leaves your machine" is a claim
+    you should be able to verify rather than take on trust. One click clears it.
+- **Create and Assistant are no longer hidden.** Both were fully implemented behind
+  `Visibility="Collapsed"`, and with 2.1.0 shipping a round-trip-verified `.tm7` writer there is no
+  longer a reason to keep model authoring out of the product. Create offers templates, Copilot
+  refinement, a live diagram preview, components, flows and boundaries; Assistant extracts a DFD
+  from a document, an architecture image, or an OpenAPI spec.
+- **The app and the CLI now run the same generation engine.** The Create tab used the original
+  generator while `generate` used the deterministic pipeline. Two implementations of one feature
+  drift, and a user comparing them would rightly lose confidence in both. Create now reports how
+  many threats it produced and states that each is recorded as *Needs Investigation*, so its output
+  is not mistaken for a finished review.
+- **Rubric citations updated to OWASP Top 10:2025**, published 6 November 2025. The edition
+  re-ranked categories rather than just renaming them, so all 43 references were mapped by concept:
+  Cryptographic Failures moved A02→A04, Injection A03→A05, Insecure Design A04→A06, Security
+  Misconfiguration A05→A02, and Vulnerable & Outdated Components (A06) became Software Supply Chain
+  Failures (A03). SSRF is no longer its own category — OWASP folded it into A01 — and A10 is now
+  Mishandling of Exceptional Conditions. **No score changes:** the coverage matrix feeds reports and
+  the assistant, never the engine, and both sample models score exactly as before.
+- Release builds now upload their artifacts before publishing, so a missing or expired publishing
+  token costs a manual publish rather than a repeated build.
+
+### Notes
+- The **verdict** and **0–100 review score** remain 100% deterministic; Copilot stays advisory.
+- 1200 automated tests (up from 418 at the start of the 2.1 cycle).
+
 ## [2.1.0] — 2026-08-23
 
 This release is mostly **new engine capability, reachable from the CLI**. The desktop UI for these
@@ -343,6 +410,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.1
 [2.1.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.0
 [2.0.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.3
 [2.0.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.2

@@ -1,6 +1,6 @@
 # Data Handling & Privacy
 
-*Applies to Threat Model Reviewer v2.1.0 and later. Companion to [SECURITY.md](../SECURITY.md).*
+*Applies to Threat Model Reviewer v2.1.1 and later. Companion to [SECURITY.md](../SECURITY.md).*
 
 Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
