@@ -1,8 +1,7 @@
 # User Guide
 
 Threat Model Reviewer reviews, fixes and analyzes **Microsoft Threat Modeling
-Tool `.tm7`** threat models (and OWASP Threat Dragon `.json`). Model creation is currently in
-**beta**. The **verdict and 0–100
+Tool `.tm7`** threat models (and OWASP Threat Dragon `.json`), and can create new ones. The **verdict and 0–100
 score are deterministic** — computed by a rubric engine, never by AI. GitHub Copilot is
 optional and only ever *advisory*.
 
@@ -66,12 +65,31 @@ justifications, and fill out-of-scope reasons. For each item pick **Built-in** o
 (draft the specifics with your seat). Review the preview, then **Apply & Save** a corrected
 `.tm7` that re-opens cleanly in the Microsoft Threat Modeling Tool.
 
-### Create — beta (not in the current build)
+### Create
 A guided wizard (components → flows → boundaries) that generates a `.tm7` with a STRIDE
 baseline. You can also describe a system or load an architecture / IaC / OpenAPI / Mermaid
-document and let Copilot extract a DFD you review before generating. **This tab is in beta and
-is hidden in the current release** — it will be enabled in a future update. Today's build
-focuses on reviewing, fixing and analyzing existing models.
+document and let Copilot extract a DFD you review before generating. Every generated threat is
+recorded as *Needs Investigation* — an enumerated starting point for you to triage, not a
+finished review.
+
+### Compare
+Pick two revisions — or use the model you already have open as the baseline — and see what
+changed, what got worse and what got better, with the score and verdict movement. Elements,
+flows, boundaries and threats are matched by identity, so a rename reads as a rename rather than
+a delete plus an add. **Explain with Copilot** adds a plain-English read; the numbers are computed
+first and are never altered by it. Exports to HTML, Markdown or CSV.
+
+### Ask
+An assistant scoped to the model you have open. Common questions — your score, why a model is not
+ready, how many threats are unmitigated, which flows cross a trust boundary — are answered
+**straight from the model's own numbers with no AI call**, so no answer can contradict the review.
+Each reply says which of the two it was. Open-ended questions go to Copilot, grounded in the same
+facts and required to cite them.
+
+### History
+Every review you run, recorded on this machine, with a per-model score trend. The tab names the
+folder the data lives in and can open it, so you can verify that nothing leaves your machine
+rather than taking it on trust. One click clears it.
 
 ## How AI is used (and not used)
 

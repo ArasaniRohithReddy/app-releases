@@ -8,7 +8,9 @@ name: update-releases-snapshot
 
 on:
   release:
-    types: [published, edited, unpublished, deleted, released]
+    # 'released' fires alongside 'published' for the same release, which ran this workflow twice
+    # and had the two runs racing to push the same commit. 'published' alone covers a new release.
+    types: [published, edited, unpublished, deleted]
   workflow_dispatch:
   schedule:
     # Release events proved unreliable for 'edited' activity, so this is the real guarantee:
@@ -27,7 +29,11 @@ jobs:
   snapshot:
     runs-on: ubuntu-latest
     steps:
+      # A release event checks out the tag, which leaves HEAD detached and makes the commit
+      # below unpushable. Always work on the default branch, which is where the snapshot lives.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Regenerate snapshots
         env:
@@ -71,4 +77,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "chore: refresh releases snapshot for the Pages site [skip ci]"
-          git push
+          # Name the branch explicitly. A bare `git push` relies on an upstream that a checkout
+          # driven by a release event does not have, which is how this silently stopped working.
+          git push origin "HEAD:${{ github.event.repository.default_branch }}"
