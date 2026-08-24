@@ -86,10 +86,45 @@ ready, how many threats are unmitigated, which flows cross a trust boundary — 
 Each reply says which of the two it was. Open-ended questions go to Copilot, grounded in the same
 facts and required to cite them.
 
+There is also a **floating Ask panel** in the bottom-left corner, available from any tab, so asking
+a question does not cost you your place in a long findings list. It is the *same conversation* as
+this tab: maximising the panel hands its history to the tab rather than starting again, and closing
+the model dismisses it.
+
 ### History
-Every review you run, recorded on this machine, with a per-model score trend. The tab names the
-folder the data lives in and can open it, so you can verify that nothing leaves your machine
-rather than taking it on trust. One click clears it.
+Every review you run, recorded on this machine, with a per-model score trend and **what you did** to
+each model — opens, exports, fixes applied and Copilot actions. The tab names the folder the data
+lives in and can open it, so you can verify that nothing leaves your machine rather than taking it
+on trust. One click clears it.
+
+**Reopening a model.** Double-click a row, or use the button at the end of it. File paths are *not*
+recorded by default, so usually you will be asked where the file is; the app then compares the file
+you pick against the content hash it recorded and tells you whether it is the same revision that was
+reviewed, or has changed since.
+
+## Appearance
+
+**Help → Appearance** switches between **Light**, **Dark**, and **Match Windows**. The choice is
+remembered and applies immediately — no restart.
+
+The data-flow diagram deliberately stays a light sheet in dark mode. It renders a *document* that is
+compared against the Microsoft Threat Modeling Tool and exported for review, so its colours are
+fixed; only the frame around it follows the theme.
+
+## Keyboard shortcuts
+
+**Help → Keyboard shortcuts**, or **F1**, lists every accelerator. The most useful:
+
+| Keys | Action |
+|---|---|
+| `Ctrl + O` / `Ctrl + W` | Open a model / close it |
+| `Ctrl + E` / `Ctrl + Shift + E` | Export HTML / PDF |
+| `Ctrl + R` | Critique the whole model with Copilot (advisory) |
+| `Ctrl + T` | Open in the Microsoft Threat Modeling Tool |
+| `Ctrl + 1` … `Ctrl + 7` | Jump to a tab |
+| `Ctrl + K` | Show or hide the floating Ask panel |
+| `Ctrl + mouse wheel` | Zoom the diagram |
+| `Ctrl + 0` | Fit the diagram to the window |
 
 ## How AI is used (and not used)
 
@@ -108,5 +143,7 @@ Uniform across every verb, so a pipeline can gate on them:
 | `1` | The command could not run — bad usage, or missing/unreadable input |
 | `2` | Ran fine, but the result gates: NOT READY, a serious comparison regression, or insecure IaC |
 
-`generate` returns `0` even though its output is NOT READY by construction, because every generated
-threat is deliberately left as *needs investigation* for an owner to triage.
+`generate` returns `0`: a generated model is structurally complete, so it passes the readiness gate.
+That is not the same as being reviewed. Every generated threat is recorded as *Needs Investigation*,
+which the rubric counts as triaged because it is a deliberate disposition — but nobody has actually
+analysed it yet. Treat a generated model as a starting point for triage, never as a finished review.

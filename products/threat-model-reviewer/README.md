@@ -39,7 +39,17 @@ This tool applies the same bar **locally, in seconds**, before submission.
 | **Analyze** | DREAD scoring, attack trees, mitigation plans, verification tests, whole-model critique, framework-gap analysis, STRIDE and framework coverage scorecards. |
 | **Export** | HTML, PDF, Markdown, CSV, JSON, **SARIF**, plus ready-to-file work items for **GitHub, Azure DevOps and Jira**. |
 | **Create** *(beta)* | Guided authoring and Copilot DFD extraction from a description, architecture image or OpenAPI spec. **Hidden in the current desktop build**; available today via the CLI. |
+| **Compare & History** | See whether a revision improved or regressed, and keep a local record of every review — score trend plus what you did to each model. A history row reopens the model, checking the file you pick against the revision that was reviewed. |
 
+### Working in the app
+
+- **Light, Dark and Match Windows** themes (**Help → Appearance**) — applied immediately, remembered
+  between sessions. The data-flow diagram deliberately stays a light sheet in dark mode: it renders a
+  document that is compared against the Threat Modeling Tool, so its colours are fixed.
+- **Keyboard shortcuts** for everything you repeat — open, close, export, jump between tabs,
+  `Ctrl + mouse wheel` to zoom the diagram. **F1** lists them all.
+- **A floating Ask panel** available from any tab, so a question does not cost you your place in a
+  long findings list. It shares one conversation with the Ask tab.
 ### Coverage highlights
 
 - **STRIDE-per-element** and per-interaction analysis, matching how the Threat Modeling Tool

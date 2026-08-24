@@ -40,7 +40,7 @@ The portable `.exe` and the installers **are** Authenticode-signed — but for n
 run. Click **More info → Run anyway**. A self-signed certificate never accrues SmartScreen
 reputation; the warning clears for everyone only once signing moves to a **CA-issued/EV**
 certificate or **Azure Trusted Signing**, which is planned. You can verify the signature and hash
-yourself first — see [SECURITY.md](../SECURITY.md#code-signing).
+yourself first — see [SECURITY.md](../../SECURITY.md#code-signing).
 
 ### The MSIX won't install / AI features don't work in the MSIX.
 - Install the included **`ThreatModelReviewer-publisher.cer`** into **Trusted People**

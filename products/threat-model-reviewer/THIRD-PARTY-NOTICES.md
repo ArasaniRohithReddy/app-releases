@@ -4,7 +4,7 @@ Threat Model Reviewer incorporates the third-party components listed below. This
 for license-compliance review. Threat Model Reviewer itself is licensed under the
 [MIT License](../LICENSE).
 
-*Accurate as of v2.1.1. Versions are the package references declared in the solution; license
+*Accurate as of v2.1.2. Versions are the package references declared in the solution; license
 identifiers are taken from each package's own metadata.*
 
 ---

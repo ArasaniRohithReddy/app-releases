@@ -64,7 +64,7 @@ so Microsoft Defender SmartScreen may still show *"Windows protected your PC"* o
 That's expected. The warning is about the certificate's **trust chain**, not about the app's
 behavior. Verify it yourself before running — check the signature and hash with
 `Get-AuthenticodeSignature` and `Get-FileHash` (see
-[SECURITY.md](../SECURITY.md#code-signing)) — and note that the deterministic review runs
+[SECURITY.md](../../SECURITY.md#code-signing)) — and note that the deterministic review runs
 entirely on your machine.
 
 SmartScreen only stops warning when the binaries are signed with a certificate from a

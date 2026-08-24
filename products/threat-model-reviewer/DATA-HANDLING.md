@@ -1,6 +1,6 @@
 # Data Handling & Privacy
 
-*Applies to Threat Model Reviewer v2.1.1 and later. Companion to [SECURITY.md](../SECURITY.md).*
+*Applies to Threat Model Reviewer v2.1.2 and later. Companion to [SECURITY.md](../../SECURITY.md).*
 
 Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
@@ -212,4 +212,4 @@ You do not have to take this document on trust:
 
 **Questions or an issue with anything stated here?** Please
 [open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose), or report
-security concerns privately as described in [SECURITY.md](../SECURITY.md).
+security concerns privately as described in [SECURITY.md](../../SECURITY.md).
