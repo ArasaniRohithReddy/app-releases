@@ -4,6 +4,29 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.7] — 2026-08-24
+
+The command-line interface is now something you can actually download.
+
+### Added
+- **`ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip` ships with every release.** The documentation had
+  described CLI usage since 2.0, but no release ever contained a CLI — the only way to obtain one
+  was to build the source, and the source repository is private. A reviewer following the docs
+  reached a dead end. The bundle is self-contained and signed like every other artifact.
+- **[docs/CLI.md](docs/CLI.md)** — download, exit codes, every verb, authentication, and a working
+  GitHub Actions example that gates a build on the verdict and uploads SARIF.
+
+### Fixed
+- **Every documented CLI command required the private repository.** All seventeen examples used
+  `dotnet run --project ThreatModelReviewer.Cli`, which nobody outside the repo can run. They now
+  use the shipped executable.
+- **"Threats by interaction" stopped short of the panel edge**, leaving a large empty area beside it
+  once the framework table below started using the full width. Both now share one rhythm.
+
+### Internal
+- Two guards: every artifact the documentation tells people to download must be produced by the
+  release script, and the public CLI documentation may not instruct readers to build from source.
+
 ## [2.1.6] — 2026-08-24
 
 Layout and labelling fixes across the Overview and Fix tabs, and a regression from 2.1.5.
@@ -557,6 +580,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.7]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.7
 [2.1.6]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.6
 [2.1.5]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.5
 [2.1.4]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.4
