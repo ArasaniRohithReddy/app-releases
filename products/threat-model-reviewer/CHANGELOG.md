@@ -4,6 +4,38 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.4] — 2026-08-24
+
+Dark mode finished properly, keyboard shortcuts, and a history you can act on.
+
+### Added
+- **Keyboard shortcuts** — 16 accelerators for opening, closing, exporting, critiquing and moving
+  between tabs, plus **Ctrl + mouse wheel** to zoom the diagram. **Help → Keyboard shortcuts** (F1)
+  lists them; the list is checked against the window's real bindings in both directions.
+- **Reopen from History.** A row can now be opened again. File paths are not stored by default, so
+  the app usually asks where the file is — and then uses the recorded content hash to tell you
+  whether it is the same revision that was reviewed.
+- **"What you did" in History** — opens, exports, fixes applied and Copilot actions per model.
+
+### Fixed
+- **Dark mode reached only part of the app.** The guard added in 2.1.3 checked a single file, so 84
+  hard-coded colours survived across the dialogs and the diagram; the whole Diagram tab stayed light
+  inside a dark window. Every view is now covered.
+- **The diagram is a document, not chrome.** Theming its shapes made every node a dark block with
+  unreadable text. The canvas is now a light sheet inside a dark frame, with its colours pinned.
+- **Icons that looked broken.** The Threat Modeling Tool substitutes an 18×18 generic outline for
+  elements left as a plain External Interactor or Data Store, which reads as a missing image when
+  scaled. Those, and the legacy 16×16 glyphs, now fall back to our own name-derived icons — a chart
+  for Power BI datasets, a file box for SharePoint. Real product artwork is unchanged.
+- **"Threats by interaction" and "Framework coverage" were unusable on a wide monitor.** Both had an
+  unbounded column, so the name sat at one edge and the numbers at the other. Both are now capped.
+- **Element names containing line breaks** turned a single interaction into three ragged lines.
+- **F1 did nothing** — WPF's built-in help command claims it before window bindings see it.
+
+### Internal
+- Export, fix and Copilot events were recordable but never recorded; Copilot events could not even be
+  attributed to a model. Both are now wired, so history describes work rather than just file opens.
+
 ## [2.1.3] — 2026-08-24
 
 Appearance and reach: the app can now be themed, questions can be asked without leaving
@@ -484,6 +516,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.4]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.4
 [2.1.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.3
 [2.1.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.2
 [2.1.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.1
