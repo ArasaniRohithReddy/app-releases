@@ -170,7 +170,17 @@
     .nav-links { display: flex; align-items: center; gap: .3rem; flex: none; }
     .nav-links a:not(.btn) { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
     .nav-links a:not(.btn):hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
-    @media (max-width: 1260px) { .nav-links.secondary { display: none; } }
+    /* Keep the section links visible on ordinary laptop widths. The header needs about 1212px of
+       content but only had 1120px at 1280px wide, so it used to overflow; rather than hiding the
+       links, the header tightens its padding, gaps and link size between 1180px and 1460px, which
+       reclaims the ~92px shortfall. Below 1180px there is genuinely no room and they collapse. */
+    @media (max-width: 1460px) {
+      .nav { padding-left: 16px; padding-right: 16px; gap: 8px; }
+      .nav-links { gap: .55rem; }
+      .nav-links.secondary { font-size: .9rem; gap: .35rem; }
+      .nav-links.secondary a { padding-left: .25rem; padding-right: .25rem; white-space: nowrap; }
+    }
+    @media (max-width: 1180px) { .nav-links.secondary { display: none; } }
     @media (max-width: 620px) { .nav .gh-btn { display: none; } .back-link .bl-text { display: none; } }
     @media (max-width: 700px) { .nav .dl-btn { display: none; } }
     @media (max-width: 400px) { .nav .brand-text { display: none; } }
@@ -265,8 +275,11 @@
     .callout p { margin: 0; color: var(--ink-2); font-size: var(--step-0); }
 
     /* Docs links */
-    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .9rem; }
-    .doc-link { display: flex; align-items: center; gap: .7rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem 1.15rem; color: var(--ink); font-weight: 600; }
+    /* One row per group. auto-fit with a 200px floor gave five cards a 4 + 1 break at desktop
+       widths, leaving a lone card stranded; auto-fill on a narrower floor keeps them together and
+       still wraps sensibly on small screens. */
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; align-items: stretch; }
+    .doc-link { display: flex; align-items: center; gap: .55rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .95rem 1rem; color: var(--ink); font-weight: 600; font-size: .95rem; white-space: nowrap; min-width: 0; }
     .doc-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
     .doc-link svg { width: 1.15em; height: 1.15em; color: var(--accent); flex: none; }
     .doc-link .arrow { margin-left: auto; color: var(--muted); }
@@ -341,7 +354,7 @@
             <a class="btn btn-secondary" href="#features">See what it does</a>
           </div>
           <div class="meta-line">
-            <span class="chip" id="version-chip">v2.1.1</span>
+            <span class="chip" id="version-chip">v2.1.6</span>
             <span>Windows 10/11 · x64</span>
             <span>Self-contained — no .NET install</span>
           </div>
@@ -396,7 +409,7 @@
           </article>
         </div>
         <div class="roadmap">
-          <span class="badge">2.1.1</span>
+          <span class="badge">2.1.6</span>
           <p><strong>Create is no longer beta, and everything now has both surfaces.</strong> Guided authoring, comparing two revisions, asking questions about a model, and local review history are all available in the desktop app <em>and</em> in the CLI. Every generated threat starts as <em>Needs Investigation</em> — an enumerated starting point for you to triage, never a finished review.</p>
         </div>
       </div>
@@ -411,10 +424,10 @@
         </div>
         <div class="features">
           <div class="feature"><h3><span class="tick">✓</span> STRIDE-per-element coverage</h3><p>Every element and interaction checked for the STRIDE categories it should address, with a threats-by-interaction breakdown.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> AI &amp; agentic surface</h3><p>Dedicated checks for the <span class="kbd">OWASP LLM Top 10 (2025)</span>, OWASP Agentic threats and MITRE ATLAS on AI/LLM components.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> AI &amp; agentic surface</h3><p>All ten categories of the <span class="kbd">OWASP LLM Top 10 (2025)</span> &mdash; &ldquo;Top 10&rdquo; is the standard&rsquo;s name, not a limit &mdash; plus OWASP Agentic threats and MITRE ATLAS techniques on AI/LLM components.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Triage &amp; mitigation quality</h3><p>Flags untriaged threats, “Not Applicable / Mitigated” without justification, and open high-priority work.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Structure &amp; hygiene</h3><p>Completeness, identity &amp; boundaries, data protection, network, logging/detection, deprecated crypto, supply chain and mismodeled stencils.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Coverage scorecards</h3><p>STRIDE matrix and a Framework coverage view (OWASP Top 10 + STRIDE) so gaps are obvious at a glance.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Coverage scorecards</h3><p>STRIDE matrix and a Framework coverage view scoring every OWASP Top 10:2025 category and all six STRIDE properties, so gaps are obvious at a glance.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Exports for every workflow</h3><p>HTML, PDF, Markdown, CSV, JSON and SARIF, plus ready-to-file work items for <span class="kbd">GitHub</span>, <span class="kbd">Azure DevOps</span> and <span class="kbd">Jira</span>.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Copilot enrichments</h3><p>Explain findings, deep DREAD/attack-tree analysis, draft fixes, whole-model critique and gap analysis — each advisory, never changing the verdict.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Also reads Threat Dragon</h3><p>Parses OWASP Threat Dragon <span class="kbd">.json</span> models too, so mixed toolchains work in one place.</p></div>
@@ -426,8 +439,8 @@
     <section class="alt" id="whats-new" aria-labelledby="whats-new-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="whats-new-h">New in 2.1 — in the app and on the command line</h2>
-          <p>2.1.1 finishes the job 2.1.0 started: every capability below is now available in the desktop app <em>and</em> in <span class="kbd">ThreatModelReviewer.Cli</span>, so you can pick the surface rather than the feature. The CLI is where a pipeline runs them on every pull request; the app is where you work through them.</p>
+          <h2 id="whats-new-h">What is new in 2.1</h2>
+          <p>Every capability below is available in the desktop app <em>and</em> in <span class="kbd">ThreatModelReviewer.Cli</span>, so you can pick the surface rather than the feature. The CLI is where a pipeline runs them on every pull request; the app is where you work through them.</p>
         </div>
         <div class="features">
           <div class="feature"><h3><span class="tick">✓</span> Compare two revisions</h3><p>Matches by stable identity, so a rename reads as a rename rather than a delete plus an add. Shows what got worse and what got better with the score and verdict movement, and Copilot can narrate it — after the numbers are already final. <strong>Compare tab</strong> · <span class="kbd">compare</span></p></div>
@@ -447,7 +460,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.1.1</span>.</p>
+          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.1.6</span>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
@@ -541,7 +554,7 @@
         <div class="docs-grid">
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/INSTALL.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/FAQ.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ &amp; troubleshooting<span class="arrow">→</span></a>
+          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/FAQ.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ<span class="arrow">→</span></a>
           <a class="doc-link" href="./releases/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> All releases<span class="arrow">→</span></a>
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow">→</span></a>
         </div>

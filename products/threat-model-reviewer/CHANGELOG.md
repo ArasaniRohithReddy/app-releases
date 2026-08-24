@@ -4,6 +4,47 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.6] — 2026-08-24
+
+Layout and labelling fixes across the Overview and Fix tabs, and a regression from 2.1.5.
+
+### Fixed
+- **The Review options model picker showed raw records** (`AiModel { Id = …, Name = … }`). A
+  regression from 2.1.5: removing the shared ComboBox style's blanket item template fixed four blank
+  dropdowns but broke this one, which had been relying on it. The guard added at the time only read
+  `MainWindow.xaml`, so it did not see the dialog; it now reads every view.
+- **Framework coverage stacked OWASP and STRIDE vertically**, using half a wide panel and leaving
+  the rest empty. They now sit side by side.
+- **Unlabelled grid columns.** The Fix tab's review column and the History tab's reopen column had
+  blank headers; both are named. The `Apply` and `Check` headers were also too narrow and clipped.
+
+## [2.1.5] — 2026-08-24
+
+A crash on the Findings tab, four dropdowns that rendered blank, and README badges
+that had gone stale.
+
+### Fixed
+- **The Findings tab threw and failed to render.** Moving view models from literal colours to
+  semantic tokens in 2.1.4 updated one colour converter and left the other parsing its argument as
+  a colour, so drawing a severity threw `FormatException` ("Token is not valid"). Both converters
+  now share one resolver.
+- **Four dropdowns rendered as blank rows** — the component and element-kind pickers on **Create**
+  and **Diagram**. The shared ComboBox style imposed `{Binding Name}` on every ComboBox in the app,
+  and a plain string has no `Name`. Lists of records now name their own display property.
+- **The diagram-surface picker** needed a display property after all, and its record calls it
+  `Label`. Fixed while verifying the change above.
+- **README badges** claimed `v2.1.2` and `418 passing` while the app shipped 2.1.4 with 1297 tests.
+
+### Internal
+- **Binding failures are now observable in development.** WPF logs a broken binding and renders
+  nothing, so the symptom is a blank column and no error — which is how the ComboBox defect survived
+  several releases. Debug builds write those failures to a file, and an automated pass over all nine
+  tabs reads it. Release builds are unchanged.
+- New guards, each verified against the real defect: the converters are exercised with the exact
+  values the view models emit; every ComboBox must be able to display its items, checked by
+  reflecting the collection's element type; the shared style may not impose a display binding; and
+  the README badges must track the shipped version and the test count.
+
 ## [2.1.4] — 2026-08-24
 
 Dark mode finished properly, keyboard shortcuts, and a history you can act on.
@@ -516,6 +557,8 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.6]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.6
+[2.1.5]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.5
 [2.1.4]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.4
 [2.1.3]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.3
 [2.1.2]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.2
