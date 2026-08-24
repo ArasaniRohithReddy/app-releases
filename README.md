@@ -39,7 +39,9 @@ your machine; GitHub Copilot is advisory only. *(Model authoring is in beta.)*
 > Additional applications will be published here over time, each under `products/<app>/` with its
 > own documentation and product-prefixed release tags.
 
-## Download
+## Download
+
+Each release contains the **desktop app** (MSI, setup, or portable ZIP) and a **command-line bundle** (-cli-win-x64.zip) for CI and scripting. See the [CLI documentation](products/threat-model-reviewer/CLI.md).
 
 Browse every version — with its release notes, file sizes and direct downloads — on the
 **[releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)**.

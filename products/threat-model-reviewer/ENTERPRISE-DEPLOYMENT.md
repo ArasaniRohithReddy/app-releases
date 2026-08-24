@@ -16,6 +16,7 @@ distribution. For a single interactive install, see [INSTALL.md](INSTALL.md).
 | **`ThreatModelReviewer-v<version>-win-x64-portable.zip`** | Extract anywhere | None | Air-gapped hosts, jump boxes, VDI golden images, "no install" policies |
 | **`ThreatModelReviewer-v<version>-setup.exe`** | Per-user | None | Self-service for users without local admin |
 | **`ThreatModelReviewer-v<version>-x64.msix`** + `.cer` | Per-user (packaged) | Certificate must be trusted | Environments standardizing on MSIX *(experimental — container restrictions may limit AI features)* |
+| **`ThreatModelReviewer-v<version>-cli-win-x64.zip`** | Extract anywhere | None | **Build agents and pipelines** — headless review, exit-code gating, SARIF upload. See [CLI.md](CLI.md) |
 
 All packages are **self-contained**: no .NET runtime prerequisite. All are
 **Authenticode-signed** — see [Signing and SmartScreen](#6-signing-smartscreen-and-trust).
@@ -89,7 +90,7 @@ No registry writes, no uninstall entry — remove the folder to uninstall.
    ```
 4. **Install behaviour:** *System* (for per-machine) — or *User* if deploying per-user.
 5. **Detection rule:** MSI product code, or a file rule on
-   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.1.8.0**.
+   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.1.9.0**.
 6. **Requirements:** Windows 10 1809+ / Windows 11, x64.
 7. **Return codes:** `0` success, `3010` soft reboot (not expected), `1602` user cancelled,
    `1603` fatal error — inspect the MSI log.

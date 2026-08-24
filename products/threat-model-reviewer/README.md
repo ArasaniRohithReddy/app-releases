@@ -74,7 +74,9 @@ This tool applies the same bar **locally, in seconds**, before submission.
 
 Full detail: **[Data handling & privacy](DATA-HANDLING.md)**.
 
-## Install
+## Install
+
+Every release ships the **desktop app** (MSI, setup, or portable ZIP) *and* a **command-line bundle** (`-cli-win-x64.zip`) for CI and scripting &mdash; see [CLI.md](CLI.md).
 
 Download from the **[latest release](https://github.com/ArasaniRohithReddy/app-releases/releases/latest)**:
 

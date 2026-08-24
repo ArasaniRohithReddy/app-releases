@@ -119,3 +119,17 @@ and findings are computed deterministically without AI.
 
 See [FAQ.md](FAQ.md). Still stuck? Open an issue:
 <https://github.com/ArasaniRohithReddy/app-releases/issues>.
+
+---
+
+## Option 5 — Command line
+
+For CI, batch review and scripting, download **`ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip`** from the
+same release. It is self-contained: extract it anywhere and run it, with no .NET installation.
+
+```powershell
+ThreatModelReviewer.Cli.exe "path\to\Model.tm7"
+```
+
+The exit code is the contract — `0` READY WITH NOTES, `2` NOT READY, `1` the run failed — so a build
+can gate on the verdict. Full reference: [CLI.md](CLI.md).

@@ -354,7 +354,7 @@
             <a class="btn btn-secondary" href="#features">See what it does</a>
           </div>
           <div class="meta-line">
-            <span class="chip" id="version-chip">v2.1.8</span>
+            <span class="chip" id="version-chip">v2.1.9</span>
             <span>Windows 10/11 · x64</span>
             <span>Self-contained — no .NET install</span>
           </div>
@@ -409,7 +409,7 @@
           </article>
         </div>
         <div class="roadmap">
-          <span class="badge">2.1.8</span>
+          <span class="badge">2.1.9</span>
           <p><strong>Create is no longer beta, and everything now has both surfaces.</strong> Guided authoring, comparing two revisions, asking questions about a model, and local review history are all available in the desktop app <em>and</em> in the CLI. Every generated threat starts as <em>Needs Investigation</em> — an enumerated starting point for you to triage, never a finished review.</p>
         </div>
       </div>
@@ -460,30 +460,37 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. A <strong>command-line bundle</strong> ships alongside them for CI and scripting. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.1.8</span>.</p>
+          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. A <strong>command-line bundle</strong> ships alongside them for CI and scripting. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.1.9</span>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
-            <div class="dl-head"><h3>Portable</h3><span class="tag">Recommended</span></div>
-            <p>Extract the <code>.zip</code> and run — nothing to install, easy to remove.</p>
-            <a class="btn btn-primary" data-dl="portable" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .zip</a>
-            <span class="dl-size" data-size="portable"></span>
-          </div>
-          <div class="dl-card">
-            <div class="dl-head"><h3>Installer (MSI)</h3></div>
-            <p>Standard installer — choose all-users or just-me at install time.</p>
-            <a class="btn btn-secondary" data-dl="msi" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msi</a>
+            <div class="dl-head"><h3>Installer (MSI)</h3><span class="tag">Recommended</span></div>
+            <p>Standard installer &mdash; choose all-users or just-me at install time. Updates itself in place.</p>
+            <a class="btn btn-primary" data-dl="msi" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msi</a>
             <span class="dl-size" data-size="msi"></span>
           </div>
           <div class="dl-card">
+            <div class="dl-head"><h3>Portable</h3></div>
+            <p>Extract the <code>.zip</code> and run &mdash; nothing to install, easy to remove.</p>
+            <a class="btn btn-secondary" data-dl="portable" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .zip</a>
+            <span class="dl-size" data-size="portable"></span>
+          </div>
+          <div class="dl-card">
             <div class="dl-head"><h3>Setup (.exe)</h3></div>
-            <p>Per-user installer with a Start-Menu shortcut and uninstall — no admin needed.</p>
+            <p>Per-user installer with a Start-Menu shortcut and uninstall &mdash; no admin needed.</p>
             <a class="btn btn-secondary" data-dl="setup" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download setup.exe</a>
             <span class="dl-size" data-size="setup"></span>
           </div>
           <div class="dl-card">
+            <div class="dl-head"><h3>Command line</h3><span class="tag">CI &amp; scripting</span></div>
+            <p>The same deterministic engine with no UI. Self-contained &mdash; extract and run. Exit code <code>2</code> means NOT READY, so a build can gate on it.</p>
+            <a class="btn btn-secondary" data-dl="cli" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download CLI</a>
+            <span class="dl-size" data-size="cli"></span>
+            <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">CLI documentation</a></div>
+          </div>
+          <div class="dl-card">
             <div class="dl-head"><h3>MSIX</h3><span class="tag">Experimental</span></div>
-            <p>Packaged install — trust the <code>publisher.cer</code> first. AI may be limited under MSIX.</p>
+            <p>Packaged install &mdash; trust the <code>publisher.cer</code> first. AI may be limited under MSIX.</p>
             <a class="btn btn-secondary" data-dl="msix" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msix</a>
             <span class="dl-size" data-size="msix"></span>
             <div class="dl-size"><a data-dl="cer" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">publisher.cer</a></div>
@@ -590,7 +597,8 @@
 
       function matcher(name) {
         var n = name.toLowerCase();
-        if (n.endsWith("-portable.zip") || (n.endsWith(".zip") && n.indexOf("portable") > -1)) return "portable";
+        if (n.indexOf("cli") > -1 && n.endsWith(".zip")) return "cli";
+      if (n.endsWith("-portable.zip") || (n.endsWith(".zip") && n.indexOf("portable") > -1)) return "portable";
         if (n.endsWith(".msi")) return "msi";
         if (n.endsWith("-setup.exe") || (n.endsWith(".exe") && n.indexOf("setup") > -1)) return "setup";
         if (n.endsWith(".msix")) return "msix";
@@ -621,9 +629,9 @@
             document.querySelectorAll('[data-dl="' + k + '"]').forEach(function (el) { el.href = a.browser_download_url; });
             document.querySelectorAll('[data-size="' + k + '"]').forEach(function (el) { el.textContent = mb(a.size); });
           });
-          // Hero button → the recommended (portable) asset when available
+          // Hero button -> the recommended asset (MSI), matching the download grid
           var hero = document.getElementById("hero-download");
-          if (hero && byKind.portable) hero.href = byKind.portable.browser_download_url;
+          if (hero && byKind.msi) hero.href = byKind.msi.browser_download_url;
           else if (hero) hero.href = LATEST_PAGE;
         })
         .catch(function () { /* keep the static /releases/latest links */ });

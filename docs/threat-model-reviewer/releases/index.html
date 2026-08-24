@@ -320,6 +320,7 @@
     // Classify an asset filename into a package kind.
     function kindOf(name) {
       var n = (name || "").toLowerCase();
+      if (n.indexOf("cli") > -1 && n.slice(-4) === ".zip") return "cli";
       if (n.indexOf("portable") > -1 && n.slice(-4) === ".zip") return "portable";
       if (n.slice(-4) === ".msi") return "msi";
       if (n.slice(-4) === ".exe") return "setup";
@@ -330,11 +331,12 @@
     var KIND = {
       msi:      { label: "Installer (MSI)", hint: "Per-machine or per-user", rec: true },
       portable: { label: "Portable (ZIP)",  hint: "Extract and run" },
+      cli:      { label: "Command line",    hint: "For CI and scripting" },
       setup:    { label: "Setup (.exe)",    hint: "Per-user, no admin" },
       msix:     { label: "MSIX",            hint: "Packaged (experimental)" },
       cer:      { label: "Publisher cert",  hint: "Trust before MSIX install" }
     };
-    var ORDER = ["msi", "portable", "setup", "msix", "cer"];
+    var ORDER = ["msi", "portable", "setup", "cli", "msix", "cer"];
     var ICON = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>';
 
     function versionOf(tag) { return (tag || "").indexOf(PREFIX) === 0 ? tag.slice(PREFIX.length) : (tag || ""); }

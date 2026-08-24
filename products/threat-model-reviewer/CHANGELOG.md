@@ -4,6 +4,29 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.9] — 2026-08-24
+
+The CLI is now visible everywhere it should be, and two flaky tests are gone.
+
+### Fixed
+- **The CLI was invisible on the website.** Both the product page and the releases page map asset
+  names to download cards, and neither knew about `cli-win-x64.zip` — so every release silently
+  dropped it from the download grid. Both now show it, with its size and a link to the CLI guide.
+- **The product page called the portable ZIP "Recommended"** while the README, the install guide, the
+  release notes and the releases page all said the MSI. The MSI now leads the download grid, carries
+  the recommendation, and is what the hero button offers.
+- **Package tables omitted the CLI.** The install guide, the README artifact table and the enterprise
+  deployment guide each enumerate the downloads; none listed the command-line bundle.
+- **Two flaky tests.** The Markdown renderer's STA helper swallowed a thread-join timeout and then
+  asserted on an empty string, so it passed alone and failed under load with a misleading message.
+  The streaming-progress test polled for a `Progress<T>` callback that xUnit marshals onto the same
+  single-threaded context the polling loop occupied, so the two starved each other; it now records
+  progress synchronously, which is what the provider's contract actually promises. Five consecutive
+  full runs, no failures.
+
+### Internal
+- A guard asserts that any document listing the download packages lists the CLI bundle too.
+
 ## [2.1.8] — 2026-08-24
 
 Both the desktop app and the CLI ship — and a regression that would have replaced one with the other.
@@ -604,6 +627,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.9]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.9
 [2.1.8]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.8
 [2.1.7]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.7
 [2.1.6]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.6
