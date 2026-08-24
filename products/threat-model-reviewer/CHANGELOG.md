@@ -4,6 +4,30 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.1.8] — 2026-08-24
+
+Both the desktop app and the CLI ship — and a regression that would have replaced one with the other.
+
+### Fixed
+- **The in-app updater could have installed the CLI over the desktop app.** Adding the CLI bundle in
+  2.1.7 gave a release two `.zip` assets, and the portable channel matched on the extension alone —
+  so a portable desktop install was offered the command-line bundle. It now requires a *portable*
+  archive, and a test asserts that no channel can ever deliver the CLI as an app update.
+- **Copilot answers showed raw `##` and `>` markers.** The Markdown renderer handled inline
+  formatting only, so headings and blockquotes — which Copilot uses to structure answers and to flag
+  grounding corrections — arrived with their syntax visible. Headings, blockquotes and numbered lists
+  now render, and `#1234` or `#FF0000` are still left alone.
+
+### Note on packaging
+Every release contains **both** products, and will continue to:
+
+| Artifact | What it is |
+| --- | --- |
+| `…-x64.msi` | Desktop app installer (recommended) |
+| `…-setup.exe` | Desktop app installer (Inno) |
+| `…-win-x64-portable.zip` | Desktop app, no installation |
+| `…-cli-win-x64.zip` | Command line, for CI and scripting |
+
 ## [2.1.7] — 2026-08-24
 
 The command-line interface is now something you can actually download.
@@ -580,6 +604,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.1.8]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.8
 [2.1.7]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.7
 [2.1.6]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.6
 [2.1.5]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.5
