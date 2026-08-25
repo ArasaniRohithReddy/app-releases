@@ -11,7 +11,7 @@
 
 **[Product site](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/)** ·
 **[Download](https://github.com/ArasaniRohithReddy/app-releases/releases/latest)** ·
-**[Install](INSTALL.md)** · **[User guide](USER-GUIDE.md)** · **[FAQ](FAQ.md)**
+**[Install](INSTALL.md)** · **[User guide](USER-GUIDE.md)** · **[CLI](CLI.md)** · **[FAQ](FAQ.md)**
 
 </div>
 
@@ -103,6 +103,7 @@ Every build is **self-contained** — no .NET runtime required. Step-by-step: **
 | **[INSTALL.md](INSTALL.md)** | Installing, updating and uninstalling |
 | **[USER-GUIDE.md](USER-GUIDE.md)** | Tabs, scoring, findings and workflows |
 | **[FAQ.md](FAQ.md)** | Common questions and troubleshooting |
+| **[CLI.md](CLI.md)** | **Command line** — verbs, exit codes, authentication, CI examples |
 | **[DATA-HANDLING.md](DATA-HANDLING.md)** | **Security & privacy review** — network egress, storage, redaction, no telemetry |
 | **[ENTERPRISE-DEPLOYMENT.md](ENTERPRISE-DEPLOYMENT.md)** | **IT administrators** — silent install, Intune/SCCM/GPO, air-gapped, CI/CD |
 | **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)** | License compliance |
