@@ -90,7 +90,7 @@ No registry writes, no uninstall entry — remove the folder to uninstall.
    ```
 4. **Install behaviour:** *System* (for per-machine) — or *User* if deploying per-user.
 5. **Detection rule:** MSI product code, or a file rule on
-   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.1.9.0**.
+   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.2.0.0**.
 6. **Requirements:** Windows 10 1809+ / Windows 11, x64.
 7. **Return codes:** `0` success, `3010` soft reboot (not expected), `1602` user cancelled,
    `1603` fatal error — inspect the MSI log.

@@ -66,6 +66,9 @@ ThreatModelReviewer.Cli.exe compare baseline.tm7 candidate.tm7 --md diff.md
 # Build a .tm7 from a described system (deterministic STRIDE enumeration)
 ThreatModelReviewer.Cli.exe generate system.json --out model.tm7
 
+# ...and write an auditable record of how it was built, beside the model
+ThreatModelReviewer.Cli.exe generate system.json --out model.tm7 --evidence
+
 # Read what the team already has: documents, diagrams, or infrastructure as code
 ThreatModelReviewer.Cli.exe ingest architecture.drawio
 ThreatModelReviewer.Cli.exe ingest main.bicep

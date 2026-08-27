@@ -126,6 +126,28 @@ fixed; only the frame around it follows the theme.
 | `Ctrl + mouse wheel` | Zoom the diagram |
 | `Ctrl + 0` | Fit the diagram to the window |
 
+---
+
+## Evidence files
+
+A generated threat model is only trustworthy if the reader can check how it was built. Passing
+`--evidence` (or leaving **Write evidence file** ticked in the app's Create tab) writes a
+`.evidence.md` beside the `.tm7` recording:
+
+- **Declared inputs** — components, flows, boundaries and assumptions, exactly as supplied.
+- **The resulting model** — every component, its stencil, whether it is in scope, and its boundary.
+- **Threats enumerated** — the count by STRIDE category, and **every rule that fired and how often**,
+  so the enumeration itself can be challenged rather than only the individual threats.
+- **Added by the generator** — anything synthesized on your behalf, such as a trust boundary the
+  specification did not declare. Presenting these as though you had asked for them would be the most
+  misleading thing the file could do, so they are called out separately.
+- **Gaps and what to verify** — every warning the generator raised, plus the manual checks that no
+  tool can perform for you.
+
+The file is deterministic and contains no AI-generated claims: re-running the same specification
+reproduces it byte for byte, so any difference is a real change of input rather than model drift.
+Attach it to a review and a reader can audit the model instead of trusting it.
+
 ## How AI is used (and not used)
 
 - The **verdict, score, and findings are deterministic** — they never depend on AI.

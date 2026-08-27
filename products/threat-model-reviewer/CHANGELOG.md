@@ -4,6 +4,35 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.2.0] — 2026-08-27
+
+Generated models can now be audited rather than trusted.
+
+### Added
+- **Evidence files.** Generating a model can write a `.evidence.md` beside the `.tm7` recording the
+  declared inputs, the resulting model, **every rule that fired and how often**, anything the
+  generator synthesized on your behalf, and every warning it raised. Deterministic and AI-free: the
+  same specification reproduces it byte for byte, so a difference means the input changed rather than
+  the model drifting. `--evidence` in the CLI, a **Write evidence file** checkbox in the Create tab.
+- **CI on every push and pull request** (`.github/workflows/ci.yml`), building with `-warnaserror`.
+  Until now the only workflow was `release`, triggered solely by a version tag — so nothing validated
+  a pull request, and three Dependabot bumps (two of them major) sat with no checks at all.
+- **Branch safety.** The public release hub is protected server-side against force-pushes and branch
+  deletion, verified by attempting one as the owner and having it rejected. The private source repo
+  cannot use GitHub protection on this plan, so it has a committed pre-push hook
+  (`pwsh scripts/install-hooks.ps1`) that refuses to force-push or delete `main` and runs build and
+  tests first.
+
+### Changed
+- Dependencies: `xunit.runner.visualstudio` 3.1.4 → 4.0.0, `Microsoft.OpenApi.Readers` 1.6.22 →
+  1.6.31, `actions/upload-artifact` v4 → v7. Each was tested locally before merging, including the
+  `openapi` verb specifically, since it consumes the bumped reader.
+
+### Internal
+- A **surface parity** guard asserts the desktop app and the CLI cannot diverge: a capability added
+  to one must be reachable from the other. This is the defect class that once shipped the Create and
+  Assistant tabs hidden while the CLI could already do the work.
+
 ## [2.1.9] — 2026-08-24
 
 The CLI is now visible everywhere it should be, and two flaky tests are gone.
@@ -627,6 +656,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.2.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.2.0
 [2.1.9]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.9
 [2.1.8]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.8
 [2.1.7]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.7
