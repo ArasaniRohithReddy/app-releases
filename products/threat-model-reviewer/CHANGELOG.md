@@ -4,6 +4,40 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.4.0] — 2026-09-06
+
+Two engines that shipped in every build but could not be reached are now connected, and the guard
+that should have noticed no longer depends on anyone remembering.
+
+### Added
+- **Assistant data sources (MCP).** **Help → Assistant data sources** lets the assistant check a
+  model's assumptions against systems you already have access to — including the **Azure MCP
+  Server**, which reads the subscriptions and resource configuration *you* can read, using your
+  existing `az login`. Off behind two switches, and each source states what it can reach before you
+  enable it. It never touches the verdict or the score.
+- **Import architecture into the Create tab.** Build a draft from what your team already has: Bicep,
+  an ARM template, Terraform, or a draw.io / Excalidraw / Graphviz / Mermaid / Visio diagram. The
+  reading is deterministic and shared with the CLI's `ingest` verb, so the two surfaces cannot
+  disagree about what a file contains.
+
+### Fixed
+- **The MCP subsystem was unreachable.** Runtime, connection manager, config store and the Azure
+  descriptor — with 43 passing security tests — shipped for several releases while
+  `CopilotProvider` created sessions without ever populating `SessionConfig.McpServers`. It
+  compiled, it was correct, and it did nothing.
+- **The ingest engines were CLI-only.** Bicep, ARM, Terraform and six diagram parsers were in every
+  build, and the desktop app could not open any of them.
+- **The importer threw on a file with no diagram in it**, where it should return "nothing found".
+  Found by a test written against its own documented contract.
+
+### Internal
+- **`OrphanedCodeTests` replaces an allowlist with a structural check.** `FeatureWiringTests`
+  guards a hand-written list of capabilities, which only catches what someone remembered to add —
+  which is exactly why MCP hid. The new guard flags *any* public engine that only the tests can
+  reach and requires each exemption to carry a written reason. Verified by planting a deliberate
+  orphan and confirming the build fails.
+- Surface parity now covers architecture import, so it cannot become CLI-only again.
+
 ## [2.3.0] — 2026-09-06
 
 The tool is now usable from an AI agent, not only by a human at a keyboard.
@@ -14,7 +48,7 @@ The tool is now usable from an AI agent, not only by a human at a keyboard.
   compare two revisions for regression, and generate a model with an evidence file — each mapped to
   what a developer actually asks rather than to our verb names. It carries the CI recipes, both spec
   schemas, and the full rubric so an agent can explain a check id instead of inventing one.
-  See [SKILL.md](SKILL.md).
+  See [docs/SKILL.md](docs/SKILL.md).
 - **The determinism invariant is stated in the skill in the imperative**: never report a verdict you
   did not read out of the tool, never imply that any AI can change one, and stop rather than guess
   if the engine cannot be run. The verdict and the 0-100 score still come from 72 rubric checks with
@@ -121,7 +155,7 @@ The command-line interface is now something you can actually download.
   described CLI usage since 2.0, but no release ever contained a CLI — the only way to obtain one
   was to build the source, and the source repository is private. A reviewer following the docs
   reached a dead end. The bundle is self-contained and signed like every other artifact.
-- **[CLI.md](CLI.md)** — download, exit codes, every verb, authentication, and a working
+- **[docs/CLI.md](docs/CLI.md)** — download, exit codes, every verb, authentication, and a working
   GitHub Actions example that gates a build on the verdict and uploads SARIF.
 
 ### Fixed
@@ -688,6 +722,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.4.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.4.0
 [2.3.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.3.0
 [2.2.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.2.0
 [2.1.9]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.9

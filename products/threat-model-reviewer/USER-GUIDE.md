@@ -66,6 +66,14 @@ justifications, and fill out-of-scope reasons. For each item pick **Built-in** o
 `.tm7` that re-opens cleanly in the Microsoft Threat Modeling Tool.
 
 ### Create
+
+**Import architecture…** builds a draft from a file your team already maintains — Bicep, an ARM
+template, Terraform, or a draw.io / Excalidraw / Graphviz / Mermaid / Visio diagram. The reading is
+deterministic and uses the same code as the CLI's `ingest` verb.
+
+It produces a *draft*, on purpose: infrastructure code records what was declared and a diagram records
+what someone drew, and neither is necessarily what is deployed. Review it, correct it, then generate.
+
 A guided wizard (components → flows → boundaries) that generates a `.tm7` with a STRIDE
 baseline. You can also describe a system or load an architecture / IaC / OpenAPI / Mermaid
 document and let Copilot extract a DFD you review before generating. Every generated threat is
@@ -148,6 +156,26 @@ The file is deterministic and contains no AI-generated claims: re-running the sa
 reproduces it byte for byte, so any difference is a real change of input rather than model drift.
 Attach it to a review and a reader can audit the model instead of trusting it.
 
+## Assistant data sources (MCP)
+
+**Help → Assistant data sources (MCP)** lets the assistant consult systems you already have access
+to, so it can check a model's assumptions against reality rather than guessing — for example whether
+a storage account really is private.
+
+Two sources ship with the app:
+
+| Source | What it adds |
+| --- | --- |
+| **Microsoft Learn Docs** | Grounds remediation advice in current official documentation rather than model training data. |
+| **Azure MCP Server** | Reads the Azure subscriptions, resource groups and resource configuration that *you* can already read. Requires Node.js and an existing `az login`. |
+
+Everything is **off until you turn it on**, behind two switches: a master toggle and a per-source
+tick. Nothing starts a process, and no configuration is written, until you enable something. Each
+source states plainly what it can reach before you enable it, because turning one on grants a local
+process access to your own accounts.
+
+None of this affects the verdict or the score. Those come from the rubric engine, which never
+consults an external source.
 ## How AI is used (and not used)
 
 - The **verdict, score, and findings are deterministic** — they never depend on AI.
