@@ -116,3 +116,21 @@ sent and when.
 ```
 
 The SARIF output means findings appear in the GitHub Security tab like any other scanner's.
+
+---
+
+## Driving it from an AI agent
+
+Everything above is also reachable through the **GitHub Copilot CLI skill**, shipped as
+`ThreatModelReviewer-vX.Y.Z-skill.zip` in the same release. It teaches an agent which verb to run
+for a plain-English request, what the exit codes mean, and — importantly — that it must report the
+engine's verdict rather than form one of its own.
+
+```powershell
+Expand-Archive ThreatModelReviewer-vX.Y.Z-skill.zip -DestinationPath C:\tools\tmr-skill
+$env:THREAT_MODEL_REVIEWER_CLI = 'C:\tools\tmr-cli'   # where this CLI bundle was extracted
+copilot skill add C:\tools\tmr-skill\skills
+```
+
+Then: *"review docs/threat-model.tm7"*, *"why is it NOT READY?"*, *"fix what you can"*, *"did the
+posture regress?"*. Full guide: [SKILL.md](SKILL.md).

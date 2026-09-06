@@ -1,7 +1,7 @@
 # Installing Threat Model Reviewer
 
-Threat Model Reviewer is a **Windows desktop application**. Three download options are
-attached to every release on the
+Threat Model Reviewer is a **Windows desktop application** with a command line and a GitHub Copilot
+CLI skill alongside it. Every download is attached to each release on the
 **[releases page](https://github.com/ArasaniRohithReddy/app-releases/releases)** — pick one.
 
 ## System requirements
@@ -133,3 +133,21 @@ ThreatModelReviewer.Cli.exe "path\to\Model.tm7"
 
 The exit code is the contract — `0` READY WITH NOTES, `2` NOT READY, `1` the run failed — so a build
 can gate on the verdict. Full reference: [CLI.md](CLI.md).
+
+## Option 6 — GitHub Copilot CLI skill
+
+To let an AI agent drive the reviewer, download **`ThreatModelReviewer-vX.Y.Z-skill.zip`** as well
+as the CLI bundle. The skill is instructions; the CLI does the work, so both are needed.
+
+```powershell
+Expand-Archive ThreatModelReviewer-vX.Y.Z-skill.zip    -DestinationPath C:\tools\tmr-skill
+Expand-Archive ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip -DestinationPath C:\tools\tmr-cli
+
+$env:THREAT_MODEL_REVIEWER_CLI = 'C:\tools\tmr-cli'   # or put that folder on PATH
+copilot skill add C:\tools\tmr-skill\skills
+copilot skill list                                    # 'threat-model-reviewer' should appear
+```
+
+Then ask in plain English: *"review docs/threat-model.tm7"*, *"why is it NOT READY?"*, *"fix what
+you can"*. The verdict still comes from the deterministic engine; the agent only runs it and reports
+what it says. Full guide: [SKILL.md](SKILL.md).

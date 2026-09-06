@@ -76,7 +76,7 @@ Full detail: **[Data handling & privacy](DATA-HANDLING.md)**.
 
 ## Install
 
-Every release ships the **desktop app** (MSI, setup, or portable ZIP) *and* a **command-line bundle** (`-cli-win-x64.zip`) for CI and scripting &mdash; see [CLI.md](CLI.md).
+Every release ships the **desktop app** (MSI, setup, or portable ZIP), a **command-line bundle** (`-cli-win-x64.zip`) for CI and scripting &mdash; see [CLI.md](CLI.md) &mdash; and a **GitHub Copilot CLI skill** (`-skill.zip`) so an AI agent can drive the reviewer &mdash; see [SKILL.md](SKILL.md).
 
 Download from the **[latest release](https://github.com/ArasaniRohithReddy/app-releases/releases/latest)**:
 
@@ -85,6 +85,8 @@ Download from the **[latest release](https://github.com/ArasaniRohithReddy/app-r
 | **`…-x64.msi`** | Standard installer; per-machine or per-user. **Recommended, and the option for managed deployment** |
 | **`…-win-x64-portable.zip`** | Extract and run — no installation |
 | **`…-setup.exe`** | Per-user installer, no administrator rights |
+| **`…-cli-win-x64.zip`** | Command line for CI and scripting — headless review, exit-code gating, SARIF |
+| **`…-skill.zip`** | GitHub Copilot CLI skill — review, fix, compare and generate from an AI agent. Needs the CLI bundle alongside it |
 | **`…-x64.msix`** + **`…-publisher.cer`** | MSIX *(experimental — trust the `.cer` first)* |
 
 Every build is **self-contained** — no .NET runtime required. Step-by-step: **[INSTALL.md](INSTALL.md)**.
@@ -104,6 +106,7 @@ Every build is **self-contained** — no .NET runtime required. Step-by-step: **
 | **[USER-GUIDE.md](USER-GUIDE.md)** | Tabs, scoring, findings and workflows |
 | **[FAQ.md](FAQ.md)** | Common questions and troubleshooting |
 | **[CLI.md](CLI.md)** | **Command line** — verbs, exit codes, authentication, CI examples |
+| **[SKILL.md](SKILL.md)** | **GitHub Copilot CLI skill** — installing it, what it exposes to an agent, and its limits |
 | **[DATA-HANDLING.md](DATA-HANDLING.md)** | **Security & privacy review** — network egress, storage, redaction, no telemetry |
 | **[ENTERPRISE-DEPLOYMENT.md](ENTERPRISE-DEPLOYMENT.md)** | **IT administrators** — silent install, Intune/SCCM/GPO, air-gapped, CI/CD |
 | **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)** | License compliance |

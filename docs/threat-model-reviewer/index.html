@@ -354,7 +354,7 @@
             <a class="btn btn-secondary" href="#features">See what it does</a>
           </div>
           <div class="meta-line">
-            <span class="chip" id="version-chip">v2.2.0</span>
+            <span class="chip" id="version-chip">v2.3.0</span>
             <span>Windows 10/11 · x64</span>
             <span>Self-contained — no .NET install</span>
           </div>
@@ -409,7 +409,7 @@
           </article>
         </div>
         <div class="roadmap">
-          <span class="badge">2.2.0</span>
+          <span class="badge">2.3.0</span>
           <p><strong>Create is no longer beta, and everything now has both surfaces.</strong> Guided authoring, comparing two revisions, asking questions about a model, and local review history are all available in the desktop app <em>and</em> in the CLI. Every generated threat starts as <em>Needs Investigation</em> — an enumerated starting point for you to triage, never a finished review.</p>
         </div>
       </div>
@@ -460,7 +460,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. A <strong>command-line bundle</strong> ships alongside them for CI and scripting. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.2.0</span>.</p>
+          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. A <strong>command-line bundle</strong> ships alongside them for CI and scripting, and a <strong>GitHub Copilot CLI skill</strong> for driving it from an AI agent. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.3.0</span>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
@@ -487,6 +487,13 @@
             <a class="btn btn-secondary" data-dl="cli" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download CLI</a>
             <span class="dl-size" data-size="cli"></span>
             <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">CLI documentation</a></div>
+          </div>
+          <div class="dl-card">
+            <div class="dl-head"><h3>Copilot CLI skill</h3><span class="tag">AI agents</span></div>
+            <p>Ask an agent to review, explain, fix or compare a model in plain English. The verdict still comes from the deterministic engine &mdash; the agent only runs it. Needs the command-line bundle alongside it.</p>
+            <a class="btn btn-secondary" data-dl="skill" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download skill</a>
+            <span class="dl-size" data-size="skill"></span>
+            <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/SKILL.md">Skill documentation</a></div>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>MSIX</h3><span class="tag">Experimental</span></div>
@@ -597,6 +604,7 @@
 
       function matcher(name) {
         var n = name.toLowerCase();
+        if (n.indexOf("skill") > -1 && n.endsWith(".zip")) return "skill";
         if (n.indexOf("cli") > -1 && n.endsWith(".zip")) return "cli";
       if (n.endsWith("-portable.zip") || (n.endsWith(".zip") && n.indexOf("portable") > -1)) return "portable";
         if (n.endsWith(".msi")) return "msi";

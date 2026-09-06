@@ -4,6 +4,38 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.3.0] — 2026-09-06
+
+The tool is now usable from an AI agent, not only by a human at a keyboard.
+
+### Added
+- **A GitHub Copilot CLI skill**, shipped as `ThreatModelReviewer-vX.Y.Z-skill.zip`. It teaches an
+  agent five jobs — review a model, explain why it is NOT READY, fix what is mechanically fixable,
+  compare two revisions for regression, and generate a model with an evidence file — each mapped to
+  what a developer actually asks rather than to our verb names. It carries the CI recipes, both spec
+  schemas, and the full rubric so an agent can explain a check id instead of inventing one.
+  See [SKILL.md](SKILL.md).
+- **The determinism invariant is stated in the skill in the imperative**: never report a verdict you
+  did not read out of the tool, never imply that any AI can change one, and stop rather than guess
+  if the engine cannot be run. The verdict and the 0-100 score still come from 72 rubric checks with
+  no AI involvement.
+- **`Invoke-ThreatModelReviewer.ps1`** in the bundle finds the CLI — `THREAT_MODEL_REVIEWER_CLI`,
+  then `PATH`, then the usual install locations — and forwards its exit code verbatim, since a
+  wrapper that rewrote it would turn a failing CI gate into a passing one.
+- **`skill.zip` is now built by `scripts/build-release.ps1`** and published with every release, with
+  the version stamped into the plugin manifest and the bundle README so a forgotten bump cannot ship
+  instructions that name a file that does not exist.
+
+### Internal
+- **`SkillPackagingTests`, 23 tests.** Nothing compiles a skill, so a wrong sentence in one becomes a
+  wrong command. They assert every verb and flag the skill uses is one the CLI parses, that both
+  documented spec examples deserialize and generate a real model, that every gating check is named
+  in the rubric reference, that every relative link resolves, that the description stays inside the
+  Copilot CLI's 1024-character limit, and that the release script still packages the bundle. Each
+  guard was verified by breaking the thing it protects and confirming the test failed.
+- The **surface parity** guard now covers three front ends: a shared capability must be reachable
+  from the desktop app, the CLI **and** the skill.
+
 ## [2.2.0] — 2026-08-27
 
 Generated models can now be audited rather than trusted.
@@ -89,7 +121,7 @@ The command-line interface is now something you can actually download.
   described CLI usage since 2.0, but no release ever contained a CLI — the only way to obtain one
   was to build the source, and the source repository is private. A reviewer following the docs
   reached a dead end. The bundle is self-contained and signed like every other artifact.
-- **[docs/CLI.md](docs/CLI.md)** — download, exit codes, every verb, authentication, and a working
+- **[CLI.md](CLI.md)** — download, exit codes, every verb, authentication, and a working
   GitHub Actions example that gates a build on the verdict and uploads SARIF.
 
 ### Fixed
@@ -656,6 +688,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.3.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.3.0
 [2.2.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.2.0
 [2.1.9]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.9
 [2.1.8]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.8
