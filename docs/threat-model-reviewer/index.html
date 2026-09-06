@@ -613,7 +613,14 @@
         if (n.endsWith(".cer")) return "cer";
         return null;
       }
-      function mb(bytes) { return bytes ? (bytes / 1e6).toFixed(0) + " MB" : ""; }
+      // Sizes span five orders of magnitude here: the skill bundle is tens of kilobytes and the
+      // portable ZIP is hundreds of megabytes. Rounding everything to whole megabytes reported the
+      // skill as "0 MB", which reads as a broken or empty download.
+      function mb(bytes) {
+        if (!bytes) return "";
+        if (bytes < 1048576) return (bytes / 1024).toFixed(0) + " KB";
+        return (bytes / 1e6).toFixed(0) + " MB";
+      }
 
       fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
         .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
