@@ -35,10 +35,11 @@ privacy reviewer can approve it on evidence rather than assurances.
 | Update preferences (`update.json`) | `%APPDATA%\ThreatModelReviewer\update.json` | Never |
 | Activity history (`history-*.jsonl`, `settings.json`, `salt.txt`) | `%LOCALAPPDATA%\ThreatModelReviewer\history\` | **Never** |
 | Downloaded update package | `%LOCALAPPDATA%\…\ThreatModelReviewer` cache | Never |
+| Azure inventory read by **Build from Azure…** | In memory, plus the evidence file you choose to write | **Never** — it is read *from* Azure, and nothing is sent anywhere |
 
 ## 3. Exactly what leaves the machine
 
-There are **three** possible outbound destinations. Nothing else is contacted.
+There are **four** possible outbound destinations. Nothing else is contacted.
 
 ### 3.1 Update check — automatic, disableable
 
@@ -71,6 +72,24 @@ OpenAI-compatible endpoint — **Azure OpenAI**, a private gateway, or a locally
 | **Destination** | The base URL **you** enter. There is no default and no vendor endpoint. |
 | **Credential** | Stored locally and DPAPI-encrypted; sent only to your endpoint as a bearer token. |
 | **Use case** | Regulated environments that require inference to remain in-tenant or on-premises. |
+
+### 3.4 Azure Resource Manager — only when you build from a resource group
+
+Used only by **Create → Build from Azure…** in the app, or the `azure` verb in the CLI. If you never
+use those, no Azure endpoint is contacted.
+
+| Property | Detail |
+| --- | --- |
+| **Destination** | Azure Resource Manager, reached through the **Azure CLI already installed on your machine**, authenticated as your existing `az login`. This tool ships no Azure credential and stores none. |
+| **When** | Only when you explicitly pick a resource group and build from it |
+| **Sent** | Nothing but the read request itself: which subscription and resource group to list. **No threat model content, no findings, no file contents, no telemetry.** |
+| **Read** | The resources in the group and their configuration, role assignments over the group, and private endpoints |
+| **Never read** | Keys, secrets, connection strings, credentials, or the contents of any data store. Those commands are **not reachable** — the wrapper cannot be handed a command, and every read is re-validated against an allowlist before it runs. |
+| **Never written** | Nothing is created, changed or deleted. Discovery requires only the **Reader** role. |
+| **To disable** | Do not use the Azure button or the `azure` verb. Nothing else in the product contacts Azure. |
+
+Every Azure build can write an evidence file listing the exact commands run and every fact used, so
+what was read is auditable rather than asserted.
 
 ## 4. Secret redaction before any prompt
 

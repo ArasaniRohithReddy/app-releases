@@ -80,6 +80,29 @@ document and let Copilot extract a DFD you review before generating. Every gener
 recorded as *Needs Investigation* — an enumerated starting point for you to triage, not a
 finished review.
 
+**Build from Azure…** goes one step further: instead of reading what was *declared*, it reads what is
+actually **deployed**. Pick a resource group you already have access to and it drafts a model from
+the resources in it.
+
+What makes this different from reading a diagram is where the flows come from. A managed identity
+holding a **data-plane** role on a store is evidence that the resource running as that identity reads
+or writes it — a connection that exists in production whether or not anyone drew it. Roles that only
+grant control over configuration (Contributor, Reader, Owner) are not drawn, and neither are grants
+made across the whole subscription or a management group, which are almost always inherited
+governance rather than this system talking to itself.
+
+You need the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), a completed
+`az login`, and the **Reader** role. Discovery is read-only by construction: it cannot create,
+change or delete anything, and no command that reads a key, secret or connection string is
+reachable from the tool at all.
+
+Tick **Write evidence file** before generating, and read what it says discovery *cannot* see. Two
+limits matter most, and both are also written into the generated `.tm7` as assumptions:
+
+- A role shows what is **authorised**, not what happens — a granted role may be unused.
+- Access using a **shared key** leaves no role assignment, so it is invisible here and will be
+  missing from the diagram entirely.
+
 ### Compare
 Pick two revisions — or use the model you already have open as the baseline — and see what
 changed, what got worse and what got better, with the score and verdict movement. Elements,
@@ -155,6 +178,21 @@ A generated threat model is only trustworthy if the reader can check how it was 
 The file is deterministic and contains no AI-generated claims: re-running the same specification
 reproduces it byte for byte, so any difference is a real change of input rather than model drift.
 Attach it to a review and a reader can audit the model instead of trusting it.
+
+### Azure discovery evidence
+
+A model built from a live subscription is the easiest kind to over-trust, because it describes
+something real. Building from Azure therefore writes a second file, `.azure-evidence.md`, recording:
+
+- **Every Azure command that was run** — the complete list, all of them reads.
+- **How each flow was inferred** — which role assignment produced it, and where a data-plane role was
+  read but *not* drawn, the reason.
+- **Every resource left off the diagram**, grouped by type, with why. Nothing is dropped silently:
+  a reader who believes the model is complete when it is not is worse off than one who has no file.
+- **Configuration worth reviewing**, such as public network access or shared-key auth being enabled.
+- **What could not be read at all** — including resources referenced by a private endpoint that your
+  account cannot see, which is proof the picture is incomplete.
+- **What discovery cannot tell you**, stated plainly rather than left to be discovered later.
 
 ## Assistant data sources (MCP)
 

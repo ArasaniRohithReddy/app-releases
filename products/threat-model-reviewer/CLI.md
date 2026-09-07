@@ -74,12 +74,64 @@ ThreatModelReviewer.Cli.exe ingest architecture.drawio
 ThreatModelReviewer.Cli.exe ingest main.bicep
 ThreatModelReviewer.Cli.exe ingest design.docx --out grounding.md
 
+# Draft from a DEPLOYED Azure resource group (read-only; never reads a secret)
+ThreatModelReviewer.Cli.exe azure groups
+ThreatModelReviewer.Cli.exe azure my-rg --out spec.json --evidence
+
 # Write the SDL-ready artifact bundle (document, register, matrix, manifest)
 ThreatModelReviewer.Cli.exe sdl model.tm7 --out .\sdl-bundle
 
 # Answer a question from deterministic facts only - no AI, no network
 ThreatModelReviewer.Cli.exe ask model.tm7 "why is it not ready?"
 ```
+
+---
+
+## Building from a deployed Azure resource group
+
+Infrastructure code records what was *declared* and a diagram records what somebody *drew*. Neither
+is the same as what is running. The `azure` verb reads the deployed system instead.
+
+```powershell
+ThreatModelReviewer.Cli.exe azure groups                                  # what you can read
+ThreatModelReviewer.Cli.exe azure my-rg --out spec.json --evidence
+ThreatModelReviewer.Cli.exe generate spec.json --out model.tm7
+ThreatModelReviewer.Cli.exe model.tm7                                     # review it
+```
+
+Requires the Azure CLI, a completed `az login`, and the **Reader** role on the group.
+
+### How flows are inferred
+
+A managed identity holding a **data-plane** role on a store is evidence that the resource running as
+that identity reads or writes it — a path that exists in production whether or not anyone drew it.
+
+Two kinds of assignment are deliberately **not** drawn:
+
+| Not drawn | Why |
+| --- | --- |
+| Configuration roles (Contributor, Reader, Owner) | Being able to reconfigure a store is a privilege concern, not a path data travels. |
+| Subscription- or management-group-scoped grants | Almost always inherited governance. On one measured resource group, 111 of 115 assignments were at this level. |
+
+Both are counted in the evidence file, so you can see the decision rather than wonder about it.
+
+### Read-only by construction
+
+The wrapper cannot be handed a command. Every read is a named method that builds its own arguments
+and re-validates them against an allowlist before running. Nothing can create, change or delete a
+resource, and no command that reads a key, secret, connection string or credential is reachable.
+
+### What it cannot tell you
+
+Always pass `--evidence`, and read the limits it records. The two that matter most:
+
+- **A role shows what is authorised, not what happens.** A granted role may be unused — which is
+  worth questioning in itself.
+- **Access using a shared key leaves no role assignment.** Discovery cannot see it, and this tool
+  never reads those credentials to find out. Such a path will be missing from the diagram entirely.
+
+These are written into the generated `.tm7` as assumptions, so the model states them even when it
+travels without the evidence file.
 
 ---
 

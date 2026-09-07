@@ -4,6 +4,52 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.5.0] — 2026-09-07
+
+Threat models are built from what a team wrote down: a diagram someone drew, or infrastructure code
+that describes what was declared. Neither is the same as what is running now. This release reads the
+deployed system instead.
+
+### Added
+- **Build from a deployed Azure resource group.** In the app, **Create → Build from Azure…**; in the
+  CLI, `azure <resource-group> --out spec.json --evidence`. Reads what is actually deployed and
+  drafts a threat model from it. Deterministic and AI-free: the same resource group always produces
+  the same model.
+- **Data flows inferred from role assignments.** A managed identity holding a *data-plane* role on a
+  store is evidence that the resource holding that identity reads or writes it — a path that exists
+  in production whether or not anyone drew it. Roles that only grant control over configuration
+  (Contributor, Reader, Owner) are deliberately not drawn, and neither are subscription- or
+  management-group-scoped grants: measured on a real resource group, 111 of 115 assignments were
+  inherited governance rather than one component talking to another.
+- **An evidence file for every Azure build.** Records the subscription and group, every command run,
+  which flow came from which role assignment, every resource left off the diagram *and why*, the
+  configuration observed, and what discovery could not read at all.
+- **Discovery's limits are written into the model as assumptions**, not left in a side file — so the
+  `.tm7` cannot travel on its own looking more certain than it is. Chief among them: access using a
+  shared key leaves no role assignment, so it is invisible here and missing from the diagram.
+- **Azure resource types become TMT stencils**, so product-specific threat rules fire — a Key Vault
+  gets Key Vault threats rather than generic data-store ones.
+
+### Security
+- **Read-only by construction, not by convention.** No caller can hand the Azure wrapper a command
+  string at all: every read is a named method building its own arguments, re-validated against an
+  allowlist before execution. Nothing can create, change or delete a resource, and no command that
+  reads a key, secret or connection string is reachable. A test asserts the guarantee by reflection,
+  so adding a method that accepts a caller-supplied command fails the build.
+
+### Changed
+- Resources are now included on a discovered diagram only when their type is **recognised**, rather
+  than excluded when they match a list of known plumbing. Azure has hundreds of resource types and
+  gains more constantly; the old shape put every unfamiliar type on the diagram as a process box.
+  On a real resource group this cut the draft from 23 components — 20 of them unconnected noise — to
+  7 real ones. Everything excluded is listed in the evidence file with the reason.
+
+### Fixed
+- Two resources sharing one user-assigned managed identity no longer crash evidence generation.
+  Shared identities are ordinary Azure configuration; the code treated a duplicate as a fault.
+- Resource-group lists in the Azure dialog now report a readable name to screen readers instead of
+  the underlying record's raw text.
+
 ## [2.4.0] — 2026-09-06
 
 Two engines that shipped in every build but could not be reached are now connected, and the guard
@@ -722,6 +768,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.5.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.0
 [2.4.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.4.0
 [2.3.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.3.0
 [2.2.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.2.0
