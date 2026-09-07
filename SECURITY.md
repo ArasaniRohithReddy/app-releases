@@ -78,7 +78,7 @@ or the contents written back to a `.tm7` without explicit user approval of each 
 
 | Version | Status |
 | --- | --- |
-| **2.5.0** (latest) | ✅ Supported — receives security and functional fixes |
+| **2.5.1** (latest) | ✅ Supported — receives security and functional fixes |
 | 2.4.x (earlier) | ⚠️ Best effort — please update; in-app update makes this a two-click operation |
 | 2.2.x (earlier) | ⚠️ Best effort — please update; in-app update makes this a two-click operation |
 | 2.0.x (earlier) | ⚠️ Best effort — please update; in-app update makes this a two-click operation |

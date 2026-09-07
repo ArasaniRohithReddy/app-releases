@@ -4,6 +4,47 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [2.5.1] — 2026-09-07
+
+Three defects found by looking at what the product actually renders, rather than at what the code
+says it renders.
+
+### Fixed
+- **Azure components were labelled "Generic Process" on the diagram.** `StencilCatalog.FriendlyName`
+  consulted an element's *generic* stencil family before deriving a name from its *specific* stencil
+  id, so any product not in the curated table lost to its parent — an Azure Logic App read as
+  "Generic Process" while the `.tm7` underneath correctly said `SE.P.TMCore.AzureLogicApp`. Spotted
+  on three components; a guard covering every stencil the Azure map can emit measured the real
+  scope at **79 of 92**. The model was right and only the label was wrong, which is the worst
+  combination because nothing looks broken.
+- **Flow labels could be hidden by a component.** Labels were painted as part of the connector, and
+  connectors are painted behind the nodes so a line reads as passing under a box rather than
+  terminating at it. A label that happened to sit where the layout placed a node was clipped to a
+  single character, so the diagram silently stopped saying what the flow carried. Labels are now
+  painted last, and a test asserts the layering.
+
+### Added
+- **A framework-edition manifest, and a drift guard that holds it to the code.** Which edition of
+  each standard the tool encodes was folklore spread across a knowledge base, a coverage matrix and
+  several rule tables. It is now declared once and checked, because a manifest nothing verifies is
+  just another thing that goes stale.
+- **Reports state which editions produced the verdict**, and disclose anywhere the tool is knowingly
+  an edition behind, with the reason. Being behind is sometimes right; being quietly behind is not,
+  so the manifest refuses to record an unadopted edition without a stated reason.
+
+### Framework currency (verified against each publisher)
+- **OWASP Top 10:2025** — current. All ten shipped citation URLs verified live.
+- **OWASP API Security Top 10:2023** — still current.
+- **CWE** — individual identifiers are stable and edition-independent; the annual Top 25 ranking is
+  not encoded, so it cannot drift.
+- **OWASP Top 10 for LLM Applications** — the tool encodes 2025; edition 2026 was published on
+  3 August 2026 and is **deliberately not yet adopted**. It re-ranks eight of the ten risks
+  (Excessive Agency LLM06→LLM03, Improper Output Handling LLM05→LLM10, and six more), so adopting it
+  means remapping identifiers rather than changing a year. OWASP has not published per-risk pages
+  for 2026 — its own index still links every risk to the 2025 pages — so renumbering now would leave
+  every citation pointing at a page whose identifier no longer matches its title. This is disclosed
+  in every HTML and Markdown report rather than left in a comment.
+
 ## [2.5.0] — 2026-09-07
 
 Threat models are built from what a team wrote down: a diagram someone drew, or infrastructure code
@@ -768,6 +809,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.5.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1
 [2.5.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.0
 [2.4.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.4.0
 [2.3.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.3.0
