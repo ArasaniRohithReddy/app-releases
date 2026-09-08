@@ -41,7 +41,9 @@
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
   <style>
-    :root {
+    /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
+       heading the reader clicked. Reserve the header's height plus a little breathing room. */
+    html { scroll-padding-top: 5.5rem; }    :root {
       --bg:#FBFBFD; --surface:#FFFFFF; --surface-2:#F4F5F8;
       --ink:#14161C; --ink-2:#3A3F4C; --muted:#5A5F70; --line:#E4E6ED;
       --accent:#4F46E5; --accent-600:#4338CA; --accent-tint:#EEF0FE; --on-accent:#FFFFFF;

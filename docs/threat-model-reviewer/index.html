@@ -55,7 +55,9 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Cpath d='M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M11.5 16.2l3.1 3.1 6-6.4' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 
   <style>
-    :root {
+    /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
+       heading the reader clicked. Reserve the header's height plus a little breathing room. */
+    html { scroll-padding-top: 5.5rem; }    :root {
       /* Palette — light, editorial-technical. One indigo brand accent; verdict colors used only for meaning. */
       --bg:        #FBFBFD;
       --surface:   #FFFFFF;

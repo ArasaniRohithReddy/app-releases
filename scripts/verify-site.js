@@ -134,6 +134,22 @@ const ok = (cond, msg) => { if (cond) pass++; else fail.push(msg); };
   const ld = await page.locator('script[type="application/ld+json"]').count();
   ok(ld === 1, `product: expected 1 JSON-LD block, found ${ld}`);
 
+  // Anchor navigation must not park a section underneath the sticky header. Measured on the
+  // section's own top edge, because that is what scroll-padding-top controls — checking the
+  // heading instead passes either way, since section padding happens to clear the header on its own.
+  const headerH = await page.evaluate(() => {
+    const h = document.querySelector('header, .nav')?.getBoundingClientRect().height || 0;
+    return Math.round(h);
+  });
+  for (const id of ['how', 'features', 'download']) {
+    // Instant, not the page's smooth default: a measurement taken mid-animation reports wherever
+    // the scroll happened to be and silently passes.
+    await page.evaluate(i => document.getElementById(i).scrollIntoView({ behavior: 'instant', block: 'start' }), id);
+    await page.waitForTimeout(150);
+    const top = await page.evaluate(i => Math.round(document.getElementById(i).getBoundingClientRect().top), id);
+    ok(top >= headerH - 2, `product: #${id} lands at ${top}px, beneath the ${headerH}px sticky header`);
+  }
+
   const body = await page.textContent('body');
   ok(!/Rohithreddy7123/.test(body), 'product: stale owner reference');
   ok(/72 deterministic checks/.test(body), 'product: the check count is not stated exactly');
