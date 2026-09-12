@@ -333,9 +333,9 @@
     .dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.1rem; }
     .dl-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem; }
     .dl-card.recommended { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
-    .dl-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
+    .dl-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .3rem; }
     .dl-card h3 { margin: 0; font-size: var(--step-1); letter-spacing: -.01em; }
-    .dl-card .tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); background: var(--accent-tint); padding: .2rem .5rem; border-radius: 999px; }
+    .dl-card .tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); background: var(--accent-tint); padding: .2rem .5rem; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
     .dl-card p { margin: .1rem 0 1.2rem; color: var(--muted); font-size: var(--step--1); flex: 1; }
     .dl-card .btn { justify-content: center; }
     .dl-size { font-family: var(--mono); font-size: var(--step--1); color: var(--muted); margin-top: .55rem; text-align: center; }
@@ -350,14 +350,11 @@
     .callout p { margin: 0; color: var(--ink-2); font-size: var(--step-0); }
 
     /* Docs links */
-    /* One row per group. auto-fit with a 200px floor gave five cards a 4 + 1 break at desktop
-       widths, leaving a lone card stranded; auto-fill on a narrower floor keeps them together and
-       still wraps sensibly on small screens. */
-    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; align-items: stretch; }
-    .doc-link { display: flex; align-items: center; gap: .55rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .95rem 1rem; color: var(--ink); font-weight: 600; font-size: .95rem; white-space: nowrap; min-width: 0; }
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: .75rem; align-items: stretch; }
+    .doc-link { display: flex; align-items: center; gap: .55rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .95rem 1rem; color: var(--ink); font-weight: 600; font-size: .95rem; white-space: normal; min-width: 0; overflow-wrap: anywhere; }
     .doc-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
     .doc-link svg { width: 1.15em; height: 1.15em; color: var(--accent); flex: none; }
-    .doc-link .arrow { margin-left: auto; color: var(--muted); }
+    .doc-link .arrow { margin-left: auto; color: var(--muted); flex: none; }
     /* On a phone the label plus its icon and arrow cannot fit on one line, and nowrap made the card
        push past the viewport by up to 48px. Below this width the label wraps and the arrow — which
        is decoration, since the whole card is the link — steps out of the way. */

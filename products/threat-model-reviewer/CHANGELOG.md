@@ -15,6 +15,8 @@ project aims to follow [Semantic Versioning](https://semver.org/).
 - Correct stale public Create/Assistant descriptions and privacy/network guidance
   for Azure, MCP, document extraction and image input.
 - Replace the manually maintained source test-count badge with the CI status badge.
+- Keep CI test-report artifacts for failed runs only, with seven-day retention;
+  successful build/test results remain in the run logs.
 
 ### Fixed in source, not yet included in a new binary release
 - Widen the Findings check column and use an ellipsis plus tooltip for long targets.
