@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "source": "samples/customer-portal.tm7",
+  "rubricVersion": "v1-public-2026-06",
+  "checkCount": 72,
+  "mode": "default",
+  "verdict": "NOT READY",
+  "score": 65,
+  "grade": "D",
+  "findingCount": 35,
+  "gatingFindings": 27,
+  "gatingCheckId": "C1"
+}

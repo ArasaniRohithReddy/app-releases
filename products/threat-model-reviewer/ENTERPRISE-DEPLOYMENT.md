@@ -128,9 +128,10 @@ lifecycle is then owned entirely by your deployment tooling. Users can also togg
 
 ### Controlling AI features
 
-AI is **opt-in by user sign-in**; nothing is sent to any model unless a user signs in to Copilot
-*and* clicks an AI action. To keep the deployment fully offline, simply do not distribute Copilot
-seats — the deterministic review, reports and remediation are unaffected.
+AI use is optional; a configured OpenAI-compatible provider does not require Copilot
+sign-in. For offline deployment, disable updates, do not use remote AI actions or
+Azure discovery, and leave MCP sources disabled. The deterministic review, reports
+and built-in remediation remain available.
 
 To keep inference inside your own boundary, configure the OpenAI-compatible provider against an
 Azure OpenAI or self-hosted endpoint; the key is stored DPAPI-encrypted per user. See
@@ -142,11 +143,16 @@ Azure OpenAI or self-hosted endpoint; the key is stored DPAPI-encrypted per user
 | --- | --- | --- |
 | Update check | `api.github.com`, `github.com` | Optional — omit if updates are disabled |
 | Copilot AI features | GitHub Copilot endpoints (per your Copilot deployment) | Optional — only if AI is used |
-| Everything else (review, scoring, reports, remediation) | — | **No network access required** |
+| Configured AI provider | The endpoint selected by the organization | Optional |
+| Direct Azure discovery | Azure management and identity endpoints used by the installed Azure CLI | Optional |
+| Microsoft Learn MCP | `learn.microsoft.com/api/mcp` | Optional; disabled initially |
+| Azure MCP | npm package registry, Azure identity and service endpoints used by the server | Optional; disabled initially |
+| Deterministic review, scoring, reports and built-in remediation | — | **No network access required** |
 
 ## 6. Signing, SmartScreen and trust
 
-Every artifact is Authenticode-signed. The current certificate is **self-signed**
+Application executables and installers are Authenticode-signed; ZIP containers are not.
+The current certificate is **self-signed**
 (`CN=ArasaniRohithReddy`), which means the binaries carry a valid, tamper-evident signature, but
 Microsoft Defender SmartScreen may warn on first run because the certificate is not chain-trusted.
 

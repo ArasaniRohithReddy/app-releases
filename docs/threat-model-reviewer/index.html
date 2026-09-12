@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Threat Model Reviewer — review, fix &amp; analyze Microsoft .tm7 threat models</title>
-  <meta name="description" content="A Windows desktop tool that reviews, fixes and analyzes Microsoft Threat Modeling Tool (.tm7) threat models before you submit for SDL review. Deterministic 0–100 score and verdict — AI never decides it. Powered by your GitHub Copilot seat." />
+  <meta name="description" content="Find structural, coverage and triage gaps in Microsoft .tm7 threat models before human review. Local deterministic checks, model fixes, a Windows CLI and an optional Copilot skill. Try a synthetic sample." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -15,7 +15,7 @@
   <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Threat Model Reviewer" />
-  <meta property="og:description" content="Catch the issues a Microsoft SDL reviewer would bounce back — before you submit. Deterministic verdict &amp; 0–100 score computed locally — AI never decides it." />
+  <meta property="og:description" content="Find the gaps before your threat model review. Local checks, traceable findings and reviewable model changes. Copilot is optional; application owners implement the security controls." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta property="og:image:width" content="1200" />
@@ -39,9 +39,9 @@
     "downloadUrl": "https://github.com/ArasaniRohithReddy/app-releases/releases/latest",
     "softwareVersion": "2.5.1",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "Reviews, fixes and analyzes Microsoft Threat Modeling Tool (.tm7) threat models before SDL submission. The 0-100 score and READY/NOT READY verdict are computed deterministically from 72 rule-based checks and are never produced by a language model.",
+    "description": "Reviews and helps correct Microsoft .tm7 threat models using 72 deterministic checks. The score measures the model, not system security; a readiness result is not Microsoft approval or proof that mitigations are implemented.",
     "featureList": [
-      "Deterministic 0-100 review score and READY / NOT READY verdict",
+      "Deterministic 0-100 review score and READY WITH NOTES / NOT READY verdict",
       "72 rule-based checks mapped to OWASP, MITRE ATT&CK, MITRE ATLAS, CWE and NIST",
       "Writes a corrected .tm7 that reopens in the Microsoft Threat Modeling Tool",
       "Builds a draft threat model from a deployed Azure resource group, read-only",
@@ -57,7 +57,8 @@
   <style>
     /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
        heading the reader clicked. Reserve the header's height plus a little breathing room. */
-    html { scroll-padding-top: 5.5rem; }    :root {
+    html { scroll-padding-top: 5.5rem; }
+    :root {
       /* Palette — light, editorial-technical. One indigo brand accent; verdict colors used only for meaning. */
       --bg:        #FBFBFD;
       --surface:   #FFFFFF;
@@ -204,10 +205,7 @@
     .nav-links { display: flex; align-items: center; gap: .3rem; flex: none; }
     .nav-links a:not(.btn) { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
     .nav-links a:not(.btn):hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
-    /* Keep the section links visible on ordinary laptop widths. The header needs about 1212px of
-       content but only had 1120px at 1280px wide, so it used to overflow; rather than hiding the
-       links, the header tightens its padding, gaps and link size between 1180px and 1460px, which
-       reclaims the ~92px shortfall. Below 1180px there is genuinely no room and they collapse. */
+    /* Keep the product identity and download action ahead of secondary section links. */
     @media (max-width: 1460px) {
       .nav { padding-left: 16px; padding-right: 16px; gap: 8px; }
       .nav-links { gap: .55rem; }
@@ -220,44 +218,33 @@
     @media (max-width: 400px) { .nav .brand-text { display: none; } }
 
     /* ---------- Hero ---------- */
-    .hero { padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem); }
-    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+    .hero { padding-block: clamp(2.5rem, 6vw, 5rem) clamp(2rem, 4vw, 3.5rem); }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
+    .hero-grid > * { min-width: 0; }
     @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
 
     .eyebrow {
       display: inline-flex; align-items: center; gap: .5rem;
       font-size: var(--step--1); font-weight: 600; color: var(--accent);
-      background: var(--accent-tint); padding: .35rem .7rem; border-radius: 999px; margin-bottom: 1.1rem;
+      margin-bottom: 1.1rem;
     }
     .eyebrow { white-space: nowrap; }
     .eyebrow .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); flex: none; }
     @media (max-width: 420px) { .eyebrow .eb-more { display: none; } }
 
-    h1.title { font-size: var(--step-4); line-height: 1.06; letter-spacing: -.03em; margin: 0 0 1.1rem; text-wrap: balance; }
-    .lede { font-size: var(--step-1); color: var(--ink-2); margin: 0 0 1.6rem; max-width: 34ch; text-wrap: pretty; }
+    h1.title { font-size: clamp(2.3rem, 1.3rem + 3vw, 3.65rem); line-height: 1.09; letter-spacing: -.025em; margin: 0 0 1.2rem; max-width: 17ch; text-wrap: balance; }
+    .lede { font-size: var(--step-1); color: var(--ink-2); margin: 0 0 1.5rem; max-width: 42ch; text-wrap: pretty; }
     .cta-row { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
     .meta-line { margin-top: 1.4rem; color: var(--muted); font-size: var(--step--1); display: flex; flex-wrap: wrap; gap: .4rem .9rem; }
     .meta-line .chip { font-family: var(--mono); background: var(--surface-2); border: 1px solid var(--line); padding: .15rem .55rem; border-radius: 7px; color: var(--ink-2); }
 
-    /* Verdict card (pure CSS depiction of the product's real output) */
-    .result-card {
-      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 1.4rem 1.5rem; box-shadow: var(--shadow);
-    }
-    .result-top { display: flex; align-items: center; justify-content: space-between; gap: .6rem 1rem; margin-bottom: 1.15rem; flex-wrap: wrap; }
-    .result-top .label { font-size: var(--step--1); font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
-    .pill { font-size: var(--step--1); font-weight: 700; padding: .3rem .7rem; border-radius: 999px; white-space: nowrap; }
-    .pill.ready { background: var(--warn-tint); color: var(--warn); }
-    .score-row { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .3rem; }
-    .score-num { font-size: clamp(3rem, 8vw, 4.2rem); font-weight: 800; line-height: 1; letter-spacing: -.04em; color: var(--ok); }
-    .score-den { font-size: var(--step-1); color: var(--muted); font-weight: 600; }
-    .score-grade { margin-left: auto; align-self: center; font-weight: 700; color: var(--ok); background: var(--ok-tint); padding: .25rem .7rem; border-radius: 8px; font-size: var(--step--1); }
-    .bar { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin: .2rem 0 1.2rem; }
-    .bar > i { display: block; height: 100%; width: 92%; background: var(--ok); border-radius: 999px; }
-    .find-row { display: flex; align-items: center; gap: .6rem; padding: .55rem 0; border-top: 1px solid var(--line); font-size: var(--step--1); color: var(--ink-2); }
-    .find-row .sev { width: .6rem; height: .6rem; border-radius: 50%; flex: none; }
-    .sev.high { background: var(--danger); } .sev.med { background: var(--warn); } .sev.low { background: var(--muted); }
-    .find-row .id { font-family: var(--mono); color: var(--muted); }
+    .hero-proof { margin: 0; }
+    .hero-proof img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+    .hero-proof figcaption { color: var(--ink-2); font-size: var(--step--1); margin-top: .9rem; max-width: 55ch; }
+    .hero-proof strong { color: var(--danger); }
+    .trust-strip { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; margin: 2rem 0 0; padding: 1rem 0 0; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--step--1); }
+    .download-hint { color: var(--muted); font-size: var(--step--1); margin: .8rem 0 0; }
+    .boundary-note { margin: 1.4rem 0 0; max-width: 70ch; color: var(--muted); }
 
     /* ---------- Sections ---------- */
     section { padding-block: clamp(2.6rem, 6vw, 5rem); }
@@ -266,19 +253,18 @@
     .sec-head h2 { font-size: var(--step-3); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 .6rem; text-wrap: balance; }
     .sec-head p { font-size: var(--step-1); color: var(--ink-2); margin: 0; text-wrap: pretty; }
 
-    /* Pillars: Review / Fix / Analyze */
-    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+    .pillars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3rem; }
     @media (max-width: 820px) { .pillars { grid-template-columns: 1fr; } }
-    .pillar { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
-    .pillar .icn { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-tint); color: var(--accent); display: grid; place-items: center; margin-bottom: 1rem; }
-    .pillar .icn svg { width: 22px; height: 22px; }
+    .pillar { border-top: 2px solid var(--line); padding-top: 1.2rem; min-width: 0; }
     .pillar h3 { margin: 0 0 .4rem; font-size: var(--step-1); letter-spacing: -.01em; }
     .pillar p { margin: 0; color: var(--muted); font-size: var(--step-0); }
-    /* Roadmap / beta note under the pillars */
-    .roadmap { margin-top: 1.3rem; display: flex; gap: .9rem; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.3rem; }
-    .roadmap .badge { flex: none; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); background: var(--accent-tint); padding: .25rem .6rem; border-radius: 999px; margin-top: .15rem; }
-    .roadmap p { margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.55; }
-    .roadmap strong { color: var(--ink); }
+    .scope-note { margin: 2rem 0 0; max-width: 76ch; color: var(--ink-2); }
+    .start-example { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+    .start-example > * { min-width: 0; }
+    .start-example h3 { font-size: var(--step-2); line-height: 1.2; margin: 0 0 .7rem; }
+    .start-example p { margin: .5rem 0 1rem; }
+    .start-example pre { max-width: 100%; overflow-x: auto; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: .875rem; }
+    @media (max-width: 760px) { .start-example { grid-template-columns: 1fr; gap: .5rem; } }
 
     /* Steps. Numbered because the order is the argument: the verdict exists before any model is
        consulted, and that sequence is the whole claim. */
@@ -314,7 +300,26 @@
     .shot figcaption strong { color: var(--ink); font-weight: 650; }
     .shot-lead { margin-bottom: 2.2rem; }
     .shot-lead figcaption { max-width: 62ch; }
-    .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; }
+    .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.8rem; }
+    .coverage-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 3rem; margin: 0; }
+    .coverage-list > div { border-top: 1px solid var(--line); padding: 1.2rem 0; min-width: 0; }
+    .coverage-list dt { font-weight: 650; margin-bottom: .45rem; }
+    .coverage-list dd { margin: 0; color: var(--muted); max-width: 65ch; }
+    .workflow-list { display: grid; gap: 0; }
+    .workflow { display: grid; grid-template-columns: 1fr 2fr auto; align-items: start; gap: 1.5rem; border-top: 1px solid var(--line); padding: 1.6rem 0; }
+    .workflow > * { min-width: 0; }
+    .workflow h3 { font-size: var(--step-1); margin: 0; }
+    .workflow p { color: var(--ink-2); margin: 0; max-width: 62ch; }
+    .workflow a { font-weight: 600; padding-block: .25rem; }
+    @media (max-width: 760px) {
+      .coverage-list, .workflow { grid-template-columns: 1fr; }
+      .workflow { gap: .6rem; }
+    }
+    @media (max-width: 460px) { :root { --step--1: .875rem; } }
+    @media (prefers-reduced-motion: reduce) {
+      .btn, .theme-toggle { transition: none; }
+      .btn:active { transform: none; }
+    }
 
     /* Feature grid */
     .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.1rem; }
@@ -392,13 +397,9 @@
       <div class="spacer"></div>
       <nav class="nav-links secondary" aria-label="Primary">
         <a href="#how">How it works</a>
-        <a href="#features">Features</a>
-                <a href="#whats-new">New in 2.1</a>
-                <a href="#download">Download</a>
-        <a href="./releases/">Releases</a>
-        <a href="#enterprise">Enterprise</a>
+        <a href="#features">Coverage</a>
+        <a href="#whats-new">Workflows</a>
         <a href="#docs">Docs</a>
-        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md">Changelog</a>
       </nav>
       <div class="nav-links">
         <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme">
@@ -421,16 +422,17 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <span class="eyebrow"><span class="dot"></span> Windows desktop app<span class="eb-more"> · powered by GitHub Copilot</span></span>
-          <h1 class="title">Ship threat models that pass SDL review the first time.</h1>
-          <p class="lede">Threat Model Reviewer reviews, fixes and analyzes Microsoft Threat Modeling Tool <code>.tm7</code> models — catching what a Microsoft SDL reviewer would bounce back, before you submit.</p>
+          <span class="eyebrow">For Microsoft .tm7 threat models</span>
+          <h1 class="title">Find the gaps before your threat model review.</h1>
+          <p class="lede">Find missing coverage, unfinished triage and structural issues. Work through the findings, save a corrected model, and give your reviewer a clearer starting point.</p>
           <div class="cta-row">
             <a class="btn btn-primary" id="hero-download" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>
-              Download for Windows
+              Download Windows app
             </a>
-            <a class="btn btn-secondary" href="#features">See what it does</a>
+            <a class="btn btn-secondary" href="#try">Try a sample review</a>
           </div>
+          <p class="download-hint">MSI recommended. No Copilot subscription needed for deterministic review.</p>
           <div class="meta-line">
             <span class="chip" id="version-chip">v2.5.1</span>
             <span>Windows 10/11 · x64</span>
@@ -438,22 +440,25 @@
           </div>
         </div>
 
-        <aside class="result-card" aria-label="Example review result">
-          <div class="result-top">
-            <span class="label">Review verdict</span>
-            <span class="pill ready">READY WITH NOTES</span>
-          </div>
-          <div class="score-row">
-            <span class="score-num">92</span>
-            <span class="score-den">/ 100</span>
-            <span class="score-grade">Grade A</span>
-          </div>
-          <div class="bar"><i></i></div>
-          <div class="find-row"><span class="sev high"></span><span class="id">B3</span><span>Add Elevation-of-Privilege threat to “API → Database”</span></div>
-          <div class="find-row"><span class="sev med"></span><span class="id">C2</span><span>“Not Applicable” threat needs a justification</span></div>
-          <div class="find-row"><span class="sev low"></span><span class="id">A6</span><span>Out-of-scope element missing a reason</span></div>
-          <p style="margin:.9rem 0 0; font-size:var(--step--1); color:var(--muted); line-height:1.5">Severity is not the same as gating — only must-fix findings block readiness.</p>
-        </aside>
+        <figure class="hero-proof">
+          <a href="#screens" aria-label="See the sample review screenshots at a larger size">
+            <img src="img/overview.png" width="1440" height="900" fetchpriority="high" decoding="async"
+                 alt="A real review of the synthetic customer-portal model, showing its findings and score breakdown." />
+          </a>
+          <figcaption>
+            The sample returns <strong data-sample-verdict>NOT READY</strong>,
+            <span data-sample-score>65</span>/100: <span data-sample-gating>27</span>
+            threats still need triage. <a href="#try">Run the same review yourself.</a>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="wrap">
+        <ul class="trust-strip" aria-label="Review essentials">
+          <li>72 deterministic checks</li>
+          <li>Local model review</li>
+          <li>Optional Copilot assistance</li>
+        </ul>
+        <p class="boundary-note">This tool improves the threat model. It does not patch application code, prove a system secure or guarantee Microsoft approval.</p>
       </div>
     </section>
 
@@ -461,34 +466,41 @@
     <section class="alt" id="what" aria-labelledby="what-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="what-h">One tool for the whole threat-model lifecycle</h2>
-          <p>Deterministic analysis you can trust, with optional Copilot help that stays advisory.</p>
+          <h2 id="what-h">Turn model gaps into reviewable work.</h2>
+          <p>Use it before a review, while drafting a model, or when checking what changed.</p>
         </div>
         <div class="pillars">
           <article class="pillar">
-            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-            <h3>Review</h3>
-            <p>Open a <code>.tm7</code> and get a stamped <strong>NOT&nbsp;READY / READY&nbsp;WITH&nbsp;NOTES</strong> verdict, a 0–100 score, and a prioritized findings list mapped to OWASP, MITRE, CWE and Microsoft Learn.</p>
+            <h3>Know what needs attention</h3>
+            <p>Open a <code>.tm7</code> or Threat Dragon <code>.json</code>. Get a score, readiness verdict and findings with check IDs and references, rather than an unexplained AI judgement.</p>
           </article>
           <article class="pillar">
-            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg></div>
-            <h3>Fix</h3>
-            <p>Apply built-in or Copilot-drafted fixes — added threats, triage, justifications, out-of-scope reasons — with round-trip write-back to a valid <code>.tm7</code> that reopens in the Threat Modeling Tool.</p>
+            <h3>Correct the model deliberately</h3>
+            <p>Preview missing threats, triage changes and draft justifications. Choose what to apply and save a new <code>.tm7</code>. A proposed mitigation still needs an owner and verification.</p>
           </article>
           <article class="pillar">
-            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2"/></svg></div>
-            <h3>Analyze</h3>
-            <p>Go deeper on any finding — DREAD scoring, attack trees, mitigation plans and verification tests — then export to HTML, PDF, SARIF or GitHub / Azure DevOps / Jira work items.</p>
+            <h3>Make the hand-off actionable</h3>
+            <p>Export reports or tracker-ready work items for GitHub, Azure DevOps and Jira. Compare revisions and keep local review history. Optional AI can help explain findings and propose mitigation tests.</p>
           </article>
           <article class="pillar">
-            <div class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div>
-            <h3>Create</h3>
-            <p>Describe a system — or hand over a document, an architecture image or an OpenAPI spec — and get a data-flow diagram with a deterministic STRIDE baseline, written to a <code>.tm7</code> that reopens in the Threat Modeling Tool.</p>
+            <h3>Start without a blank diagram</h3>
+            <p>Draft from a description, supported architecture files or an Azure resource group. Review the inferred components and paths before generating threats. Use a suitable TMT baseline when you need to reopen newly authored files in Microsoft TMT.</p>
           </article>
         </div>
-        <div class="roadmap">
-          <span class="badge">2.5.1</span>
-          <p><strong>New: build a threat model from a deployed Azure resource group.</strong> Instead of starting from a diagram someone drew or infrastructure code describing what was <em>declared</em>, point it at a resource group you already have access to and it drafts a model from what is actually running. Data flows are recovered from <strong>role assignments</strong>, so the draft shows the paths Azure genuinely permits. Read-only by construction. <em>2.5.1 corrects two diagram defects found by inspecting rendered output: Azure components labelled with their generic family instead of their product, and flow labels that a component could hide.</em></p>
+        <p class="scope-note"><strong>Azure is an additional starting point, not a complete traffic map.</strong> Read-only metadata queries and eligible role assignments suggest possible access paths. Shared-key access and out-of-scope dependencies can be missing; review the evidence and the draft.</p>
+        <div class="start-example" id="try" aria-labelledby="try-h">
+          <div>
+            <h3 id="try-h">Try it before opening your own model.</h3>
+            <p>The synthetic customer portal has intentionally unfinished triage. Open it in the app, inspect the <code>C1</code> findings, then preview a fix plan. No Copilot sign-in is needed.</p>
+            <a class="btn btn-secondary" href="samples/customer-portal.tm7" download>Download sample .tm7</a>
+            <p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md#try-the-sample-model">Follow the quick-start guide</a></p>
+          </div>
+          <div>
+            <p><strong>Prefer the CLI?</strong> Extract the Windows CLI bundle and run:</p>
+            <pre tabindex="0" aria-label="Sample CLI review command"><code>.\ThreatModelReviewer.Cli.exe .\customer-portal.tm7</code></pre>
+            <p>Expected: <strong>NOT READY</strong>, 65/100, with 27 gating findings. Exit code <code>2</code> means the review found blockers; <code>1</code> means the command could not run.</p>
+            <p>Moving a threat to <em>Needs Investigation</em> is not a security fix. Keep investigating and record implementation evidence.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -499,7 +511,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="screens-h">What it looks like</h2>
-          <p>Captured from the shipped sample model, <code>samples/customer-portal.tm7</code>, so every number here is one you can reproduce.</p>
+          <p>A real review of the <a href="samples/customer-portal.tm7" download>synthetic customer portal</a>. The sample result is reproducible under the default rubric. Screenshots use a development build; small UI details may differ from the released installer.</p>
         </div>
 
         <figure class="shot shot-lead">
@@ -536,7 +548,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="how-h">How the verdict is produced</h2>
-          <p>Four steps, and a model is involved in none of them.</p>
+          <p>The verdict is computed before any optional AI explanation.</p>
         </div>
 
         <ol class="steps">
@@ -553,7 +565,7 @@
           <li>
             <span class="step-n">3</span>
             <h3>Score and gate</h3>
-            <p>Maturity is a weighted 0–100 score. Readiness is a <em>separate</em> gate: a thorough model can still be blocked by a single must-fix issue, which is how a real reviewer behaves.</p>
+            <p>Maturity is a weighted 0–100 score. Readiness is a <em>separate</em> gate: a high-scoring model can still have a must-fix finding. These are signals about the model, not proof that controls are deployed.</p>
           </li>
           <li>
             <span class="step-n">4</span>
@@ -563,9 +575,9 @@
         </ol>
 
         <p class="how-note">
-          The practical consequence: run it twice on the same file and you get the same answer, and
-          so does your reviewer. A number that moves between runs cannot be argued with, and a
-          threat model is an argument.
+          The same model, rubric version and policy produce the same result.
+          <strong>READY WITH NOTES</strong> means no gating findings remain under that configuration.
+          Your reviewer still decides what evidence and risk treatment are sufficient.
         </p>
       </div>
     </section>
@@ -574,39 +586,31 @@
     <section id="features" aria-labelledby="features-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="features-h">Built to match a real SDL bar</h2>
-          <p>72 deterministic checks run entirely on your machine — the same issues a reviewer would flag, surfaced before you submit.</p>
+          <h2 id="features-h">What the review checks</h2>
+          <p>72 deterministic checks apply public security guidance to the model you provide. Each finding can be traced to its rule.</p>
         </div>
-        <div class="features">
-          <div class="feature"><h3><span class="tick">✓</span> STRIDE-per-element coverage</h3><p>Every element and interaction checked for the STRIDE categories it should address, with a threats-by-interaction breakdown.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> AI &amp; agentic surface</h3><p>All ten categories of the <span class="kbd">OWASP LLM Top 10 (2025)</span> &mdash; &ldquo;Top 10&rdquo; is the standard&rsquo;s name, not a limit &mdash; plus OWASP Agentic threats and MITRE ATLAS techniques on AI/LLM components.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Triage &amp; mitigation quality</h3><p>Flags untriaged threats, “Not Applicable / Mitigated” without justification, and open high-priority work.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Structure &amp; hygiene</h3><p>Completeness, identity &amp; boundaries, data protection, network, logging/detection, deprecated crypto, supply chain and mismodeled stencils.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Coverage scorecards</h3><p>STRIDE matrix and a Framework coverage view scoring every OWASP Top 10:2025 category and all six STRIDE properties, so gaps are obvious at a glance.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Exports for every workflow</h3><p>HTML, PDF, Markdown, CSV, JSON and SARIF, plus ready-to-file work items for <span class="kbd">GitHub</span>, <span class="kbd">Azure DevOps</span> and <span class="kbd">Jira</span>.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Copilot enrichments</h3><p>Explain findings, deep DREAD/attack-tree analysis, draft fixes, whole-model critique and gap analysis — each advisory, never changing the verdict.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Also reads Threat Dragon</h3><p>Parses OWASP Threat Dragon <span class="kbd">.json</span> models too, so mixed toolchains work in one place.</p></div>
-        </div>
+        <dl class="coverage-list">
+          <div><dt>Structure and scope</dt><dd>Missing endpoints, orphaned elements, ambiguous boundaries and out-of-scope components without a reason.</dd></div>
+          <div><dt>STRIDE coverage</dt><dd>Missing categories and unanalysed interactions, including flows crossing trust boundaries.</dd></div>
+          <div><dt>Triage and justification</dt><dd>Threats still Not Started, unsupported Mitigated or Not Applicable claims, and boilerplate explanations.</dd></div>
+          <div><dt>AI and agentic risks</dt><dd>Applicable OWASP LLM Top 10 (2025) and MITRE ATLAS risks, including prompt injection, retrieval exposure and excessive agency.</dd></div>
+          <div><dt>Security hygiene</dt><dd>Model signals for identity, data protection, logging, deprecated cryptography and related security concerns. These checks do not scan deployed code.</dd></div>
+          <div><dt>Coverage evidence</dt><dd>STRIDE and framework scorecards, check IDs and source references. Use them to discuss gaps, not as a compliance certificate.</dd></div>
+        </dl>
       </div>
     </section>
 
-    <!-- New in 2.1 -->
+    <!-- The anchor is retained for links from earlier releases. -->
     <section class="alt" id="whats-new" aria-labelledby="whats-new-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="whats-new-h">What is new in 2.1</h2>
-          <p>Every capability below is available in the desktop app <em>and</em> in <span class="kbd">ThreatModelReviewer.Cli</span>, so you can pick the surface rather than the feature. The CLI is where a pipeline runs them on every pull request; the app is where you work through them.</p>
+          <h2 id="whats-new-h">Use it where you work.</h2>
+          <p>The same deterministic review engine, with a surface suited to your task.</p>
         </div>
-        <div class="features">
-          <div class="feature"><h3><span class="tick">✓</span> Compare two revisions</h3><p>Matches by stable identity, so a rename reads as a rename rather than a delete plus an add. Shows what got worse and what got better with the score and verdict movement, and Copilot can narrate it — after the numbers are already final. <strong>Compare tab</strong> · <span class="kbd">compare</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Create a model</h3><p>Deterministic STRIDE enumeration from a described system. The same input always produces byte-identical output, and every threat lands as <em>Needs Investigation</em> — an enumerated starting point, never a finished review. <strong>Create tab</strong> · <span class="kbd">generate</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Build from deployed Azure</h3><p>Read a resource group you already have access to and draft a model from what is actually running. Flows are recovered from <strong>role assignments</strong>, so the diagram shows the paths Azure permits — not what a diagram claims. Read-only by construction; never reads a key or secret. <strong>Create tab</strong> · <span class="kbd">azure</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Ingest what you already have</h3><p>Word, PowerPoint, Excel, PDF, CSV, Markdown; Excalidraw, draw.io, Mermaid, Visio, Graphviz; and ARM, Bicep and Terraform. <strong>Assistant tab</strong> · <span class="kbd">ingest</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Security facts from infrastructure</h3><p>TLS enforcement, public network access, identity type, key-vault protection and firewall rules — each read straight from your IaC with a file and line citation.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> SDL-ready artifact bundle</h3><p>Threat model document, threat register, assumptions log, traceability matrix, and a manifest recording tool and rubric versions plus the source model's hash, so a reviewer can verify every file. <strong>Export menu</strong> · <span class="kbd">sdl</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Ask, answered without AI</h3><p>Score, verdict, unmitigated counts, which flows cross a boundary, why a model is not ready — answered exactly from computed facts with the check ids cited. No model call, so no hallucinated number can contradict the engine. <strong>Ask tab</strong> · <span class="kbd">ask</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Organisation policy</h3><p>Tune the rubric to your risk appetite. Waivers need a reason, an owner and an expiry, and applying a policy always prints the unpoliced result beside the policed one — it can adjust the bar, never quietly hide a failure. <span class="kbd">policy</span></p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Local review history</h3><p>Score trends per model, append-only and on your machine only. Paths are hashed by default and AI prompts are never recorded — and the app names the folder so you can check. <strong>History tab</strong> · <span class="kbd">history</span></p></div>
+        <div class="workflow-list">
+          <article class="workflow"><h3>Desktop app</h3><p>Inspect the diagram, review findings, preview model edits and compare revisions. Start in Create or Assistant when you are drafting a model.</p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md">Desktop guide</a></article>
+          <article class="workflow"><h3>Windows CLI</h3><p>Run reviews in CI, export SARIF, compare revisions or apply an organization policy with disclosure. The headless bundle is separate from the desktop installer.</p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">CLI guide</a></article>
+          <article class="workflow"><h3>Copilot CLI skill</h3><p>Ask an agent to invoke the reviewer and report its actual results. Install the skill and the CLI bundle together; the instructions do not replace the engine.</p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/SKILL.md">Skill guide</a></article>
         </div>
       </div>
     </section>
@@ -661,7 +665,7 @@
         </div>
         <p class="dl-note">On v1.0.4 or later the app updates itself — click <strong>Download &amp; install</strong> on the in-app banner, then <strong>Install &amp; restart</strong>. Every version, its notes and all files are on the <a href="./releases/">releases page</a>.</p>
         <div class="note">
-          <strong>SmartScreen note:</strong> builds are signed, but with a self-signed certificate for now, so Windows SmartScreen may warn on first run — choose <strong>More info → Run anyway</strong>. A CA/EV certificate is planned to remove the warning for everyone.
+          <strong>SmartScreen note:</strong> executables and installers use a self-signed certificate, so Windows may warn or block them. Verify the download and follow your organization's policy. A future trusted-publisher certificate does not guarantee that every warning disappears.
         </div>
       </div>
     </section>
@@ -680,11 +684,11 @@
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Private by design</h3>
-            <p>The deterministic review runs entirely on your machine. Copilot features send only minimal, <strong>redacted</strong> context — finding text and a data-flow summary — to your own Copilot seat, never the raw <code>.tm7</code>.</p>
+            <p>Deterministic review runs locally. Optional AI actions send context to your chosen provider; image extraction sends the selected image. Read the privacy guide before using confidential inputs.</p>
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg> No telemetry</h3>
-            <p>No analytics, no usage tracking, no vendor endpoint. The only request the app makes on its own is an anonymous release check — and that can be switched off, after which it works <strong>fully offline</strong>.</p>
+            <p>The app does not collect product analytics. Update checks can be disabled. AI, Azure discovery and enabled MCP sources are separate network features; external runtimes have their own settings.</p>
           </div>
         </div>
       </div>
@@ -700,10 +704,10 @@
         <div class="features">
           <div class="feature"><h3><span class="tick">✓</span> Security &amp; privacy review</h3><p>Every network destination, on-disk storage path and redaction rule is enumerated — plus how to verify the claims yourself with a proxy or offline run.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Silent, managed installation</h3><p>MSI with per-machine or per-user scope, documented <span class="kbd">UpgradeCode</span> and silent switches for <span class="kbd">Intune</span>, <span class="kbd">SCCM</span> and <span class="kbd">Group Policy</span>.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Air-gapped &amp; offline</h3><p>Update checks can be disabled fleet-wide, after which the app makes no outbound request. The full review keeps working with no network at all.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Offline review</h3><p>Disable update checks and leave remote AI, Azure discovery and MCP sources unused. Deterministic review and built-in model fixes need no network.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> Keep inference in your tenant</h3><p>Use GitHub Copilot, or point the provider at <span class="kbd">Azure OpenAI</span> or a self-hosted OpenAI-compatible endpoint. Credentials are DPAPI-encrypted locally.</p></div>
           <div class="feature"><h3><span class="tick">✓</span> CI/CD gating</h3><p>The CLI runs the same deterministic engine headlessly and exits <span class="kbd">2</span> when a model is not ready, so a pipeline can block on threat-model readiness. SARIF uploads to code scanning.</p></div>
-          <div class="feature"><h3><span class="tick">✓</span> Signed &amp; auditable</h3><p>Every artifact is Authenticode-signed and verifiable with <span class="kbd">Get-AuthenticodeSignature</span>. Licenses for every bundled component are published.</p></div>
+          <div class="feature"><h3><span class="tick">✓</span> Signing information</h3><p>Executables and installers use the project's current self-signed certificate. ZIP containers are not Authenticode-signed. Follow the install guide and your organization's software policy.</p></div>
         </div>
         <div class="docs-grid" style="margin-top:1.4rem">
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/DATA-HANDLING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Data handling &amp; privacy<span class="arrow">→</span></a>

@@ -284,7 +284,7 @@
         </div>
 
         <div class="note">
-          <strong>Verify before you deploy.</strong> Every artifact is Authenticode-signed. Confirm the signature and record the hash:
+          <strong>Verify before you deploy.</strong> Executables and installers are Authenticode-signed; ZIP containers are not. Confirm a supported binary's signature and record each download's hash:
           <code>Get-AuthenticodeSignature .\&lt;file&gt;</code> and <code>Get-FileHash .\&lt;file&gt; -Algorithm SHA256</code>.
           Signing currently uses a self-signed certificate, so SmartScreen may warn on first run — see the
           <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/SECURITY.md#code-signing">security policy</a>.

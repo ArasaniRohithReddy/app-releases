@@ -23,10 +23,14 @@ single place to **download** builds, read **documentation**, and file **issues**
 
 ### 🛡️ Threat Model Reviewer
 
-Reviews, fixes and analyzes **Microsoft Threat Modeling Tool (`.tm7`)** threat models — and OWASP
-Threat Dragon (`.json`) — catching the issues a Microsoft SDL reviewer would send back **before**
-you submit. The readiness verdict and 0–100 score are **deterministic** and computed entirely on
-your machine; GitHub Copilot is advisory only. *(Model authoring is in beta.)*
+Find structural, coverage and triage gaps in **Microsoft Threat Modeling Tool (`.tm7`)**
+and OWASP Threat Dragon (`.json`) models before human review. The readiness verdict
+and 0–100 score are computed locally by a deterministic rubric; Copilot is optional.
+Create and Assistant are available in the desktop app.
+
+Model fixes do **not** patch code or change infrastructure. The owning team implements
+and verifies mitigations; a readiness result is not Microsoft approval.
+Start with the [synthetic sample and quick-start guide](products/threat-model-reviewer/USER-GUIDE.md#try-the-sample-model).
 
 | Resource | Link |
 | --- | --- |
@@ -41,7 +45,10 @@ your machine; GitHub Copilot is advisory only. *(Model authoring is in beta.)*
 
 ## Download
 
-Each release contains the **desktop app** (MSI, setup, or portable ZIP) and a **command-line bundle** (-cli-win-x64.zip) for CI and scripting. See the [CLI documentation](products/threat-model-reviewer/CLI.md).
+Choose **MSI (recommended)** for the desktop app, or the portable ZIP/per-user setup.
+The separate **CLI bundle** (`-cli-win-x64.zip`) supports Windows CI and scripting.
+The **Copilot CLI skill** (`-skill.zip`) needs that CLI bundle alongside it.
+See the [CLI](products/threat-model-reviewer/CLI.md) and [skill guides](products/threat-model-reviewer/SKILL.md).
 
 Browse every version — with its release notes, file sizes and direct downloads — on the
 **[releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)**.
@@ -50,16 +57,16 @@ and the raw **[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releas
 remains available.
 
 Release tags are product-prefixed — `‹app›-v‹x.y.z›`, for example
-`threat-model-reviewer-v2.0.3`.
+`threat-model-reviewer-vX.Y.Z`.
 
 ### Verifying a download
 
-Every artifact is **Authenticode-signed**. Before deploying widely, confirm the signature and
-record the hash:
+Executables and installers are **Authenticode-signed**; ZIP containers are not.
+Before deploying widely, confirm the signature and record the hash:
 
 ```powershell
-Get-AuthenticodeSignature .\ThreatModelReviewer-v2.0.3-x64.msi | Format-List Status, SignerCertificate
-Get-FileHash .\ThreatModelReviewer-v2.0.3-x64.msi -Algorithm SHA256
+Get-AuthenticodeSignature .\ThreatModelReviewer-vX.Y.Z-x64.msi | Format-List Status, SignerCertificate
+Get-FileHash .\ThreatModelReviewer-vX.Y.Z-x64.msi -Algorithm SHA256
 ```
 
 Artifacts are currently signed with a self-signed certificate, so Microsoft Defender SmartScreen

@@ -1,5 +1,20 @@
 # FAQ & Troubleshooting
 
+### Does this fix security vulnerabilities in my code?
+No. It edits **threat model artifacts**, not application code or deployed resources.
+It identifies missing threats and weak triage, helps draft mitigation proposals, and
+exports work items. The owning team implements the controls and verifies them.
+
+### Does READY WITH NOTES mean Microsoft will approve the model?
+No. It means the model has no gating findings under the selected rubric and policy.
+The score measures model maturity, not real-world security. A reviewer can require
+additional evidence, and open threats can remain even when the readiness gate passes.
+
+### Can I try it without a Copilot subscription or a real model?
+Yes. Download the [synthetic sample](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/samples/customer-portal.tm7)
+and follow [Try the sample model](USER-GUIDE.md#try-the-sample-model). Its default
+result is NOT READY, 65/100, with 27 gating findings. No AI call is needed.
+
 ### What file types can it review?
 Microsoft Threat Modeling Tool **`.tm7`** files, and OWASP **Threat Dragon `.json`**.
 
@@ -30,17 +45,19 @@ the app. To sign in, do any one of:
 When you're connected, the header shows a green dot and *"GitHub Copilot ready — N models"*.
 
 ### Is my threat model sent anywhere?
-The deterministic review is **100% local**. AI features send only **minimal, redacted**
-context (finding text, a DFD summary) to **your** Copilot seat — never the raw `.tm7`, and
-secrets are stripped by a redaction pass first.
+The deterministic review is **local**. AI features send context to your selected
+provider; extraction can include supplied document text or the image you select.
+Text redaction is a safeguard, not a guarantee that every sensitive value is removed.
+Azure discovery and enabled MCP sources have their own network paths. See
+[Data handling](DATA-HANDLING.md) before using private inputs.
 
 ### Windows SmartScreen says "Windows protected your PC".
 The portable `.exe` and the installers **are** Authenticode-signed — but for now with a
 **self-signed** certificate that Windows doesn't chain-trust, so SmartScreen may warn on first
-run. Click **More info → Run anyway**. A self-signed certificate never accrues SmartScreen
-reputation; the warning clears for everyone only once signing moves to a **CA-issued/EV**
-certificate or **Azure Trusted Signing**, which is planned. You can verify the signature and hash
-yourself first — see [SECURITY.md](../../SECURITY.md#code-signing).
+run. Verify the download source, signature and hash before deciding whether to run it,
+and follow your organization's policy. A CA-issued/EV certificate or Azure Trusted
+Signing can establish publisher trust, but does not guarantee that all warnings disappear.
+See [SECURITY.md](../../SECURITY.md#code-signing).
 
 ### The MSIX won't install / AI features don't work in the MSIX.
 - Install the included **`ThreatModelReviewer-publisher.cer`** into **Trusted People**
@@ -56,8 +73,8 @@ including `runtimes\win-x64\native\copilot.exe`. Don't copy the `.exe` out on it
 ### Why is the verdict NOT READY even though the score is high?
 Because they measure different things, and this is intended. The score measures **maturity** —
 how complete and thorough the model is. Readiness is a separate **gate**: a single must-fix
-(gating) finding — e.g. an un-triaged threat — forces NOT READY, exactly as a Microsoft SDL
-reviewer would. A high score with a NOT READY verdict is the most common result for a *good*
+(gating) finding — e.g. an un-triaged threat — forces NOT READY under this tool's rubric.
+A high score with a NOT READY verdict can describe a thorough
 model that has a few specific blockers. Clear the gating findings (the Fix tab automates most)
 and the verdict flips to READY WITH NOTES.
 
@@ -73,7 +90,9 @@ Open an issue with the check ID and a sanitized snippet:
 deliberately tight triggers; we tune them from real reports.
 
 ### Can I add my own organization's checks?
-Not from a released build today. The rubric engine is designed for it — checks implement an
+The CLI's `policy` commands can configure the existing rubric with disclosed overrides
+and waivers; they do not load arbitrary new checks. Custom check implementations are
+source-level extensions — checks implement an
 `IRubricCheck` interface and compose with the defaults via
 `RubricEngine.WithAdditionalChecks(...)` — but that extension point is only reachable when
 building from source, and the source repository is private. A supported way to load

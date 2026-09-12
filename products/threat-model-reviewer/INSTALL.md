@@ -59,18 +59,15 @@ The MSIX is signed with a **self-signed** certificate, so you must trust it firs
 
 ## About the SmartScreen warning
 
-The downloads are **Authenticode-signed**, but with a **self-signed** certificate for now —
-so Microsoft Defender SmartScreen may still show *"Windows protected your PC"* on first run.
-That's expected. The warning is about the certificate's **trust chain**, not about the app's
-behavior. Verify it yourself before running — check the signature and hash with
-`Get-AuthenticodeSignature` and `Get-FileHash` (see
-[SECURITY.md](../../SECURITY.md#code-signing)) — and note that the deterministic review runs
-entirely on your machine.
+Executables and installers are **Authenticode-signed** with the project's current
+**self-signed** certificate; ZIP containers are not. SmartScreen or organization
+policy can still warn or block execution. Do not treat a warning as proof of safety
+or dismiss it automatically. Verify the download source, signature and hash, then
+follow your organization's software policy. See [SECURITY.md](../../SECURITY.md#code-signing).
 
-SmartScreen only stops warning when the binaries are signed with a certificate from a
-**trusted Certificate Authority** (ideally **EV**, or **Azure Trusted Signing**). That
-requires identity enrollment + a small cost, so it's planned rather than shipped. Once a CA
-certificate is in place, the warning disappears for everyone — no change needed on your end.
+CA-issued, EV or Azure Trusted Signing certificates can establish publisher trust,
+but signing alone does not guarantee that SmartScreen or policy warnings disappear.
+That signing migration is planned, not shipped.
 
 ---
 

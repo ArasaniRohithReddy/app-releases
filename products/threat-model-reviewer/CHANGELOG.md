@@ -4,6 +4,21 @@ All notable changes to **Threat Model Reviewer** are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project aims to follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Documentation and website
+- Clarify that model fixes do not patch application code, and a readiness result is
+  not Microsoft approval or proof that mitigations are implemented.
+- Add a public synthetic sample and quick-start workflow tied to the actual rubric output.
+- Add an explicit public-document map, link-aware synchronization command and
+  read-only drift check; record the cross-repository documentation workflow.
+- Correct stale public Create/Assistant descriptions and privacy/network guidance
+  for Azure, MCP, document extraction and image input.
+- Replace the manually maintained source test-count badge with the CI status badge.
+
+### Fixed in source, not yet included in a new binary release
+- Widen the Findings check column and use an ellipsis plus tooltip for long targets.
+
 ## [2.5.1] — 2026-09-07
 
 Three defects found by looking at what the product actually renders, rather than at what the code
@@ -135,7 +150,7 @@ The tool is now usable from an AI agent, not only by a human at a keyboard.
   compare two revisions for regression, and generate a model with an evidence file — each mapped to
   what a developer actually asks rather than to our verb names. It carries the CI recipes, both spec
   schemas, and the full rubric so an agent can explain a check id instead of inventing one.
-  See [docs/SKILL.md](docs/SKILL.md).
+  See [docs/SKILL.md](SKILL.md).
 - **The determinism invariant is stated in the skill in the imperative**: never report a verdict you
   did not read out of the tool, never imply that any AI can change one, and stop rather than guess
   if the engine cannot be run. The verdict and the 0-100 score still come from 72 rubric checks with
@@ -242,7 +257,7 @@ The command-line interface is now something you can actually download.
   described CLI usage since 2.0, but no release ever contained a CLI — the only way to obtain one
   was to build the source, and the source repository is private. A reviewer following the docs
   reached a dead end. The bundle is self-contained and signed like every other artifact.
-- **[docs/CLI.md](docs/CLI.md)** — download, exit codes, every verb, authentication, and a working
+- **[docs/CLI.md](CLI.md)** — download, exit codes, every verb, authentication, and a working
   GitHub Actions example that gates a build on the verdict and uploads SARIF.
 
 ### Fixed

@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ThreatModel xmlns:abs="http://schemas.datacontract.org/2004/07/ThreatModeling.Model.Abstracts" xmlns:kb="http://schemas.datacontract.org/2004/07/ThreatModeling.KnowledgeBase" xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/ThreatModeling.Model">
+  <MetaInformation>
+    <ThreatModelName>Customer Portal Threat Model</ThreatModelName>
+  </MetaInformation>
+  <DrawingSurfaceList>
+    <DrawingSurfaceModel>
+      <Guid>18ee4e6e-38f0-45f3-b288-29bc6fdcc3f2</Guid>
+      <Header>Customer Portal Threat Model</Header>
+      <Borders>
+        <a:KeyValueOfguidanyType>
+          <a:Key>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</a:Key>
+          <a:Value>
+            <abs:Guid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</abs:Guid>
+            <abs:GenericTypeId>GE.EI</abs:GenericTypeId>
+            <abs:TypeId>ExternalEntity</abs:TypeId>
+            <abs:Left>100</abs:Left>
+            <abs:Top>700</abs:Top>
+            <abs:Width>60</abs:Width>
+            <abs:Height>60</abs:Height>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Customer Browser</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+        <a:KeyValueOfguidanyType>
+          <a:Key>38853b08-9d4e-4467-bd83-e8866b88a785</a:Key>
+          <a:Value>
+            <abs:Guid>38853b08-9d4e-4467-bd83-e8866b88a785</abs:Guid>
+            <abs:GenericTypeId>GE.P</abs:GenericTypeId>
+            <abs:TypeId>Process</abs:TypeId>
+            <abs:Left>160</abs:Left>
+            <abs:Top>180</abs:Top>
+            <abs:Width>60</abs:Width>
+            <abs:Height>60</abs:Height>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Web App</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+        <a:KeyValueOfguidanyType>
+          <a:Key>1feeabca-491e-4ea8-b15a-654882794588</a:Key>
+          <a:Value>
+            <abs:Guid>1feeabca-491e-4ea8-b15a-654882794588</abs:Guid>
+            <abs:GenericTypeId>GE.P</abs:GenericTypeId>
+            <abs:TypeId>Process</abs:TypeId>
+            <abs:Left>250</abs:Left>
+            <abs:Top>180</abs:Top>
+            <abs:Width>60</abs:Width>
+            <abs:Height>60</abs:Height>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Auth Service</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+        <a:KeyValueOfguidanyType>
+          <a:Key>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</a:Key>
+          <a:Value>
+            <abs:Guid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</abs:Guid>
+            <abs:GenericTypeId>GE.DS</abs:GenericTypeId>
+            <abs:TypeId>DataStore</abs:TypeId>
+            <abs:Left>340</abs:Left>
+            <abs:Top>180</abs:Top>
+            <abs:Width>60</abs:Width>
+            <abs:Height>60</abs:Height>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Orders Database</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+        <a:KeyValueOfguidanyType>
+          <a:Key>0c1cdbc7-aa0e-4f0a-aff3-ea066c9d6db7</a:Key>
+          <a:Value>
+            <abs:Guid>0c1cdbc7-aa0e-4f0a-aff3-ea066c9d6db7</abs:Guid>
+            <abs:GenericTypeId>GE.TB.B</abs:GenericTypeId>
+            <abs:TypeId>TrustBoundary</abs:TypeId>
+            <abs:Left>100</abs:Left>
+            <abs:Top>100</abs:Top>
+            <abs:Width>500</abs:Width>
+            <abs:Height>400</abs:Height>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Azure Boundary</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+      </Borders>
+      <Lines>
+        <a:KeyValueOfguidanyType>
+          <a:Key>fddfff28-f1eb-4d68-bd76-9dfda67eb61c</a:Key>
+          <a:Value>
+            <abs:Guid>fddfff28-f1eb-4d68-bd76-9dfda67eb61c</abs:Guid>
+            <abs:SourceGuid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</abs:SourceGuid>
+            <abs:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</abs:TargetGuid>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>HTTPS Request</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+        <a:KeyValueOfguidanyType>
+          <a:Key>cb782516-502a-4849-8155-ccdee7c5fc03</a:Key>
+          <a:Value>
+            <abs:Guid>cb782516-502a-4849-8155-ccdee7c5fc03</abs:Guid>
+            <abs:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</abs:SourceGuid>
+            <abs:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</abs:TargetGuid>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Auth Check</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+        <a:KeyValueOfguidanyType>
+          <a:Key>74d9e8f0-a47c-4f28-a84f-4438e9afb12d</a:Key>
+          <a:Value>
+            <abs:Guid>74d9e8f0-a47c-4f28-a84f-4438e9afb12d</abs:Guid>
+            <abs:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</abs:SourceGuid>
+            <abs:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</abs:TargetGuid>
+            <abs:Properties>
+              <a:anyType>
+                <kb:DisplayName>Name</kb:DisplayName>
+                <kb:Value>Order Query</kb:Value>
+              </a:anyType>
+            </abs:Properties>
+          </a:Value>
+        </a:KeyValueOfguidanyType>
+      </Lines>
+    </DrawingSurfaceModel>
+  </DrawingSurfaceList>
+  <ThreatInstances>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-1</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Spoofing of Customer Browser</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Spoofing</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-2</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Repudiation of Customer Browser</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Repudiation</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-3</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Spoofing of Web App</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Spoofing</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-4</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Tampering of Web App</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Tampering</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-5</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Repudiation of Web App</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Repudiation</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-6</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Information Disclosure of Web App</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Information Disclosure</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-7</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Denial of Service of Web App</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Denial of Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-8</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Elevation of Privilege of Web App</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Elevation of Privilege</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-9</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Spoofing of Auth Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Spoofing</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-10</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Tampering of Auth Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Tampering</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-11</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Repudiation of Auth Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Repudiation</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-12</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Information Disclosure of Auth Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Information Disclosure</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-13</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Denial of Service of Auth Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Denial of Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-14</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Elevation of Privilege of Auth Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Elevation of Privilege</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-15</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Tampering of Orders Database</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Tampering</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-16</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Repudiation of Orders Database</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Repudiation</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-17</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Information Disclosure of Orders Database</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Information Disclosure</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-18</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid></kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid></kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Denial of Service of Orders Database</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Denial of Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-19</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid>fddfff28-f1eb-4d68-bd76-9dfda67eb61c</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Tampering of HTTPS Request</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Tampering</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-20</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid>fddfff28-f1eb-4d68-bd76-9dfda67eb61c</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Information Disclosure of HTTPS Request</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Information Disclosure</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-21</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>36c84ff9-7b71-4eb3-888d-b6d8f348ca51</kb:SourceGuid>
+        <kb:TargetGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:TargetGuid>
+        <kb:FlowGuid>fddfff28-f1eb-4d68-bd76-9dfda67eb61c</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Denial of Service of HTTPS Request</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Denial of Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-22</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid>cb782516-502a-4849-8155-ccdee7c5fc03</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Tampering of Auth Check</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Tampering</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-23</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid>cb782516-502a-4849-8155-ccdee7c5fc03</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Information Disclosure of Auth Check</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Information Disclosure</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-24</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:SourceGuid>
+        <kb:TargetGuid>1feeabca-491e-4ea8-b15a-654882794588</kb:TargetGuid>
+        <kb:FlowGuid>cb782516-502a-4849-8155-ccdee7c5fc03</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Denial of Service of Auth Check</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Denial of Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-25</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid>74d9e8f0-a47c-4f28-a84f-4438e9afb12d</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Tampering of Order Query</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Tampering</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-26</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid>74d9e8f0-a47c-4f28-a84f-4438e9afb12d</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Information Disclosure of Order Query</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Information Disclosure</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+    <a:KeyValueOfstringThreatpc_P0_PhOB>
+      <a:Key>GT-27</a:Key>
+      <a:Value>
+        <kb:Priority>High</kb:Priority>
+        <kb:State>Not Started</kb:State>
+        <kb:SourceGuid>38853b08-9d4e-4467-bd83-e8866b88a785</kb:SourceGuid>
+        <kb:TargetGuid>cf9f5b7f-4ab5-44fe-9aa3-76dc10638a8f</kb:TargetGuid>
+        <kb:FlowGuid>74d9e8f0-a47c-4f28-a84f-4438e9afb12d</kb:FlowGuid>
+        <kb:Properties>
+          <a:KeyValueOfstringstring>
+            <a:Key>Title</a:Key>
+            <a:Value>Denial of Service of Order Query</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatCategory</a:Key>
+            <a:Value>Denial of Service</a:Value>
+          </a:KeyValueOfstringstring>
+          <a:KeyValueOfstringstring>
+            <a:Key>UserThreatDescription</a:Key>
+            <a:Value></a:Value>
+          </a:KeyValueOfstringstring>
+        </kb:Properties>
+      </a:Value>
+    </a:KeyValueOfstringThreatpc_P0_PhOB>
+  </ThreatInstances>
+  <Version>4.3</Version>
+</ThreatModel>

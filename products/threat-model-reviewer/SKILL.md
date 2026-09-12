@@ -146,7 +146,9 @@ and `copilot skill add` refused it outright. Nothing in the build would have cau
 - **The engine reads the model, not the system.** It cannot verify that a claimed mitigation is
   actually deployed.
 - **Generation enumerates; it does not analyse.** Every generated threat is *Needs Investigation*.
-- **AI verbs need a Copilot seat.** Only `--explain` and `fix --ai`. Everything else works offline.
+- **AI operations need provider access.** Deterministic review and built-in fixes work offline.
+  The `azure` verb is also deterministic, but requires Azure network access and sign-in.
+- **Model fixes are not code fixes.** The owning team implements and verifies mitigations.
 - **Skill selection is not guaranteed.** An agent chooses a skill from its description. On a machine
   with hundreds of skills installed the list an agent sees can be truncated, and the skill may not
   be offered at all. Naming it — "use the threat-model-reviewer skill" — always works.

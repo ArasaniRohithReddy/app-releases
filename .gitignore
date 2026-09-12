@@ -1,4 +1,5 @@
 .serve.log
 .serve.err
 .playwright-mcp/
-
+node_modules/
+test-results/

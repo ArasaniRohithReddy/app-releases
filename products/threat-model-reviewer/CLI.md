@@ -99,12 +99,14 @@ ThreatModelReviewer.Cli.exe generate spec.json --out model.tm7
 ThreatModelReviewer.Cli.exe model.tm7                                     # review it
 ```
 
-Requires the Azure CLI, a completed `az login`, and the **Reader** role on the group.
+Requires the Azure CLI, a completed `az login`, and read access to the requested
+resources, role assignments and endpoints. Missing access can produce gaps.
 
 ### How flows are inferred
 
-A managed identity holding a **data-plane** role on a store is evidence that the resource running as
-that identity reads or writes it — a path that exists in production whether or not anyone drew it.
+A managed identity holding a **data-plane** role has permission to access a resource.
+Discovery uses eligible assignments to suggest possible flows; it does not observe
+traffic or verify that an application uses the permission.
 
 Two kinds of assignment are deliberately **not** drawn:
 

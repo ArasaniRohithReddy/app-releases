@@ -17,6 +17,22 @@ optional and only ever *advisory*.
   header shows a green dot and *"GitHub Copilot ready — N models"*. See **INSTALL.md → Signing in to
   GitHub Copilot** for details.
 
+## Try the sample model
+
+Download the [synthetic customer-portal model](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/samples/customer-portal.tm7)
+and open it using **Open .tm7**. No Copilot sign-in is needed. With the default rubric,
+expect **NOT READY**, **65/100**, and **27 gating findings**: its threats are still
+*Not Started*.
+
+Open **Findings** to see the `C1` findings, then **Fix > Generate fix plan** to preview
+the proposed triage. Save to a **new file** if you apply changes. A move to
+*Needs Investigation* is an acknowledgement to investigate, not an implemented
+mitigation. Compare the revisions to see model progress, then assign and verify
+the actual security work.
+
+The sample is intentionally incomplete. Its score and gate are not a certification,
+and clearing the gate does not mean every threat has been resolved.
+
 ## Open a model
 
 - Click **Open .tm7** in the header, or
@@ -84,9 +100,8 @@ finished review.
 actually **deployed**. Pick a resource group you already have access to and it drafts a model from
 the resources in it.
 
-What makes this different from reading a diagram is where the flows come from. A managed identity
-holding a **data-plane** role on a store is evidence that the resource running as that identity reads
-or writes it — a connection that exists in production whether or not anyone drew it. Roles that only
+The draft can include possible access paths inferred from a managed identity's
+**data-plane** role assignments. Permission is not evidence of actual traffic. Roles that only
 grant control over configuration (Contributor, Reader, Owner) are not drawn, and neither are grants
 made across the whole subscription or a management group, which are almost always inherited
 governance rather than this system talking to itself.
@@ -96,12 +111,18 @@ You need the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli
 change or delete anything, and no command that reads a key, secret or connection string is
 reachable from the tool at all.
 
-Tick **Write evidence file** before generating, and read what it says discovery *cannot* see. Two
-limits matter most, and both are also written into the generated `.tm7` as assumptions:
+Tick **Write evidence file** before generating, and read what it says discovery *cannot* see.
+Retain that evidence and explicitly record relevant assumptions in the model:
 
 - A role shows what is **authorised**, not what happens — a granted role may be unused.
 - Access using a **shared key** leaves no role assignment, so it is invisible here and will be
   missing from the diagram entirely.
+
+For Microsoft TMT compatibility, use the Create workflow's baseline prompt to carry
+the embedded KnowledgeBase and Profile from a suitable existing `.tm7`. Without a
+baseline, the app identifies the output as reviewer-only. Always open the final
+artifact in Microsoft TMT before submitting it; a successful reviewer parse is not
+the same compatibility check.
 
 ### Compare
 Pick two revisions — or use the model you already have open as the baseline — and see what
@@ -175,8 +196,9 @@ A generated threat model is only trustworthy if the reader can check how it was 
 - **Gaps and what to verify** — every warning the generator raised, plus the manual checks that no
   tool can perform for you.
 
-The file is deterministic and contains no AI-generated claims: re-running the same specification
-reproduces it byte for byte, so any difference is a real change of input rather than model drift.
+Rule enumeration is deterministic for the same specification and options.
+Evidence files include a capture timestamp, so repeated runs need not produce
+byte-identical evidence. AI-supplied wording is disclosed where applicable.
 Attach it to a review and a reader can audit the model instead of trusting it.
 
 ### Azure discovery evidence

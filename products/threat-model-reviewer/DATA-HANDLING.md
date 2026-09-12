@@ -1,6 +1,6 @@
 # Data Handling & Privacy
 
-*Applies to Threat Model Reviewer v2.1.2 and later. Companion to [SECURITY.md](../../SECURITY.md).*
+*Describes the current 2.5.x feature set. Companion to [SECURITY.md](../../SECURITY.md).*
 
 Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
@@ -13,12 +13,12 @@ privacy reviewer can approve it on evidence rather than assurances.
 
 | Question | Answer |
 | --- | --- |
-| Is the review performed locally? | **Yes.** Parsing, all ~70 rubric checks, scoring, the verdict and every report are computed in-process on your machine. |
+| Is the review performed locally? | **Yes.** Parsing, all 72 rubric checks, scoring, the verdict and deterministic reports are computed in-process on your machine. |
 | Is the threat model file ever uploaded? | **No.** The raw `.tm7` / `.json` is never transmitted. |
-| Does the product collect telemetry or analytics? | **No.** There is no analytics SDK, no usage tracking, no crash reporting, and no vendor endpoint. |
+| Does the app collect product analytics? | **No.** The app does not send usage analytics. Optional providers, external CLI runtimes and MCP servers have their own terms, authentication and telemetry settings. |
 | Is there an activity history? | **Yes, and it is yours.** An optional local history of what *you* did (models reviewed, scores, exports, AI actions) is kept on your own disk. It is never transmitted, contains no threat-model content and no AI prompt or response, and can be disabled, exported or erased at any time — see [§5.1](#51-local-activity-history). |
-| Does it require network access? | **No.** The deterministic review works fully offline and air-gapped. |
-| What can leave the machine? | Only (a) an anonymous GitHub release check and (b) AI prompts, **and only when you explicitly invoke an AI feature**. Both are described below and both can be disabled. |
+| Does it require network access? | Deterministic review does not. Sign-in, updates, remote AI, Azure discovery and enabled MCP sources do. |
+| What can leave the machine? | Update and authentication requests; context supplied to AI; and queries to Azure or enabled MCP sources. Image extraction sends the selected image. See the feature-specific descriptions below. |
 | Where is data stored at rest? | Locally, under `%APPDATA%\ThreatModelReviewer\`. Credentials are encrypted with Windows DPAPI. |
 | Who is the data processor for AI features? | **Your own** GitHub Copilot subscription — the same tenant, terms and data-protection commitments your organization already has with GitHub. |
 
@@ -35,11 +35,13 @@ privacy reviewer can approve it on evidence rather than assurances.
 | Update preferences (`update.json`) | `%APPDATA%\ThreatModelReviewer\update.json` | Never |
 | Activity history (`history-*.jsonl`, `settings.json`, `salt.txt`) | `%LOCALAPPDATA%\ThreatModelReviewer\history\` | **Never** |
 | Downloaded update package | `%LOCALAPPDATA%\…\ThreatModelReviewer` cache | Never |
-| Azure inventory read by **Build from Azure…** | In memory, plus the evidence file you choose to write | **Never** — it is read *from* Azure, and nothing is sent anywhere |
+| Azure inventory read by **Build from Azure…** | In memory, plus the evidence file you choose to write | Discovery does not send it to an AI provider. If you later submit the derived draft to AI refinement, that draft becomes AI input. |
 
 ## 3. Exactly what leaves the machine
 
-There are **four** possible outbound destinations. Nothing else is contacted.
+The application has the following network paths. Do not treat this as a fixed
+domain allow-list for third-party runtimes: authentication, package downloads and
+enabled MCP servers can use additional endpoints.
 
 ### 3.1 Update check — automatic, disableable
 
@@ -56,11 +58,15 @@ There are **four** possible outbound destinations. Nothing else is contacted.
 | Property | Detail |
 | --- | --- |
 | **Destination** | GitHub Copilot, through the bundled GitHub Copilot CLI runtime, authenticated as **your** signed-in seat |
-| **When** | Only on an explicit action: *Explain*, *Deep analysis*, *Critique*, *Framework-gap analysis*, *Draft fix*, *Prioritize interactions* |
-| **Sent** | The finding text (check id, title, message), a **redacted** structural summary of the data-flow diagram (element and flow names, kinds, trust boundaries), and the relevant framework references |
-| **Not sent** | The `.tm7`/`.json` file itself, file paths, file contents outside the summarized structure, or any credential material |
+| **When** | On AI actions such as Explain, Deep analysis, Critique, Draft fix, DFD extraction and refinement |
+| **Sent** | The context needed for the selected action. Finding tools use finding text and structural summaries; extraction/refinement can send supplied descriptions, document text, the current draft or the selected image. |
+| **Safeguards and limits** | Text prompts use redaction safeguards. They do not prove that every sensitive value was removed, and images are not made safe by a text redactor. Check and sanitize inputs before choosing an AI action. |
 | **Processing terms** | Your organization's existing GitHub Copilot agreement governs the request. Prompts are metered against your premium-request quota. |
 | **To disable** | Do not sign in to Copilot, or simply do not use the AI buttons. The deterministic review is unaffected. |
+
+Account sign-in, account/model discovery and quota checks may also contact GitHub
+without a threat-model prompt. The bundled Copilot runtime handles its service
+requests under its own configuration and your organization's agreement.
 
 ### 3.3 OpenAI-compatible provider — optional, opt-in, self-configured
 
@@ -75,21 +81,45 @@ OpenAI-compatible endpoint — **Azure OpenAI**, a private gateway, or a locally
 
 ### 3.4 Azure Resource Manager — only when you build from a resource group
 
-Used only by **Create → Build from Azure…** in the app, or the `azure` verb in the CLI. If you never
-use those, no Azure endpoint is contacted.
+This discovery path is used by **Create → Build from Azure…** and the CLI's `azure`
+verb. Azure OpenAI and the optional Azure MCP server are separate paths.
 
 | Property | Detail |
 | --- | --- |
 | **Destination** | Azure Resource Manager, reached through the **Azure CLI already installed on your machine**, authenticated as your existing `az login`. This tool ships no Azure credential and stores none. |
-| **When** | Only when you explicitly pick a resource group and build from it |
+| **When** | Opening the Azure dialog reads account and group information; building a draft reads the selected group's inventory |
 | **Sent** | Nothing but the read request itself: which subscription and resource group to list. **No threat model content, no findings, no file contents, no telemetry.** |
 | **Read** | The resources in the group and their configuration, role assignments over the group, and private endpoints |
 | **Never read** | Keys, secrets, connection strings, credentials, or the contents of any data store. Those commands are **not reachable** — the wrapper cannot be handed a command, and every read is re-validated against an allowlist before it runs. |
 | **Never written** | Nothing is created, changed or deleted. Discovery requires only the **Reader** role. |
-| **To disable** | Do not use the Azure button or the `azure` verb. Nothing else in the product contacts Azure. |
+| **To disable** | Do not open Build from Azure or run `azure`. Also leave Azure MCP disabled and do not configure an Azure-hosted AI provider if Azure egress must be avoided. |
 
 Every Azure build can write an evidence file listing the exact commands run and every fact used, so
 what was read is auditable rather than asserted.
+
+### 3.5 Assistant data sources (MCP) — separately enabled
+
+**Help > Assistant data sources (MCP)** has a master switch and per-server opt-in.
+Built-in sources are disabled initially. Enabling or testing them can start a
+connection or local process before a model-specific question is asked.
+
+| Source | Network and data implications |
+| --- | --- |
+| Microsoft Learn Docs | HTTPS queries to `https://learn.microsoft.com/api/mcp`. Queries can contain technology names and wording derived from a finding. |
+| Azure MCP Server | Starts `npx -y @azure/mcp@latest server start`; this can download a package from the npm registry. The server uses its Azure credential chain and contacts services allowed by that identity. Assistant tool arguments and results can become provider context. |
+
+The direct Azure discovery wrapper's fixed command list does **not** restrict the
+separate MCP process. Review the server's capabilities, permissions and settings
+before enabling it. Use least-privilege identities and leave MCP off for an
+offline-only workflow. Third-party server telemetry is governed by that server,
+not by the app's no-product-analytics statement.
+
+### 3.6 Authentication and installation
+
+Interactive GitHub device-flow sign-in, the bundled Copilot runtime and Azure
+CLI/server credential acquisition use their respective identity endpoints.
+Installing or starting package-based integrations can also contact package
+registries. These requests are distinct from sending a threat-model prompt.
 
 ## 4. Secret redaction before any prompt
 
@@ -104,10 +134,9 @@ note, a token in a description). Before **any** text is sent to a model, the det
 | Connection secrets | `password=`, `AccountKey=`, `SharedAccessKey=`, `client_secret=`, `api_key=` |
 | Personal data | Email addresses |
 
-The same module also **detects prompt-injection content embedded in the threat model itself**
-(for example a description containing *"ignore previous instructions"*), so untrusted model
-content cannot hijack an AI request, and surfaces secrets found in the model as findings so you
-can remove them at the source.
+The same module flags known prompt-injection patterns embedded in model content.
+This is a defense-in-depth check, not proof that all injection attempts or
+sensitive data will be detected. Review AI suggestions and tool use accordingly.
 
 Redaction is deterministic, offline and applied regardless of which provider is configured.
 
