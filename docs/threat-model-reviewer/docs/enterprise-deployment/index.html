@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md (normalized SHA-256 f8825d24ce538c3048a33a1a92f134d096c2df98317a3acc47b0fb6bc20fdd10). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Enterprise Deployment — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Applies to Threat Model Reviewer v2.5.1." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Enterprise Deployment — App Releases" />
+  <meta property="og:description" content="Applies to Threat Model Reviewer v2.5.1." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Enterprise Deployment","description":"Applies to Threat Model Reviewer v2.5.1.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="./" aria-current="page">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Enterprise deployment</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="enterprise-deployment" tabindex="-1">Enterprise Deployment</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-choosing-a-package">1. Choosing a package</a></li><li><a href="#2-silent-installation">2. Silent installation</a></li><li><a href="#3-microsoft-intune-win32-app">3. Microsoft Intune (Win32 app)</a></li><li><a href="#4-configuration-manager-sccm-and-group-policy">4. Configuration Manager (SCCM) and Group Policy</a></li><li><a href="#5-configuration-for-managed-estates">5. Configuration for managed estates</a></li><li><a href="#6-signing-smartscreen-and-trust">6. Signing, SmartScreen and trust</a></li><li><a href="#7-automation-and-cicd">7. Automation and CI/CD</a></li><li><a href="#8-virtual-desktops-and-multi-user-hosts">8. Virtual desktops and multi-user hosts</a></li><li><a href="#9-removal">9. Removal</a></li></ul></nav></details>
+        <div class="doc-content"><p><em>Applies to Threat Model Reviewer v2.5.1.</em></p>
+<p>This guide covers packaged, unattended rollout of Threat Model Reviewer to managed Windows
+estates — Microsoft Intune, Configuration Manager (SCCM), Group Policy, or a scripted
+distribution. For a single interactive install, see <a href="../install/">INSTALL.md</a>.</p>
+<hr>
+<h2 id="1-choosing-a-package" tabindex="-1">1. Choosing a package</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Enterprise Deployment table 1"><table>
+<thead>
+<tr>
+<th scope="col">Package</th>
+<th scope="col">Scope</th>
+<th scope="col">Admin rights</th>
+<th scope="col">Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>ThreatModelReviewer-v&lt;version&gt;-x64.msi</code></strong></td>
+<td>Per-machine <strong>or</strong> per-user</td>
+<td>Per-machine requires admin</td>
+<td><strong>Recommended for managed deployment</strong> — Intune, SCCM, GPO</td>
+</tr>
+<tr>
+<td><strong><code>ThreatModelReviewer-v&lt;version&gt;-win-x64-portable.zip</code></strong></td>
+<td>Extract anywhere</td>
+<td>None</td>
+<td>Air-gapped hosts, jump boxes, VDI golden images, &quot;no install&quot; policies</td>
+</tr>
+<tr>
+<td><strong><code>ThreatModelReviewer-v&lt;version&gt;-setup.exe</code></strong></td>
+<td>Per-user</td>
+<td>None</td>
+<td>Self-service for users without local admin</td>
+</tr>
+<tr>
+<td><strong><code>ThreatModelReviewer-v&lt;version&gt;-x64.msix</code></strong> + <code>.cer</code></td>
+<td>Per-user (packaged)</td>
+<td>Certificate must be trusted</td>
+<td>Environments standardizing on MSIX <em>(experimental — container restrictions may limit AI features)</em></td>
+</tr>
+<tr>
+<td><strong><code>ThreatModelReviewer-v&lt;version&gt;-cli-win-x64.zip</code></strong></td>
+<td>Extract anywhere</td>
+<td>None</td>
+<td><strong>Build agents and pipelines</strong> — headless review, exit-code gating, SARIF upload. See <a href="../cli/">CLI.md</a></td>
+</tr>
+<tr>
+<td><strong><code>ThreatModelReviewer-v&lt;version&gt;-skill.zip</code></strong></td>
+<td>Extract anywhere</td>
+<td>None</td>
+<td><strong>Developer workstations using an AI agent</strong> — registers a GitHub Copilot CLI skill that drives the CLI. Needs the CLI bundle alongside it. See <a href="../skill/">SKILL.md</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>The desktop app and CLI are <strong>self-contained</strong>: no .NET runtime prerequisite.
+The skill bundle requires the CLI; it contains instructions, not a standalone review engine.
+Application executables and installers are <strong>Authenticode-signed</strong>; ZIP containers and skill
+files are not — see <a href="#6-signing-smartscreen-and-trust">Signing and SmartScreen</a>.</p>
+<h3 id="package-identifiers" tabindex="-1">Package identifiers</h3>
+<p>Useful for detection rules, upgrade logic and uninstall automation:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Enterprise Deployment table 2"><table>
+<thead>
+<tr>
+<th scope="col">Item</th>
+<th scope="col">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product name</td>
+<td><code>Threat Model Reviewer</code></td>
+</tr>
+<tr>
+<td>Executable</td>
+<td><code>ThreatModelReviewer.exe</code></td>
+</tr>
+<tr>
+<td>MSI <code>UpgradeCode</code></td>
+<td><code>{7E2D9A14-3C5B-4F8E-A1D6-9B0C2E4F6A38}</code> — stable upgrade-family ID</td>
+</tr>
+<tr>
+<td>MSI <code>ProductCode</code></td>
+<td>Version-specific; obtain from the deployed release's original MSI</td>
+</tr>
+<tr>
+<td>Inno Setup <code>AppId</code></td>
+<td><code>{8F3A2C71-6B4E-4D2A-9E1F-7C5A0B9D3E64}</code></td>
+</tr>
+<tr>
+<td>Publisher (current)</td>
+<td><code>ArasaniRohithReddy</code> (self-signed certificate)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><code>UpgradeCode</code> identifies the upgrade family, not a particular installed release.
+Use the version-specific <code>ProductCode</code> for MSI product-code detection and GUID-based
+uninstall; read it from the deployed MSI's Property table. Never pass <code>UpgradeCode</code> to
+<code>msiexec /x</code>. A version-aware file detection rule is another option, as shown below.</p>
+</blockquote>
+<p>See Microsoft's <a href="https://learn.microsoft.com/en-us/windows/win32/msi/productcode" rel="noopener noreferrer">ProductCode</a>,
+<a href="https://learn.microsoft.com/en-us/windows/win32/msi/upgradecode" rel="noopener noreferrer">UpgradeCode</a> and
+<a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec" rel="noopener noreferrer">msiexec</a>
+references for the identifier and command semantics.</p>
+<h2 id="2-silent-installation" tabindex="-1">2. Silent installation</h2>
+<h3 id="msi-recommended" tabindex="-1">MSI (recommended)</h3>
+<pre tabindex="0" aria-label="powershell code example"><code># Per-machine (all users) — requires elevation
+msiexec /i &quot;ThreatModelReviewer-v2.5.1-x64.msi&quot; ALLUSERS=1 /qn /norestart /l*v install.log
+
+# Per-user (no elevation)
+msiexec /i &quot;ThreatModelReviewer-v2.5.1-x64.msi&quot; ALLUSERS=&quot;&quot; /qn /norestart
+
+# Upgrade in place — install the newer MSI; its upgrade rules identify related versions
+
+# Uninstall using the original MSI for the deployed release (v2.5.1 in this example)
+msiexec /x &quot;ThreatModelReviewer-v2.5.1-x64.msi&quot; /qn /norestart
+</code></pre>
+<p>Keep the deployed release's original MSI accessible to the uninstall command and use its
+actual path. If you deployed another version, use that version's MSI instead. Alternatively,
+obtain its actual <code>ProductCode</code> from the MSI's Property table and pass that GUID to <code>/x</code>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Enterprise Deployment table 3"><table>
+<thead>
+<tr>
+<th scope="col">Switch</th>
+<th scope="col">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/qn</code></td>
+<td>Fully silent, no UI</td>
+</tr>
+<tr>
+<td><code>/norestart</code></td>
+<td>Never reboot (the product does not require one)</td>
+</tr>
+<tr>
+<td><code>/l*v &lt;file&gt;</code></td>
+<td>Verbose log — always capture this in a deployment pipeline</td>
+</tr>
+<tr>
+<td><code>ALLUSERS=1</code></td>
+<td>Per-machine install (omit or set empty for per-user)</td>
+</tr>
+<tr>
+<td><code>APPLICATIONFOLDER=&quot;&lt;path&gt;&quot;</code></td>
+<td>Override the MSI install directory</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="setupexe-inno-setup" tabindex="-1">Setup.exe (Inno Setup)</h3>
+<pre tabindex="0" aria-label="powershell code example"><code>ThreatModelReviewer-v2.5.1-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG=&quot;install.log&quot;
+</code></pre>
+<h3 id="portable-zip" tabindex="-1">Portable ZIP</h3>
+<pre tabindex="0" aria-label="powershell code example"><code>Expand-Archive .\ThreatModelReviewer-v2.5.1-win-x64-portable.zip -DestinationPath &#39;C:\Program Files\ThreatModelReviewer&#39;
+# Launch: C:\Program Files\ThreatModelReviewer\ThreatModelReviewer.exe
+</code></pre>
+<p>No registry writes, no uninstall entry — remove the folder to uninstall.</p>
+<h2 id="3-microsoft-intune-win32-app" tabindex="-1">3. Microsoft Intune (Win32 app)</h2>
+<ol>
+<li><strong>Package</strong> the MSI with the Microsoft Win32 Content Prep Tool
+(<code>IntuneWinAppUtil.exe -c &lt;folder&gt; -s &lt;msi&gt; -o &lt;out&gt;</code>).</li>
+<li><strong>Install command</strong><pre tabindex="0" aria-label="Text code example"><code>msiexec /i &quot;ThreatModelReviewer-v2.5.1-x64.msi&quot; ALLUSERS=1 /qn /norestart
+</code></pre>
+</li>
+<li><strong>Uninstall command</strong><pre tabindex="0" aria-label="Text code example"><code>msiexec /x &quot;ThreatModelReviewer-v2.5.1-x64.msi&quot; /qn /norestart
+</code></pre>
+The original MSI must be accessible in the uninstall context. Otherwise, use the
+<code>ProductCode</code> from that deployed MSI, not the <code>UpgradeCode</code>.</li>
+<li><strong>Install behaviour:</strong> <em>System</em> (for per-machine) — or <em>User</em> if deploying per-user.</li>
+<li><strong>Detection rule:</strong> MSI product-code rule using the <code>ProductCode</code> from the MSI being
+deployed (not <code>UpgradeCode</code>), or a file rule on
+<code>%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe</code> with <strong>version ≥ 2.5.1.0</strong>.
+Adjust the file path for per-user installs or a custom <code>APPLICATIONFOLDER</code>.</li>
+<li><strong>Requirements:</strong> Windows 10 1809+ / Windows 11, x64.</li>
+<li><strong>Return codes:</strong> <code>0</code> success, <code>3010</code> soft reboot (not expected), <code>1602</code> user cancelled,
+<code>1603</code> fatal error — inspect the MSI log.</li>
+</ol>
+<h2 id="4-configuration-manager-sccm-and-group-policy" tabindex="-1">4. Configuration Manager (SCCM) and Group Policy</h2>
+<p><strong>Configuration Manager</strong> — create an <em>Application</em> with the MSI as the deployment type; the
+install/uninstall commands and detection method above apply unchanged. Deploy as <em>Required</em> to a
+device collection for per-machine installs.</p>
+<p><strong>Group Policy Software Installation</strong> — the MSI can be assigned per-machine via
+<em>Computer Configuration → Software Settings → Software installation</em>. Place the MSI on a UNC share
+readable by domain computers. (GPO software installation does not support MSI transforms for
+per-user/per-machine switching at deploy time; assign per-machine and control per-user behaviour
+with the configuration files in §5.)</p>
+<h2 id="5-configuration-for-managed-estates" tabindex="-1">5. Configuration for managed estates</h2>
+<p>The application stores per-user configuration under <code>%APPDATA%\ThreatModelReviewer\</code>. These files
+are plain JSON, safe to seed, and never contain threat-model content.</p>
+<h3 id="controlling-updates" tabindex="-1">Controlling updates</h3>
+<p>The in-app update check contacts GitHub once at start-up. To disable it fleet-wide, deploy this
+file to each user profile (logon script, Intune configuration script, or a default-profile seed):</p>
+<p><strong><code>%APPDATA%\ThreatModelReviewer\update.json</code></strong></p>
+<pre tabindex="0" aria-label="json code example"><code>{ &quot;Enabled&quot;: false }
+</code></pre>
+<p>With updates disabled the application makes <strong>no unsolicited outbound request at all</strong> — version
+lifecycle is then owned entirely by your deployment tooling. Users can also toggle this in the app.</p>
+<h3 id="controlling-ai-features" tabindex="-1">Controlling AI features</h3>
+<p>AI use is optional; a configured OpenAI-compatible provider does not require Copilot
+sign-in. For offline deployment, disable updates, do not use remote AI actions or
+Azure discovery, and leave MCP sources disabled. The deterministic review, reports
+and built-in remediation remain available.</p>
+<p>To keep inference inside your own boundary, configure the OpenAI-compatible provider against an
+Azure OpenAI or self-hosted endpoint; the key is stored DPAPI-encrypted per user. See
+<a href="../data-handling/#33-openai-compatible-provider--optional-opt-in-self-configured">DATA-HANDLING.md §3.3</a>.</p>
+<h3 id="network-allow-list" tabindex="-1">Network allow-list</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Enterprise Deployment table 4"><table>
+<thead>
+<tr>
+<th scope="col">Purpose</th>
+<th scope="col">Destination</th>
+<th scope="col">Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update check</td>
+<td><code>api.github.com</code>, <code>github.com</code></td>
+<td>Optional — omit if updates are disabled</td>
+</tr>
+<tr>
+<td>Copilot AI features</td>
+<td>GitHub Copilot endpoints (per your Copilot deployment)</td>
+<td>Optional — only if AI is used</td>
+</tr>
+<tr>
+<td>Configured AI provider</td>
+<td>The endpoint selected by the organization</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>Direct Azure discovery</td>
+<td>Azure management and identity endpoints used by the installed Azure CLI</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>Microsoft Learn MCP</td>
+<td><code>learn.microsoft.com/api/mcp</code></td>
+<td>Optional; disabled initially</td>
+</tr>
+<tr>
+<td>Azure MCP</td>
+<td>npm package registry, Azure identity and service endpoints used by the server</td>
+<td>Optional; disabled initially</td>
+</tr>
+<tr>
+<td>Deterministic review, scoring, reports and built-in remediation</td>
+<td>—</td>
+<td><strong>No network access required</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="6-signing-smartscreen-and-trust" tabindex="-1">6. Signing, SmartScreen and trust</h2>
+<p>Application executables and installers are Authenticode-signed; ZIP containers are not.
+The current certificate is <strong>self-signed</strong>
+(<code>CN=ArasaniRohithReddy</code>), which means the binaries carry a valid, tamper-evident signature, but
+Microsoft Defender SmartScreen may warn on first run because the certificate is not chain-trusted.</p>
+<p>Options for managed estates:</p>
+<ul>
+<li><strong>Deploy via MSI/Intune</strong> — use approved management tooling for unattended installation.
+A managed channel is not a bypass: SmartScreen or organization policy can still warn or
+block execution. Validate the rollout under your organization's software policy.</li>
+<li><strong>Experimental self-signed MSIX</strong> — follow <a href="../install/">INSTALL.md</a>: verify the publisher
+certificate and, only if policy allows, import it into <strong>Local Machine → Trusted People</strong>
+with administrator approval. <strong>Trusted Publishers alone does not establish certificate-chain trust.</strong></li>
+<li><strong>Future CA/EV signing</strong> — migration to CA-issued, EV or Azure Trusted Signing certificates
+is planned, not shipped. Such certificates can establish publisher trust but do not
+guarantee that SmartScreen or policy warnings disappear. Plan any required certificate
+or policy updates as part of deployment.</li>
+</ul>
+<p>Validate any download before mass deployment:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>Get-AuthenticodeSignature .\ThreatModelReviewer-v2.5.1-x64.msi | Format-List Status, SignerCertificate
+Get-FileHash .\ThreatModelReviewer-v2.5.1-x64.msi -Algorithm SHA256
+</code></pre>
+<p>Record the hash from your first download and compare it across distribution points. <em>(Publishing
+per-release checksums is on the roadmap.)</em></p>
+<h2 id="7-automation-and-cicd" tabindex="-1">7. Automation and CI/CD</h2>
+<p>The CLI runs the same deterministic engine with no UI and no Copilot seat, so threat-model
+readiness can gate a pipeline:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>ThreatModelReviewer.Cli.exe &quot;model.tm7&quot; --sarif review.sarif --html review.html
+# exit 0 = ready with notes | 2 = not ready | 1 = error
+</code></pre>
+<p>Upload <code>review.sarif</code> to GitHub code scanning, or publish the HTML report as a build artifact.
+Because the verdict is deterministic, the gate is stable across runs and agents.</p>
+<h2 id="8-virtual-desktops-and-multi-user-hosts" tabindex="-1">8. Virtual desktops and multi-user hosts</h2>
+<ul>
+<li><strong>VDI / golden images:</strong> install per-machine (MSI <code>ALLUSERS=1</code>) or bake in the portable folder.
+Per-user configuration is created on first run and roams with <code>%APPDATA%</code> if you use profile
+roaming or FSLogix.</li>
+<li><strong>Session hosts (RDS/AVD):</strong> per-machine install is supported. Each user gets independent
+credentials (DPAPI-encrypted to their own account) and preferences.</li>
+<li><strong>Non-persistent VDI:</strong> disable the update check so images stay at the version you validated.</li>
+</ul>
+<h2 id="9-removal" tabindex="-1">9. Removal</h2>
+<pre tabindex="0" aria-label="powershell code example"><code>msiexec /x &quot;ThreatModelReviewer-v2.5.1-x64.msi&quot; /qn /norestart       # original deployed MSI
+Remove-Item &quot;$env:APPDATA\ThreatModelReviewer&quot; -Recurse -Force        # per-user configuration
+</code></pre>
+<p>Portable installs are removed by deleting the folder. Uninstalling never touches your threat-model
+files or exported reports.</p>
+<hr>
+<p><strong>Need something this guide doesn't cover</strong> — an MST transform, a specific management platform, or
+a hardened baseline? <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">Open an issue</a>.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

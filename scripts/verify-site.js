@@ -1,30 +1,20 @@
 const { chromium } = require('playwright');
-const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const releaseData = require('../docs/release-data.js');
+const { createSiteServer, mount } = require('./site-server.js');
+const accessibilityChecks = require('./site-accessibility-checks.js');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..', 'docs'));
 const snapshot = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'releases', 'releases.json'), 'utf8'));
 const latest = snapshot.find(r => r.tag_name.startsWith('threat-model-reviewer-v') && !r.draft && !r.prerelease);
 if (!latest) throw new Error('The release snapshot has no stable Threat Model Reviewer release.');
 const sample = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'samples', 'customer-portal-review.json'), 'utf8'));
-const mime = { '.html': 'text/html', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.js': 'text/javascript', '.css': 'text/css' };
-const server = http.createServer((req, res) => {
-  let requested;
-  try { requested = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
-  catch { res.writeHead(400); res.end('Bad URL'); return; }
-  if (requested.endsWith('/')) requested += 'index.html';
-  const file = path.resolve(root, '.' + requested);
-  const relative = path.relative(root, file);
-  if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
-    res.writeHead(403); res.end('Outside site root'); return;
-  }
-  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
-    res.writeHead(404); res.end('Not found'); return;
-  }
-  res.writeHead(200, { 'Content-Type': mime[path.extname(file)] || 'application/octet-stream' });
-  fs.createReadStream(file).pipe(res);
-});
+const metadata = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'index.html'), 'utf8')
+  .match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+const staticDownload = metadata.downloadUrl;
+const pages = [['portal', '/'], ['product', '/threat-model-reviewer/'], ['releases', '/threat-model-reviewer/releases/']];
+const server = createSiteServer(root);
 
 let passed = 0;
 const failures = [];
@@ -44,23 +34,274 @@ async function mockReleases(context, unavailable = false) {
   });
 }
 
+async function ready(page) {
+  await page.waitForFunction(() => document.documentElement.dataset.releaseReady === 'true');
+}
+
+async function visit(page, url) {
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await ready(page);
+}
+
+async function historyMatches(page, expected, label) {
+  const differences = await page.evaluate(releases => {
+    const text = html => new DOMParser().parseFromString(html || '', 'text/html').body.textContent.replace(/\s+/g, ' ').trim();
+    const cards = [...document.querySelectorAll('.rel')];
+    const errors = [];
+    if (cards.length !== releases.length) errors.push(`release count ${cards.length} != ${releases.length}`);
+    for (const release of releases) {
+      const ver = release.tag_name.replace('threat-model-reviewer-v', '').toLowerCase();
+      const card = cards.find(c => c.dataset.ver === ver);
+      if (!card) { errors.push(`missing ${ver}`); continue; }
+      const actual = [...card.querySelectorAll('.files tbody a')].map(a => a.href).sort();
+      const wanted = release.assets.map(a => a.browser_download_url).sort();
+      if (JSON.stringify(actual) !== JSON.stringify(wanted)) errors.push(`${ver}: asset history changed`);
+      if (text(card.querySelector('.notes-body')?.innerHTML) !== text(release.body_html)) errors.push(`${ver}: notes changed`);
+    }
+    return errors;
+  }, expected);
+  check(differences.length === 0, `${label}: ${differences.join('; ')}`);
+}
+
+async function preservationChecks(browser, base) {
+  const version = 'v' + latest.tag_name.slice(releaseData.PREFIX.length);
+  const msi = latest.assets.find(a => releaseData.kindOf(a.name) === 'msi');
+  console.log('Checking preservation journeys and fault states');
+
+  const journey = await browser.newContext({ reducedMotion: 'reduce' });
+  try {
+    await mockReleases(journey);
+    const page = await journey.newPage();
+    await visit(page, base + '/');
+    await page.getByRole('link', { name: 'Open app', exact: true }).click();
+    await ready(page);
+    check(page.url() === base + '/threat-model-reviewer/', 'journey: portal did not open the product');
+    for (const kind of ['msi', 'cli', 'skill']) {
+      const asset = latest.assets.find(a => releaseData.kindOf(a.name) === kind);
+      // Only exercise the link/download plumbing; never download or run a real installer in tests.
+      await journey.route(asset.browser_download_url, route => route.fulfill({
+        contentType: 'application/octet-stream',
+        headers: { 'Content-Disposition': `attachment; filename="${asset.name}"` },
+        body: 'Synthetic browser download fixture, not an application binary.'
+      }));
+      const event = page.waitForEvent('download');
+      await page.locator(kind === 'msi' ? '#hero-download' : `[data-dl="${kind}"]`).click();
+      const download = await event;
+      check(download.suggestedFilename() === asset.name && await download.failure() === null, `journey: ${kind} download routing failed`);
+    }
+    check(/needs the command-line bundle/i.test(await page.locator('[data-dl="skill"]').locator('..').textContent()), 'journey: skill dependency is missing');
+    await page.getByRole('link', { name: /^All releases\b/ }).click();
+    await ready(page);
+    await historyMatches(page, snapshot, 'journey: complete history');
+    if (process.env.SITE_SCREENSHOTS)
+      await page.locator('.rel.latest .dl-grid').screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, 'release-download-kinds.png') });
+    const wrongKinds = await page.locator('.rel').evaluateAll((cards, releases) => cards.flatMap(card => {
+      const release = releases.find(r => r.tag_name === 'threat-model-reviewer-v' + card.dataset.ver);
+      return [...card.querySelectorAll('[data-kind]')].filter(link => {
+        const asset = release?.assets.find(a => a.browser_download_url === link.href);
+        return !asset || window.ReleaseData.kindOf(asset.name) !== link.dataset.kind ||
+          !link.getAttribute('aria-label')?.includes('v' + card.dataset.ver);
+      }).map(link => link.href);
+    }), snapshot);
+    check(wrongKinds.length === 0, 'history: package links or accessible version labels drifted');
+    for (const query of [version, version.toUpperCase(), latest.tag_name, '2.5']) {
+      await page.getByRole('searchbox').fill(query);
+      const normalized = query.toLowerCase().replace(/^(?:threat-model-reviewer-)?v(?=\d)/, '');
+      const count = snapshot.filter(r => r.tag_name.slice(releaseData.PREFIX.length).includes(normalized)).length;
+      check(await page.locator('.rel:visible').count() === count, `history: filter failed for ${query}`);
+    }
+    await page.getByRole('searchbox').fill('no-such-version');
+    await page.getByRole('heading', { name: 'No matching version' }).waitFor();
+    check(await page.locator('.rel:visible').count() === 0, 'history: empty state still displays cards');
+    if (process.env.SITE_SCREENSHOTS)
+      await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, 'releases-filter-empty.png') });
+    await page.getByRole('searchbox').fill('');
+    check(await page.locator('.no-match').count() === 0 && await page.locator('.rel:visible').count() === snapshot.length, 'history: clearing the filter did not recover all releases');
+    await page.getByRole('link', { name: 'Overview — back to Threat Model Reviewer', exact: true }).click();
+    await ready(page);
+    await page.getByRole('link', { name: 'All apps — release hub', exact: true }).click();
+    await ready(page);
+    check(page.url() === base + '/', 'journey: return to portal failed');
+  } finally { await journey.close(); }
+
+  const faults = [
+    { name: '403', status: 403 }, { name: '503', status: 503 }, { name: 'offline', abort: true },
+    { name: 'invalid JSON', body: '{' }, { name: 'wrong shape', body: '{}' },
+    { name: 'empty array', body: '[]' }, { name: 'malformed entries', body: JSON.stringify([null, { ...latest, assets: {} }]) }
+  ];
+  for (const fault of faults) {
+    const context = await browser.newContext();
+    try {
+      await context.route('https://api.github.com/**', route => fault.abort ? route.abort() : route.fulfill({
+        status: fault.status || 200, contentType: 'application/json', body: fault.body || '{"message":"Unavailable"}'
+      }));
+      const page = await context.newPage();
+      const errors = [];
+      page.on('pageerror', error => errors.push(error.message));
+      for (const [name, url] of pages) {
+        await visit(page, base + url);
+        check(await page.locator('html').getAttribute('data-release-source') === 'snapshot', `${name}/${fault.name}: did not retain the snapshot`);
+        if (name === 'portal') check(await page.locator('#tmr-version').textContent() === version, `${fault.name}: portal version drift`);
+        if (name === 'product') {
+          check(await page.locator('#hero-download').getAttribute('href') === msi.browser_download_url, `${fault.name}: snapshot MSI missing`);
+          const links = await page.locator('[data-dl]').evaluateAll(nodes => nodes.map(n => [n.dataset.dl, n.href]));
+          check(links.every(([kind, href]) => latest.assets.some(a => releaseData.kindOf(a.name) === kind && a.browser_download_url === href)), `${fault.name}: package kinds drifted`);
+        }
+        if (name === 'releases') await historyMatches(page, snapshot, `${fault.name}: snapshot history`);
+      }
+      check(errors.length === 0, `${fault.name}: JavaScript errors: ${errors.join('; ')}`);
+    } finally { await context.close(); }
+  }
+
+  for (const liveWorks of [false, true]) {
+    const context = await browser.newContext();
+    try {
+      await context.route('**/releases.json', route => route.fulfill({ contentType: 'application/json', body: '[]' }));
+      await context.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify(liveWorks ? snapshot : []) }));
+      const page = await context.newPage();
+      await visit(page, base + '/threat-model-reviewer/releases/');
+      if (liveWorks) await historyMatches(page, snapshot, 'empty snapshot: live recovery');
+      else {
+        check(await page.getByRole('link', { name: 'View releases on GitHub', exact: true }).isVisible(), 'both empty: GitHub fallback is missing');
+        check(await page.locator('.skel').count() === 0 && await page.locator('#hm-count').textContent() === 'Releases unavailable', 'both empty: indefinite loading state');
+        if (process.env.SITE_SCREENSHOTS)
+          await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, 'releases-unavailable.png') });
+      }
+    } finally { await context.close(); }
+  }
+
+  // Synthetic future data only: these fixtures never change the published snapshot or stable claim.
+  const newTag = releaseData.PREFIX + '99.0.0';
+  const newVersion = latest.tag_name.slice(releaseData.PREFIX.length);
+  const newer = {
+    ...latest, tag_name: newTag, published_at: '2099-01-01T00:00:00Z',
+    assets: latest.assets.map(a => ({
+      ...a, name: a.name.replace('v' + newVersion, 'v99.0.0'),
+      browser_download_url: a.browser_download_url.replaceAll(latest.tag_name, newTag).replaceAll('v' + newVersion, 'v99.0.0')
+    }))
+  };
+  const preview = { ...newer, tag_name: releaseData.PREFIX + '99.1.0-preview', prerelease: true, published_at: '2099-02-01T00:00:00Z', assets: [] };
+  const refreshes = [
+    { name: 'partial live list', live: [latest], expected: snapshot, stable: latest },
+    { name: 'mixed live products and channels', live: [{ ...newer, tag_name: 'other-app-v100.0.0' }, { ...newer, draft: true }, preview, newer], expected: [preview, newer, ...snapshot], stable: newer }
+  ];
+  for (const fixture of refreshes) {
+    const context = await browser.newContext();
+    try {
+      await context.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify(fixture.live) }));
+      const page = await context.newPage();
+      for (const [name, url] of pages) {
+        await visit(page, base + url);
+        const ver = 'v' + fixture.stable.tag_name.slice(releaseData.PREFIX.length);
+        const chip = name === 'portal' ? '#tmr-version' : name === 'product' ? '#version-chip' : '#hm-latest';
+        check(await page.locator(chip).textContent() === ver, `${name}/${fixture.name}: wrong stable version`);
+        if (name === 'product') check(await page.locator('#hero-download').getAttribute('href') === fixture.stable.assets.find(a => releaseData.kindOf(a.name) === 'msi').browser_download_url, `${fixture.name}: wrong MSI`);
+        if (name === 'releases') {
+          await historyMatches(page, fixture.expected, fixture.name);
+          check(await page.locator('.rel.latest .rel-ver').textContent() === ver, `${fixture.name}: prerelease labelled latest`);
+        }
+      }
+    } finally { await context.close(); }
+  }
+
+  const incomplete = await browser.newContext();
+  try {
+    const withoutSkill = { ...newer, assets: newer.assets.filter(a => releaseData.kindOf(a.name) !== 'skill') };
+    await incomplete.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify([withoutSkill]) }));
+    const page = await incomplete.newPage();
+    await visit(page, base + '/threat-model-reviewer/');
+    check(await page.locator('[data-dl="skill"]').getAttribute('href') === releaseData.releaseUrl(newer), 'refresh: missing skill retained an older version download');
+    check(await page.locator('[data-size="skill"]').textContent() === '', 'refresh: missing skill retained an older file size');
+  } finally { await incomplete.close(); }
+
+  const delayed = await browser.newContext({ reducedMotion: 'reduce' });
+  let releaseLive;
+  const gate = new Promise(resolve => releaseLive = resolve);
+  try {
+    const updated = structuredClone(snapshot);
+    updated[0].assets[0].download_count++;
+    await delayed.route('https://api.github.com/**', async route => {
+      await gate;
+      await route.fulfill({ contentType: 'application/json', body: JSON.stringify(updated) });
+    });
+    const page = await delayed.newPage();
+    await page.goto(base + '/threat-model-reviewer/releases/', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.releaseSource === 'snapshot');
+    const olderVersion = snapshot[1].tag_name.slice(releaseData.PREFIX.length);
+    const older = page.locator(`.rel[data-ver="${olderVersion}"]`);
+    await page.getByRole('searchbox').fill('v' + olderVersion);
+    await older.locator('.assets > summary').focus();
+    await page.keyboard.press('Enter');
+    await older.locator('.notes > summary').focus();
+    await page.keyboard.press('Enter');
+    releaseLive();
+    await ready(page);
+    check(await older.locator('.assets').evaluate(el => el.open) && await older.locator('.notes').evaluate(el => el.open), 'refresh: disclosures closed while being read');
+    check(await older.locator('.notes > summary').evaluate(el => el === document.activeElement), 'refresh: keyboard focus was lost');
+    check(await page.getByRole('searchbox').inputValue() === 'v' + olderVersion && await page.locator('.rel:visible').count() === 1, 'refresh: filter state was lost');
+  } finally { releaseLive(); await delayed.close(); }
+
+  const themes = await browser.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
+  try {
+    await mockReleases(themes);
+    const page = await themes.newPage();
+    for (const [name, url] of pages) {
+      await visit(page, base + url);
+      await page.keyboard.press('Tab');
+      check(await page.locator('.skip').evaluate(el => el === document.activeElement), `${name}: skip link is not first`);
+      await page.keyboard.press('Enter');
+      await page.keyboard.press('Tab');
+      check(await page.evaluate(() => Boolean(document.activeElement.closest('main'))), `${name}: skip link did not bypass header controls`);
+      const button = page.getByRole('button', { name: /^Theme:/ });
+      for (const mode of ['light', 'dark', 'system']) {
+        await button.focus();
+        await page.keyboard.press('Enter');
+        check(await page.locator('html').getAttribute('data-theme') === (mode === 'system' ? null : mode), `${name}: cannot select ${mode} using the keyboard`);
+        check((await button.getAttribute('aria-label')).includes('Theme: ' + mode), `${name}: theme label drift`);
+      }
+      check(await page.evaluate(() => localStorage.getItem('theme')) === null, `${name}: returning to system did not clear the saved override`);
+      await page.emulateMedia({ colorScheme: 'dark' });
+      // CSS and the matchMedia change event can settle on different turns (notably in Edge).
+      await page.waitForFunction(() => getComputedStyle(document.body).backgroundColor === 'rgb(15, 17, 22)' &&
+        document.getElementById('theme-toggle').getAttribute('aria-label').includes('system (dark)'));
+      check((await button.getAttribute('aria-label')).includes('system (dark)'), `${name}: system preference did not update`);
+      await page.emulateMedia({ colorScheme: 'light' });
+      await page.waitForFunction(() => getComputedStyle(document.body).backgroundColor === 'rgb(251, 251, 253)' &&
+        document.getElementById('theme-toggle').getAttribute('aria-label').includes('system (light)'));
+    }
+  } finally { await themes.close(); }
+
+  const blockedStorage = await browser.newContext();
+  try {
+    await mockReleases(blockedStorage);
+    await blockedStorage.addInitScript(() => Object.defineProperty(window, 'localStorage', { get() { throw new Error('Storage blocked for this test'); } }));
+    const page = await blockedStorage.newPage();
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    for (const [name, url] of pages) {
+      await visit(page, base + url);
+      for (const mode of ['light', 'dark', 'system']) {
+        await page.locator('#theme-toggle').click();
+        check(await page.locator('html').getAttribute('data-theme') === (mode === 'system' ? null : mode), `${name}: theme failed with blocked storage`);
+      }
+    }
+    check(errors.length === 0, 'blocked storage caused JavaScript errors');
+  } finally { await blockedStorage.close(); }
+}
+
 async function main() {
   await new Promise((resolve, reject) => {
     server.once('error', reject);
     server.listen(0, '127.0.0.1', resolve);
   });
-  const base = `http://127.0.0.1:${server.address().port}`;
+  const base = `http://127.0.0.1:${server.address().port}${mount}`;
   let browser;
   try {
     browser = await chromium.launch({
       ...(process.env.SITE_BROWSER_CHANNEL ? { channel: process.env.SITE_BROWSER_CHANNEL } : {}),
       timeout: 60000
     });
-    const pages = [
-      ['portal', '/'],
-      ['product', '/threat-model-reviewer/'],
-      ['releases', '/threat-model-reviewer/releases/']
-    ];
+    console.log(`Browser: ${process.env.SITE_BROWSER_CHANNEL || 'bundled Chromium'} ${browser.version()}`);
     for (const [name, url] of pages) {
       for (const theme of ['light', 'dark']) {
         console.log(`Checking ${name}/${theme}`);
@@ -73,8 +314,24 @@ async function main() {
         page.on('response', r => {
           if (r.url().startsWith(base) && r.status() >= 400) failedRequests.push(`${r.status()} ${r.url()}`);
         });
-        await page.goto(base + url, { waitUntil: 'networkidle' });
+        await visit(page, base + url);
         check(await page.locator('h1').count() === 1, `${name}/${theme}: expected one h1`);
+        if (name === 'product') {
+          const alignment = await page.evaluate(() => {
+            const rect = selector => document.querySelector(selector).getBoundingClientRect();
+            const lefts = selector => [...document.querySelectorAll(selector)].map(el => el.getBoundingClientRect().left);
+            const same = values => Math.max(...values) - Math.min(...values) < 1;
+            return {
+              note: Math.abs(rect('.how-note').width - rect('.steps').width) < 1,
+              sample: Math.abs(lefts('.pillars > *')[1] - lefts('.start-example > *')[1]) < 1,
+              workflows: same(lefts('.workflow p')) && same(lefts('.workflow > a')),
+              hero: Math.abs(rect('.hero h1').top - rect('.hero-proof img').top) < 1,
+              copy: parseFloat(getComputedStyle(document.querySelector('.steps p')).fontSize) >= 16
+            };
+          });
+          for (const [part, aligned] of Object.entries(alignment))
+            check(aligned, `product/${theme}: ${part} alignment/readability regression`);
+        }
 
         // Scroll lazy images into view before judging whether they loaded.
         for (const image of await page.locator('img').all()) {
@@ -107,6 +364,20 @@ async function main() {
           check(wrapped.length === 0, `${name}/${theme}@${width}: wrapped control labels: ${wrapped.join(', ')}`);
         }
 
+        await page.evaluate(() => document.documentElement.style.fontSize = '200%');
+        for (const width of [320, 640, 1280]) {
+          await page.setViewportSize({ width, height: 900 });
+          const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+          check(overflow <= 0, `${name}/${theme}@${width}, 200% text: ${overflow}px horizontal overflow`);
+          await page.waitForFunction(() => parseFloat(document.documentElement.style.getPropertyValue('--header-offset')) >=
+            document.querySelector('header.site').getBoundingClientRect().height);
+          const header = await page.evaluate(() => ({
+            height: document.querySelector('header.site').getBoundingClientRect().height,
+            clearance: parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
+          }));
+          check(header.clearance >= header.height, `${name}/${theme}@${width}, 200% text: ${header.height}px header exceeds ${header.clearance}px anchor clearance`);
+        }
+        await page.evaluate(() => document.documentElement.style.removeProperty('font-size'));
         await page.setViewportSize({ width: 1440, height: 900 });
         const contrastProblems = await page.evaluate(() => {
           const canvas = document.createElement('canvas');
@@ -145,6 +416,14 @@ async function main() {
         check(contrastProblems.length === 0, `${name}/${theme}: text contrast: ${contrastProblems.join('; ')}`);
         check(errors.length === 0, `${name}/${theme}: JavaScript errors: ${errors.join('; ')}`);
         check(failedRequests.length === 0, `${name}/${theme}: failed assets: ${failedRequests.join('; ')}`);
+        if (process.env.SITE_SCREENSHOTS) {
+          fs.mkdirSync(process.env.SITE_SCREENSHOTS, { recursive: true });
+          for (const [size, width, height] of [['desktop', 1440, 900], ['mobile', 390, 844]]) {
+            await page.setViewportSize({ width, height });
+            await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+            await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `${name}-${theme}-${size}.png`) });
+          }
+        }
         await context.close();
       }
     }
@@ -152,7 +431,7 @@ async function main() {
     const context = await browser.newContext({ viewport: { width: 1366, height: 768 }, reducedMotion: 'reduce' });
     await mockReleases(context);
     const page = await context.newPage();
-    await page.goto(base + '/threat-model-reviewer/', { waitUntil: 'networkidle' });
+    await visit(page, base + '/threat-model-reviewer/');
     if (process.env.SITE_SCREENSHOTS) {
       fs.mkdirSync(process.env.SITE_SCREENSHOTS, { recursive: true });
       for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844]]) {
@@ -189,7 +468,8 @@ async function main() {
       const clear = await page.evaluate(value => document.getElementById(value).getBoundingClientRect().top >= document.querySelector('header.site').getBoundingClientRect().bottom, id);
       check(clear, `product: ${id} is covered by the sticky header`);
     }
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await ready(page);
     await page.keyboard.press('Tab');
     check(await page.locator(':focus').getAttribute('class') === 'skip', 'product: skip link is not the first keyboard stop');
     const theme = page.locator('#theme-toggle');
@@ -199,7 +479,8 @@ async function main() {
     await page.keyboard.press('Enter');
     check(await theme.getAttribute('aria-label') !== initial, 'product: keyboard theme toggle failed');
     const changed = await theme.getAttribute('aria-label');
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await ready(page);
     check(await theme.getAttribute('aria-label') === changed, 'product: theme preference did not persist');
     check(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior === 'auto'), 'product: reduced motion ignored');
     await context.close();
@@ -207,16 +488,22 @@ async function main() {
     const offline = await browser.newContext();
     await mockReleases(offline, true);
     const fallback = await offline.newPage();
-    await fallback.goto(base + '/threat-model-reviewer/', { waitUntil: 'networkidle' });
-    check((await fallback.locator('#hero-download').getAttribute('href')).endsWith('/releases/latest'), 'product: API failure broke the download fallback');
+    await visit(fallback, base + '/threat-model-reviewer/');
+    check(await fallback.locator('#hero-download').getAttribute('href') === msi.browser_download_url, 'product: API failure broke the snapshot MSI fallback');
     await offline.close();
 
     const noJs = await browser.newContext({ javaScriptEnabled: false });
     const staticPage = await noJs.newPage();
     await staticPage.goto(base + '/threat-model-reviewer/');
     check(await staticPage.locator('#try a[download]').count() === 1, 'product: sample requires JavaScript');
-    check((await staticPage.locator('#hero-download').getAttribute('href')).endsWith('/releases/latest'), 'product: static download unavailable');
+    check(await staticPage.locator('#hero-download').getAttribute('href') === staticDownload, 'product: static download unavailable');
+    await staticPage.goto(base + '/threat-model-reviewer/releases/');
+    check(await staticPage.getByRole('link', { name: 'View releases on GitHub', exact: true }).isVisible(), 'releases: history fallback requires JavaScript');
+    check(await staticPage.locator('.skel').count() === 0, 'releases: no-JavaScript page leaves loading skeletons');
     await noJs.close();
+
+    await preservationChecks(browser, base);
+    await accessibilityChecks({ browser, base, snapshot, check, mockReleases, visit });
   }
   finally {
     await browser?.close();

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/RELEASING.md (normalized SHA-256 d6fd6609b73bccd0cc8bcafedc88a1c6df845c717b2c6e380cfa0920f0ca71c9). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Releasing — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release publishes the built artifacts there as a GitH" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Releasing — App Releases" />
+  <meta property="og:description" content="Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release publishes the built artifacts there as a GitH" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Releasing","description":"Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release publishes the built artifacts there as a GitH","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="./" aria-current="page">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Release process</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="releasing" tabindex="-1">Releasing</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/RELEASING.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#why-dotnet-build-not-dotnet-publish">Why dotnet build, not dotnet publish</a></li><li><a href="#build-the-artifacts">Build the artifacts</a></li><li><a href="#publish-the-github-release-public-repo">Publish the GitHub Release (public repo)</a></li><li><a href="#versioning--tags">Versioning &amp; tags</a></li><li><a href="#documentation-must-move-with-the-release">Documentation must move with the release</a></li></ul></nav></details>
+        <div class="doc-content"><p>Source lives in the <strong>private</strong> repo; binaries, docs, and issues live in the <strong>public</strong>
+release hub <strong><a href="https://github.com/ArasaniRohithReddy/app-releases" rel="noopener noreferrer">ArasaniRohithReddy/app-releases</a></strong>.
+A release publishes the built artifacts there as a GitHub Release.</p>
+<h2 id="why-dotnet-build-not-dotnet-publish" tabindex="-1">Why <code>dotnet build</code>, not <code>dotnet publish</code></h2>
+<p>The app embeds the <strong>GitHub Copilot SDK</strong>, which bundles a CLI runtime at
+<code>runtimes\win-x64\native\copilot.exe</code> and <strong>spawns it as a child process</strong>. That file is
+placed by the SDK's <code>_CopyCopilotCliToOutput</code> <strong>build</strong> target.</p>
+<ul>
+<li><code>dotnet publish</code> does <strong>not</strong> run that target and trips <code>MSB3094</code> (the SDK registers the
+runtime via <code>ContentWithTargetPath</code>).</li>
+<li>Single-file publish would bundle <code>copilot.exe</code> <em>inside</em> the host exe, so the SDK can't
+spawn it.</li>
+</ul>
+<p>So <code>scripts\build-release.ps1</code> uses <strong><code>dotnet build -c Release -r win-x64 --self-contained</code></strong>
+and ships the resulting <strong>folder</strong>. (The folder is also what the installer and MSIX package.)</p>
+<blockquote>
+<p>Paths containing apostrophes can cause SDK copy-task problems. The build script
+stages to an apostrophe-free folder under <code>%TEMP%</code> before zipping/packaging.</p>
+</blockquote>
+<h2 id="build-the-artifacts" tabindex="-1">Build the artifacts</h2>
+<pre tabindex="0" aria-label="powershell code example"><code># Requires: .NET 10 SDK; Inno Setup (winget install JRSoftware.InnoSetup);
+#           Windows SDK for MSIX (winget install Microsoft.WindowsSDK.10.0.26100)
+$ver = ([xml](Get-Content .\ThreatModelReviewer.App\ThreatModelReviewer.App.csproj)).Project.PropertyGroup.Version |
+    Where-Object { $_ } | Select-Object -First 1
+pwsh scripts\build-release.ps1 -Version $ver
+</code></pre>
+<p>Outputs to <code>dist\</code> (git-ignored):</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Releasing table 1"><table>
+<thead>
+<tr>
+<th scope="col">Artifact</th>
+<th scope="col">What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-x64.msi</code></td>
+<td><strong>Dual-scope MSI</strong> — install for all users (per-machine) or just me (per-user).</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-win-x64-portable.zip</code></td>
+<td>Self-contained folder — extract &amp; run.</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-setup.exe</code></td>
+<td>Per-user Inno Setup installer.</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-x64.msix</code></td>
+<td>Signed MSIX (experimental).</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip</code></td>
+<td>Self-contained command line for CI and scripting.</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-skill.zip</code></td>
+<td>GitHub Copilot CLI skill. Markdown plus a resolver script, so there is nothing to compile — it is staged, version-stamped and zipped.</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-publisher.cer</code></td>
+<td>Public cert users trust for the MSIX.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tools" tabindex="-1">Tools</h3>
+<ul>
+<li><strong>WiX v5</strong> for the MSI: <code>dotnet tool install --global wix --version 5.0.2</code> then
+<code>wix extension add -g WixToolset.UI.wixext/5.0.2</code>. <em>(WiX v7 requires a paid OSMF EULA — pin to v5.)</em></li>
+<li><strong>Inno Setup</strong>: <code>winget install JRSoftware.InnoSetup</code>.</li>
+<li><strong>Windows SDK</strong> (MSIX: <code>makeappx</code> + <code>signtool</code>): <code>winget install Microsoft.WindowsSDK.10.0.26100</code>.</li>
+</ul>
+<h3 id="signing" tabindex="-1">Signing</h3>
+<p><code>scripts\build-release.ps1</code> signs application executables and installers, not ZIP containers:</p>
+<ul>
+<li>with <strong>your certificate</strong> when you pass <code>-CertPfx &lt;file&gt; [-CertPassword &lt;pw&gt;]</code> or
+<code>-CertThumbprint &lt;thumb&gt;</code> — use an appropriately issued certificate or
+Azure Trusted Signing for publisher trust; signing does not guarantee SmartScreen reputation;</li>
+<li>otherwise with a generated <strong>self-signed</strong> cert (so artifacts are signed and the MSIX
+installs, but SmartScreen still warns publicly).</li>
+</ul>
+<h2 id="publish-the-github-release-public-repo" tabindex="-1">Publish the GitHub Release (public repo)</h2>
+<p><strong>Manual (gh CLI):</strong></p>
+<pre tabindex="0" aria-label="powershell code example"><code>$tag = &quot;threat-model-reviewer-v$ver&quot;
+$assets = @(
+    &quot;dist\ThreatModelReviewer-v$ver-x64.msi&quot;,
+    &quot;dist\ThreatModelReviewer-v$ver-win-x64-portable.zip&quot;,
+    &quot;dist\ThreatModelReviewer-v$ver-setup.exe&quot;,
+    &quot;dist\ThreatModelReviewer-v$ver-cli-win-x64.zip&quot;,
+    &quot;dist\ThreatModelReviewer-v$ver-skill.zip&quot;,
+    &quot;dist\ThreatModelReviewer-v$ver-x64.msix&quot;,
+    &quot;dist\ThreatModelReviewer-publisher.cer&quot;
+)
+# Omit the MSIX/certificate entries only when that packaging step was deliberately skipped.
+gh release create $tag @assets `
+  --repo ArasaniRohithReddy/app-releases `
+  --title &quot;Threat Model Reviewer v$ver&quot; `
+  --notes-file docs\release-notes\v$ver.md
+</code></pre>
+<p><strong>Automated (GitHub Actions):</strong> push a tag <code>threat-model-reviewer-vX.Y.Z</code> to the private
+repo. The <code>.github/workflows/release.yml</code> workflow builds the artifacts and creates the
+Release in <code>app-releases</code> using the <code>RELEASE_TOKEN</code> secret (a PAT with <code>contents:write</code> on
+the public repo). Set that secret once in the private repo's settings.</p>
+<h2 id="versioning--tags" tabindex="-1">Versioning &amp; tags</h2>
+<ul>
+<li>Bump <code>&lt;Version&gt;</code> in <code>ThreatModelReviewer.App\ThreatModelReviewer.App.csproj</code>.</li>
+<li>Tag format is <strong>product-prefixed</strong> so the hub can host multiple apps:
+<code>threat-model-reviewer-vX.Y.Z</code> (a future app would use <code>other-app-vX.Y.Z</code>).</li>
+<li>Add a <code>CHANGELOG.md</code> entry and a <code>docs\release-notes\vX.Y.Z.md</code>.</li>
+</ul>
+<h2 id="documentation-must-move-with-the-release" tabindex="-1">Documentation must move with the release</h2>
+<p>The version number appears in several documents as a <em>claim about the current release</em>, and a stale
+claim is worse than no claim — SECURITY.md telling a reader that an older build is the supported one
+is a security-relevant inaccuracy. So these are checked automatically:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Releasing table 2"><table>
+<thead>
+<tr>
+<th scope="col">What</th>
+<th scope="col">Where</th>
+<th scope="col">Checked by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Changelog entry and link</td>
+<td><code>CHANGELOG.md</code></td>
+<td><code>DocumentationCurrencyTests</code></td>
+</tr>
+<tr>
+<td>Release notes file</td>
+<td><code>docs\release-notes\vX.Y.Z.md</code></td>
+<td><code>DocumentationCurrencyTests</code></td>
+</tr>
+<tr>
+<td>Supported-versions table</td>
+<td><code>SECURITY.md</code></td>
+<td><code>DocumentationCurrencyTests</code></td>
+</tr>
+<tr>
+<td>Deployment version floor</td>
+<td><code>docs\ENTERPRISE-DEPLOYMENT.md</code></td>
+<td><code>DocumentationCurrencyTests</code></td>
+</tr>
+<tr>
+<td>Build example</td>
+<td><code>README.md</code></td>
+<td><code>DocumentationCurrencyTests</code></td>
+</tr>
+<tr>
+<td>Every tab is described</td>
+<td><code>docs\USER-GUIDE.md</code></td>
+<td><code>DocumentationCurrencyTests</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>dotnet test</code> fails if any of these fall behind, so a release cannot be tagged with documentation
+that still describes the previous one. Bump the version first, then run the suite: the failures tell
+you exactly which documents to update.</p>
+<p>Keep documentation aligned during development using <code>docs\DOCUMENTATION.md</code>.
+The complete public mapping lives in <code>docs\publication.json</code>, including the public
+README, user/CLI/skill guides, security guidance and synthetic sample.</p>
+<pre tabindex="0" aria-label="powershell code example"><code>pwsh scripts\sync-public-docs.ps1 -HubPath C:\work\app-releases
+pwsh scripts\sync-public-docs.ps1 -HubPath C:\work\app-releases -Check
+</code></pre>
+<p>Review the hub portal README and all Pages surfaces separately: hero claims,
+screenshots, version fallbacks, JSON-LD, MSI recommendation, CLI/skill links and
+asset classifiers. The copy command does not certify those manual surfaces.
+After publishing, run the hub release-snapshot workflow and verify the live result.</p>
+<p>Do not label a source change as shipped just because the project still carries the
+last release's version. Preserve historical release notes; document unreleased work
+separately until new packages are built and verified.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

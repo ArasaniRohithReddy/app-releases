@@ -4,7 +4,8 @@ name: update-releases-snapshot
 # rate-limited (60 requests/hour per IP for anonymous callers — easily exhausted from a
 # corporate NAT). Each product's releases page loads a same-origin snapshot first, then
 # refreshes from the live API. This workflow regenerates that snapshot whenever a release
-# changes, so it can never go stale.
+# changes. Scheduled runs are a fallback, not a freshness SLA: Actions/API failures
+# must leave the saved history intact and surface a failed run for an operator.
 
 on:
   release:
@@ -13,13 +14,13 @@ on:
     types: [published, edited, unpublished, deleted]
   workflow_dispatch:
   schedule:
-    # Release events proved unreliable for 'edited' activity, so this is the real guarantee:
-    # the snapshot is never more than a few hours behind, and the page also refreshes from the
-    # live API on every load, so the snapshot only ever backstops rate-limited visitors.
+    # Release events can be missed/delayed. Refresh on the default branch as well.
     - cron: '17 */6 * * *'
 
 permissions:
   contents: write
+  # GITHUB_TOKEN pushes do not trigger push workflows; dispatch checks explicitly.
+  actions: write
 
 concurrency:
   group: releases-snapshot
@@ -27,7 +28,11 @@ concurrency:
 
 jobs:
   snapshot:
+    if: >-
+      github.repository == 'ArasaniRohithReddy/app-releases' &&
+      (github.event_name == 'release' || github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       # A release event checks out the tag, which leaves HEAD detached and makes the commit
       # below unpushable. Always work on the default branch, which is where the snapshot lives.
@@ -35,48 +40,59 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run check:docs
+      - run: npx playwright install --with-deps chromium
+
       - name: Regenerate snapshots
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          # product tag-prefix  ->  destination file
-          declare -A PRODUCTS=(
-            ["threat-model-reviewer-v"]="docs/threat-model-reviewer/releases/releases.json"
-          )
-
+          # Slurp preserves page boundaries so the generator can reject malformed input.
           all=$(gh api -H "Accept: application/vnd.github.html+json" \
-                  "repos/${GITHUB_REPOSITORY}/releases?per_page=100" --paginate)
+                  "repos/${GITHUB_REPOSITORY}/releases?per_page=100" --paginate --slurp)
+          printf '%s' "$all" | node scripts/update-release-snapshot.js \
+            docs/threat-model-reviewer/releases/releases.json
 
-          for prefix in "${!PRODUCTS[@]}"; do
-            dest="${PRODUCTS[$prefix]}"
-            mkdir -p "$(dirname "$dest")"
-            echo "$all" | jq -c --arg p "$prefix" '
-              [ .[]
-                | select(.draft == false)
-                | select(.tag_name | startswith($p))
-                | {
-                    tag_name, name, published_at, prerelease, body_html,
-                    assets: [ .assets[] | { name, size, download_count, browser_download_url } ]
-                  }
-              ] | sort_by(.published_at) | reverse
-            ' > "$dest"
-            echo "$dest -> $(jq 'length' "$dest") releases, $(du -h "$dest" | cut -f1)"
-          done
-
-      - name: Commit if changed
+      - name: Commit the candidate locally if changed
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "$(git status --porcelain)" ]]; then
+          if git diff --quiet -- docs/threat-model-reviewer/releases/releases.json; then
             echo "Snapshot already up to date."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "chore: refresh releases snapshot for the Pages site [skip ci]"
-          # Name the branch explicitly. A bare `git push` relies on an upstream that a checkout
-          # driven by a release event does not have, which is how this silently stopped working.
+          git add -- docs/threat-model-reviewer/releases/releases.json
+          git commit -m "chore: refresh releases snapshot for the Pages site"
+
+      - name: Validate the candidate before publishing it
+        run: npm test
+
+      - name: Push only the validated candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          git diff --cached --exit-code
+          test -z "$(git status --porcelain --untracked-files=all --ignored -- docs)"
+          # A concurrent main update must reject this push. Never rebase untested work
+          # or force-push; rerun the workflow against the new base instead.
           git push origin "HEAD:${{ github.event.repository.default_branch }}"
+
+      - name: Dispatch same-SHA checks and the guarded Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Run even on a no-change refresh, so a previously failed dispatch can recover.
+          # Dispatch captures current main as github.sha; checkout and artifact use that SHA.
+          gh workflow run site-checks.yml --ref "${{ github.event.repository.default_branch }}"

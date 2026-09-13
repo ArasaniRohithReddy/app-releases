@@ -45,6 +45,9 @@ ThreatModelReviewer.Cli.exe "Model.tm7" `
   --html report.html --md summary.md --json findings.json --sarif findings.sarif --csv findings.csv
 ```
 
+`--sarif` writes a local SARIF file; it does not upload findings or transmit them automatically.
+Uploading the file requires a separately configured workflow or an explicit upload.
+
 `--explain` adds Copilot commentary to the report. It never changes the verdict or the score; those
 come from the rubric engine alone.
 
@@ -84,6 +87,10 @@ ThreatModelReviewer.Cli.exe sdl model.tm7 --out .\sdl-bundle
 # Answer a question from deterministic facts only - no AI, no network
 ThreatModelReviewer.Cli.exe ask model.tm7 "why is it not ready?"
 ```
+
+For `generate`, exit `0` means generation succeeded. It does not establish a readiness verdict.
+Run a separate review of the output (`ThreatModelReviewer.Cli.exe "model.tm7"`) and use that
+review's actual verdict, score and findings.
 
 ---
 
@@ -169,7 +176,9 @@ sent and when.
     sarif_file: findings.sarif
 ```
 
-The SARIF output means findings appear in the GitHub Security tab like any other scanner's.
+The review step writes `findings.sarif` locally. The separate `upload-sarif` step publishes
+it to GitHub code scanning; findings appear in the Security tab only if that step runs
+successfully and code scanning is available for the repository. `--sarif` alone does not upload it.
 
 ---
 
