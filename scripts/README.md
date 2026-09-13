@@ -77,7 +77,9 @@ It also measures rendered text contrast in screen and print modes, retains visib
 keyboard focus when the guide navigation collapses, and checks enlarged no-JavaScript
 reading. These are bounded checks, not a claim of full WCAG conformance.
 The compact guide header scrolls normally rather than obscuring anchors at large
-text sizes. Desktop sticky offsets follow the measured header height. Browser waits
+text sizes. Desktop sticky offsets follow the measured header height, and the reader
+retargets an occluded fragment after a font or zoom change grows the sticky header.
+The navigation regression also exercises a header that expands after arrival. Browser waits
 have finite deadlines; no-script text-size tests use a stylesheet fixture instead of
 script injection. For a targeted navigation rerun, use
 `node scripts/verify-docs.js docs --journeys-only`; the default and CI still run every page.

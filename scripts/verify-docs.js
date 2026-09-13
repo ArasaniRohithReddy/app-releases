@@ -146,6 +146,7 @@ async function main() {
         await page.getByRole('link', { name: 'Follow the quick-start guide', exact: true }).click();
         await page.waitForURL(base + '/threat-model-reviewer/docs/user-guide/#try-the-sample-model');
         await page.locator('.doc-content').waitFor();
+        await page.waitForFunction(() => document.getElementById('try-the-sample-model').getBoundingClientRect().top >= document.querySelector('header.site').getBoundingClientRect().bottom);
         check(await page.locator('#try-the-sample-model').evaluate(el => el.getBoundingClientRect().top >= document.querySelector('header.site').getBoundingClientRect().bottom), `journey@${width}: quick-start anchor hidden`);
         const disclosure = page.locator('#guide-navigation');
         if (!await disclosure.evaluate(el => el.open)) await disclosure.locator('summary').click();
@@ -163,6 +164,20 @@ async function main() {
           check(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `journey@${width}, 200%: portal reflow failed`);
       } finally { await context.close(); }
     }
+
+    const growingHeader = await openContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
+    try {
+      const page = await growingHeader.newPage();
+      await visit(page, base + '/threat-model-reviewer/docs/user-guide/#try-the-sample-model');
+      const before = await page.locator('header.site').evaluate(element => element.getBoundingClientRect().height);
+      await page.locator('.doc-topbar').evaluate(element => { element.style.maxWidth = '24rem'; });
+      await page.waitForFunction(previous => {
+        const header = document.querySelector('header.site').getBoundingClientRect();
+        return header.height > previous && document.getElementById('try-the-sample-model').getBoundingClientRect().top >= header.bottom;
+      }, before);
+      check(await page.locator('#try-the-sample-model').evaluate(element => element.getBoundingClientRect().top >= document.querySelector('header.site').getBoundingClientRect().bottom),
+        'docs: a header that grows after fragment navigation obscures the destination');
+    } finally { await growingHeader.close(); }
 
     console.log('  Keyboard, no-script and historical-link journeys');
     const keyboard = await openContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', colorScheme: 'light' });
