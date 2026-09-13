@@ -117,7 +117,11 @@ expanded notes/files and keyboard focus.
 the release filter's computed boundary/placeholder/focus contrast, synthetic pre-release
 badge text contrast, the visible “Overview”
 label in its accessible name, native light/dark controls under both OS preferences, and
-disabled theme controls when JavaScript is absent. It checks forward/reverse keyboard focus
+disabled theme controls when JavaScript is absent. It checks
+single-row normal-text headers at 16 widths, including both sides of the 1460px
+secondary-navigation breakpoint. Exactly one visible Guides entry is retained at every width.
+The separate enlarged-text checks still permit wrapping rather than clipping controls.
+It also checks forward/reverse keyboard focus
 clear of the header, 24px primary-control targets, and content overflowing inside cards at
 200% text size. The page-reflow checks include 320px at both normal and enlarged text sizes.
 Normal-size single-line checks remain; enlarged labels may wrap rather than clip.

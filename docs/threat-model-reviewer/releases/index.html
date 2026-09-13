@@ -125,7 +125,8 @@
 
     /* Header */
     header.site { position:sticky; top:0; z-index:50; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line); }
-    .nav { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; min-height:62px; }
+    .nav { display:flex; flex-wrap:wrap; align-items:center; gap:.65rem; min-height:62px; }
+    .nav .btn { font-size:.875rem; padding:.45rem .7rem; }
     .back-link { display:inline-flex; align-items:center; gap:.4rem; color:var(--ink-2); font-weight:500; font-size:var(--step--1); padding:.5rem .7rem; border-radius:8px; white-space:nowrap; flex:none; }
     .back-link:hover { color:var(--accent); background:var(--accent-tint); text-decoration:none; }
     .back-link svg { width:.95em; height:.95em; flex:none; }
@@ -134,7 +135,8 @@
     .brand .mark { width:28px; height:28px; flex:none; }
     .nav .spacer { flex:1; }
     .nav-links { display:flex; align-items:center; gap:.3rem; flex:none; }
-    @media (max-width:620px){ .nav .gh-btn{display:none;} .back-link .bl-text{display:none;} }
+    @media (max-width:700px){ .nav .gh-btn{display:none;} }
+    @media (max-width:620px){ .back-link .bl-text{display:none;} }
     @media (max-width:400px){ .nav .brand-text{display:none;} }
 
     /* Hero */
