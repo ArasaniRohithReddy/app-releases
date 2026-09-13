@@ -381,3 +381,29 @@ test('snapshot workflow validates before push and explicitly dispatches checks e
   assert.doesNotMatch(dispatchStep, /\n\s+if:/, 'No-change refreshes must retry a previously missed dispatch');
   assert.match(dispatchStep, /--ref "\$\{\{ github\.event\.repository\.default_branch \}\}"/);
 });
+
+test('quota-blocked Pages migration retains legacy publication and has an explicit configuration rollback', () => {
+  const plan = read('scripts/PAGES-DEPLOYMENT.md');
+  const plain = plan.replace(/[*`]/g, '').replace(/\s+/g, ' ');
+  assert.match(plain, /Keep Pages at build_type: legacy, source main:\/docs/);
+  assert.match(plain, /PAGES_DEPLOY_ENABLED=false/);
+  assert.match(plain, /before updating the publishing branch.*does not require an Actions artifact upload/);
+  assert.match(plain, /GitHub Releases uploads are unaffected.*not proof/);
+  assert.match(plain, /A successful upload is not a successful Pages deployment/);
+  assert.match(plain, /does not implement or run an upload-only probe/);
+  assert.doesNotMatch(plain, /Prefer changing the Pages source before merging|Keep Pages workflow-backed/);
+  const rollback = plan.split('## Explicit rollback to the prior Pages configuration')[1];
+  assert.ok(rollback, 'A source-only Actions rollback cannot recover from an artifact-quota blocker');
+  const state = JSON.parse(rollback.match(/```json\s+([\s\S]*?)```/)[1]);
+  assert.deepEqual(state, {
+    build_type: 'legacy', source: { branch: 'main', path: '/docs' },
+    https_enforced: true, cname: null
+  });
+  assert.match(plain, /restore Deploy from a branch.*main.*\/docs/);
+  assert.match(plain, /Restoring the configuration does not pin the prior deployed SHA/);
+  assert.match(plain, /ungated legacy publisher/);
+  assert.match(plain, /No cleanup job, retention shortening of existing artifacts, or deletion/);
+  assert.doesNotMatch(read('.github/workflows/update-releases-snapshot.yml'),
+    /uses:\s*actions\/(?:upload(?:-pages)?-artifact|deploy-pages)@/,
+    'The pre-push snapshot safeguard must not depend on artifact upload');
+});

@@ -1,8 +1,12 @@
 # Site verification
 
-For the validation-before-deployment workflow and the **coordinator-required Pages
-setting change**, see [Pages deployment and snapshot preservation](PAGES-DEPLOYMENT.md).
+For artifact-independent snapshot checks and the **deferred, quota-aware Pages
+migration**, see [Pages deployment and snapshot preservation](PAGES-DEPLOYMENT.md).
 Committing the workflows does not gate the existing build-from-branch deployment by itself.
+**Keep the working legacy publisher while Actions artifact capacity/deployment is unproven.**
+Candidate snapshot validation before branch updates needs no artifact upload. Pages migration
+is a separate evidence-backed step, with an explicit rollback to the prior Pages configuration;
+no artifact or release cleanup is approved.
 
 Install the locked development dependencies, then run the content and browser checks:
 
