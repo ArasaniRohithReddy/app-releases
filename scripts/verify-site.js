@@ -334,6 +334,22 @@ async function main() {
         });
         await visit(page, base + url);
         check(await page.locator('h1').count() === 1, `${name}/${theme}: expected one h1`);
+        if (name === 'product') {
+          const alignment = await page.evaluate(() => {
+            const rect = selector => document.querySelector(selector).getBoundingClientRect();
+            const lefts = selector => [...document.querySelectorAll(selector)].map(el => el.getBoundingClientRect().left);
+            const same = values => Math.max(...values) - Math.min(...values) < 1;
+            return {
+              note: Math.abs(rect('.how-note').width - rect('.steps').width) < 1,
+              sample: Math.abs(lefts('.pillars > *')[1] - lefts('.start-example > *')[1]) < 1,
+              workflows: same(lefts('.workflow p')) && same(lefts('.workflow > a')),
+              hero: Math.abs(rect('.hero h1').top - rect('.hero-proof img').top) < 1,
+              copy: parseFloat(getComputedStyle(document.querySelector('.steps p')).fontSize) >= 16
+            };
+          });
+          for (const [part, aligned] of Object.entries(alignment))
+            check(aligned, `product/${theme}: ${part} alignment/readability regression`);
+        }
 
         // Scroll lazy images into view before judging whether they loaded.
         for (const image of await page.locator('img').all()) {
