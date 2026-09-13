@@ -53,6 +53,31 @@ test('published guides have the public overview, quick start and current integra
   assert.match(read('products/threat-model-reviewer/SKILL.md'), /`azure`[\s\S]*requires Azure network access/);
 });
 
+test('stable generation success is separate from the generated model readiness verdict', () => {
+  for (const name of ['products/threat-model-reviewer/USER-GUIDE.md', 'products/threat-model-reviewer/CLI.md']) {
+    const guide = read(name).replace(/[*`]/g, '').replace(/\s+/g, ' ');
+    assert.match(guide, /For generate, exit 0 means generation succeeded/, name);
+    assert.match(guide, /does not establish a readiness verdict/, name);
+    assert.match(guide, /Run a separate review.*actual verdict, score and findings/, name);
+    assert.match(guide, /ThreatModelReviewer\.Cli\.exe "model\.tm7"/, name);
+    assert.doesNotMatch(guide, /structurally complete, so it passes the readiness gate/, name);
+  }
+  for (const name of ['README.md', 'products/threat-model-reviewer/README.md'])
+    assert.doesNotMatch(read(name), /structurally complete, so it passes the readiness gate/, name);
+});
+
+test('stable SARIF copy distinguishes local output from a separately configured upload', () => {
+  const cli = read('products/threat-model-reviewer/CLI.md').replace(/[*`]/g, '').replace(/\s+/g, ' ');
+  assert.match(cli, /--sarif writes a local SARIF file/);
+  assert.match(cli, /does not upload findings or transmit them automatically/);
+  assert.match(cli, /separate upload-sarif step publishes/);
+  assert.match(cli, /only if that step runs successfully/);
+  const page = product.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+  assert.match(page, /--sarif writes a local file; upload to code scanning is a separate workflow/);
+  assert.match(product, /<span class="kbd" style="white-space:nowrap">--sarif<\/span>/);
+  assert.doesNotMatch(page, /SARIF uploads to code scanning/);
+});
+
 test('stable enterprise MSI examples uninstall the deployed package, never its UpgradeCode', () => {
   const guide = read('products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md');
   const installer = 'ThreatModelReviewer-v2.5.1-x64.msi';

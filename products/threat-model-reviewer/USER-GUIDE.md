@@ -245,15 +245,16 @@ consults an external source.
 
 ## Exit codes (CLI)
 
-Uniform across every verb, so a pipeline can gate on them:
+Interpret exit codes in the context of the selected command; generation success is not
+a readiness verdict:
 
 | Code | Meaning |
 | --- | --- |
-| `0` | Succeeded, and nothing is gating |
+| `0` | The command succeeded; for a review, READY WITH NOTES with no gating findings |
 | `1` | The command could not run — bad usage, or missing/unreadable input |
 | `2` | Ran fine, but the result gates: NOT READY, a serious comparison regression, or insecure IaC |
 
-`generate` returns `0`: a generated model is structurally complete, so it passes the readiness gate.
-That is not the same as being reviewed. Every generated threat is recorded as *Needs Investigation*,
-which the rubric counts as triaged because it is a deliberate disposition — but nobody has actually
-analysed it yet. Treat a generated model as a starting point for triage, never as a finished review.
+For `generate`, exit `0` means generation succeeded. It does not establish a readiness verdict.
+Run a separate review of the generated file (for example, `ThreatModelReviewer.Cli.exe "model.tm7"`)
+and report that review's actual verdict, score and findings. Generated threats start as
+*Needs Investigation*: a starting point for triage, not implemented mitigations or a finished review.
