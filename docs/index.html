@@ -48,7 +48,7 @@
   <style>
     /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
        heading the reader clicked. Reserve the header's height plus a little breathing room. */
-    html { scroll-padding-top: 5.5rem; }    :root {
+    html { scroll-padding-top: max(5.5rem, var(--header-offset, 0px)); }    :root {
       --bg:        #FBFBFD;
       --surface:   #FFFFFF;
       --surface-2: #F4F5F8;
@@ -150,7 +150,7 @@
 
     /* Header */
     header.site { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(10px); border-bottom: 1px solid var(--line); }
-    .nav { display: flex; align-items: center; gap: 1rem; min-height: 62px; }
+    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; min-height: 62px; }
     .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; white-space: nowrap; flex: none; }
     .brand:hover { text-decoration: none; }
     .brand .mark { width: 28px; height: 28px; flex: none; }
@@ -316,7 +316,7 @@
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
-            <div><h3>Issues welcome</h3><p>Bugs, ideas and vulnerability reports all go to this public repo's issue tracker.</p></div>
+            <div><h3>Issues welcome</h3><p>Use public issues for bugs and ideas. <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report vulnerabilities privately</a>; never attach a real threat model to a public issue.</p></div>
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
@@ -345,33 +345,18 @@
     </div>
   </footer>
 
+  <script src="./release-data.js"></script>
   <script>
-    // Pull the live Threat Model Reviewer version for its card; falls back to the static chip.
+    // Use the same product-scoped snapshot and stable-release selection as the download pages.
     (function () {
-      fetch("https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
-        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-        .then(function (rel) {
-          var v = (rel.tag_name || "").replace("threat-model-reviewer-", "");
-          if (v) { if (v[0] !== "v") v = "v" + v; var el = document.getElementById("tmr-version"); if (el) el.textContent = v; }
-        }).catch(function () {});
+      if (!window.ReleaseData) return;
+      ReleaseData.load("./threat-model-reviewer/releases/releases.json", function (releases, source) {
+        var latest = ReleaseData.latestStable(releases);
+        if (latest) document.getElementById("tmr-version").textContent = "v" + latest.tag_name.slice(ReleaseData.PREFIX.length);
+        document.documentElement.dataset.releaseSource = source;
+      }).then(function () { document.documentElement.dataset.releaseReady = "true"; });
     })();
   </script>
-
-  <script>
-    // Theme toggle: light ⇄ dark, persisted; defaults to the OS preference until the user chooses.
-    (function () {
-      var root = document.documentElement;
-      var mq = window.matchMedia("(prefers-color-scheme: dark)");
-      var btn = document.getElementById("theme-toggle");
-      function current() { return root.getAttribute("data-theme") || (mq.matches ? "dark" : "light"); }
-      function label() { if (btn) btn.setAttribute("aria-label", current() === "dark" ? "Switch to light theme" : "Switch to dark theme"); }
-      function apply(t) { root.setAttribute("data-theme", t); try { localStorage.setItem("theme", t); } catch (e) {} label(); }
-      label();
-      if (btn) btn.addEventListener("click", function () { apply(current() === "dark" ? "light" : "dark"); });
-      if (mq.addEventListener) mq.addEventListener("change", function () {
-        try { if (!localStorage.getItem("theme")) { root.removeAttribute("data-theme"); label(); } } catch (e) {}
-      });
-    })();
-  </script>
+  <script src="./theme.js"></script>
 </body>
 </html>

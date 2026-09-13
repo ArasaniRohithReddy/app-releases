@@ -25,18 +25,40 @@ unset for the default bundled Chromium used by CI.
 node scripts/verify-site.js docs
 ```
 
-Serves `docs/` on a temporary loopback port and checks all three pages at widths from
-320 to 1920 pixels and both colour schemes:
+Serves `docs/` under `/app-releases/` on a temporary loopback port (matching the Pages
+project path) and checks all three pages at widths from 320 to 1920 pixels and both colour schemes:
 no horizontal overflow, no JavaScript errors, no failed same-origin requests, exactly one `<h1>`,
 every image loaded and carrying alt text, and nothing that should stay on one line wrapping onto two.
 It also asserts the product page still has each of its sections, four screenshots, four steps and
 one JSON-LD block, so a section cannot quietly disappear in an edit. The sample
 result is checked against its published JSON, which source tests validate against
 the actual rubric. Download tests use the release snapshot rather than a live API,
-and confirm that the hero selects MSI and all seven assets remain reachable.
+and confirm that the hero selects MSI and all seven asset kinds remain correctly linked.
+The portal → product → MSI / CLI / skill → release history journey uses synthetic download
+responses, not real binaries. Every release card, historical note and all-files link is compared
+with the unmodified snapshot.
 
-Keyboard focus, theme persistence, reduced motion, text contrast, sample downloading,
-sticky-header clearance, API failure and JavaScript-disabled fallbacks are checked.
+Keyboard focus, light/dark/system choices, theme persistence (including blocked storage),
+reduced motion, text contrast, 200% text resizing, sample downloading, sticky-header clearance
+and JavaScript-disabled fallbacks are checked. A delayed live refresh must preserve filters,
+expanded notes/files and keyboard focus.
+
+Fault cases include GitHub 403/503, an aborted request, malformed JSON/records and empty responses.
+They must retain the same-origin snapshot; if neither source is usable, the release list must
+offer GitHub history instead of loading forever. Synthetic partial lists, other products,
+drafts and newer pre-releases cannot erase history or take over stable download links.
+The fast Node tests also exercise live pagination, request timeouts, metadata and local/public-guide
+link targets. These are preservation checks, not a release inventory or installer-signature audit.
+
+To capture each route in both themes at desktop and mobile sizes:
+
+```powershell
+$env:SITE_SCREENSHOTS = Join-Path (Get-Location) 'test-results/site-preservation/local'
+npm test
+```
+
+Screenshots and dependencies are ignored by Git. The browser and temporary server are closed
+by the test runner; no user app or desktop session is touched.
 No private model or live Azure account is required. Use `npm run test:content` for
 only the fast copy/sample checks.
 

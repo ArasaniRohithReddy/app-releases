@@ -36,7 +36,7 @@
     "applicationSubCategory": "Threat modeling",
     "operatingSystem": "Windows 10, Windows 11",
     "url": "https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/",
-    "downloadUrl": "https://github.com/ArasaniRohithReddy/app-releases/releases/latest",
+    "downloadUrl": "https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1",
     "softwareVersion": "2.5.1",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "description": "Reviews and helps correct Microsoft .tm7 threat models using 72 deterministic checks. The score measures the model, not system security; a readiness result is not Microsoft approval or proof that mitigations are implemented.",
@@ -57,7 +57,7 @@
   <style>
     /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
        heading the reader clicked. Reserve the header's height plus a little breathing room. */
-    html { scroll-padding-top: 5.5rem; }
+    html { scroll-padding-top: max(5.5rem, var(--header-offset, 0px)); }
     :root {
       /* Palette — light, editorial-technical. One indigo brand accent; verdict colors used only for meaning. */
       --bg:        #FBFBFD;
@@ -197,7 +197,7 @@
       backdrop-filter: saturate(180%) blur(10px);
       border-bottom: 1px solid var(--line);
     }
-    .nav { display: flex; align-items: center; gap: 1rem; min-height: 62px; }
+    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; min-height: 62px; }
     .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; white-space: nowrap; flex: none; }
     .brand:hover { text-decoration: none; }
     .brand .mark { width: 28px; height: 28px; flex: none; }
@@ -423,7 +423,7 @@
           <h1 class="title">Find the gaps before your threat model review.</h1>
           <p class="lede">Find missing coverage, unfinished triage and structural issues. Work through the findings, save a corrected model, and give your reviewer a clearer starting point.</p>
           <div class="cta-row">
-            <a class="btn btn-primary" id="hero-download" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">
+            <a class="btn btn-primary" id="hero-download" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>
               Download Windows app
             </a>
@@ -623,41 +623,41 @@
           <div class="dl-card recommended">
             <div class="dl-head"><h3>Installer (MSI)</h3><span class="tag">Recommended</span></div>
             <p>Standard installer &mdash; choose all-users or just-me at install time. Updates itself in place.</p>
-            <a class="btn btn-primary" data-dl="msi" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msi</a>
+            <a class="btn btn-primary" data-dl="msi" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download .msi</a>
             <span class="dl-size" data-size="msi"></span>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>Portable</h3></div>
             <p>Extract the <code>.zip</code> and run &mdash; nothing to install, easy to remove.</p>
-            <a class="btn btn-secondary" data-dl="portable" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .zip</a>
+            <a class="btn btn-secondary" data-dl="portable" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download .zip</a>
             <span class="dl-size" data-size="portable"></span>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>Setup (.exe)</h3></div>
             <p>Per-user installer with a Start-Menu shortcut and uninstall &mdash; no admin needed.</p>
-            <a class="btn btn-secondary" data-dl="setup" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download setup.exe</a>
+            <a class="btn btn-secondary" data-dl="setup" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download setup.exe</a>
             <span class="dl-size" data-size="setup"></span>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>Command line</h3><span class="tag">CI &amp; scripting</span></div>
             <p>The same deterministic engine with no UI. Self-contained &mdash; extract and run. Exit code <code>2</code> means NOT READY, so a build can gate on it.</p>
-            <a class="btn btn-secondary" data-dl="cli" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download CLI</a>
+            <a class="btn btn-secondary" data-dl="cli" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download CLI</a>
             <span class="dl-size" data-size="cli"></span>
             <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">CLI documentation</a></div>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>Copilot CLI skill</h3><span class="tag">AI agents</span></div>
             <p>Ask an agent to review, explain, fix or compare a model in plain English. The verdict still comes from the deterministic engine &mdash; the agent only runs it. Needs the command-line bundle alongside it.</p>
-            <a class="btn btn-secondary" data-dl="skill" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download skill</a>
+            <a class="btn btn-secondary" data-dl="skill" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download skill</a>
             <span class="dl-size" data-size="skill"></span>
             <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/SKILL.md">Skill documentation</a></div>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>MSIX</h3><span class="tag">Experimental</span></div>
             <p>Packaged install &mdash; trust the <code>publisher.cer</code> first. AI may be limited under MSIX.</p>
-            <a class="btn btn-secondary" data-dl="msix" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">Download .msix</a>
+            <a class="btn btn-secondary" data-dl="msix" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download .msix</a>
             <span class="dl-size" data-size="msix"></span>
-            <div class="dl-size"><a data-dl="cer" href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest">publisher.cer</a></div>
+            <div class="dl-size"><a data-dl="cer" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">publisher.cer</a></div>
           </div>
         </div>
         <p class="dl-note">On v1.0.4 or later the app updates itself — click <strong>Download &amp; install</strong> on the in-app banner, then <strong>Install &amp; restart</strong>. Every version, its notes and all files are on the <a href="./releases/">releases page</a>.</p>
@@ -752,24 +752,11 @@
     </div>
   </footer>
 
+  <script src="../release-data.js"></script>
   <script>
-    // Progressive enhancement: pull the latest release from the GitHub API and wire up direct download
-    // links + the live version. If anything fails, the static links to /releases/latest already work.
+    // Snapshot first, then a product-scoped live refresh. Static links stay pinned to a known release.
     (function () {
-      var REPO = "ArasaniRohithReddy/app-releases";
-      var LATEST_PAGE = "https://github.com/" + REPO + "/releases/latest";
-
-      function matcher(name) {
-        var n = name.toLowerCase();
-        if (n.indexOf("skill") > -1 && n.endsWith(".zip")) return "skill";
-        if (n.indexOf("cli") > -1 && n.endsWith(".zip")) return "cli";
-      if (n.endsWith("-portable.zip") || (n.endsWith(".zip") && n.indexOf("portable") > -1)) return "portable";
-        if (n.endsWith(".msi")) return "msi";
-        if (n.endsWith("-setup.exe") || (n.endsWith(".exe") && n.indexOf("setup") > -1)) return "setup";
-        if (n.endsWith(".msix")) return "msix";
-        if (n.endsWith(".cer")) return "cer";
-        return null;
-      }
+      if (!window.ReleaseData) return;
       // Sizes span five orders of magnitude here: the skill bundle is tens of kilobytes and the
       // portable ZIP is hundreds of megabytes. Rounding everything to whole megabytes reported the
       // skill as "0 MB", which reads as a broken or empty download.
@@ -779,11 +766,11 @@
         return (bytes / 1e6).toFixed(0) + " MB";
       }
 
-      fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
-        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-        .then(function (rel) {
+      ReleaseData.load("./releases/releases.json", function (releases, source) {
+          var rel = ReleaseData.latestStable(releases);
+          if (!rel) return;
           // Version chips
-          var ver = (rel.tag_name || "").replace("threat-model-reviewer-", "");
+          var ver = "v" + rel.tag_name.slice(ReleaseData.PREFIX.length);
           if (ver) {
             if (ver[0] !== "v") ver = "v" + ver;
             ["version-chip", "version-chip-2"].forEach(function (id) {
@@ -792,39 +779,25 @@
           }
           // Direct asset links + sizes
           var byKind = {};
-          (rel.assets || []).forEach(function (a) {
-            var k = matcher(a.name || "");
+          rel.assets.forEach(function (a) {
+            var k = ReleaseData.kindOf(a.name);
             if (k && !byKind[k]) byKind[k] = a;
           });
-          Object.keys(byKind).forEach(function (k) {
+          // Reset missing kinds as well, so a new version never retains an older version's ZIP.
+          ["msi", "portable", "setup", "cli", "skill", "msix", "cer"].forEach(function (k) {
             var a = byKind[k];
-            document.querySelectorAll('[data-dl="' + k + '"]').forEach(function (el) { el.href = a.browser_download_url; });
-            document.querySelectorAll('[data-size="' + k + '"]').forEach(function (el) { el.textContent = mb(a.size); });
+            document.querySelectorAll('[data-dl="' + k + '"]').forEach(function (el) { el.href = a ? a.browser_download_url : ReleaseData.releaseUrl(rel); });
+            document.querySelectorAll('[data-size="' + k + '"]').forEach(function (el) { el.textContent = a ? mb(a.size) : ""; });
           });
           // Hero button -> the recommended asset (MSI), matching the download grid
           var hero = document.getElementById("hero-download");
           if (hero && byKind.msi) hero.href = byKind.msi.browser_download_url;
-          else if (hero) hero.href = LATEST_PAGE;
-        })
-        .catch(function () { /* keep the static /releases/latest links */ });
+          else if (hero) hero.href = ReleaseData.releaseUrl(rel);
+          document.documentElement.dataset.releaseSource = source;
+      }).then(function () { document.documentElement.dataset.releaseReady = "true"; });
     })();
   </script>
 
-  <script>
-    // Theme toggle: light ⇄ dark, persisted; defaults to the OS preference until the user chooses.
-    (function () {
-      var root = document.documentElement;
-      var mq = window.matchMedia("(prefers-color-scheme: dark)");
-      var btn = document.getElementById("theme-toggle");
-      function current() { return root.getAttribute("data-theme") || (mq.matches ? "dark" : "light"); }
-      function label() { if (btn) btn.setAttribute("aria-label", current() === "dark" ? "Switch to light theme" : "Switch to dark theme"); }
-      function apply(t) { root.setAttribute("data-theme", t); try { localStorage.setItem("theme", t); } catch (e) {} label(); }
-      label();
-      if (btn) btn.addEventListener("click", function () { apply(current() === "dark" ? "light" : "dark"); });
-      if (mq.addEventListener) mq.addEventListener("change", function () {
-        try { if (!localStorage.getItem("theme")) { root.removeAttribute("data-theme"); label(); } } catch (e) {}
-      });
-    })();
-  </script>
+  <script src="../theme.js"></script>
 </body>
 </html>

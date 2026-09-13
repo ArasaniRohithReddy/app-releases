@@ -52,9 +52,11 @@ See the [CLI](products/threat-model-reviewer/CLI.md) and [skill guides](products
 
 Browse every version — with its release notes, file sizes and direct downloads — on the
 **[releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)**.
-The **[website](https://arasanirohithreddy.github.io/app-releases/)** always links the latest build,
-and the raw **[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)** list
-remains available.
+The **[website](https://arasanirohithreddy.github.io/app-releases/)** selects the latest stable
+Threat Model Reviewer release from a same-origin snapshot, then refreshes from GitHub when
+available. API errors do not remove the saved release history or its download links.
+The raw **[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)** list
+remains available, including when JavaScript is disabled.
 
 Release tags are product-prefixed — `‹app›-v‹x.y.z›`, for example
 `threat-model-reviewer-vX.Y.Z`.

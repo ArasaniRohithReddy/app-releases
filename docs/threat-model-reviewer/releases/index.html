@@ -43,7 +43,7 @@
   <style>
     /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
        heading the reader clicked. Reserve the header's height plus a little breathing room. */
-    html { scroll-padding-top: 5.5rem; }    :root {
+    html { scroll-padding-top: max(5.5rem, var(--header-offset, 0px)); }    :root {
       --bg:#FBFBFD; --surface:#FFFFFF; --surface-2:#F4F5F8;
       --ink:#14161C; --ink-2:#3A3F4C; --muted:#5A5F70; --line:#E4E6ED;
       --accent:#4F46E5; --accent-600:#4338CA; --accent-tint:#EEF0FE; --on-accent:#FFFFFF;
@@ -118,7 +118,7 @@
 
     /* Header */
     header.site { position:sticky; top:0; z-index:50; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line); }
-    .nav { display:flex; align-items:center; gap:1rem; min-height:62px; }
+    .nav { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; min-height:62px; }
     .back-link { display:inline-flex; align-items:center; gap:.4rem; color:var(--ink-2); font-weight:500; font-size:var(--step--1); padding:.5rem .7rem; border-radius:8px; white-space:nowrap; flex:none; }
     .back-link:hover { color:var(--accent); background:var(--accent-tint); text-decoration:none; }
     .back-link svg { width:.95em; height:.95em; flex:none; }
@@ -259,10 +259,10 @@
       <div class="wrap">
         <span class="eyebrow"><span class="dot"></span> Threat Model Reviewer</span>
         <h1 class="title">Releases</h1>
-        <p class="lede">Every published build, with its release notes, downloads and file sizes. All packages are self-contained and Authenticode-signed — no .NET runtime required.</p>
+        <p class="lede">Every published build, with its release notes, downloads and file sizes. Desktop and CLI builds are self-contained; the separate skill needs the CLI. Executables and installers are Authenticode-signed, not ZIP containers.</p>
         <div class="hero-meta">
           <span class="chip" id="hm-latest">—</span>
-          <span id="hm-count">Loading releases…</span>
+          <span id="hm-count" role="status">Release history on GitHub</span>
           <span id="hm-updated"></span>
         </div>
       </div>
@@ -274,13 +274,17 @@
           <h2 id="all-h">All releases</h2>
           <div class="filter-row">
             <label class="visually-hidden" for="filter">Filter releases by version</label>
-            <input id="filter" type="search" placeholder="Filter by version, e.g. 2.0" autocomplete="off" />
+            <input id="filter" type="search" placeholder="Filter by version, e.g. 2.0" autocomplete="off" disabled />
             <span class="count" id="count" aria-live="polite"></span>
           </div>
         </div>
 
         <div id="list">
-          <div class="skel"></div><div class="skel"></div>
+          <div class="state">
+            <h3>Release history on GitHub</h3>
+            <p>Browse every version, its release notes and all downloadable files.</p>
+            <a class="btn btn-primary" href="https://github.com/ArasaniRohithReddy/app-releases/releases">View releases on GitHub</a>
+          </div>
         </div>
 
         <div class="note">
@@ -313,12 +317,13 @@
     </div>
   </footer>
 
+  <script src="../../release-data.js"></script>
   <script>
   (function () {
+    if (!window.ReleaseData) return;
     var REPO = "ArasaniRohithReddy/app-releases";
-    var PREFIX = "threat-model-reviewer-v";
+    var PREFIX = ReleaseData.PREFIX;
     var RELEASES_URL = "https://github.com/" + REPO + "/releases";
-    var CACHE_KEY = "tmr-releases-v1";
     var list = document.getElementById("list");
 
     // ---- helpers ---------------------------------------------------------
@@ -339,18 +344,6 @@
       if (isNaN(d)) return "";
       return d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
     }
-    // Classify an asset filename into a package kind.
-    function kindOf(name) {
-      var n = (name || "").toLowerCase();
-      if (n.indexOf("skill") > -1 && n.slice(-4) === ".zip") return "skill";
-      if (n.indexOf("cli") > -1 && n.slice(-4) === ".zip") return "cli";
-      if (n.indexOf("portable") > -1 && n.slice(-4) === ".zip") return "portable";
-      if (n.slice(-4) === ".msi") return "msi";
-      if (n.slice(-4) === ".exe") return "setup";
-      if (n.slice(-5) === ".msix") return "msix";
-      if (n.slice(-4) === ".cer") return "cer";
-      return null;
-    }
     var KIND = {
       msi:      { label: "Installer (MSI)", hint: "Per-machine or per-user", rec: true },
       portable: { label: "Portable (ZIP)",  hint: "Extract and run" },
@@ -370,7 +363,7 @@
       var ver = versionOf(rel.tag_name);
       var assets = rel.assets || [];
       var byKind = {};
-      assets.forEach(function (a) { var k = kindOf(a.name); if (k && !byKind[k]) byKind[k] = a; });
+      assets.forEach(function (a) { var k = ReleaseData.kindOf(a.name); if (k && !byKind[k]) byKind[k] = a; });
 
       var dl = ORDER.filter(function (k) { return byKind[k]; }).map(function (k) {
         var a = byKind[k], meta = KIND[k];
@@ -379,7 +372,8 @@
               (meta.rec ? ' <span class="tag-rec">Recommended</span>' : '') + '</span>' +
             '<span class="meta">' + esc(mb(a.size)) + '</span>' +
             '<span class="hint">' + esc(meta.hint) + '</span>' +
-            '<a class="btn ' + (meta.rec ? 'btn-primary' : 'btn-secondary') + '" href="' + esc(a.browser_download_url) + '">Download</a>' +
+            '<a class="btn ' + (meta.rec ? 'btn-primary' : 'btn-secondary') + '" data-kind="' + k + '" href="' + esc(a.browser_download_url) +
+              '" aria-label="Download ' + esc(meta.label) + ' for v' + esc(ver) + '">Download</a>' +
           '</div>';
       }).join("");
 
@@ -410,14 +404,29 @@
         '</article>';
     }
 
+    var lastRender = "";
     function render(rels) {
       if (!rels.length) { showError("No releases found for this application yet."); return; }
-      list.innerHTML = rels.map(function (r, i) { return renderRelease(r, i === 0); }).join("");
-      var ver = versionOf(rels[0].tag_name);
-      document.getElementById("hm-latest").textContent = "v" + ver;
+      var signature = JSON.stringify(rels);
+      if (signature === lastRender) return;
+      var expanded = new Map();
+      list.querySelectorAll(".rel").forEach(function (card) {
+        expanded.set(card.getAttribute("data-ver"), Array.from(card.querySelectorAll("details")).map(function (details) {
+          return { kind: details.className, open: details.open };
+        }));
+      });
+      var active = document.activeElement, oldCard = active.closest(".rel");
+      var focused = oldCard && list.contains(oldCard) ? {
+        version: oldCard.getAttribute("data-ver"), tag: active.tagName, href: active.getAttribute("href"),
+        group: active.closest("details") ? active.closest("details").className : ""
+      } : null;
+      var latest = ReleaseData.latestStable(rels);
+      list.innerHTML = rels.map(function (r) { return renderRelease(r, r === latest); }).join("");
+      document.getElementById("hm-latest").textContent = latest ? "v" + versionOf(latest.tag_name) : "No stable release";
       document.getElementById("hm-count").textContent = rels.length + " release" + (rels.length === 1 ? "" : "s") + " published";
-      var d = fmtDate(rels[0].published_at);
-      document.getElementById("hm-updated").textContent = d ? "Latest: " + d : "";
+      var d = latest ? fmtDate(latest.published_at) : "";
+      document.getElementById("hm-updated").textContent = d ? "Latest stable: " + d : "";
+      document.getElementById("filter").disabled = false;
       updateCount();
       // Open external links from rendered notes in a new tab, safely.
       list.querySelectorAll(".notes-body a[href]").forEach(function (a) {
@@ -437,17 +446,34 @@
           });
         });
       });
+      // Refreshing download counts must not close what someone is reading or discard keyboard focus.
+      list.querySelectorAll(".rel").forEach(function (card) {
+        var version = card.getAttribute("data-ver");
+        (expanded.get(version) || []).forEach(function (state) {
+          var details = Array.from(card.querySelectorAll("details")).find(function (el) { return el.className === state.kind; });
+          if (details) details.open = state.open;
+        });
+        if (focused && version === focused.version) {
+          var target = Array.from(card.querySelectorAll("a, summary")).find(function (el) {
+            var group = el.closest("details");
+            return el.tagName === focused.tag && el.getAttribute("href") === focused.href &&
+              (group ? group.className : "") === focused.group;
+          });
+          if (target) target.focus({ preventScroll: true });
+        }
+      });
+      lastRender = signature;
     }
 
     function showError(msg) {
       list.innerHTML = '<div class="state warn"><h3>Couldn\'t load releases here</h3>' +
-        '<p>' + esc(msg) + ' Every download is still available on GitHub.</p>' +
+        '<p>' + esc(msg) + ' Use the GitHub release history for notes and downloads.</p>' +
         '<a class="btn btn-primary" href="' + RELEASES_URL + '">View releases on GitHub</a></div>';
       document.getElementById("hm-count").textContent = "Releases unavailable";
     }
 
     function updateCount() {
-      var q = (document.getElementById("filter").value || "").trim().toLowerCase();
+      var q = (document.getElementById("filter").value || "").trim().toLowerCase().replace(/^(?:threat-model-reviewer-)?v(?=\d)/, "");
       var cards = list.querySelectorAll(".rel"), shown = 0;
       cards.forEach(function (c) {
         var hit = !q || (c.getAttribute("data-ver") || "").indexOf(q) > -1;
@@ -469,62 +495,19 @@
     }
     document.getElementById("filter").addEventListener("input", updateCount);
 
-    // ---- load ------------------------------------------------------------
-    // Strategy: render the same-origin snapshot first so the page always works — no rate limit,
-    // no CORS, instant paint — then refresh from the GitHub API so it stays current between
-    // releases. Only if BOTH fail do we show the fallback state.
-    var rendered = false;
-
-    function useData(json, isLive) {
-      var rels = (json || []).filter(function (r) {
-        return !r.draft && (r.tag_name || "").indexOf(PREFIX) === 0;
-      });
-      if (!rels.length) return false;
-      rels.sort(function (a, b) { return new Date(b.published_at) - new Date(a.published_at); });
+    // Snapshot first; merge a validated, paginated live response without removing saved history.
+    document.getElementById("hm-count").textContent = "Loading releases…";
+    list.innerHTML = '<div class="skel" aria-hidden="true"></div><div class="skel" aria-hidden="true"></div>';
+    ReleaseData.load("./releases.json", function (rels, source) {
       render(rels);
-      rendered = true;
-      if (isLive) { try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(json)); } catch (e) {} }
-      return true;
-    }
-
-    // 1. same-origin snapshot (committed alongside this page)
-    var snapshot = fetch("./releases.json", { cache: "no-cache" })
-      .then(function (r) { if (!r.ok) throw new Error("snapshot " + r.status); return r.json(); })
-      .then(function (j) { if (!rendered) useData(j, false); })
-      .catch(function () { /* fall through to the API */ });
-
-    // 2. live refresh from the GitHub API
-    snapshot.then(function () {
-      return fetch("https://api.github.com/repos/" + REPO + "/releases?per_page=100",
-                   { headers: { Accept: "application/vnd.github.html+json" } })
-        .then(function (r) {
-          if (r.status === 403) throw new Error("GitHub's API rate limit was reached from this network.");
-          if (!r.ok) throw new Error("GitHub returned HTTP " + r.status + ".");
-          return r.json();
-        })
-        .then(function (json) { useData(json, true); })
-        .catch(function (err) {
-          // The snapshot already covers the user; only surface an error if nothing rendered.
-          if (!rendered) showError(err && err.message ? err.message : "The release list couldn't be fetched.");
-        });
-    });
+      document.documentElement.dataset.releaseSource = source;
+    }, function (error) {
+      showError(error.message || "The release list couldn't be fetched.");
+      document.documentElement.dataset.releaseSource = "unavailable";
+    }).then(function () { document.documentElement.dataset.releaseReady = "true"; });
   })();
   </script>
 
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var mq = window.matchMedia("(prefers-color-scheme: dark)");
-      var btn = document.getElementById("theme-toggle");
-      function current() { return root.getAttribute("data-theme") || (mq.matches ? "dark" : "light"); }
-      function label() { if (btn) btn.setAttribute("aria-label", current() === "dark" ? "Switch to light theme" : "Switch to dark theme"); }
-      function apply(t) { root.setAttribute("data-theme", t); try { localStorage.setItem("theme", t); } catch (e) {} label(); }
-      label();
-      if (btn) btn.addEventListener("click", function () { apply(current() === "dark" ? "light" : "dark"); });
-      if (mq.addEventListener) mq.addEventListener("change", function () {
-        try { if (!localStorage.getItem("theme")) { root.removeAttribute("data-theme"); label(); } } catch (e) {}
-      });
-    })();
-  </script>
+  <script src="../../theme.js"></script>
 </body>
 </html>
