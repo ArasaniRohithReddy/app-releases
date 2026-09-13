@@ -33,8 +33,10 @@
     label();
   }
   if (button) {
-    button.hidden = false;
     button.addEventListener("click", function () { apply(next()); });
+    // Without this helper, the native disabled state avoids advertising a dead control.
+    button.disabled = false;
+    button.hidden = false;
   }
   if (mq.addEventListener) mq.addEventListener("change", label);
   label();

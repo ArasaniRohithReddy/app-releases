@@ -44,6 +44,7 @@
     /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
        heading the reader clicked. Reserve the header's height plus a little breathing room. */
     html { scroll-padding-top: max(5.5rem, var(--header-offset, 0px)); }    :root {
+      color-scheme: light;
       --bg:#FBFBFD; --surface:#FFFFFF; --surface-2:#F4F5F8;
       --ink:#14161C; --ink-2:#3A3F4C; --muted:#5A5F70; --line:#E4E6ED;
       --accent:#4F46E5; --accent-600:#4338CA; --accent-tint:#EEF0FE; --on-accent:#FFFFFF;
@@ -63,6 +64,7 @@
       --step-4:  clamp(2.35rem, 1.9rem + 2.4vw, 3.9rem);
     }
     :root[data-theme="dark"] {
+      color-scheme: dark;
       --bg:#0F1116; --surface:#171A22; --surface-2:#1C2029;
       --ink:#EDEEF2; --ink-2:#C6C9D4; --muted:#9AA0B0; --line:#2A2F3A;
       --accent:#8A83F6; --accent-600:#A29BFF; --accent-tint:#1B1D33; --on-accent:#0F1116;
@@ -73,6 +75,7 @@
     }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
+        color-scheme: dark;
         --bg:#0F1116; --surface:#171A22; --surface-2:#1C2029;
         --ink:#EDEEF2; --ink-2:#C6C9D4; --muted:#9AA0B0; --line:#2A2F3A;
         --accent:#8A83F6; --accent-600:#A29BFF; --accent-tint:#1B1D33; --on-accent:#0F1116;
@@ -86,15 +89,18 @@
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-    body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:var(--step-0); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:var(--step-0); line-height:1.6; -webkit-font-smoothing:antialiased; overflow-wrap:anywhere; }
     .wrap { width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem); }
     a { color:var(--accent); text-decoration:none; }
     a:hover { text-decoration:underline; text-underline-offset:3px; }
+    /* Prose links must not depend on the accent colour alone in either theme. */
+    main :where(p, li, dd, figcaption, .note, .dl-size, .notes-body) a:not(.btn) { text-decoration:underline; text-underline-offset:3px; }
     :focus-visible { outline:2.5px solid var(--accent); outline-offset:2px; border-radius:4px; }
     .skip { position:absolute; left:-999px; top:0; background:var(--btn); color:var(--on-btn); padding:.6rem 1rem; border-radius:0 0 var(--radius-sm) 0; z-index:100; font-weight:600; }
     .skip:focus { left:0; }
 
     .btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font:inherit; font-weight:600; font-size:var(--step-0); padding:.72rem 1.15rem; border-radius:var(--radius-sm); border:1px solid transparent; cursor:pointer; white-space:nowrap; min-height:40px; transition:background-color .16s ease,border-color .16s ease,color .16s ease,transform .16s ease; }
+    main .btn { max-width:100%; white-space:normal; overflow-wrap:anywhere; text-align:center; }
     .btn:hover { text-decoration:none; }
     .btn:active { transform:translateY(1px); }
     .btn-primary { background:var(--btn); color:var(--on-btn); }
@@ -106,7 +112,8 @@
     .btn svg { width:1.05em; height:1.05em; flex:none; }
 
     .theme-toggle { background:transparent; border:1px solid var(--line); color:var(--ink-2); width:40px; height:40px; padding:0; border-radius:9px; display:inline-grid; place-items:center; cursor:pointer; transition:color .16s ease,border-color .16s ease,background-color .16s ease; }
-    .theme-toggle:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-tint); }
+    .theme-toggle:enabled:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-tint); }
+    .theme-toggle:disabled { cursor:default; }
     .theme-toggle svg { width:1.15rem; height:1.15rem; }
     .theme-toggle .moon { display:none; }
     :root[data-theme="dark"] .theme-toggle .sun { display:none; }
@@ -132,7 +139,7 @@
 
     /* Hero */
     .hero { padding-block:clamp(2.4rem,6vw,4rem) clamp(1.2rem,3vw,2rem); }
-    .eyebrow { display:inline-flex; align-items:center; gap:.5rem; font-size:var(--step--1); font-weight:600; color:var(--accent); background:var(--accent-tint); padding:.35rem .75rem; border-radius:999px; margin-bottom:1rem; white-space:nowrap; }
+    .eyebrow { display:inline-flex; align-items:center; gap:.5rem; font-size:var(--step--1); font-weight:600; color:var(--accent); background:var(--accent-tint); padding:.35rem .75rem; border-radius:999px; margin-bottom:1rem; white-space:normal; }
     .eyebrow .dot { width:.5rem; height:.5rem; border-radius:50%; background:var(--accent); flex:none; }
     h1.title { font-size:var(--step-3); line-height:1.08; letter-spacing:-.03em; margin:0 0 .8rem; text-wrap:balance; }
     .lede { font-size:var(--step-1); color:var(--ink-2); margin:0; max-width:62ch; text-wrap:pretty; }
@@ -148,21 +155,22 @@
     .rel.latest { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-tint); }
     .rel-head { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; margin-bottom:.35rem; }
     .rel-ver { font-size:var(--step-1); font-weight:700; letter-spacing:-.01em; margin:0; }
-    .badge { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:.2rem .55rem; border-radius:999px; white-space:nowrap; }
+    .badge { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:.2rem .55rem; border-radius:999px; white-space:normal; max-width:100%; }
     .badge.latest { background:var(--ok-tint); color:var(--ok); }
-    .badge.pre { background:var(--warn-tint); color:var(--warn); }
-    .rel-date { color:var(--muted); font-size:var(--step--1); white-space:nowrap; }
+    /* Small badge text needs 4.5:1; --warn on --warn-tint is only 4.46:1 in light mode. */
+    .badge.pre { background:var(--warn-tint); color:var(--ink-2); }
+    .rel-date { color:var(--muted); font-size:var(--step--1); }
     .rel-sub { color:var(--muted); font-size:var(--step--1); margin:0 0 1rem; }
 
     /* Download grid */
-    .dl-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:.8rem; margin:1rem 0 .4rem; }
+    .dl-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,13.4375rem),1fr)); gap:.8rem; margin:1rem 0 .4rem; }
     .dl-item { display:flex; flex-direction:column; gap:.5rem; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:.9rem; }
-    .dl-item .nm { display:flex; align-items:center; gap:.5rem; font-weight:600; font-size:var(--step--1); }
+    .dl-item .nm { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; font-weight:600; font-size:var(--step--1); }
     .dl-item .nm svg { width:1.05em; height:1.05em; color:var(--accent); flex:none; }
     .dl-item .meta { color:var(--ink-2); font-size:var(--step--1); font-family:var(--mono); white-space:nowrap; }
     .dl-item .hint { color:var(--muted); font-size:var(--step--1); margin-top:-.25rem; }
     .dl-item .btn { width:100%; }
-    .tag-rec { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); background:var(--accent-tint); padding:.12rem .4rem; border-radius:999px; white-space:nowrap; }
+    .tag-rec { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); background:var(--accent-tint); padding:.12rem .4rem; border-radius:999px; white-space:normal; max-width:100%; }
 
     /* Asset table (all files) */
     details.assets { margin-top:.9rem; border-top:1px solid var(--line); padding-top:.7rem; }
@@ -202,7 +210,7 @@
 
     /* Filter */
     .filter-row { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
-    .filter-row input { font:inherit; font-size:var(--step--1); padding:.5rem .8rem; min-height:40px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface); color:var(--ink); min-width:0; width:min(240px,52vw); }
+    .filter-row input { font:inherit; font-size:var(--step--1); padding:.5rem .8rem; min-height:40px; border-radius:var(--radius-sm); border:1px solid var(--muted); background:var(--surface); color:var(--ink); min-width:0; width:min(240px,52vw); }
     .filter-row input::placeholder { color:var(--muted); }
     .filter-row input:focus-visible { border-color:var(--accent); }
     .count { color:var(--muted); font-size:var(--step--1); white-space:nowrap; }
@@ -221,6 +229,7 @@
     .note code { font-family:var(--mono); font-size:.9em; background:var(--surface); border:1px solid var(--line); padding:.05rem .32rem; border-radius:5px; overflow-wrap:anywhere; }
 
     footer.site { border-top:1px solid var(--line); padding-block:2.2rem; color:var(--muted); font-size:var(--step--1); margin-top:1.5rem; }
+    footer.site .brand { max-width:100%; white-space:normal; }
     .foot-grid { display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between; }
     .foot-links { display:flex; flex-wrap:wrap; gap:.3rem 1.2rem; }
     .foot-links a { color:var(--ink-2); }
@@ -232,7 +241,7 @@
 
   <header class="site">
     <div class="wrap nav">
-      <a class="back-link" href="../" aria-label="Back to Threat Model Reviewer">
+      <a class="back-link" href="../" aria-label="Overview — back to Threat Model Reviewer">
         <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M9.7 3.3a1 1 0 010 1.4L6.4 8l3.3 3.3a1 1 0 11-1.4 1.4l-4-4a1 1 0 010-1.4l4-4a1 1 0 011.4 0z"/></svg>
         <span class="bl-text">Overview</span>
       </a>
@@ -243,7 +252,7 @@
       <div class="spacer"></div>
       <div class="nav-links">
         <a class="btn btn-secondary" href="../docs/">Guides</a>
-        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme">
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme" disabled>
           <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
         </button>

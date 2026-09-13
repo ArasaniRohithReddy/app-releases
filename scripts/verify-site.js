@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const releaseData = require('../docs/release-data.js');
 const { createSiteServer, mount } = require('./site-server.js');
+const accessibilityChecks = require('./site-accessibility-checks.js');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..', 'docs'));
 const snapshot = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'releases', 'releases.json'), 'utf8'));
@@ -116,7 +117,7 @@ async function preservationChecks(browser, base) {
       await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, 'releases-filter-empty.png') });
     await page.getByRole('searchbox').fill('');
     check(await page.locator('.no-match').count() === 0 && await page.locator('.rel:visible').count() === snapshot.length, 'history: clearing the filter did not recover all releases');
-    await page.getByRole('link', { name: 'Back to Threat Model Reviewer', exact: true }).click();
+    await page.getByRole('link', { name: 'Overview — back to Threat Model Reviewer', exact: true }).click();
     await ready(page);
     await page.getByRole('link', { name: 'All apps — release hub', exact: true }).click();
     await ready(page);
@@ -364,7 +365,7 @@ async function main() {
         }
 
         await page.evaluate(() => document.documentElement.style.fontSize = '200%');
-        for (const width of [640, 1280]) {
+        for (const width of [320, 640, 1280]) {
           await page.setViewportSize({ width, height: 900 });
           const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
           check(overflow <= 0, `${name}/${theme}@${width}, 200% text: ${overflow}px horizontal overflow`);
@@ -502,6 +503,7 @@ async function main() {
     await noJs.close();
 
     await preservationChecks(browser, base);
+    await accessibilityChecks({ browser, base, snapshot, check, mockReleases, visit });
   }
   finally {
     await browser?.close();

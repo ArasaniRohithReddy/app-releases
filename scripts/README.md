@@ -8,13 +8,16 @@ Candidate snapshot validation before branch updates needs no artifact upload. Pa
 is a separate evidence-backed step, with an explicit rollback to the prior Pages configuration;
 no artifact or release cleanup is approved.
 
-Install the locked development dependencies, then run the content and browser checks:
+Start with the fast content checks, then the browser suite, reusing installed dependencies:
 
 ```powershell
-npm ci
-npx playwright install chromium
-npm test
+npm run test:content
+npm run test:site
 ```
+
+Run `npm ci` only if a dependency is missing (for example, `Cannot find module 'playwright'`),
+then repeat the checks. If the bundled browser is missing, use installed Edge below or install
+it with `npx playwright install chromium`. Run the complete `npm test` before committing.
 
 If a managed Windows environment cannot launch the downloaded Chromium, the same
 assertions can run against an installed Edge browser:
@@ -107,6 +110,30 @@ Keyboard focus, light/dark/system choices, theme persistence (including blocked 
 reduced motion, text contrast, 200% text resizing, sample downloading, sticky-header clearance
 and JavaScript-disabled fallbacks are checked. A delayed live refresh must preserve filters,
 expanded notes/files and keyboard focus.
+
+`site-accessibility-checks.js` adds regressions for persistent prose-link underlines,
+the release filter's computed boundary/placeholder/focus contrast, synthetic pre-release
+badge text contrast, the visible “Overview”
+label in its accessible name, native light/dark controls under both OS preferences, and
+disabled theme controls when JavaScript is absent. It checks forward/reverse keyboard focus
+clear of the header, 24px primary-control targets, and content overflowing inside cards at
+200% text size. The page-reflow checks include 320px at both normal and enlarged text sizes.
+Normal-size single-line checks remain; enlarged labels may wrap rather than clip.
+The shared prose-link rule uses existing accent colours; the filter boundary uses the
+existing `--muted` token instead of the decorative `--line`, and small pre-release text uses
+`--ink-2` on its existing warning tint. No new palette is introduced.
+Its route list is explicitly limited to the portal, product landing page and releases page;
+it does not inherit or audit native product-guide or `/help/` routes from other checks.
+
+These checks are not a WCAG conformance claim. Root-font resizing is **not browser zoom**.
+Before publication, manually use Edge at 200% browser zoom and NVDA with keyboard-only
+navigation: follow portal → product → downloads → filtered history, expand/scroll all files
+and notes, clear a no-match filter, and check the unavailable-history fallback. Verify spoken
+labels/status updates, text-spacing overrides, focus after scrolling and delayed refresh,
+and inline/spacing exceptions for small links. Inspect every changed-page capture and all
+four synthetic screenshots; record browser/AT versions and any image-inspection limitation.
+Criteria: [WCAG 2.2, W3C Recommendation, 5 October 2023](https://www.w3.org/TR/2023/REC-WCAG22-20231005/)
+1.4.1, 1.4.3, 1.4.4, 1.4.10–12, 2.1.1–2, 2.4.7, 2.4.11, 2.5.3, 2.5.8 and 4.1.3.
 
 Fault cases include GitHub 403/503, an aborted request, malformed JSON/records and empty responses.
 They must retain the same-origin snapshot; if neither source is usable, the release list must
