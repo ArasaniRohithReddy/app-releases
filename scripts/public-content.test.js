@@ -51,6 +51,42 @@ test('published guides have the public overview, quick start and current integra
   assert.match(read('products/threat-model-reviewer/SKILL.md'), /`azure`[\s\S]*requires Azure network access/);
 });
 
+test('stable enterprise MSI examples uninstall the deployed package, never its UpgradeCode', () => {
+  const guide = read('products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md');
+  const installer = 'ThreatModelReviewer-v2.5.1-x64.msi';
+  assert.ok(snapshot.find(r => r.tag_name === 'threat-model-reviewer-v2.5.1').assets.some(a => a.name === installer));
+  const uninstalls = [...guide.matchAll(/^\s*msiexec\s+\/x\s+("[^"]+"|\S+).*$/gmi)];
+  assert.equal(uninstalls.length, 3, 'Silent install, Intune and removal examples must all be checked');
+  for (const [, target] of uninstalls) assert.equal(target, `"${installer}"`);
+  assert.match(guide, /Applies to Threat Model Reviewer v2\.5\.1\b/);
+  const versions = [...guide.matchAll(/ThreatModelReviewer-v(\d+\.\d+\.\d+)-/g)].map(m => m[1]);
+  assert.deepEqual([...new Set(versions)], ['2.5.1']);
+  assert.doesNotMatch(guide, /v2\.1\.2\b|\bINSTALLFOLDER\b/);
+  assert.match(guide, /`APPLICATIONFOLDER="<path>"`/);
+  const plain = guide.replace(/^>\s?/gm, '').replace(/[*`]/g, '').replace(/\s+/g, ' ');
+  assert.match(plain, /MSI ProductCode \| Version-specific/);
+  assert.match(plain, /UpgradeCode identifies the upgrade family/);
+  assert.match(plain, /Never pass UpgradeCode to msiexec \/x/);
+  assert.match(plain, /ProductCode from the MSI being deployed \(not UpgradeCode\)/);
+});
+
+test('stable enterprise signing and MSIX trust guidance keeps package and policy boundaries', () => {
+  const guide = read('products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md');
+  const plain = guide.replace(/^>\s?/gm, '').replace(/[*`]/g, '').replace(/\s+/g, ' ');
+  assert.match(plain, /desktop app and CLI are self-contained/i);
+  assert.match(plain, /skill bundle requires the CLI/i);
+  assert.match(plain, /ZIP containers and skill files are not/);
+  assert.doesNotMatch(plain, /All packages are self-contained|All are Authenticode-signed/i);
+  assert.doesNotMatch(plain, /do not surface the interactive SmartScreen prompt|will require no change on the client/);
+  const trust = guide.split('## 6. Signing, SmartScreen and trust')[1].split('## 7.')[0];
+  assert.match(trust, /\[INSTALL\.md\]\(INSTALL\.md\)/);
+  assert.match(plain, /Local Machine → Trusted People/);
+  assert.match(plain, /Trusted Publishers alone does not establish certificate-chain trust/);
+  assert.match(plain, /do not guarantee that SmartScreen or policy warnings disappear/);
+  assert.match(plain, /organization's software policy/);
+  assert.doesNotMatch(guide, /ThreatModelReviewer\.Cli\.exe\s+(?:fleet|mcp)\b|^#{1,6}.*UNRELEASED.*MCP/im);
+});
+
 test('all three pages contain exactly one valid structured-data block and social image', () => {
   for (const name of pages) {
     const html = read(name);
