@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/USER-GUIDE.md (normalized SHA-256 285fd6e53a3eff4e4910cdb4bb61186ea14661ac687e5a28ce4688a4429420c0). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>User Guide — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Threat Model Reviewer reviews, fixes and analyzes Microsoft Threat Modeling Tool .tm7 threat models (and OWASP Threat Dragon .json), and can create new ones. The verdict and 0–100 " />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/user-guide/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="User Guide — App Releases" />
+  <meta property="og:description" content="Threat Model Reviewer reviews, fixes and analyzes Microsoft Threat Modeling Tool .tm7 threat models (and OWASP Threat Dragon .json), and can create new ones. The verdict and 0–100 " />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/user-guide/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"User Guide","description":"Threat Model Reviewer reviews, fixes and analyzes Microsoft Threat Modeling Tool .tm7 threat models (and OWASP Threat Dragon .json), and can create new ones. The verdict and 0–100 ","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/user-guide/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="./" aria-current="page">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">User guide</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="user-guide" tabindex="-1">User Guide</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#before-you-start-prerequisites">Before you start (prerequisites)</a></li><li><a href="#try-the-sample-model">Try the sample model</a></li><li><a href="#open-a-model">Open a model</a></li><li><a href="#the-tabs">The tabs</a></li><li><a href="#appearance">Appearance</a></li><li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li><li><a href="#evidence-files">Evidence files</a></li><li><a href="#assistant-data-sources-mcp">Assistant data sources (MCP)</a></li><li><a href="#how-ai-is-used-and-not-used">How AI is used (and not used)</a></li><li><a href="#exit-codes-cli">Exit codes (CLI)</a></li></ul></nav></details>
+        <div class="doc-content"><p>Threat Model Reviewer reviews, fixes and analyzes <strong>Microsoft Threat Modeling
+Tool <code>.tm7</code></strong> threat models (and OWASP Threat Dragon <code>.json</code>), and can create new ones. The <strong>verdict and 0–100
+score are deterministic</strong> — computed by a rubric engine, never by AI. GitHub Copilot is
+optional and only ever <em>advisory</em>.</p>
+<h2 id="before-you-start-prerequisites" tabindex="-1">Before you start (prerequisites)</h2>
+<ul>
+<li><strong>To review, fix, score, and export:</strong> nothing extra — it all runs locally and offline.</li>
+<li><strong>To use the AI features</strong> (explain, deep analysis, draft fixes, critique, gap analysis, DFD
+extraction): an <strong>active GitHub Copilot subscription</strong> (Individual, Business, or Enterprise) and
+being <strong>signed in</strong>. The app uses the bundled <strong>GitHub Copilot CLI</strong> and your logged-in seat —
+<strong>no token to paste.</strong> If the header shows <em>&quot;Not signed in to GitHub Copilot&quot;</em>, click
+<strong>Sign in to Copilot</strong> (or run <code>gh auth login</code>, or set <code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> /
+<code>GITHUB_TOKEN</code> to a fine-grained PAT with the &quot;Copilot Requests&quot; permission). When connected, the
+header shows a green dot and <em>&quot;GitHub Copilot ready — N models&quot;</em>. See <strong>INSTALL.md → Signing in to
+GitHub Copilot</strong> for details.</li>
+</ul>
+<h2 id="try-the-sample-model" tabindex="-1">Try the sample model</h2>
+<p>Download the <a href="../../samples/customer-portal.tm7">synthetic customer-portal model</a>
+and open it using <strong>Open .tm7</strong>. No Copilot sign-in is needed. With the default rubric,
+expect <strong>NOT READY</strong>, <strong>65/100</strong>, and <strong>27 gating findings</strong>: its threats are still
+<em>Not Started</em>.</p>
+<p>Open <strong>Findings</strong> to see the <code>C1</code> findings, then <strong>Fix &gt; Generate fix plan</strong> to preview
+the proposed triage. Save to a <strong>new file</strong> if you apply changes. A move to
+<em>Needs Investigation</em> is an acknowledgement to investigate, not an implemented
+mitigation. Compare the revisions to see model progress, then assign and verify
+the actual security work.</p>
+<p>The sample is intentionally incomplete. Its score and gate are not a certification,
+and clearing the gate does not mean every threat has been resolved.</p>
+<h2 id="open-a-model" tabindex="-1">Open a model</h2>
+<ul>
+<li>Click <strong>Open .tm7</strong> in the header, or</li>
+<li>Launch the app with a path (<code>ThreatModelReviewer.exe &quot;C:\path\Model.tm7&quot;</code>), or &quot;Open with&quot;.</li>
+</ul>
+<p>The header shows one <strong>verdict</strong> — NOT READY or READY WITH NOTES — with the <strong>review score</strong>
+as supporting detail. They answer different questions. The <strong>score (0–100)</strong> measures
+<em>maturity</em>: how thoroughly the model is built. The <strong>verdict</strong> is a <em>gate</em>: any must-fix
+(gating) finding forces NOT READY no matter how high the score, so a well-built model can
+legitimately score 88/100 and still be NOT READY — &quot;thorough work, but specific blockers&quot;.
+The <strong>band</strong> (PASS / CONDITIONAL / FAIL) appears in exports and CI only; FAIL is simply the
+machine-readable name for NOT READY. Toggle <strong>Strict SDL bar</strong> to make borderline SDL items
+gating.</p>
+<h2 id="the-tabs" tabindex="-1">The tabs</h2>
+<h3 id="overview" tabindex="-1">Overview</h3>
+<p>The at-a-glance dashboard:</p>
+<ul>
+<li><strong>Verdict &amp; readiness</strong> — why the model is gated, grouped by check.</li>
+<li><strong>Review score</strong> — the 0–100 maturity score broken into the four dimensions
+(scope, coverage, response/hygiene, validation).</li>
+<li><strong>Stat cards</strong>, <strong>STRIDE coverage</strong>, and <strong>AI/LLM components</strong>.</li>
+<li><strong>Threats by interaction</strong> — every threat regrouped onto its data flow, worst-gap-first,
+with an independent <strong>Prioritize with Copilot</strong> button.</li>
+<li><strong>Framework coverage</strong> — a deterministic scorecard (OWASP Top 10 2021 + STRIDE): which
+categories your threats address, with an independent <strong>Analyze gaps with Copilot</strong> button.</li>
+<li><strong>Copilot critique pass</strong> — an optional whole-model SDL critique.</li>
+</ul>
+<h3 id="diagram" tabindex="-1">Diagram</h3>
+<p>The data-flow diagram with correct DFD shapes, each node labelled with its <strong>stencil type</strong>
+(e.g. &quot;Azure Key Vault&quot;, &quot;Web Application&quot;); zoomable. A Copilot chat can answer questions
+and propose diagram edits.</p>
+<h3 id="findings" tabindex="-1">Findings</h3>
+<p>The prioritized findings list. Each finding shows its severity, whether it's <strong>gating</strong>,
+the target element/flow, the message, <strong>framework references</strong> (OWASP / MITRE / CWE /
+Microsoft Learn), and built-in <strong>what-it-means / how-to-fix</strong> guidance. Per finding you can
+<strong>Explain with Copilot</strong> or run <strong>Deep analysis</strong> (DREAD + attack tree + Gherkin tests) —
+each independent. <strong>Export ▾</strong> offers HTML / PDF / Markdown / CSV / JSON / SARIF and
+work-item exports (GitHub / Azure DevOps / Jira), with an optional &quot;include Copilot
+guidance / deep analysis&quot; step.</p>
+<h3 id="fix" tabindex="-1">Fix</h3>
+<p>Generate a <strong>remediation plan</strong>: add missing threats, triage Not-Started threats, draft
+justifications, and fill out-of-scope reasons. For each item pick <strong>Built-in</strong> or <strong>Copilot</strong>
+(draft the specifics with your seat). Review the preview, then <strong>Apply &amp; Save</strong> a corrected
+<code>.tm7</code> that re-opens cleanly in the Microsoft Threat Modeling Tool.</p>
+<h3 id="create" tabindex="-1">Create</h3>
+<p><strong>Import architecture…</strong> builds a draft from a file your team already maintains — Bicep, an ARM
+template, Terraform, or a draw.io / Excalidraw / Graphviz / Mermaid / Visio diagram. The reading is
+deterministic and uses the same code as the CLI's <code>ingest</code> verb.</p>
+<p>It produces a <em>draft</em>, on purpose: infrastructure code records what was declared and a diagram records
+what someone drew, and neither is necessarily what is deployed. Review it, correct it, then generate.</p>
+<p>A guided wizard (components → flows → boundaries) that generates a <code>.tm7</code> with a STRIDE
+baseline. You can also describe a system or load an architecture / IaC / OpenAPI / Mermaid
+document and let Copilot extract a DFD you review before generating. Every generated threat is
+recorded as <em>Needs Investigation</em> — an enumerated starting point for you to triage, not a
+finished review.</p>
+<p><strong>Build from Azure…</strong> goes one step further: instead of reading what was <em>declared</em>, it reads what is
+actually <strong>deployed</strong>. Pick a resource group you already have access to and it drafts a model from
+the resources in it.</p>
+<p>The draft can include possible access paths inferred from a managed identity's
+<strong>data-plane</strong> role assignments. Permission is not evidence of actual traffic. Roles that only
+grant control over configuration (Contributor, Reader, Owner) are not drawn, and neither are grants
+made across the whole subscription or a management group, which are almost always inherited
+governance rather than this system talking to itself.</p>
+<p>You need the <a href="https://learn.microsoft.com/cli/azure/install-azure-cli" rel="noopener noreferrer">Azure CLI</a>, a completed
+<code>az login</code>, and the <strong>Reader</strong> role. Discovery is read-only by construction: it cannot create,
+change or delete anything, and no command that reads a key, secret or connection string is
+reachable from the tool at all.</p>
+<p>Tick <strong>Write evidence file</strong> before generating, and read what it says discovery <em>cannot</em> see.
+Retain that evidence and explicitly record relevant assumptions in the model:</p>
+<ul>
+<li>A role shows what is <strong>authorised</strong>, not what happens — a granted role may be unused.</li>
+<li>Access using a <strong>shared key</strong> leaves no role assignment, so it is invisible here and will be
+missing from the diagram entirely.</li>
+</ul>
+<p>For Microsoft TMT compatibility, use the Create workflow's baseline prompt to carry
+the embedded KnowledgeBase and Profile from a suitable existing <code>.tm7</code>. Without a
+baseline, the app identifies the output as reviewer-only. Always open the final
+artifact in Microsoft TMT before submitting it; a successful reviewer parse is not
+the same compatibility check.</p>
+<h3 id="compare" tabindex="-1">Compare</h3>
+<p>Pick two revisions — or use the model you already have open as the baseline — and see what
+changed, what got worse and what got better, with the score and verdict movement. Elements,
+flows, boundaries and threats are matched by identity, so a rename reads as a rename rather than
+a delete plus an add. <strong>Explain with Copilot</strong> adds a plain-English read; the numbers are computed
+first and are never altered by it. Exports to HTML, Markdown or CSV.</p>
+<h3 id="ask" tabindex="-1">Ask</h3>
+<p>An assistant scoped to the model you have open. Common questions — your score, why a model is not
+ready, how many threats are unmitigated, which flows cross a trust boundary — are answered
+<strong>straight from the model's own numbers with no AI call</strong>, so no answer can contradict the review.
+Each reply says which of the two it was. Open-ended questions go to Copilot, grounded in the same
+facts and required to cite them.</p>
+<p>There is also a <strong>floating Ask panel</strong> in the bottom-left corner, available from any tab, so asking
+a question does not cost you your place in a long findings list. It is the <em>same conversation</em> as
+this tab: maximising the panel hands its history to the tab rather than starting again, and closing
+the model dismisses it.</p>
+<h3 id="history" tabindex="-1">History</h3>
+<p>Every review you run, recorded on this machine, with a per-model score trend and <strong>what you did</strong> to
+each model — opens, exports, fixes applied and Copilot actions. The tab names the folder the data
+lives in and can open it, so you can verify that nothing leaves your machine rather than taking it
+on trust. One click clears it.</p>
+<p><strong>Reopening a model.</strong> Double-click a row, or use the button at the end of it. File paths are <em>not</em>
+recorded by default, so usually you will be asked where the file is; the app then compares the file
+you pick against the content hash it recorded and tells you whether it is the same revision that was
+reviewed, or has changed since.</p>
+<h2 id="appearance" tabindex="-1">Appearance</h2>
+<p><strong>Help → Appearance</strong> switches between <strong>Light</strong>, <strong>Dark</strong>, and <strong>Match Windows</strong>. The choice is
+remembered and applies immediately — no restart.</p>
+<p>The data-flow diagram deliberately stays a light sheet in dark mode. It renders a <em>document</em> that is
+compared against the Microsoft Threat Modeling Tool and exported for review, so its colours are
+fixed; only the frame around it follows the theme.</p>
+<h2 id="keyboard-shortcuts" tabindex="-1">Keyboard shortcuts</h2>
+<p><strong>Help → Keyboard shortcuts</strong>, or <strong>F1</strong>, lists every accelerator. The most useful:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 1"><table>
+<thead>
+<tr>
+<th scope="col">Keys</th>
+<th scope="col">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl + O</code> / <code>Ctrl + W</code></td>
+<td>Open a model / close it</td>
+</tr>
+<tr>
+<td><code>Ctrl + E</code> / <code>Ctrl + Shift + E</code></td>
+<td>Export HTML / PDF</td>
+</tr>
+<tr>
+<td><code>Ctrl + R</code></td>
+<td>Critique the whole model with Copilot (advisory)</td>
+</tr>
+<tr>
+<td><code>Ctrl + T</code></td>
+<td>Open in the Microsoft Threat Modeling Tool</td>
+</tr>
+<tr>
+<td><code>Ctrl + 1</code> … <code>Ctrl + 7</code></td>
+<td>Jump to a tab</td>
+</tr>
+<tr>
+<td><code>Ctrl + K</code></td>
+<td>Show or hide the floating Ask panel</td>
+</tr>
+<tr>
+<td><code>Ctrl + mouse wheel</code></td>
+<td>Zoom the diagram</td>
+</tr>
+<tr>
+<td><code>Ctrl + 0</code></td>
+<td>Fit the diagram to the window</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="evidence-files" tabindex="-1">Evidence files</h2>
+<p>A generated threat model is only trustworthy if the reader can check how it was built. Passing
+<code>--evidence</code> (or leaving <strong>Write evidence file</strong> ticked in the app's Create tab) writes a
+<code>.evidence.md</code> beside the <code>.tm7</code> recording:</p>
+<ul>
+<li><strong>Declared inputs</strong> — components, flows, boundaries and assumptions, exactly as supplied.</li>
+<li><strong>The resulting model</strong> — every component, its stencil, whether it is in scope, and its boundary.</li>
+<li><strong>Threats enumerated</strong> — the count by STRIDE category, and <strong>every rule that fired and how often</strong>,
+so the enumeration itself can be challenged rather than only the individual threats.</li>
+<li><strong>Added by the generator</strong> — anything synthesized on your behalf, such as a trust boundary the
+specification did not declare. Presenting these as though you had asked for them would be the most
+misleading thing the file could do, so they are called out separately.</li>
+<li><strong>Gaps and what to verify</strong> — every warning the generator raised, plus the manual checks that no
+tool can perform for you.</li>
+</ul>
+<p>Rule enumeration is deterministic for the same specification and options.
+Evidence files include a capture timestamp, so repeated runs need not produce
+byte-identical evidence. AI-supplied wording is disclosed where applicable.
+Attach it to a review and a reader can audit the model instead of trusting it.</p>
+<h3 id="azure-discovery-evidence" tabindex="-1">Azure discovery evidence</h3>
+<p>A model built from a live subscription is the easiest kind to over-trust, because it describes
+something real. Building from Azure therefore writes a second file, <code>.azure-evidence.md</code>, recording:</p>
+<ul>
+<li><strong>Every Azure command that was run</strong> — the complete list, all of them reads.</li>
+<li><strong>How each flow was inferred</strong> — which role assignment produced it, and where a data-plane role was
+read but <em>not</em> drawn, the reason.</li>
+<li><strong>Every resource left off the diagram</strong>, grouped by type, with why. Nothing is dropped silently:
+a reader who believes the model is complete when it is not is worse off than one who has no file.</li>
+<li><strong>Configuration worth reviewing</strong>, such as public network access or shared-key auth being enabled.</li>
+<li><strong>What could not be read at all</strong> — including resources referenced by a private endpoint that your
+account cannot see, which is proof the picture is incomplete.</li>
+<li><strong>What discovery cannot tell you</strong>, stated plainly rather than left to be discovered later.</li>
+</ul>
+<h2 id="assistant-data-sources-mcp" tabindex="-1">Assistant data sources (MCP)</h2>
+<p><strong>Help → Assistant data sources (MCP)</strong> lets the assistant consult systems you already have access
+to, so it can check a model's assumptions against reality rather than guessing — for example whether
+a storage account really is private.</p>
+<p>Two sources ship with the app:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 2"><table>
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">What it adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Microsoft Learn Docs</strong></td>
+<td>Grounds remediation advice in current official documentation rather than model training data.</td>
+</tr>
+<tr>
+<td><strong>Azure MCP Server</strong></td>
+<td>Reads the Azure subscriptions, resource groups and resource configuration that <em>you</em> can already read. Requires Node.js and an existing <code>az login</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Everything is <strong>off until you turn it on</strong>, behind two switches: a master toggle and a per-source
+tick. Nothing starts a process, and no configuration is written, until you enable something. Each
+source states plainly what it can reach before you enable it, because turning one on grants a local
+process access to your own accounts.</p>
+<p>None of this affects the verdict or the score. Those come from the rubric engine, which never
+consults an external source.</p>
+<h2 id="how-ai-is-used-and-not-used" tabindex="-1">How AI is used (and not used)</h2>
+<ul>
+<li>The <strong>verdict, score, and findings are deterministic</strong> — they never depend on AI.</li>
+<li>Copilot buttons are <strong>additive and independent</strong>: running one never blocks the others.</li>
+<li>Only minimal, <strong>redacted</strong> context is sent (finding text, a DFD summary) — never the raw
+<code>.tm7</code>. Prompts use <strong>your GitHub Copilot seat</strong>.</li>
+</ul>
+<h2 id="exit-codes-cli" tabindex="-1">Exit codes (CLI)</h2>
+<p>Interpret exit codes in the context of the selected command; generation success is not
+a readiness verdict:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 3"><table>
+<thead>
+<tr>
+<th scope="col">Code</th>
+<th scope="col">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>The command succeeded; for a review, READY WITH NOTES with no gating findings</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>The command could not run — bad usage, or missing/unreadable input</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Ran fine, but the result gates: NOT READY, a serious comparison regression, or insecure IaC</td>
+</tr>
+</tbody>
+</table></div>
+<p>For <code>generate</code>, exit <code>0</code> means generation succeeded. It does not establish a readiness verdict.
+Run a separate review of the generated file (for example, <code>ThreatModelReviewer.Cli.exe &quot;model.tm7&quot;</code>)
+and report that review's actual verdict, score and findings. Generated threats start as
+<em>Needs Investigation</em>: a starting point for triage, not implemented mitigations or a finished review.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

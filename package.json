@@ -2,11 +2,14 @@
   "name": "app-releases-site-checks",
   "private": true,
   "scripts": {
-    "test": "node --test scripts/public-content.test.js && node scripts/verify-site.js docs",
-    "test:content": "node --test scripts/public-content.test.js",
-    "test:site": "node scripts/verify-site.js docs"
+    "build:docs": "node scripts/build-docs.js",
+    "check:docs": "node scripts/build-docs.js --check",
+    "test": "npm run check:docs && npm run test:content && npm run test:site",
+    "test:content": "node --test scripts/public-content.test.js scripts/docs.test.js",
+    "test:site": "node scripts/verify-site.js docs && node scripts/verify-docs.js docs"
   },
   "devDependencies": {
+    "markdown-it": "15.0.1",
     "playwright": "1.63.0"
   }
 }

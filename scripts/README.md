@@ -27,6 +27,63 @@ npm test
 This changes the browser executable, not which assertions run. Leave the variable
 unset for the default bundled Chromium used by CI.
 
+## Native documentation
+
+The repository Markdown is canonical. Do not edit generated guide HTML by hand.
+`scripts/docs/manifest.json` is an explicit **stable-public** allowlist: the current
+12 product guides and the root security, support, license and conduct documents.
+It does not discover or import private-source exports or development-preview directories.
+The existing public changelog retains its labelled Unreleased history, with a clear notice;
+that exception does not permit publishing an unreleased guide.
+
+After an approved public Markdown change, run:
+
+```powershell
+npm run build:docs
+npm run check:docs
+npm test
+```
+
+Commit the source and generated outputs together. `check:docs` is read-only and fails on
+missing/stale HTML, route metadata or unexpected pages in the generated directories.
+Both site and snapshot workflows run that check; the test command includes it as well.
+The shared shell is `scripts/docs/layout.html`; the shared reader styles/controls are
+`docs/docs.css`, `docs/docs.js` and the existing `docs/theme.js`.
+
+Markdown-it is a pinned development dependency, not a browser dependency. Raw HTML is
+escaped, unsafe URL schemes are rejected, code is escaped, tables get keyboard-scrollable
+regions, and internal guide links/fragments are resolved at build time. External badges
+are represented by their alternative text, not fetched from an API when someone reads.
+Each generated page has a genuine secondary **View source on GitHub** link.
+Issue, authentication, release-download and third-party reference actions stay external.
+Availability labels are checked as Markdown tokens, including plain or bold
+development-only notices; fenced examples are not mistaken for publication metadata.
+Generated heading fragments stay unique even when a natural numbered heading collides
+with a duplicate heading. Every output path is validated before any page is rewritten.
+
+Native guides are committed under `docs/threat-model-reviewer/docs/` and `docs/help/`.
+They work with JavaScript disabled and without GitHub/API access. `docs/guide-links.js`
+only rewrites known documentation references in rendered historical release notes;
+the release snapshot and its historical note text are not edited.
+
+`scripts/verify-docs.js` checks every native page, internal targets and source links,
+keyboard/TOC/code/table behavior, both themes, mobile/tablet/desktop widths and 200% text
+reflow. It blocks external requests while reading guides and exercises portal → product →
+guide → cross-guide → product/portal journeys, including JavaScript-disabled navigation.
+It also measures rendered text contrast in screen and print modes, retains visible
+keyboard focus when the guide navigation collapses, and checks enlarged no-JavaScript
+reading. These are bounded checks, not a claim of full WCAG conformance.
+The compact guide header scrolls normally rather than obscuring anchors at large
+text sizes. Desktop sticky offsets follow the measured header height. Browser waits
+have finite deadlines; no-script text-size tests use a stylesheet fixture instead of
+script injection. For a targeted navigation rerun, use
+`node scripts/verify-docs.js docs --journeys-only`; the default and CI still run every page.
+
+This requires **no new production server or runtime API**, and **no Pages source-setting
+change**. The working `main:/docs` publisher can serve the committed static outputs.
+Artifact-quota constraints and the separately deferred Actions migration still apply;
+local generation or tests are not proof of a remote deployment.
+
 ## verify-site.js
 
 ```bash

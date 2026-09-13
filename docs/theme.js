@@ -32,7 +32,10 @@
     } catch (_) { /* The control still works when storage is blocked. */ }
     label();
   }
-  if (button) button.addEventListener("click", function () { apply(next()); });
+  if (button) {
+    button.hidden = false;
+    button.addEventListener("click", function () { apply(next()); });
+  }
   if (mq.addEventListener) mq.addEventListener("change", label);
   label();
 })();

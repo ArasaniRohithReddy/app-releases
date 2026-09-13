@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/ARCHITECTURE.md (normalized SHA-256 368fff74fe6e9cfce36037c54dcaf99c440cce2973850c483548b214c5389332). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Architecture — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Threat Model Reviewer is a .NET 10 solution (ThreatModelReviewer.slnx) of five projects. The guiding rule: the deterministic core never depends on AI, so the verdict is reproducibl" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/architecture/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Architecture — App Releases" />
+  <meta property="og:description" content="Threat Model Reviewer is a .NET 10 solution (ThreatModelReviewer.slnx) of five projects. The guiding rule: the deterministic core never depends on AI, so the verdict is reproducibl" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/architecture/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Architecture","description":"Threat Model Reviewer is a .NET 10 solution (ThreatModelReviewer.slnx) of five projects. The guiding rule: the deterministic core never depends on AI, so the verdict is reproducibl","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/architecture/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="./" aria-current="page">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Architecture</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="architecture" tabindex="-1">Architecture</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/ARCHITECTURE.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#core-threatmodelreviewercore">Core (ThreatModelReviewer.Core)</a></li><li><a href="#ai-threatmodelreviewerai">Ai (ThreatModelReviewer.Ai)</a></li><li><a href="#app-threatmodelreviewerapp">App (ThreatModelReviewer.App)</a></li><li><a href="#trust-boundaries-of-the-tool-itself">Trust boundaries of the tool itself</a></li><li><a href="#cli-threatmodelreviewercli">Cli (ThreatModelReviewer.Cli)</a></li><li><a href="#extending-the-rubric">Extending the rubric</a></li><li><a href="#documentation-and-distribution">Documentation and distribution</a></li></ul></nav></details>
+        <div class="doc-content"><p>Threat Model Reviewer is a .NET 10 solution (<code>ThreatModelReviewer.slnx</code>) of five projects.
+The guiding rule: <strong>the deterministic core never depends on AI</strong>, so the verdict is
+reproducible. Deterministic review works offline; direct Azure discovery is a
+separate network-backed Core feature and AI/MCP integrations are optional.</p>
+<pre tabindex="0" aria-label="Text code example"><code>ThreatModelReviewer.Core   ──► no AI dependency (the deterministic engine)
+        ▲
+        │ uses
+ThreatModelReviewer.Ai     ──► IAiProvider + CopilotProvider (GitHub Copilot SDK)
+        ▲
+        │ both used by
+ThreatModelReviewer.App  (WPF / MVVM)      ThreatModelReviewer.Cli  (review/fix/create/eval)
+ThreatModelReviewer.Tests (xUnit)
+</code></pre>
+<h2 id="core-threatmodelreviewercore" tabindex="-1">Core (<code>ThreatModelReviewer.Core</code>)</h2>
+<ul>
+<li><strong>Model</strong> — the canonical, format-agnostic <code>ThreatModel</code> (elements, flows, trust
+boundaries, threats) plus a source artifact for lossless round-trip.</li>
+<li><strong>Parsing</strong> — <code>Tm7Parser</code> (Microsoft <code>.tm7</code>) and <code>ThreatDragonParser</code> (<code>.json</code>).</li>
+<li><strong>Rubric</strong> — the <strong><code>RubricEngine</code></strong> runs 72 <code>IRubricCheck</code> checks and computes the
+verdict + 0–100 review score. Also: <code>StrideCoverageMatrix</code>, <code>FlowThreatBreakdown</code>,
+<code>FrameworkCoverageMatrix</code>, <code>RiskScorer</code>, <code>ResponseClassifier</code>.</li>
+<li><strong>Knowledge</strong> — <code>SecurityKnowledgeBase</code> (STRIDE → mitigations + OWASP / MITRE / CWE /
+NIST / MCSB references, OWASP LLM Top 10, MITRE ATLAS) and <code>FindingGuidance</code>.</li>
+<li><strong>Authoring</strong> — <code>Tm7Editor</code> (DOM-passthrough), <code>Remediator</code>, <code>ThreatModelGenerator</code>.</li>
+<li><strong>Reporting</strong> — HTML / PDF / Markdown / CSV / JSON / SARIF writers + issue exporters.</li>
+<li><strong>Generation</strong> — <code>GenerationSpec</code>, <code>ThreatModelGenerationPipeline</code>, rule-based
+threat enumeration and evidence. <code>CreateSpecAdapter</code> adapts the form-shaped input.</li>
+<li><strong>Ingestion</strong> — document/diagram readers and ARM, Bicep and Terraform parsing.</li>
+<li><strong>Azure</strong> — <code>AzureReadOnlyCli</code> reads metadata; <code>AzureDiscovery</code> builds an inventory;
+<code>AzureDfdBuilder</code> drafts structure from recognized resources and eligible role assignments.</li>
+<li><strong>Compare, Facts, History and Policy</strong> — deterministic comparisons and answers,
+local review history, and disclosed policy adjustments.</li>
+</ul>
+<h2 id="ai-threatmodelreviewerai" tabindex="-1">Ai (<code>ThreatModelReviewer.Ai</code>)</h2>
+<p><code>IAiProvider</code> with <code>CopilotProvider</code> (GitHub Copilot SDK) and an
+<code>OpenAiCompatibleProvider</code>. Helpers: <code>FindingExplainer</code>, <code>ThreatAnalyzer</code>, <code>ModelCritic</code>,
+remediation drafters. <strong>All advisory</strong> — nothing here changes the verdict.
+Declared dependency versions are recorded in <a href="../third-party-notices/">Third-party notices</a>.</p>
+<blockquote>
+<p>The Copilot SDK bundles a CLI runtime (<code>runtimes\win-x64\native\copilot.exe</code>) that it
+spawns as a child process. It is placed by a <strong>build</strong> target, so the app is distributed
+as a self-contained <strong><code>dotnet build</code></strong> folder (not <code>dotnet publish</code> / single-file). See
+<a href="../releasing/">RELEASING.md</a>.</p>
+</blockquote>
+<h2 id="app-threatmodelreviewerapp" tabindex="-1">App (<code>ThreatModelReviewer.App</code>)</h2>
+<p>WPF, CommunityToolkit.Mvvm. The app exposes <strong>Create, Assistant, Overview, Diagram,
+Findings, Fix, Compare, Ask and History</strong>. Model-dependent tabs are available when
+their input is loaded. Create and Assistant are not unfinished hidden features.</p>
+<p>Create accepts form input, architecture imports and an Azure-discovered draft.
+The baseline-carried writer preserves an existing TMT KnowledgeBase and Profile.
+Without a baseline, the app identifies newly generated output as reviewer-only.
+The CLI's <code>azure</code> command writes the richer <code>GenerationSpec</code>; the desktop form uses
+<code>CreateSpec</code>. Do not assume every rich property survives conversion through the form.</p>
+<p><code>StencilImages</code> resolves and caches frozen artwork from an installed Microsoft TMT
+instance. The diagram uses vector fallbacks when matching artwork is unavailable.</p>
+<h2 id="trust-boundaries-of-the-tool-itself" tabindex="-1">Trust boundaries of the tool itself</h2>
+<p>Because this application parses untrusted files and can forward their content to a language model,
+its own boundaries matter:</p>
+<pre tabindex="0" aria-label="Text code example"><code>   ┌─────────────────────────── your machine ───────────────────────────┐
+   │                                                                    │
+   │  .tm7 / .json ──► Parsing ──► Rubric engine ──► Verdict, score,     │
+   │  (untrusted)                  (deterministic)   findings, reports   │
+   │                                     │                               │
+   │                                     ▼                               │
+   │                            PromptSafety.Redact                      │
+   │                     (secrets + PII stripped, injection flagged)     │
+   └─────────────────────────────────────┼───────────────────────────────┘
+                                         │  finding text + redacted DFD summary
+                                         ▼            (only on explicit user action)
+                          GitHub Copilot (your seat)  ── or ──  your OpenAI-compatible endpoint
+</code></pre>
+<ul>
+<li>Review does not upload the raw model file. AI extraction/refinement can send supplied
+text, the current draft or the selected image; text redaction does not redact images.</li>
+<li>Nothing returned by a model can change the verdict, the score or the findings; AI output is
+rendered as advisory text, and every drafted <code>.tm7</code> change is applied only after explicit
+user approval.</li>
+<li>Updates and authentication use their service endpoints. Direct Azure discovery
+uses the installed Azure CLI and existing identity.</li>
+<li><strong>MCP</strong> is separate from direct discovery. <code>McpConnectionManager</code> requires master
+and per-server opt-in; enabled descriptors are passed into Copilot sessions.
+Microsoft Learn uses HTTPS; Azure MCP can download and run a local npm package.
+The direct Azure CLI wrapper's allowlist does not govern that separate process.</li>
+</ul>
+<p>Full enumeration: <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
+<h2 id="cli-threatmodelreviewercli" tabindex="-1">Cli (<code>ThreatModelReviewer.Cli</code>)</h2>
+<p><code>review</code> / <code>fix</code> / <code>create</code> / <code>openapi</code> / <code>diff</code> / <code>eval</code>, plus <code>compare</code>, <code>generate</code>,
+<code>ingest</code>, <code>azure</code>, <code>sdl</code>, <code>ask</code>, <code>history</code>, <code>policy</code>, and report/issue-export flags.
+<code>review</code> exit codes: <code>0</code> ready-with-notes, <code>2</code> not ready, <code>1</code> error — designed so a build pipeline
+can gate on threat-model readiness.</p>
+<h2 id="extending-the-rubric" tabindex="-1">Extending the rubric</h2>
+<p>Implement <code>IRubricCheck</code> and compose with the defaults:</p>
+<pre tabindex="0" aria-label="csharp code example"><code>var engine = RubricEngine.WithAdditionalChecks(new[] { new MyOrgPolicyCheck() });
+</code></pre>
+<p>Add <code>FindingGuidance</code> and <code>SecurityKnowledgeBase</code> citations for any new check, plus tests.</p>
+<h2 id="documentation-and-distribution" tabindex="-1">Documentation and distribution</h2>
+<p>The source owns the public guide copies listed in <code>docs/publication.json</code>.
+<code>scripts\sync-public-docs.ps1</code> exports only that whitelist to a local hub clone,
+relocates Markdown links and supports a read-only drift check. It never commits,
+pushes, or publishes a release. Public Pages copy is maintained separately and
+verified against the guide, sample result and current published release.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

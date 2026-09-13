@@ -2,7 +2,7 @@ name: Site and documentation checks
 
 on:
   pull_request:
-    paths: ['docs/**', 'products/**', 'scripts/**', 'package*.json', 'README.md', 'SECURITY.md', '.github/workflows/**']
+    paths: ['docs/**', 'products/**', 'scripts/**', 'package*.json', '*.md', 'LICENSE', '.github/workflows/**']
   push:
     branches: [main]
   workflow_dispatch:
@@ -29,6 +29,7 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run check:docs
       - run: npx playwright install --with-deps chromium
       - run: npm test
 

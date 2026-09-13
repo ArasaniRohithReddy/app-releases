@@ -36,12 +36,19 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/) |
 | **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/) — every version, notes and files · or [latest on GitHub](https://github.com/ArasaniRohithReddy/app-releases/releases/latest) |
-| **Documentation** | [Overview](products/threat-model-reviewer/) · [Install](products/threat-model-reviewer/INSTALL.md) · [User guide](products/threat-model-reviewer/USER-GUIDE.md) · [FAQ](products/threat-model-reviewer/FAQ.md) · [Changelog](products/threat-model-reviewer/CHANGELOG.md) |
-| **For enterprises** | [Data handling & privacy](products/threat-model-reviewer/DATA-HANDLING.md) · [Enterprise deployment](products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md) · [Third-party notices](products/threat-model-reviewer/THIRD-PARTY-NOTICES.md) |
+| **Documentation** | [Read guides on the site](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/) — overview, installation, user guide, CLI, skill, FAQ and changelog |
+| **For enterprises** | [Data handling & privacy](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/) · [Enterprise deployment](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/) · [Third-party notices](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/third-party-notices/) |
 | **Platform** | Windows 10/11 x64 · self-contained (no .NET install) |
 
 > Additional applications will be published here over time, each under `products/<app>/` with its
 > own documentation and product-prefixed release tags.
+
+Guides and [support](https://arasanirohithreddy.github.io/app-releases/help/),
+[security](https://arasanirohithreddy.github.io/app-releases/help/security/) and
+[license](https://arasanirohithreddy.github.io/app-releases/help/license/) pages are readable
+on the site without GitHub's API. This repository's public Markdown remains their canonical
+source; HTML is generated deterministically, with a secondary **View source on GitHub** link.
+Contributor workflow: [build and drift checks](scripts/README.md#native-documentation).
 
 ## Download
 

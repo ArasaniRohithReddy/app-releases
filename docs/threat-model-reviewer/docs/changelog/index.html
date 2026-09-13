@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/CHANGELOG.md (normalized SHA-256 fa1990d57486b452fce0e21b68805ac9e19020ecdaa328227aca10dc43e082d0). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Changelog — Threat Model Reviewer documentation</title>
+  <meta name="description" content="All notable changes to Threat Model Reviewer are documented here. The format is based on Keep a Changelog, and the project aims to follow Semantic Versioning." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/changelog/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Changelog — App Releases" />
+  <meta property="og:description" content="All notable changes to Threat Model Reviewer are documented here. The format is based on Keep a Changelog, and the project aims to follow Semantic Versioning." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/changelog/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Changelog","description":"All notable changes to Threat Model Reviewer are documented here. The format is based on Keep a Changelog, and the project aims to follow Semantic Versioning.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/changelog/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="./" aria-current="page">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Changelog</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="changelog" tabindex="-1">Changelog</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md">View source on GitHub</a></p>
+          <p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#unreleased">[Unreleased]</a></li><li><a href="#251--2026-09-07">2.5.1 — 2026-09-07</a></li><li><a href="#250--2026-09-07">2.5.0 — 2026-09-07</a></li><li><a href="#240--2026-09-06">2.4.0 — 2026-09-06</a></li><li><a href="#230--2026-09-06">2.3.0 — 2026-09-06</a></li><li><a href="#220--2026-08-27">2.2.0 — 2026-08-27</a></li><li><a href="#219--2026-08-24">2.1.9 — 2026-08-24</a></li><li><a href="#218--2026-08-24">2.1.8 — 2026-08-24</a></li><li><a href="#217--2026-08-24">2.1.7 — 2026-08-24</a></li><li><a href="#216--2026-08-24">2.1.6 — 2026-08-24</a></li><li><a href="#215--2026-08-24">2.1.5 — 2026-08-24</a></li><li><a href="#214--2026-08-24">2.1.4 — 2026-08-24</a></li><li><a href="#213--2026-08-24">2.1.3 — 2026-08-24</a></li><li><a href="#212--2026-08-23">2.1.2 — 2026-08-23</a></li><li><a href="#211--2026-08-23">2.1.1 — 2026-08-23</a></li><li><a href="#210--2026-08-23">2.1.0 — 2026-08-23</a></li><li><a href="#203--2026-08-09">2.0.3 — 2026-08-09</a></li><li><a href="#202--2026-08-09">2.0.2 — 2026-08-09</a></li><li><a href="#201--2026-07-27">2.0.1 — 2026-07-27</a></li><li><a href="#200--2026-07-26">2.0.0 — 2026-07-26</a></li><li><a href="#1011--2026-07-03">1.0.11 — 2026-07-03</a></li><li><a href="#1010--2026-07-03">1.0.10 — 2026-07-03</a></li><li><a href="#109--2026-07-03">1.0.9 — 2026-07-03</a></li><li><a href="#108--2026-07-03">1.0.8 — 2026-07-03</a></li><li><a href="#107--2026-07-03">1.0.7 — 2026-07-03</a></li><li><a href="#106--2026-07-03">1.0.6 — 2026-07-03</a></li><li><a href="#105--2026-07-03">1.0.5 — 2026-07-03</a></li><li><a href="#104--2026-06-28">1.0.4 — 2026-06-28</a></li><li><a href="#103--2026-06-28">1.0.3 — 2026-06-28</a></li><li><a href="#102--2026-06-28">1.0.2 — 2026-06-28</a></li><li><a href="#101--2026-06-28">1.0.1 — 2026-06-28</a></li><li><a href="#100--2026-06-27">1.0.0 — 2026-06-27</a></li></ul></nav></details>
+        <div class="doc-content"><p>All notable changes to <strong>Threat Model Reviewer</strong> are documented here.
+The format is based on <a href="https://keepachangelog.com/" rel="noopener noreferrer">Keep a Changelog</a>, and the
+project aims to follow <a href="https://semver.org/" rel="noopener noreferrer">Semantic Versioning</a>.</p>
+<h2 id="unreleased" tabindex="-1">[Unreleased]</h2>
+<h3 id="documentation-and-website" tabindex="-1">Documentation and website</h3>
+<ul>
+<li>Clarify that model fixes do not patch application code, and a readiness result is
+not Microsoft approval or proof that mitigations are implemented.</li>
+<li>Add a public synthetic sample and quick-start workflow tied to the actual rubric output.</li>
+<li>Add an explicit public-document map, link-aware synchronization command and
+read-only drift check; record the cross-repository documentation workflow.</li>
+<li>Correct stale public Create/Assistant descriptions and privacy/network guidance
+for Azure, MCP, document extraction and image input.</li>
+<li>Replace the manually maintained source test-count badge with the CI status badge.</li>
+<li>Keep CI test-report artifacts for failed runs only, with seven-day retention;
+successful build/test results remain in the run logs.</li>
+</ul>
+<h3 id="fixed-in-source-not-yet-included-in-a-new-binary-release" tabindex="-1">Fixed in source, not yet included in a new binary release</h3>
+<ul>
+<li>Widen the Findings check column and use an ellipsis plus tooltip for long targets.</li>
+</ul>
+<h2 id="251--2026-09-07" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1" rel="noopener noreferrer">2.5.1</a> — 2026-09-07</h2>
+<p>Three defects found by looking at what the product actually renders, rather than at what the code
+says it renders.</p>
+<h3 id="fixed" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>Azure components were labelled &quot;Generic Process&quot; on the diagram.</strong> <code>StencilCatalog.FriendlyName</code>
+consulted an element's <em>generic</em> stencil family before deriving a name from its <em>specific</em> stencil
+id, so any product not in the curated table lost to its parent — an Azure Logic App read as
+&quot;Generic Process&quot; while the <code>.tm7</code> underneath correctly said <code>SE.P.TMCore.AzureLogicApp</code>. Spotted
+on three components; a guard covering every stencil the Azure map can emit measured the real
+scope at <strong>79 of 92</strong>. The model was right and only the label was wrong, which is the worst
+combination because nothing looks broken.</li>
+<li><strong>Flow labels could be hidden by a component.</strong> Labels were painted as part of the connector, and
+connectors are painted behind the nodes so a line reads as passing under a box rather than
+terminating at it. A label that happened to sit where the layout placed a node was clipped to a
+single character, so the diagram silently stopped saying what the flow carried. Labels are now
+painted last, and a test asserts the layering.</li>
+</ul>
+<h3 id="added" tabindex="-1">Added</h3>
+<ul>
+<li><strong>A framework-edition manifest, and a drift guard that holds it to the code.</strong> Which edition of
+each standard the tool encodes was folklore spread across a knowledge base, a coverage matrix and
+several rule tables. It is now declared once and checked, because a manifest nothing verifies is
+just another thing that goes stale.</li>
+<li><strong>Reports state which editions produced the verdict</strong>, and disclose anywhere the tool is knowingly
+an edition behind, with the reason. Being behind is sometimes right; being quietly behind is not,
+so the manifest refuses to record an unadopted edition without a stated reason.</li>
+</ul>
+<h3 id="framework-currency-verified-against-each-publisher" tabindex="-1">Framework currency (verified against each publisher)</h3>
+<ul>
+<li><strong>OWASP Top 10:2025</strong> — current. All ten shipped citation URLs verified live.</li>
+<li><strong>OWASP API Security Top 10:2023</strong> — still current.</li>
+<li><strong>CWE</strong> — individual identifiers are stable and edition-independent; the annual Top 25 ranking is
+not encoded, so it cannot drift.</li>
+<li><strong>OWASP Top 10 for LLM Applications</strong> — the tool encodes 2025; edition 2026 was published on
+3 August 2026 and is <strong>deliberately not yet adopted</strong>. It re-ranks eight of the ten risks
+(Excessive Agency LLM06→LLM03, Improper Output Handling LLM05→LLM10, and six more), so adopting it
+means remapping identifiers rather than changing a year. OWASP has not published per-risk pages
+for 2026 — its own index still links every risk to the 2025 pages — so renumbering now would leave
+every citation pointing at a page whose identifier no longer matches its title. This is disclosed
+in every HTML and Markdown report rather than left in a comment.</li>
+</ul>
+<h2 id="250--2026-09-07" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.0" rel="noopener noreferrer">2.5.0</a> — 2026-09-07</h2>
+<p>Threat models are built from what a team wrote down: a diagram someone drew, or infrastructure code
+that describes what was declared. Neither is the same as what is running now. This release reads the
+deployed system instead.</p>
+<h3 id="added-1" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Build from a deployed Azure resource group.</strong> In the app, <strong>Create → Build from Azure…</strong>; in the
+CLI, <code>azure &lt;resource-group&gt; --out spec.json --evidence</code>. Reads what is actually deployed and
+drafts a threat model from it. Deterministic and AI-free: the same resource group always produces
+the same model.</li>
+<li><strong>Data flows inferred from role assignments.</strong> A managed identity holding a <em>data-plane</em> role on a
+store is evidence that the resource holding that identity reads or writes it — a path that exists
+in production whether or not anyone drew it. Roles that only grant control over configuration
+(Contributor, Reader, Owner) are deliberately not drawn, and neither are subscription- or
+management-group-scoped grants: measured on a real resource group, 111 of 115 assignments were
+inherited governance rather than one component talking to another.</li>
+<li><strong>An evidence file for every Azure build.</strong> Records the subscription and group, every command run,
+which flow came from which role assignment, every resource left off the diagram <em>and why</em>, the
+configuration observed, and what discovery could not read at all.</li>
+<li><strong>Discovery's limits are written into the model as assumptions</strong>, not left in a side file — so the
+<code>.tm7</code> cannot travel on its own looking more certain than it is. Chief among them: access using a
+shared key leaves no role assignment, so it is invisible here and missing from the diagram.</li>
+<li><strong>Azure resource types become TMT stencils</strong>, so product-specific threat rules fire — a Key Vault
+gets Key Vault threats rather than generic data-store ones.</li>
+</ul>
+<h3 id="security" tabindex="-1">Security</h3>
+<ul>
+<li><strong>Read-only by construction, not by convention.</strong> No caller can hand the Azure wrapper a command
+string at all: every read is a named method building its own arguments, re-validated against an
+allowlist before execution. Nothing can create, change or delete a resource, and no command that
+reads a key, secret or connection string is reachable. A test asserts the guarantee by reflection,
+so adding a method that accepts a caller-supplied command fails the build.</li>
+</ul>
+<h3 id="changed" tabindex="-1">Changed</h3>
+<ul>
+<li>Resources are now included on a discovered diagram only when their type is <strong>recognised</strong>, rather
+than excluded when they match a list of known plumbing. Azure has hundreds of resource types and
+gains more constantly; the old shape put every unfamiliar type on the diagram as a process box.
+On a real resource group this cut the draft from 23 components — 20 of them unconnected noise — to
+7 real ones. Everything excluded is listed in the evidence file with the reason.</li>
+</ul>
+<h3 id="fixed-1" tabindex="-1">Fixed</h3>
+<ul>
+<li>Two resources sharing one user-assigned managed identity no longer crash evidence generation.
+Shared identities are ordinary Azure configuration; the code treated a duplicate as a fault.</li>
+<li>Resource-group lists in the Azure dialog now report a readable name to screen readers instead of
+the underlying record's raw text.</li>
+</ul>
+<h2 id="240--2026-09-06" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.4.0" rel="noopener noreferrer">2.4.0</a> — 2026-09-06</h2>
+<p>Two engines that shipped in every build but could not be reached are now connected, and the guard
+that should have noticed no longer depends on anyone remembering.</p>
+<h3 id="added-2" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Assistant data sources (MCP).</strong> <strong>Help → Assistant data sources</strong> lets the assistant check a
+model's assumptions against systems you already have access to — including the <strong>Azure MCP
+Server</strong>, which reads the subscriptions and resource configuration <em>you</em> can read, using your
+existing <code>az login</code>. Off behind two switches, and each source states what it can reach before you
+enable it. It never touches the verdict or the score.</li>
+<li><strong>Import architecture into the Create tab.</strong> Build a draft from what your team already has: Bicep,
+an ARM template, Terraform, or a draw.io / Excalidraw / Graphviz / Mermaid / Visio diagram. The
+reading is deterministic and shared with the CLI's <code>ingest</code> verb, so the two surfaces cannot
+disagree about what a file contains.</li>
+</ul>
+<h3 id="fixed-2" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>The MCP subsystem was unreachable.</strong> Runtime, connection manager, config store and the Azure
+descriptor — with 43 passing security tests — shipped for several releases while
+<code>CopilotProvider</code> created sessions without ever populating <code>SessionConfig.McpServers</code>. It
+compiled, it was correct, and it did nothing.</li>
+<li><strong>The ingest engines were CLI-only.</strong> Bicep, ARM, Terraform and six diagram parsers were in every
+build, and the desktop app could not open any of them.</li>
+<li><strong>The importer threw on a file with no diagram in it</strong>, where it should return &quot;nothing found&quot;.
+Found by a test written against its own documented contract.</li>
+</ul>
+<h3 id="internal" tabindex="-1">Internal</h3>
+<ul>
+<li><strong><code>OrphanedCodeTests</code> replaces an allowlist with a structural check.</strong> <code>FeatureWiringTests</code>
+guards a hand-written list of capabilities, which only catches what someone remembered to add —
+which is exactly why MCP hid. The new guard flags <em>any</em> public engine that only the tests can
+reach and requires each exemption to carry a written reason. Verified by planting a deliberate
+orphan and confirming the build fails.</li>
+<li>Surface parity now covers architecture import, so it cannot become CLI-only again.</li>
+</ul>
+<h2 id="230--2026-09-06" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.3.0" rel="noopener noreferrer">2.3.0</a> — 2026-09-06</h2>
+<p>The tool is now usable from an AI agent, not only by a human at a keyboard.</p>
+<h3 id="added-3" tabindex="-1">Added</h3>
+<ul>
+<li><strong>A GitHub Copilot CLI skill</strong>, shipped as <code>ThreatModelReviewer-vX.Y.Z-skill.zip</code>. It teaches an
+agent five jobs — review a model, explain why it is NOT READY, fix what is mechanically fixable,
+compare two revisions for regression, and generate a model with an evidence file — each mapped to
+what a developer actually asks rather than to our verb names. It carries the CI recipes, both spec
+schemas, and the full rubric so an agent can explain a check id instead of inventing one.
+See <a href="../skill/">docs/SKILL.md</a>.</li>
+<li><strong>The determinism invariant is stated in the skill in the imperative</strong>: never report a verdict you
+did not read out of the tool, never imply that any AI can change one, and stop rather than guess
+if the engine cannot be run. The verdict and the 0-100 score still come from 72 rubric checks with
+no AI involvement.</li>
+<li><strong><code>Invoke-ThreatModelReviewer.ps1</code></strong> in the bundle finds the CLI — <code>THREAT_MODEL_REVIEWER_CLI</code>,
+then <code>PATH</code>, then the usual install locations — and forwards its exit code verbatim, since a
+wrapper that rewrote it would turn a failing CI gate into a passing one.</li>
+<li><strong><code>skill.zip</code> is now built by <code>scripts/build-release.ps1</code></strong> and published with every release, with
+the version stamped into the plugin manifest and the bundle README so a forgotten bump cannot ship
+instructions that name a file that does not exist.</li>
+</ul>
+<h3 id="internal-1" tabindex="-1">Internal</h3>
+<ul>
+<li><strong><code>SkillPackagingTests</code>, 23 tests.</strong> Nothing compiles a skill, so a wrong sentence in one becomes a
+wrong command. They assert every verb and flag the skill uses is one the CLI parses, that both
+documented spec examples deserialize and generate a real model, that every gating check is named
+in the rubric reference, that every relative link resolves, that the description stays inside the
+Copilot CLI's 1024-character limit, and that the release script still packages the bundle. Each
+guard was verified by breaking the thing it protects and confirming the test failed.</li>
+<li>The <strong>surface parity</strong> guard now covers three front ends: a shared capability must be reachable
+from the desktop app, the CLI <strong>and</strong> the skill.</li>
+</ul>
+<h2 id="220--2026-08-27" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.2.0" rel="noopener noreferrer">2.2.0</a> — 2026-08-27</h2>
+<p>Generated models can now be audited rather than trusted.</p>
+<h3 id="added-4" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Evidence files.</strong> Generating a model can write a <code>.evidence.md</code> beside the <code>.tm7</code> recording the
+declared inputs, the resulting model, <strong>every rule that fired and how often</strong>, anything the
+generator synthesized on your behalf, and every warning it raised. Deterministic and AI-free: the
+same specification reproduces it byte for byte, so a difference means the input changed rather than
+the model drifting. <code>--evidence</code> in the CLI, a <strong>Write evidence file</strong> checkbox in the Create tab.</li>
+<li><strong>CI on every push and pull request</strong> (<code>.github/workflows/ci.yml</code>), building with <code>-warnaserror</code>.
+Until now the only workflow was <code>release</code>, triggered solely by a version tag — so nothing validated
+a pull request, and three Dependabot bumps (two of them major) sat with no checks at all.</li>
+<li><strong>Branch safety.</strong> The public release hub is protected server-side against force-pushes and branch
+deletion, verified by attempting one as the owner and having it rejected. The private source repo
+cannot use GitHub protection on this plan, so it has a committed pre-push hook
+(<code>pwsh scripts/install-hooks.ps1</code>) that refuses to force-push or delete <code>main</code> and runs build and
+tests first.</li>
+</ul>
+<h3 id="changed-1" tabindex="-1">Changed</h3>
+<ul>
+<li>Dependencies: <code>xunit.runner.visualstudio</code> 3.1.4 → 4.0.0, <code>Microsoft.OpenApi.Readers</code> 1.6.22 →
+1.6.31, <code>actions/upload-artifact</code> v4 → v7. Each was tested locally before merging, including the
+<code>openapi</code> verb specifically, since it consumes the bumped reader.</li>
+</ul>
+<h3 id="internal-2" tabindex="-1">Internal</h3>
+<ul>
+<li>A <strong>surface parity</strong> guard asserts the desktop app and the CLI cannot diverge: a capability added
+to one must be reachable from the other. This is the defect class that once shipped the Create and
+Assistant tabs hidden while the CLI could already do the work.</li>
+</ul>
+<h2 id="219--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.9" rel="noopener noreferrer">2.1.9</a> — 2026-08-24</h2>
+<p>The CLI is now visible everywhere it should be, and two flaky tests are gone.</p>
+<h3 id="fixed-3" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>The CLI was invisible on the website.</strong> Both the product page and the releases page map asset
+names to download cards, and neither knew about <code>cli-win-x64.zip</code> — so every release silently
+dropped it from the download grid. Both now show it, with its size and a link to the CLI guide.</li>
+<li><strong>The product page called the portable ZIP &quot;Recommended&quot;</strong> while the README, the install guide, the
+release notes and the releases page all said the MSI. The MSI now leads the download grid, carries
+the recommendation, and is what the hero button offers.</li>
+<li><strong>Package tables omitted the CLI.</strong> The install guide, the README artifact table and the enterprise
+deployment guide each enumerate the downloads; none listed the command-line bundle.</li>
+<li><strong>Two flaky tests.</strong> The Markdown renderer's STA helper swallowed a thread-join timeout and then
+asserted on an empty string, so it passed alone and failed under load with a misleading message.
+The streaming-progress test polled for a <code>Progress&lt;T&gt;</code> callback that xUnit marshals onto the same
+single-threaded context the polling loop occupied, so the two starved each other; it now records
+progress synchronously, which is what the provider's contract actually promises. Five consecutive
+full runs, no failures.</li>
+</ul>
+<h3 id="internal-3" tabindex="-1">Internal</h3>
+<ul>
+<li>A guard asserts that any document listing the download packages lists the CLI bundle too.</li>
+</ul>
+<h2 id="218--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.8" rel="noopener noreferrer">2.1.8</a> — 2026-08-24</h2>
+<p>Both the desktop app and the CLI ship — and a regression that would have replaced one with the other.</p>
+<h3 id="fixed-4" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>The in-app updater could have installed the CLI over the desktop app.</strong> Adding the CLI bundle in
+2.1.7 gave a release two <code>.zip</code> assets, and the portable channel matched on the extension alone —
+so a portable desktop install was offered the command-line bundle. It now requires a <em>portable</em>
+archive, and a test asserts that no channel can ever deliver the CLI as an app update.</li>
+<li><strong>Copilot answers showed raw <code>##</code> and <code>&gt;</code> markers.</strong> The Markdown renderer handled inline
+formatting only, so headings and blockquotes — which Copilot uses to structure answers and to flag
+grounding corrections — arrived with their syntax visible. Headings, blockquotes and numbered lists
+now render, and <code>#1234</code> or <code>#FF0000</code> are still left alone.</li>
+</ul>
+<h3 id="note-on-packaging" tabindex="-1">Note on packaging</h3>
+<p>Every release contains <strong>both</strong> products, and will continue to:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Changelog table 1"><table>
+<thead>
+<tr>
+<th scope="col">Artifact</th>
+<th scope="col">What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>…-x64.msi</code></td>
+<td>Desktop app installer (recommended)</td>
+</tr>
+<tr>
+<td><code>…-setup.exe</code></td>
+<td>Desktop app installer (Inno)</td>
+</tr>
+<tr>
+<td><code>…-win-x64-portable.zip</code></td>
+<td>Desktop app, no installation</td>
+</tr>
+<tr>
+<td><code>…-cli-win-x64.zip</code></td>
+<td>Command line, for CI and scripting</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="217--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.7" rel="noopener noreferrer">2.1.7</a> — 2026-08-24</h2>
+<p>The command-line interface is now something you can actually download.</p>
+<h3 id="added-5" tabindex="-1">Added</h3>
+<ul>
+<li><strong><code>ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip</code> ships with every release.</strong> The documentation had
+described CLI usage since 2.0, but no release ever contained a CLI — the only way to obtain one
+was to build the source, and the source repository is private. A reviewer following the docs
+reached a dead end. The bundle is self-contained and signed like every other artifact.</li>
+<li><strong><a href="../cli/">docs/CLI.md</a></strong> — download, exit codes, every verb, authentication, and a working
+GitHub Actions example that gates a build on the verdict and uploads SARIF.</li>
+</ul>
+<h3 id="fixed-5" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>Every documented CLI command required the private repository.</strong> All seventeen examples used
+<code>dotnet run --project ThreatModelReviewer.Cli</code>, which nobody outside the repo can run. They now
+use the shipped executable.</li>
+<li><strong>&quot;Threats by interaction&quot; stopped short of the panel edge</strong>, leaving a large empty area beside it
+once the framework table below started using the full width. Both now share one rhythm.</li>
+</ul>
+<h3 id="internal-4" tabindex="-1">Internal</h3>
+<ul>
+<li>Two guards: every artifact the documentation tells people to download must be produced by the
+release script, and the public CLI documentation may not instruct readers to build from source.</li>
+</ul>
+<h2 id="216--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.6" rel="noopener noreferrer">2.1.6</a> — 2026-08-24</h2>
+<p>Layout and labelling fixes across the Overview and Fix tabs, and a regression from 2.1.5.</p>
+<h3 id="fixed-6" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>The Review options model picker showed raw records</strong> (<code>AiModel { Id = …, Name = … }</code>). A
+regression from 2.1.5: removing the shared ComboBox style's blanket item template fixed four blank
+dropdowns but broke this one, which had been relying on it. The guard added at the time only read
+<code>MainWindow.xaml</code>, so it did not see the dialog; it now reads every view.</li>
+<li><strong>Framework coverage stacked OWASP and STRIDE vertically</strong>, using half a wide panel and leaving
+the rest empty. They now sit side by side.</li>
+<li><strong>Unlabelled grid columns.</strong> The Fix tab's review column and the History tab's reopen column had
+blank headers; both are named. The <code>Apply</code> and <code>Check</code> headers were also too narrow and clipped.</li>
+</ul>
+<h2 id="215--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.5" rel="noopener noreferrer">2.1.5</a> — 2026-08-24</h2>
+<p>A crash on the Findings tab, four dropdowns that rendered blank, and README badges
+that had gone stale.</p>
+<h3 id="fixed-7" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>The Findings tab threw and failed to render.</strong> Moving view models from literal colours to
+semantic tokens in 2.1.4 updated one colour converter and left the other parsing its argument as
+a colour, so drawing a severity threw <code>FormatException</code> (&quot;Token is not valid&quot;). Both converters
+now share one resolver.</li>
+<li><strong>Four dropdowns rendered as blank rows</strong> — the component and element-kind pickers on <strong>Create</strong>
+and <strong>Diagram</strong>. The shared ComboBox style imposed <code>{Binding Name}</code> on every ComboBox in the app,
+and a plain string has no <code>Name</code>. Lists of records now name their own display property.</li>
+<li><strong>The diagram-surface picker</strong> needed a display property after all, and its record calls it
+<code>Label</code>. Fixed while verifying the change above.</li>
+<li><strong>README badges</strong> claimed <code>v2.1.2</code> and <code>418 passing</code> while the app shipped 2.1.4 with 1297 tests.</li>
+</ul>
+<h3 id="internal-5" tabindex="-1">Internal</h3>
+<ul>
+<li><strong>Binding failures are now observable in development.</strong> WPF logs a broken binding and renders
+nothing, so the symptom is a blank column and no error — which is how the ComboBox defect survived
+several releases. Debug builds write those failures to a file, and an automated pass over all nine
+tabs reads it. Release builds are unchanged.</li>
+<li>New guards, each verified against the real defect: the converters are exercised with the exact
+values the view models emit; every ComboBox must be able to display its items, checked by
+reflecting the collection's element type; the shared style may not impose a display binding; and
+the README badges must track the shipped version and the test count.</li>
+</ul>
+<h2 id="214--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.4" rel="noopener noreferrer">2.1.4</a> — 2026-08-24</h2>
+<p>Dark mode finished properly, keyboard shortcuts, and a history you can act on.</p>
+<h3 id="added-6" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Keyboard shortcuts</strong> — 16 accelerators for opening, closing, exporting, critiquing and moving
+between tabs, plus <strong>Ctrl + mouse wheel</strong> to zoom the diagram. <strong>Help → Keyboard shortcuts</strong> (F1)
+lists them; the list is checked against the window's real bindings in both directions.</li>
+<li><strong>Reopen from History.</strong> A row can now be opened again. File paths are not stored by default, so
+the app usually asks where the file is — and then uses the recorded content hash to tell you
+whether it is the same revision that was reviewed.</li>
+<li><strong>&quot;What you did&quot; in History</strong> — opens, exports, fixes applied and Copilot actions per model.</li>
+</ul>
+<h3 id="fixed-8" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>Dark mode reached only part of the app.</strong> The guard added in 2.1.3 checked a single file, so 84
+hard-coded colours survived across the dialogs and the diagram; the whole Diagram tab stayed light
+inside a dark window. Every view is now covered.</li>
+<li><strong>The diagram is a document, not chrome.</strong> Theming its shapes made every node a dark block with
+unreadable text. The canvas is now a light sheet inside a dark frame, with its colours pinned.</li>
+<li><strong>Icons that looked broken.</strong> The Threat Modeling Tool substitutes an 18×18 generic outline for
+elements left as a plain External Interactor or Data Store, which reads as a missing image when
+scaled. Those, and the legacy 16×16 glyphs, now fall back to our own name-derived icons — a chart
+for Power BI datasets, a file box for SharePoint. Real product artwork is unchanged.</li>
+<li><strong>&quot;Threats by interaction&quot; and &quot;Framework coverage&quot; were unusable on a wide monitor.</strong> Both had an
+unbounded column, so the name sat at one edge and the numbers at the other. Both are now capped.</li>
+<li><strong>Element names containing line breaks</strong> turned a single interaction into three ragged lines.</li>
+<li><strong>F1 did nothing</strong> — WPF's built-in help command claims it before window bindings see it.</li>
+</ul>
+<h3 id="internal-6" tabindex="-1">Internal</h3>
+<ul>
+<li>Export, fix and Copilot events were recordable but never recorded; Copilot events could not even be
+attributed to a model. Both are now wired, so history describes work rather than just file opens.</li>
+</ul>
+<h2 id="213--2026-08-24" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.3" rel="noopener noreferrer">2.1.3</a> — 2026-08-24</h2>
+<p>Appearance and reach: the app can now be themed, questions can be asked without leaving
+the tab you're on, and comparing two revisions is legible.</p>
+<h3 id="added-7" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Light, Dark and Match Windows themes</strong> (Help → Appearance). The choice is remembered,
+applies immediately without a restart, and System follows Windows as it changes.</li>
+<li><strong>A floating Ask panel.</strong> A launcher in the bottom-left opens a compact chat over any tab,
+so a question no longer costs you your place. It is the same conversation as the Ask tab:
+maximising hands the history over rather than starting again.</li>
+<li><strong>&quot;Use open model&quot; on both Compare fields</strong>, plus a swap button. Comparing the open model
+against an older revision is as common as the reverse, and only the baseline supported it.</li>
+</ul>
+<h3 id="changed-2" tabindex="-1">Changed</h3>
+<ul>
+<li>The Compare tab leads with the verdict and separates what got worse from what got better,
+instead of stacking dense lists of long strings.</li>
+<li>Overview statistics sit on an even four-column grid; eight tiles previously broke 5 + 3 and
+left a gap.</li>
+</ul>
+<h3 id="fixed-9" tabindex="-1">Fixed</h3>
+<ul>
+<li>Interactions without a name printed their endpoints twice in &quot;Threats by interaction&quot;.</li>
+<li>Closing a model now dismisses the floating Ask panel, which otherwise stayed open over the
+empty state with nothing left to answer about.</li>
+</ul>
+<h3 id="internal-7" tabindex="-1">Internal</h3>
+<ul>
+<li>Every colour in the app now resolves through a semantic token — 114 hard-coded values in the
+main window, 26 white backgrounds across the dialogs, and 43 literals chosen in view models.
+Guards were added for each way this fails quietly: the two palettes must define the same
+tokens and differ on the core surfaces, no themed brush may be bound with <code>StaticResource</code>
+(which resolves once and then ignores a theme change), and no colour may be hard-coded.
+The diagram is exempt by design: it renders a document, not app chrome.</li>
+</ul>
+<h2 id="212--2026-08-23" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.2" rel="noopener noreferrer">2.1.2</a> — 2026-08-23</h2>
+<p>Fixes found by driving the app before shipping rather than trusting a green test suite.</p>
+<h3 id="fixed-10" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>The History tab was empty even after a review.</strong> Two separate faults. The recorder was never
+called — the store, query layer, privacy controls and tab were all complete and all tested, and
+nothing invoked them, so the feature did nothing while every test passed. And once recording
+worked, the tab still showed nothing until you noticed the <strong>Refresh</strong> button. Reviewing a model
+now records it, and opening the tab loads it.</li>
+<li><strong>The assistant showed its own Markdown.</strong> Answers are written in Markdown and were bound straight
+to text, so readers saw <code>**NOT READY**</code> and literal dashes — the most important line in an answer
+was the hardest to read. It now uses the renderer the app already had.</li>
+<li><strong>The test suite wrote into the real history store.</strong> Wiring the recorder into model loading meant
+any test that opened a model recorded a review, filling a developer's History tab with fixtures.
+The history root now honours <code>THREATMODELREVIEWER_HISTORY_ROOT</code>, which the tests redirect to a
+temp folder — and which administrators can use to move history off a roaming profile.</li>
+<li><strong>Compare's Explain and Export buttons looked broken.</strong> They are correctly disabled until a
+comparison exists, but said nothing; they now explain themselves while disabled. The path boxes
+also accept a dropped <code>.tm7</code>.</li>
+<li><strong>A documented claim was untrue.</strong> The docs said <code>generate</code> produces a NOT READY model &quot;by
+construction&quot;. It does not: a generated model reports READY WITH NOTES with zero gating findings,
+because the rubric counts <em>Needs Investigation</em> as triaged. The docs now describe what actually
+happens, and why a generated model still is not a reviewed one.</li>
+<li><strong>The framework coverage matrix was labelled &quot;OWASP Top 10 (2021)&quot;</strong> while listing the 2025
+categories updated in 2.1.1.</li>
+</ul>
+<h3 id="added-8" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Feature wiring tests.</strong> The History bug could not be caught by unit tests — every part passed in
+isolation; the gap was between the code existing and the code running. These assert that each
+capability is reachable from a surface a user can drive: every Core engine referenced by the app or
+CLI, every advertised tab present and not collapsed, every CLI verb dispatchable, the recorder
+actually invoked, and the assistant rendering Markdown. They cannot prove a feature is correct,
+only that it is not orphaned.</li>
+</ul>
+<h3 id="notes" tabindex="-1">Notes</h3>
+<ul>
+<li>The <strong>verdict</strong> and <strong>0–100 review score</strong> remain 100% deterministic; Copilot stays advisory.</li>
+<li>1231 automated tests.</li>
+</ul>
+<h2 id="211--2026-08-23" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.1" rel="noopener noreferrer">2.1.1</a> — 2026-08-23</h2>
+<p>A follow-up to 2.1.0 fixing three things that stopped users seeing any of it, plus a
+correction to the standards the rubric cites.</p>
+<h3 id="fixed-11" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>In-app update could produce an unusable installer.</strong> Downloads were only size-checked when
+a length was known. On the release-atom fallback — taken whenever the anonymous GitHub API is
+rate-limited at 60 requests an hour — every asset size is reported as <code>0</code>, so if the server also
+omitted <code>Content-Length</code> nothing was verified at all. A truncated transfer or an error page was
+moved into place and handed to <code>msiexec</code>, which reported <em>&quot;This installation package could not be
+opened&quot;</em> — an error that says nothing about the download. Every download is now format-checked
+before it runs (an MSI must start with the OLE compound-file signature, a zip with <code>PK</code>, an
+executable with <code>MZ</code>) and the failure names the real cause. The published 2.1.0 MSI was never
+faulty; only the download path was.</li>
+<li><strong>The header could collapse and hide the tab strip.</strong> The identity block sat in a star-width
+column beside a content-sized command cluster. Adding the Close button in 2.1.0 tipped it over:
+the cluster claimed the row, the star column collapsed to a few pixels, and the title wrapped one
+character per line down the left edge, pushing the tabs off screen. Rebuilt as a single compact
+strip — roughly 50px — in which nothing can wrap; the open model's name trims with an ellipsis.</li>
+<li><strong>The verdict was printed twice.</strong> The CI band is FAIL precisely when the verdict is NOT READY,
+so showing them as separate chips read as two independent failures, and previously put a green
+grade pill beside a red FAIL. They are now one chip.</li>
+<li><strong>Markdown was rejected as &quot;not a diagram&quot;.</strong> <code>.md</code> is registered as a diagram extension because
+markdown can embed Mermaid, so plain prose never reached the document reader. Shared extensions
+now fall back correctly, and markdown containing a diagram is still read as one.</li>
+</ul>
+<h3 id="changed-3" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Compare, Ask and History are now in the app, not just the CLI.</strong> 2.1.0 shipped these engines
+with no way to reach them outside a terminal.
+<ul>
+<li><strong>Compare</strong> — pick two revisions (or use the model you already have open as the baseline) and see
+what changed, what got worse, and what got better, with the score and verdict movement. <em>Explain
+with Copilot</em> adds a plain-English read of the change; the numbers are computed before Copilot is
+asked and never change. Exports to HTML, Markdown or CSV.</li>
+<li><strong>Ask</strong> — an assistant scoped to the open threat model. Common questions are answered straight
+from the model's own numbers with <strong>no AI call at all</strong>, so no answer can contradict the review;
+each reply says which of the two it was. Open-ended questions go to Copilot grounded in the same
+facts, with the supporting check ids cited.</li>
+<li><strong>History</strong> — every review you run, recorded locally, with score trends per model. The tab states
+where the data lives and can open that folder, because &quot;it never leaves your machine&quot; is a claim
+you should be able to verify rather than take on trust. One click clears it.</li>
+</ul>
+</li>
+<li><strong>Create and Assistant are no longer hidden.</strong> Both were fully implemented behind
+<code>Visibility=&quot;Collapsed&quot;</code>, and with 2.1.0 shipping a round-trip-verified <code>.tm7</code> writer there is no
+longer a reason to keep model authoring out of the product. Create offers templates, Copilot
+refinement, a live diagram preview, components, flows and boundaries; Assistant extracts a DFD
+from a document, an architecture image, or an OpenAPI spec.</li>
+<li><strong>The app and the CLI now run the same generation engine.</strong> The Create tab used the original
+generator while <code>generate</code> used the deterministic pipeline. Two implementations of one feature
+drift, and a user comparing them would rightly lose confidence in both. Create now reports how
+many threats it produced and states that each is recorded as <em>Needs Investigation</em>, so its output
+is not mistaken for a finished review.</li>
+<li><strong>Rubric citations updated to OWASP Top 10:2025</strong>, published 6 November 2025. The edition
+re-ranked categories rather than just renaming them, so all 43 references were mapped by concept:
+Cryptographic Failures moved A02→A04, Injection A03→A05, Insecure Design A04→A06, Security
+Misconfiguration A05→A02, and Vulnerable &amp; Outdated Components (A06) became Software Supply Chain
+Failures (A03). SSRF is no longer its own category — OWASP folded it into A01 — and A10 is now
+Mishandling of Exceptional Conditions. <strong>No score changes:</strong> the coverage matrix feeds reports and
+the assistant, never the engine, and both sample models score exactly as before.</li>
+<li>Release builds now upload their artifacts before publishing, so a missing or expired publishing
+token costs a manual publish rather than a repeated build.</li>
+</ul>
+<h3 id="notes-1" tabindex="-1">Notes</h3>
+<ul>
+<li>The <strong>verdict</strong> and <strong>0–100 review score</strong> remain 100% deterministic; Copilot stays advisory.</li>
+<li>1200 automated tests (up from 418 at the start of the 2.1 cycle).</li>
+</ul>
+<h2 id="210--2026-08-23" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.1.0" rel="noopener noreferrer">2.1.0</a> — 2026-08-23</h2>
+<p>This release is mostly <strong>new engine capability, reachable from the CLI</strong>. The desktop UI for these
+features lands next; everything below is available today via <code>ThreatModelReviewer.Cli</code>.</p>
+<p>The <strong>verdict</strong> and <strong>0–100 review score</strong> remain 100% deterministic. Copilot stays advisory, and
+several of the additions below exist specifically to keep it that way — the assistant answers from
+computed facts rather than inference, and generation lets a language model touch prose only, never
+structure.</p>
+<h3 id="added-9" tabindex="-1">Added</h3>
+<ul>
+<li><strong><code>compare</code> — what changed between two revisions.</strong> Matches elements, flows, boundaries and threats
+by stable identity rather than list position, so a rename is reported as a rename instead of a
+delete plus an add. Reports rubric deltas including pass→fail transitions, threat state changes,
+and a posture summary that makes regressions impossible to miss. Exits <code>2</code> on a serious regression
+so CI can block on it.</li>
+<li><strong><code>generate</code> — build a <code>.tm7</code> from a described system.</strong> Deterministic STRIDE enumeration keyed on
+element kinds, boundary crossings and flow properties. Every generated threat is recorded as
+<em>Needs Investigation</em>: this is an enumerated starting point, not a completed review, and the output
+says so. Generating twice from one spec produces byte-identical output.</li>
+<li><strong><code>ingest</code> — read what teams already have.</strong> Documents (Word, PowerPoint, Excel, PDF, CSV, Markdown,
+JSON, YAML), diagrams (Excalidraw, draw.io including its compressed form, Mermaid, Visio, Graphviz),
+and infrastructure as code (ARM, Bicep, Terraform). Diagrams are mapped to data-flow-diagram
+candidates; anything the mapper cannot classify confidently is flagged for a human rather than
+guessed at. Infrastructure ingestion extracts deterministic <strong>security facts</strong> — TLS enforcement,
+public network access, identity type, key-vault protection, firewall rules — each with a file and
+line citation, and exits <code>2</code> when it finds insecure configuration.</li>
+<li><strong><code>sdl</code> — the artifacts a reviewer actually asks for.</strong> A full threat model document (Markdown and
+HTML), the threat register (CSV and JSON), an assumptions and out-of-scope log, a traceability
+matrix, and a manifest recording tool version, rubric version and the source model's identity and
+hash, so a reviewer can verify every file and reproduce the deterministic content.</li>
+<li><strong><code>ask</code> — answers with no AI and no network.</strong> Common questions (score, verdict, unmitigated counts,
+which flows cross a boundary, why a model is not ready) are answered exactly from a computed fact
+sheet, with the supporting check ids cited. Questions needing judgement are declined rather than
+guessed at.</li>
+<li><strong><code>policy</code> — organisation policy, with disclosure that cannot be switched off.</strong> Validate a policy,
+list the check ids one may reference, or apply one to a review. Waivers require a reason, an owner
+and an expiry; an expired waiver stops applying and becomes a finding of its own. Applying a policy
+always prints the unpoliced result beside the policed one, plus every suppression and the policy's
+hash — a policy can tune the rubric, but it can never quietly hide a failure. Ships <code>default</code>,
+<code>strict</code> and a worked <code>enterprise-exceptions</code> preset.</li>
+<li><strong><code>history</code> — local review history and score trends.</strong> Append-only, on this machine only, never
+transmitted. File paths are hashed rather than stored by default, and AI prompts and responses are
+never recorded.</li>
+<li><strong>Model Context Protocol support</strong>, shipped disabled. Every server must be enabled individually and
+carries a plain-English disclosure of what it can see; secrets are held in the existing DPAPI-backed
+store rather than written into configuration.</li>
+<li><strong>Close the open threat model</strong> (Ctrl+W), with an unsaved-changes guard and a full reset of document
+state. Previously a model could only be replaced, never closed.</li>
+<li><strong>Microsoft Threat Modeling Tool stencil artwork in the diagram view</strong>, extracted at run time from
+the user's own MTMT installation. The artwork is Microsoft's and is deliberately never redistributed
+with this app.</li>
+<li><strong>File attachments in the Edit with Copilot panel</strong>, so an architecture diagram or document can be
+handed over directly instead of described in prose. Vision-only content is gated on the selected
+model actually supporting vision.</li>
+</ul>
+<h3 id="changed-4" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>GitHub Copilot SDK 1.0.2 → 1.0.11</strong>, which moves the bundled Copilot runtime to CLI 1.0.79.
+Verified with a live probe, not just a clean compile. Note that the available model list is served
+by the GitHub API and is <em>not</em> gated by the SDK version — both runtimes return the same models.</li>
+<li><strong>Fluent 2 design foundation</strong>, with the whole app re-skinned onto shared design tokens.</li>
+<li>Test host updated to Microsoft.NET.Test.Sdk 18.9.0 and coverlet.collector 10.0.1.</li>
+</ul>
+<h3 id="fixed-12" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>A shipping WCAG contrast failure.</strong> The score and band chips used colours that failed AA against
+their own background (2.78:1 and 4.29:1). All three states now pass (5.64:1, 4.55:1, 6.40:1).</li>
+<li><strong>An unreadable model dropdown</strong>, which rendered the raw record text
+(<code>AiModel { Id = …, SupportsVision = True }</code>) inside a 190px control.</li>
+<li><strong>A gap in the archive guard.</strong> A crafted Office file whose central directory under-reported an
+entry's size passed inspection and then silently truncated content. Such a mismatch is now detected
+and rejected.</li>
+<li><strong>Ingestion of shared file extensions.</strong> <code>.md</code> is also a diagram extension, because markdown can
+embed a Mermaid block, so plain markdown was being rejected as &quot;not a diagram&quot;. Shared extensions
+now fall back to document extraction.</li>
+<li><strong>A load-sensitive test</strong> that waited a fixed interval for an asynchronous progress callback and
+failed on a busy machine.</li>
+<li>Documentation corrected on the relationship between the score, the verdict and the CI band: the
+<strong>FAIL</strong> band and the <strong>NOT READY</strong> verdict are the same outcome, not two independent ones.</li>
+</ul>
+<h2 id="203--2026-08-09" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.3" rel="noopener noreferrer">2.0.3</a> — 2026-08-09</h2>
+<h3 id="changed-5" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Product copy now matches the shipped feature set.</strong> The header subtitle, About dialog, package
+description and docs previously said the app also <em>creates</em> threat models, but model <strong>creation is in
+beta and hidden in the current build</strong>. Everywhere now reads &quot;review, fix &amp; analyze&quot;, and the Create
+capability (guided wizard + Copilot DFD extraction from a description, image or OpenAPI spec) is clearly
+labelled <strong>beta / coming soon</strong>. No functional change — the Create and Assistant tabs were already hidden.
+The <code>create</code> and <code>openapi</code> commands remain available in the CLI.</li>
+</ul>
+<h3 id="added-10" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Enterprise-grade documentation set</strong>, for security review and managed rollout:
+<ul>
+<li><strong>Data handling &amp; privacy</strong> — every network destination and on-disk path, the secret redaction
+applied before any AI prompt, and confirmation that no telemetry or analytics are collected.</li>
+<li><strong>Enterprise deployment</strong> — silent-install switches, MSI <code>UpgradeCode</code> / Inno <code>AppId</code> for detection
+rules, Intune / Configuration Manager / Group Policy guidance, disabling update checks fleet-wide,
+air-gapped operation, VDI notes, and CI/CD gating with the CLI.</li>
+<li><strong>Third-party notices</strong> — full component inventory with licenses.</li>
+<li><strong>Support policy</strong> — severity definitions and response targets.</li>
+<li><strong>Code of conduct</strong>, <code>CODEOWNERS</code> and Dependabot configuration.</li>
+</ul>
+</li>
+<li><strong>Security policy expanded</strong> with vulnerability-response targets, a supported-versions table, and the
+controls protecting the tool itself (untrusted-file parsing, prompt-injection detection, DPAPI
+credential storage, export formula-injection neutralization, supply chain).</li>
+</ul>
+<h3 id="notes-2" tabindex="-1">Notes</h3>
+<ul>
+<li>The <strong>verdict</strong> and <strong>0–100 review score</strong> remain 100% deterministic; Copilot stays advisory.</li>
+</ul>
+<h2 id="202--2026-08-09" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.2" rel="noopener noreferrer">2.0.2</a> — 2026-08-09</h2>
+<h3 id="changed-6" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Canonical project home is now <code>ArasaniRohithReddy</code>.</strong> Following the repository transfer, every link
+and identifier the app carries now points to the new owner: the <strong>in-app update check</strong>, the <strong>About</strong>
+dialog and <strong>Help</strong> menu links (releases, install &amp; user guide, FAQ, issues, security, license), the
+SARIF report's <code>informationUri</code>, and the installer/package <strong>publisher</strong>, URLs, and <strong>code-signing
+identity</strong> (<code>CN=ArasaniRohithReddy</code>). The old <code>Rohithreddy7123</code> URLs still resolve via GitHub's
+automatic redirect, but the app no longer relies on it — existing installs are offered this update
+through that redirect and are canonical afterwards.</li>
+</ul>
+<h3 id="notes-3" tabindex="-1">Notes</h3>
+<ul>
+<li><strong>No change to behavior, the verdict, or the 0–100 review score</strong> — this is an identity/branding
+release. The score and verdict remain 100% deterministic; Copilot stays advisory only.</li>
+<li>The MSIX package identity changed with the publisher, so an existing <strong>MSIX</strong> install updates
+side-by-side; <strong>MSI</strong>, <strong>Setup.exe</strong>, and <strong>portable</strong> users update normally (in-app from v1.0.4+).</li>
+</ul>
+<h2 id="201--2026-07-27" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.1" rel="noopener noreferrer">2.0.1</a> — 2026-07-27</h2>
+<h3 id="changed-7" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Diagram edits no longer freeze the UI on large models.</strong> Adding, renaming, deleting, or connecting
+elements — and the <strong>Save changes</strong> / <strong>Reset</strong> diagram commands — now run the re-parse and re-review on a
+background thread, so the app stays responsive on big threat models.</li>
+</ul>
+<h3 id="fixed-13" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>CLI:</strong> a dangling or unknown option (e.g. a trailing <code>--model</code> with no value) now reports a clear error
+and exits with code 1 instead of being mistaken for the input file path; an invalid <code>--issues-format</code> is
+rejected with the list of valid choices.</li>
+</ul>
+<h3 id="security-1" tabindex="-1">Security</h3>
+<ul>
+<li>The in-app device-flow GitHub token is now passed directly to the Copilot SDK instead of being set as a
+process-wide environment variable, so it can no longer be inherited by other processes the app launches
+(browser, <code>cmd</code>, the Threat Modeling Tool).</li>
+</ul>
+<h2 id="200--2026-07-26" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.0.0" rel="noopener noreferrer">2.0.0</a> — 2026-07-26</h2>
+<p>The 2.0 line opens with a correctness release: models you fix in the app now reliably
+reopen in the Microsoft Threat Modeling Tool, Copilot's advisory text renders properly,
+and a whole-app audit (run with Claude Opus 4.8 + Opus 5) hardened every write path.</p>
+<h3 id="fixed-14" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>App-fixed <code>.tm7</code> files now open in the Microsoft Threat Modeling Tool.</strong> Two defects made
+TMT reject a saved model as <em>&quot;could not be deserialized / may be corrupted&quot;</em>: the threat
+<code>State</code> was written as <code>&quot;Needs Investigation&quot;</code> (TMT's <code>ThreatState</code> enum only accepts
+<code>NeedsInvestigation</code>), and whole-model threats wrote empty <code>Guid</code> fields. Both are fixed and
+verified against TMT's own serializer.</li>
+<li><strong>Fixed a TMT dashboard crash</strong> (<em>&quot;an item with the same key has already been added&quot;</em>). TMT
+identifies a threat by <code>TypeId + Source + Flow + Target</code>; several distinct threats added to one
+element/category (e.g. OWASP-LLM risks) now get distinct TypeIds so they never collide.</li>
+<li><strong>The <code>--baseline</code> Create path no longer produces corrupt files</strong> (an XML declaration/encoding
+mismatch); carried KnowledgeBase and multi-line names are preserved byte-for-byte.</li>
+<li><strong>Copilot output now renders as formatted text</strong> — the critique, per-finding guidance, and
+mitigation plan show real <strong>bold</strong>, <em>italic</em>, <code>code</code>, and bullet lists instead of literal
+Markdown symbols.</li>
+</ul>
+<h3 id="changed-8" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Whole-app correctness audit.</strong> Hardened AI-response handling (malformed/partial JSON no longer
+crashes; AI failures never abort the deterministic report or verdict), fixed a triage-state parser
+that could mark open threats as mitigated, made model parsing/diff/critique robust to duplicate or
+blank element ids, stopped a portable-update helper from hanging invisibly, neutralized CSV
+formula-injection in exports, and ensured the bundled Copilot runtime is never orphaned on exit.</li>
+<li>Newly added diagram elements now default <strong>in scope</strong> (a cloned template could previously make them
+out-of-scope and change the deterministic result).</li>
+</ul>
+<h3 id="notes-4" tabindex="-1">Notes</h3>
+<ul>
+<li><strong>Verdict and 0–100 review score remain 100% deterministic.</strong> Copilot is advisory only.</li>
+<li>Known follow-ups: diagram-edit responsiveness on very large models, and published update-asset
+checksums, are planned for a later 2.x release.</li>
+</ul>
+<h2 id="1011--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.11" rel="noopener noreferrer">1.0.11</a> — 2026-07-03</h2>
+<h3 id="added-11" tabindex="-1">Added</h3>
+<ul>
+<li><strong>&quot;Deep analysis for all&quot; button</strong> on the Findings tab, beside &quot;Explain all with Copilot&quot;. It runs
+the full deep analysis (DREAD, mitigation plan, attack tree, and verification tests) for <strong>every</strong>
+finding at once, stored per-finding and reusable in exports. Because each finding is several
+premium requests, it asks for confirmation (showing the estimated cost) first. Advisory only — the
+verdict stays deterministic.</li>
+</ul>
+<h3 id="changed-9" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Consistent button styling &amp; sizing across the app.</strong> Buttons now use one of three deliberate
+tiers (default / compact / inline) instead of ad-hoc per-button sizes: the coverage-panel buttons
+match the standard text size; the Diagram, Create, and chat action buttons share one compact size;
+and the AI-provider and review-options dialogs now use the app's shared button styles (rounded
+chrome, hover/focus states) rather than raw system buttons.</li>
+</ul>
+<h2 id="1010--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.10" rel="noopener noreferrer">1.0.10</a> — 2026-07-03</h2>
+<h3 id="fixed-15" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>Literal <code>\u2026</code> / <code>\u2014</code> shown in the UI.</strong> A few labels/tooltips had C#-style Unicode escapes
+embedded in XAML (where they aren't interpreted), so an ellipsis appeared as the raw text
+<code>\u2026</code> (e.g. on the <strong>Analyze gaps with Copilot</strong> and <strong>Prioritize with Copilot</strong> buttons) and an
+em-dash as <code>\u2014</code> (a couple of tooltips and the diagram-assistant title). All are now rendered as
+proper <code>…</code> and <code>—</code>.</li>
+</ul>
+<h2 id="109--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.9" rel="noopener noreferrer">1.0.9</a> — 2026-07-03</h2>
+<h3 id="fixed-16" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>&quot;Check for updates&quot; could wrongly say &quot;You're on the latest version&quot; when it actually failed.</strong>
+GitHub's unauthenticated API has a 60-requests/hour limit; when it was hit (HTTP 403), the check
+treated the failure as &quot;up to date.&quot; Now:
+<ul>
+<li>it <strong>falls back to the <code>releases.atom</code> feed</strong> (served from github.com, <strong>not</strong> subject to that
+API rate limit) so the check keeps working — reconstructing the download links from the release
+tag; and</li>
+<li>if it genuinely <strong>can't reach GitHub</strong>, it says so (&quot;Couldn't reach GitHub… try again later&quot;)
+instead of claiming you're up to date.</li>
+</ul>
+</li>
+</ul>
+<h2 id="108--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.8" rel="noopener noreferrer">1.0.8</a> — 2026-07-03</h2>
+<h3 id="added-12" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Sign in to GitHub Copilot from inside the app — no external CLI required.</strong> If you're not
+already signed in, the <strong>Sign in to Copilot</strong> button now opens an in-app dialog that runs GitHub's
+<strong>OAuth device flow</strong> (the same flow and client the GitHub Copilot CLI uses): it shows a one-time
+code, you approve it in your browser, and the app connects and lists your models. The token is
+stored DPAPI-encrypted per-user.</li>
+</ul>
+<h3 id="changed-10" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Copilot authentication is now layered (best UX first):</strong> the app uses your <strong>existing GitHub
+Copilot CLI / <code>gh</code> sign-in</strong> automatically when present, and only offers the in-app device-flow
+sign-in if you're not already signed in. Either way, the deterministic review needs no sign-in.</li>
+</ul>
+<h2 id="107--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.7" rel="noopener noreferrer">1.0.7</a> — 2026-07-03</h2>
+<h3 id="added-13" tabindex="-1">Added</h3>
+<ul>
+<li><strong>In-app &quot;Sign in to GitHub Copilot&quot;.</strong> When the AI features aren't available because you're not
+signed in, the header now says so clearly and shows a <strong>Sign in to Copilot</strong> button that runs the
+bundled GitHub Copilot CLI's sign-in (browser / device-code) — then reconnects and lists your
+models automatically. No token to paste.</li>
+</ul>
+<h3 id="changed-11" tabindex="-1">Changed</h3>
+<ul>
+<li>Clearer prerequisites everywhere: the AI features need an <strong>active GitHub Copilot subscription</strong>
+and being signed in (via the in-app button, <code>gh auth login</code>, or a <code>COPILOT_GITHUB_TOKEN</code> /
+<code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code> fine-grained PAT with the &quot;Copilot Requests&quot; permission). Documented in
+the README, install guide, user guide, and FAQ. The deterministic review still needs none of this.</li>
+</ul>
+<h2 id="106--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.6" rel="noopener noreferrer">1.0.6</a> — 2026-07-03</h2>
+<h3 id="added-14" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Choose the fix source for <em>all</em> fixes at once.</strong> The Fix tab now has a <strong>&quot;Use for all:
+Built-in / Copilot&quot;</strong> control that switches every fix to the deterministic built-in content or to
+the Copilot draft in one click — alongside the existing <strong>&quot;Draft with Copilot&quot;</strong> button
+(generates the drafts) and the <strong>per-row</strong> Built-in / Copilot radios (individual override). So you
+can pick the source globally or per fix.</li>
+</ul>
+<h2 id="105--2026-07-03" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.5" rel="noopener noreferrer">1.0.5</a> — 2026-07-03</h2>
+<h3 id="fixed-17" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>&quot;Analyze gaps with Copilot&quot; and &quot;Prioritize with Copilot&quot; buttons stayed greyed out</strong> on the
+Overview tab even after a model was loaded. Their enable-state wasn't being re-evaluated when the
+review completed (a missing change-notification), so they were stuck disabled. Both now enable as
+soon as a <code>.tm7</code> is reviewed, exactly like the other Copilot buttons. (These are independent,
+advisory actions — using &quot;Draft with Copilot&quot; in the Fix tab never disabled them.)</li>
+</ul>
+<h2 id="104--2026-06-28" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.4" rel="noopener noreferrer">1.0.4</a> — 2026-06-28</h2>
+<h3 id="changed-12" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>In-app updates</strong> — clicking <strong>Download</strong> on the update banner now downloads the new build
+<em>inside the app</em>, with a progress bar, instead of opening a browser. It automatically picks the
+installer that matches how you installed (MSI, Inno <code>-setup.exe</code>, portable <code>.zip</code>, or MSIX),
+then offers <strong>Install &amp; restart</strong>: the app closes, updates in place, and reopens on the new
+version. A <strong>What's new</strong> link still opens the full release notes in the browser, and the
+browser download remains as a fallback when no matching installer is found.</li>
+</ul>
+<h2 id="103--2026-06-28" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.3" rel="noopener noreferrer">1.0.3</a> — 2026-06-28</h2>
+<h3 id="added-15" tabindex="-1">Added</h3>
+<ul>
+<li><strong>About dialog</strong> — a proper About page (header <strong>Help ▾ → About</strong>) showing the app version,
+publisher, what the app does, the <strong>deterministic-verdict promise</strong> (the verdict and 0–100
+score come from the rubric engine, never AI; Copilot is advisory; models are reviewed
+locally), the MIT license, and direct links to the repo, issues, and releases.</li>
+<li><strong>Help menu</strong> in the header with direct links — <strong>User guide</strong>, <strong>Installation guide</strong>,
+<strong>FAQ</strong>, <strong>Report an issue</strong>, <strong>View all releases</strong>, <strong>View on GitHub</strong>, and <strong>Check for
+updates</strong> — so help and the issue tracker are one click away.</li>
+</ul>
+<h3 id="changed-13" tabindex="-1">Changed</h3>
+<ul>
+<li>Header subtitle now reads &quot;Review, fix, <strong>analyze</strong> &amp; create Microsoft Threat Modeling Tool
+(.tm7) threat models&quot; — it previously omitted <em>analyze</em> — and wraps cleanly on narrow windows.</li>
+</ul>
+<h2 id="102--2026-06-28" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.2" rel="noopener noreferrer">1.0.2</a> — 2026-06-28</h2>
+<h3 id="added-16" tabindex="-1">Added</h3>
+<ul>
+<li><strong>In-app update check</strong> — on startup (and via a &quot;Check for updates&quot; link in the status
+bar) the app checks the release hub for a newer build and shows a dismissible banner with
+<strong>Download / Skip this version / Later</strong>. It's notify-only (never auto-applies), works for
+every install format, fails soft when offline, and can be disabled in
+<code>%APPDATA%\ThreatModelReviewer\update.json</code>.</li>
+</ul>
+<h2 id="101--2026-06-28" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.1" rel="noopener noreferrer">1.0.1</a> — 2026-06-28</h2>
+<h3 id="added-17" tabindex="-1">Added</h3>
+<ul>
+<li><strong>MSI installer</strong> (<code>…-x64.msi</code>) built with WiX — a single, dual-scope installer that lets
+the user choose <strong>per-machine</strong> (all users / Program Files) or <strong>per-user</strong> (no admin) at
+install time, with a Start-Menu shortcut and <em>Apps &amp; features</em> entry.</li>
+<li><strong>Authenticode signing</strong> of every artifact (portable <code>.exe</code>, MSI, installer <code>.exe</code>, MSIX).
+The build pipeline signs with your CA/EV certificate via <code>-CertPfx</code> / <code>-CertThumbprint</code>;
+otherwise a self-signed certificate is used.</li>
+</ul>
+<h3 id="notes-5" tabindex="-1">Notes</h3>
+<ul>
+<li>Artifacts are currently <strong>self-signed</strong>, so SmartScreen still warns on first run until a
+CA-issued (ideally EV) certificate or Azure Trusted Signing is used. See <code>docs/INSTALL.md</code>.</li>
+</ul>
+<h2 id="100--2026-06-27" tabindex="-1"><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v1.0.0" rel="noopener noreferrer">1.0.0</a> — 2026-06-27</h2>
+<p>First public release.</p>
+<h3 id="added-18" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Deterministic review</strong> of Microsoft Threat Modeling Tool <code>.tm7</code> files (and OWASP
+Threat Dragon <code>.json</code>): a stamped <strong>NOT READY / READY-WITH-NOTES</strong> verdict plus a
+<strong>0–100 review score</strong> with a letter grade across the Four-Question dimensions. The
+verdict is never produced by AI.</li>
+<li><strong>~70 rubric checks</strong> spanning structural completeness, STRIDE-per-element coverage,
+triage &amp; mitigation quality, trust-boundary/identity, data protection, network,
+logging/detection, deprecated cryptography, software supply chain, mismodeled
+stencils, and a deep <strong>AI/agentic</strong> surface (OWASP LLM Top 10 2025, OWASP Agentic,
+MITRE ATLAS). Each finding cites authoritative references (OWASP, MITRE, CWE,
+Microsoft Learn) and ships built-in &quot;what it means / how to fix&quot; guidance.</li>
+<li><strong>STRIDE-per-element coverage matrix</strong>, <strong>Threats-by-interaction</strong> breakdown
+(worst-gap-first), and a deterministic <strong>Framework coverage</strong> scorecard
+(OWASP Top 10 2021 + STRIDE).</li>
+<li><strong>Fix / remediation</strong> with round-trip write-back to a valid <code>.tm7</code> (add missing
+threats, triage Not-Started, draft justifications, fill out-of-scope reasons).</li>
+<li><strong>Create</strong> a new <code>.tm7</code> from a guided wizard or from Copilot DFD extraction.</li>
+<li><strong>Copilot enrichment</strong> (optional, advisory): explain findings, deep analysis (DREAD /
+attack tree / Gherkin), draft fixes, whole-model critique, framework-gap analysis, and
+interaction-triage planning — each independent and powered by your GitHub Copilot seat.</li>
+<li><strong>Exports</strong>: HTML, PDF, Markdown, CSV, JSON, SARIF reports + issue-tracker work items
+(GitHub / Azure DevOps / Jira / JSON), with an optional pre-export &quot;include Copilot
+guidance / deep analysis&quot; step.</li>
+<li><strong>Packaging</strong>: portable self-contained <code>.exe</code> (zip), Inno Setup installer, and a signed
+MSIX package.</li>
+</ul>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

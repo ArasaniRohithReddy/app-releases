@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/FAQ.md (normalized SHA-256 a0c59735bcf2989ee413efab4a77890f0e31803ada5c480825e75de9c83e99db). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>FAQ &amp; Troubleshooting — Threat Model Reviewer documentation</title>
+  <meta name="description" content="No. It edits threat model artifacts, not application code or deployed resources. It identifies missing threats and weak triage, helps draft mitigation proposals, and exports work i" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/faq/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="FAQ &amp; Troubleshooting — App Releases" />
+  <meta property="og:description" content="No. It edits threat model artifacts, not application code or deployed resources. It identifies missing threats and weak triage, helps draft mitigation proposals, and exports work i" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/faq/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"FAQ & Troubleshooting","description":"No. It edits threat model artifacts, not application code or deployed resources. It identifies missing threats and weak triage, helps draft mitigation proposals, and exports work i","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/faq/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="./" aria-current="page">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">FAQ</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="faq--troubleshooting" tabindex="-1">FAQ &amp; Troubleshooting</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/FAQ.md">View source on GitHub</a></p>
+
+        </header>
+
+        <div class="doc-content"><h3 id="does-this-fix-security-vulnerabilities-in-my-code" tabindex="-1">Does this fix security vulnerabilities in my code?</h3>
+<p>No. It edits <strong>threat model artifacts</strong>, not application code or deployed resources.
+It identifies missing threats and weak triage, helps draft mitigation proposals, and
+exports work items. The owning team implements the controls and verifies them.</p>
+<h3 id="does-ready-with-notes-mean-microsoft-will-approve-the-model" tabindex="-1">Does READY WITH NOTES mean Microsoft will approve the model?</h3>
+<p>No. It means the model has no gating findings under the selected rubric and policy.
+The score measures model maturity, not real-world security. A reviewer can require
+additional evidence, and open threats can remain even when the readiness gate passes.</p>
+<h3 id="can-i-try-it-without-a-copilot-subscription-or-a-real-model" tabindex="-1">Can I try it without a Copilot subscription or a real model?</h3>
+<p>Yes. Download the <a href="../../samples/customer-portal.tm7">synthetic sample</a>
+and follow <a href="../user-guide/#try-the-sample-model">Try the sample model</a>. Its default
+result is NOT READY, 65/100, with 27 gating findings. No AI call is needed.</p>
+<h3 id="what-file-types-can-it-review" tabindex="-1">What file types can it review?</h3>
+<p>Microsoft Threat Modeling Tool <strong><code>.tm7</code></strong> files, and OWASP <strong>Threat Dragon <code>.json</code></strong>.</p>
+<h3 id="do-i-need-net-installed" tabindex="-1">Do I need .NET installed?</h3>
+<p>No. Every download is <strong>self-contained</strong> — the .NET runtime is bundled.</p>
+<h3 id="do-i-need-github-copilot" tabindex="-1">Do I need GitHub Copilot?</h3>
+<p>No. The <strong>verdict, 0–100 score, and findings are fully deterministic</strong> and work offline.
+Copilot only powers the optional, advisory enrichments (explain, deep analysis, draft
+fixes, critique, gap analysis). You can also point at an OpenAI-compatible endpoint via
+<strong>AI provider</strong> in the header.</p>
+<h3 id="the-ai-buttons-are-greyed-out--the-header-says-not-signed-in-to-github-copilot-how-do-i-fix-it" tabindex="-1">The AI buttons are greyed out / the header says &quot;Not signed in to GitHub Copilot&quot;. How do I fix it?</h3>
+<p>The AI features run on <strong>your GitHub Copilot seat</strong>, so you need an <strong>active Copilot
+subscription</strong> (Individual, Business, or Enterprise) <strong>and</strong> to be signed in — <strong>no token to paste.</strong>
+The app uses your existing Copilot CLI / <code>gh</code> sign-in if you have one; otherwise sign in right in
+the app. To sign in, do any one of:</p>
+<ul>
+<li>Click <strong>&quot;Sign in to Copilot&quot;</strong> in the header — a dialog shows a one-time code; click <strong>Copy code
+&amp; open GitHub</strong>, approve it in your browser, and the app reconnects and lists your models. This is
+the GitHub <strong>device flow</strong> (same client the Copilot CLI uses) — <strong>no external CLI needed.</strong></li>
+<li>Already signed in via the <strong>Copilot CLI</strong> (<code>copilot login</code>) or <strong>GitHub CLI</strong> (<code>gh auth login</code>)?
+The app uses that automatically — nothing to do.</li>
+<li>Set an environment variable <code>COPILOT_GITHUB_TOKEN</code>, <code>GH_TOKEN</code>, or <code>GITHUB_TOKEN</code> to a
+<strong>fine-grained PAT (v2) with the &quot;Copilot Requests&quot; permission</strong> <em>(classic <code>ghp_</code> tokens aren't
+supported)</em>.</li>
+</ul>
+<p>When you're connected, the header shows a green dot and <em>&quot;GitHub Copilot ready — N models&quot;</em>.</p>
+<h3 id="is-my-threat-model-sent-anywhere" tabindex="-1">Is my threat model sent anywhere?</h3>
+<p>The deterministic review is <strong>local</strong>. AI features send context to your selected
+provider; extraction can include supplied document text or the image you select.
+Text redaction is a safeguard, not a guarantee that every sensitive value is removed.
+Azure discovery and enabled MCP sources have their own network paths. See
+<a href="../data-handling/">Data handling</a> before using private inputs.</p>
+<h3 id="windows-smartscreen-says-windows-protected-your-pc" tabindex="-1">Windows SmartScreen says &quot;Windows protected your PC&quot;.</h3>
+<p>The portable <code>.exe</code> and the installers <strong>are</strong> Authenticode-signed — but for now with a
+<strong>self-signed</strong> certificate that Windows doesn't chain-trust, so SmartScreen may warn on first
+run. Verify the download source, signature and hash before deciding whether to run it,
+and follow your organization's policy. A CA-issued/EV certificate or Azure Trusted
+Signing can establish publisher trust, but does not guarantee that all warnings disappear.
+See <a href="../../../help/security/#code-signing">SECURITY.md</a>.</p>
+<h3 id="the-msix-wont-install--ai-features-dont-work-in-the-msix" tabindex="-1">The MSIX won't install / AI features don't work in the MSIX.</h3>
+<ul>
+<li>Install the included <strong><code>ThreatModelReviewer-publisher.cer</code></strong> into <strong>Trusted People</strong>
+(Local Machine) first — see <a href="../install/">INSTALL.md</a>.</li>
+<li>Under MSIX the app runs in a container that can restrict the Copilot CLI child process,
+so <strong>AI may be limited</strong>. Use the <strong>portable</strong> or <strong>installer</strong> download for full Copilot
+support.</li>
+</ul>
+<h3 id="copilot-cli-runtime-not-found--ai-buttons-fail-in-the-portable-build" tabindex="-1">&quot;Copilot CLI runtime not found&quot; / AI buttons fail in the portable build.</h3>
+<p>Keep the extracted folder intact — <code>ThreatModelReviewer.exe</code> needs the files beside it,
+including <code>runtimes\win-x64\native\copilot.exe</code>. Don't copy the <code>.exe</code> out on its own.</p>
+<h3 id="why-is-the-verdict-not-ready-even-though-the-score-is-high" tabindex="-1">Why is the verdict NOT READY even though the score is high?</h3>
+<p>Because they measure different things, and this is intended. The score measures <strong>maturity</strong> —
+how complete and thorough the model is. Readiness is a separate <strong>gate</strong>: a single must-fix
+(gating) finding — e.g. an un-triaged threat — forces NOT READY under this tool's rubric.
+A high score with a NOT READY verdict can describe a thorough
+model that has a few specific blockers. Clear the gating findings (the Fix tab automates most)
+and the verdict flips to READY WITH NOTES.</p>
+<h3 id="is-fail-different-from-not-ready" tabindex="-1">Is FAIL different from NOT READY?</h3>
+<p>No — they are the same fact under two names. <code>Band == Fail</code> is <em>defined as</em>
+<code>Verdict == NotReady</code>, so the score can never cause FAIL on its own; the band only
+distinguishes <strong>PASS</strong> (score ≥ 85) from <strong>CONDITIONAL</strong> once there are no gating findings.
+FAIL is the machine-readable name used in exports and CI.</p>
+<h3 id="a-finding-looks-wrong--too-noisy" tabindex="-1">A finding looks wrong / too noisy.</h3>
+<p>Open an issue with the check ID and a sanitized snippet:
+<a href="https://github.com/ArasaniRohithReddy/app-releases/issues" rel="noopener noreferrer">https://github.com/ArasaniRohithReddy/app-releases/issues</a>. Many checks are advisory and use
+deliberately tight triggers; we tune them from real reports.</p>
+<h3 id="can-i-add-my-own-organizations-checks" tabindex="-1">Can I add my own organization's checks?</h3>
+<p>The CLI's <code>policy</code> commands can configure the existing rubric with disclosed overrides
+and waivers; they do not load arbitrary new checks. Custom check implementations are
+source-level extensions — checks implement an
+<code>IRubricCheck</code> interface and compose with the defaults via
+<code>RubricEngine.WithAdditionalChecks(...)</code> — but that extension point is only reachable when
+building from source, and the source repository is private. A supported way to load
+organization-specific checks into the shipped app and CLI is on the roadmap. If you need a
+particular check, please <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">open an issue</a>
+describing the policy — several built-in checks started exactly that way.</p>
+<h3 id="how-do-i-report-a-bug-or-request-a-feature" tabindex="-1">How do I report a bug or request a feature?</h3>
+<p>Use the issue templates at
+<a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose</a>.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

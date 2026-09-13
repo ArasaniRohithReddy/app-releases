@@ -403,6 +403,7 @@
         <a href="#docs">Docs</a>
       </nav>
       <div class="nav-links">
+        <a class="btn btn-secondary" href="./docs/">Guides</a>
         <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme">
           <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
@@ -496,7 +497,7 @@
             <h3 id="try-h">Try it before opening your own model.</h3>
             <p>The synthetic customer portal has intentionally unfinished triage. Open it in the app, inspect the <code>C1</code> findings, then preview a fix plan. No Copilot sign-in is needed.</p>
             <a class="btn btn-secondary" href="samples/customer-portal.tm7" download>Download sample .tm7</a>
-            <p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md#try-the-sample-model">Follow the quick-start guide</a></p>
+            <p><a href="./docs/user-guide/#try-the-sample-model">Follow the quick-start guide</a></p>
           </div>
           <div>
             <h3>Prefer the CLI?</h3>
@@ -612,9 +613,9 @@
           <p>The same deterministic review engine, with a surface suited to your task.</p>
         </div>
         <div class="workflow-list">
-          <article class="workflow"><h3>Desktop app</h3><p>Inspect the diagram, review findings, preview model edits and compare revisions. Start in Create or Assistant when you are drafting a model.</p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md">Desktop guide</a></article>
-          <article class="workflow"><h3>Windows CLI</h3><p>Run reviews in CI, export SARIF, compare revisions or apply an organization policy with disclosure. The headless bundle is separate from the desktop installer.</p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">CLI guide</a></article>
-          <article class="workflow"><h3>Copilot CLI skill</h3><p>Ask an agent to invoke the reviewer and report its actual results. Install the skill and the CLI bundle together; the instructions do not replace the engine.</p><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/SKILL.md">Skill guide</a></article>
+          <article class="workflow"><h3>Desktop app</h3><p>Inspect the diagram, review findings, preview model edits and compare revisions. Start in Create or Assistant when you are drafting a model.</p><a href="./docs/user-guide/">Desktop guide</a></article>
+          <article class="workflow"><h3>Windows CLI</h3><p>Run reviews in CI, export SARIF, compare revisions or apply an organization policy with disclosure. The headless bundle is separate from the desktop installer.</p><a href="./docs/cli/">CLI guide</a></article>
+          <article class="workflow"><h3>Copilot CLI skill</h3><p>Ask an agent to invoke the reviewer and report its actual results. Install the skill and the CLI bundle together; the instructions do not replace the engine.</p><a href="./docs/skill/">Skill guide</a></article>
         </div>
       </div>
     </section>
@@ -650,14 +651,14 @@
             <p>The same deterministic engine with no UI. Self-contained &mdash; extract and run. Exit code <code>2</code> means NOT READY, so a build can gate on it.</p>
             <a class="btn btn-secondary" data-dl="cli" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download CLI</a>
             <span class="dl-size" data-size="cli"></span>
-            <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">CLI documentation</a></div>
+            <div class="dl-size"><a href="./docs/cli/">CLI documentation</a></div>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>Copilot CLI skill</h3><span class="tag">AI agents</span></div>
             <p>Ask an agent to review, explain, fix or compare a model in plain English. The verdict still comes from the deterministic engine &mdash; the agent only runs it. Needs the command-line bundle alongside it.</p>
             <a class="btn btn-secondary" data-dl="skill" href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1">Download skill</a>
             <span class="dl-size" data-size="skill"></span>
-            <div class="dl-size"><a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/SKILL.md">Skill documentation</a></div>
+            <div class="dl-size"><a href="./docs/skill/">Skill documentation</a></div>
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>MSIX</h3><span class="tag">Experimental</span></div>
@@ -714,10 +715,10 @@
           <div class="feature"><h3><span class="tick">✓</span> Signing information</h3><p>Executables and installers use the project's current self-signed certificate. ZIP containers are not Authenticode-signed. Follow the install guide and your organization's software policy.</p></div>
         </div>
         <div class="docs-grid" style="margin-top:1.4rem">
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/DATA-HANDLING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Data handling &amp; privacy<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Enterprise deployment<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/SECURITY.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Security policy<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/THIRD-PARTY-NOTICES.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg> Third-party notices<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/data-handling/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Data handling &amp; privacy<span class="arrow" aria-hidden="true">→</span></a>
+          <a class="doc-link" href="./docs/enterprise-deployment/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Enterprise deployment<span class="arrow" aria-hidden="true">→</span></a>
+          <a class="doc-link" href="../help/security/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Security policy<span class="arrow" aria-hidden="true">→</span></a>
+          <a class="doc-link" href="./docs/third-party-notices/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg> Third-party notices<span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -727,15 +728,15 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="docs-h">Documentation</h2>
-          <p>Everything you need to install, use and troubleshoot the app.</p>
+          <p>Everything you need to install, use and troubleshoot the app. <a href="./docs/">Browse all guides</a> without leaving this site.</p>
         </div>
         <div class="docs-grid">
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/INSTALL.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/USER-GUIDE.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> CLI<span class="arrow">&#8594;</span></a>
-            <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/FAQ.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/install/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow" aria-hidden="true">→</span></a>
+          <a class="doc-link" href="./docs/user-guide/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow" aria-hidden="true">→</span></a>
+          <a class="doc-link" href="./docs/cli/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> CLI<span class="arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="doc-link" href="./docs/faq/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ<span class="arrow" aria-hidden="true">→</span></a>
           <a class="doc-link" href="./releases/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> All releases<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CHANGELOG.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/changelog/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
@@ -754,7 +755,9 @@
         <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">Releases</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report a vulnerability</a>
-        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/LICENSE">License</a>
+        <a href="../help/">Support</a>
+        <a href="../help/security/">Security policy</a>
+        <a href="../help/license/">License</a>
       </nav>
     </div>
   </footer>

@@ -1,8 +1,8 @@
 const { chromium } = require('playwright');
-const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const releaseData = require('../docs/release-data.js');
+const { createSiteServer, mount } = require('./site-server.js');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..', 'docs'));
 const snapshot = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'releases', 'releases.json'), 'utf8'));
@@ -13,26 +13,7 @@ const metadata = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-review
   .match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
 const staticDownload = metadata.downloadUrl;
 const pages = [['portal', '/'], ['product', '/threat-model-reviewer/'], ['releases', '/threat-model-reviewer/releases/']];
-const mount = '/app-releases';
-const mime = { '.html': 'text/html', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.js': 'text/javascript', '.css': 'text/css' };
-const server = http.createServer((req, res) => {
-  let requested;
-  try { requested = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
-  catch { res.writeHead(400); res.end('Bad URL'); return; }
-  if (!requested.startsWith(mount + '/')) { res.writeHead(404); res.end('Outside Pages mount'); return; }
-  requested = requested.slice(mount.length);
-  if (requested.endsWith('/')) requested += 'index.html';
-  const file = path.resolve(root, '.' + requested);
-  const relative = path.relative(root, file);
-  if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
-    res.writeHead(403); res.end('Outside site root'); return;
-  }
-  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
-    res.writeHead(404); res.end('Not found'); return;
-  }
-  res.writeHead(200, { 'Content-Type': mime[path.extname(file)] || 'application/octet-stream' });
-  fs.createReadStream(file).pipe(res);
-});
+const server = createSiteServer(root);
 
 let passed = 0;
 const failures = [];

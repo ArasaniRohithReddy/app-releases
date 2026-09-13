@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/DATA-HANDLING.md (normalized SHA-256 21c9f8f4cf980a3f15b2702a7a34b029aeaec7c246ccf6b67b31430a40de45f0). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Data Handling &amp; Privacy — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Describes the current 2.5.x feature set. Companion to SECURITY.md." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Data Handling &amp; Privacy — App Releases" />
+  <meta property="og:description" content="Describes the current 2.5.x feature set. Companion to SECURITY.md." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Data Handling & Privacy","description":"Describes the current 2.5.x feature set. Companion to SECURITY.md.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="./" aria-current="page">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Data handling &amp; privacy</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="data-handling--privacy" tabindex="-1">Data Handling &amp; Privacy</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/DATA-HANDLING.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-summary-for-reviewers">1. Summary for reviewers</a></li><li><a href="#2-data-classification">2. Data classification</a></li><li><a href="#3-exactly-what-leaves-the-machine">3. Exactly what leaves the machine</a></li><li><a href="#4-secret-redaction-before-any-prompt">4. Secret redaction before any prompt</a></li><li><a href="#5-storage-retention-and-removal">5. Storage, retention and removal</a></li><li><a href="#6-compliance-notes">6. Compliance notes</a></li><li><a href="#7-verifying-these-claims-yourself">7. Verifying these claims yourself</a></li></ul></nav></details>
+        <div class="doc-content"><p><em>Describes the current 2.5.x feature set. Companion to <a href="../../../help/security/">SECURITY.md</a>.</em></p>
+<p>Threat models are among the most sensitive documents an organization produces: they enumerate a
+system's assets, trust boundaries and known weaknesses. This document states precisely what the
+application does with that data, what leaves your machine, and what does not — so a security or
+privacy reviewer can approve it on evidence rather than assurances.</p>
+<hr>
+<h2 id="1-summary-for-reviewers" tabindex="-1">1. Summary for reviewers</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 1"><table>
+<thead>
+<tr>
+<th scope="col">Question</th>
+<th scope="col">Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Is the review performed locally?</td>
+<td><strong>Yes.</strong> Parsing, all 72 rubric checks, scoring, the verdict and deterministic reports are computed in-process on your machine.</td>
+</tr>
+<tr>
+<td>Is the threat model file ever uploaded?</td>
+<td><strong>No.</strong> The raw <code>.tm7</code> / <code>.json</code> is never transmitted.</td>
+</tr>
+<tr>
+<td>Does the app collect product analytics?</td>
+<td><strong>No.</strong> The app does not send usage analytics. Optional providers, external CLI runtimes and MCP servers have their own terms, authentication and telemetry settings.</td>
+</tr>
+<tr>
+<td>Is there an activity history?</td>
+<td><strong>Yes, and it is yours.</strong> An optional local history of what <em>you</em> did (models reviewed, scores, exports, AI actions) is kept on your own disk. It is never transmitted, contains no threat-model content and no AI prompt or response, and can be disabled, exported or erased at any time — see <a href="#51-local-activity-history">§5.1</a>.</td>
+</tr>
+<tr>
+<td>Does it require network access?</td>
+<td>Deterministic review does not. Sign-in, updates, remote AI, Azure discovery and enabled MCP sources do.</td>
+</tr>
+<tr>
+<td>What can leave the machine?</td>
+<td>Update and authentication requests; context supplied to AI; and queries to Azure or enabled MCP sources. Image extraction sends the selected image. See the feature-specific descriptions below.</td>
+</tr>
+<tr>
+<td>Where is data stored at rest?</td>
+<td>Locally, under <code>%APPDATA%\ThreatModelReviewer\</code>. Credentials are encrypted with Windows DPAPI.</td>
+</tr>
+<tr>
+<td>Who is the data processor for AI features?</td>
+<td><strong>Your own</strong> GitHub Copilot subscription — the same tenant, terms and data-protection commitments your organization already has with GitHub.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-data-classification" tabindex="-1">2. Data classification</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 2"><table>
+<thead>
+<tr>
+<th scope="col">Data</th>
+<th scope="col">Where it lives</th>
+<th scope="col">Leaves the machine?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The threat model file (<code>.tm7</code>, <code>.json</code>)</td>
+<td>Only where you opened it from / saved it to</td>
+<td><strong>Never</strong></td>
+</tr>
+<tr>
+<td>Findings, verdict, score, coverage matrices</td>
+<td>In memory; written to reports you explicitly export</td>
+<td><strong>Never</strong> (unless you send a report you exported)</td>
+</tr>
+<tr>
+<td>Exported reports (HTML, PDF, MD, CSV, JSON, SARIF, work items)</td>
+<td>The path you choose</td>
+<td>Only if you distribute them</td>
+</tr>
+<tr>
+<td>Finding text + redacted DFD summary</td>
+<td>In memory</td>
+<td><strong>Only when you invoke an AI feature</strong> → your Copilot seat</td>
+</tr>
+<tr>
+<td>GitHub OAuth token (if you sign in inside the app)</td>
+<td><code>%APPDATA%\ThreatModelReviewer\</code>, <strong>DPAPI-encrypted</strong> (current user)</td>
+<td>Sent only to GitHub to authenticate your own seat</td>
+</tr>
+<tr>
+<td>AI provider settings / API key (optional OpenAI-compatible mode)</td>
+<td><code>%APPDATA%\ThreatModelReviewer\</code>, <strong>DPAPI-encrypted</strong></td>
+<td>Sent only to the endpoint <strong>you</strong> configure</td>
+</tr>
+<tr>
+<td>Update preferences (<code>update.json</code>)</td>
+<td><code>%APPDATA%\ThreatModelReviewer\update.json</code></td>
+<td>Never</td>
+</tr>
+<tr>
+<td>Activity history (<code>history-*.jsonl</code>, <code>settings.json</code>, <code>salt.txt</code>)</td>
+<td><code>%LOCALAPPDATA%\ThreatModelReviewer\history\</code></td>
+<td><strong>Never</strong></td>
+</tr>
+<tr>
+<td>Downloaded update package</td>
+<td><code>%LOCALAPPDATA%\…\ThreatModelReviewer</code> cache</td>
+<td>Never</td>
+</tr>
+<tr>
+<td>Azure inventory read by <strong>Build from Azure…</strong></td>
+<td>In memory, plus the evidence file you choose to write</td>
+<td>Discovery does not send it to an AI provider. If you later submit the derived draft to AI refinement, that draft becomes AI input.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="3-exactly-what-leaves-the-machine" tabindex="-1">3. Exactly what leaves the machine</h2>
+<p>The application has the following network paths. Do not treat this as a fixed
+domain allow-list for third-party runtimes: authentication, package downloads and
+enabled MCP servers can use additional endpoints.</p>
+<h3 id="31-update-check--automatic-disableable" tabindex="-1">3.1 Update check — automatic, disableable</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 3"><table>
+<thead>
+<tr>
+<th scope="col">Property</th>
+<th scope="col">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Destination</strong></td>
+<td><code>https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases</code> (falls back to the public <code>releases.atom</code> feed on <code>github.com</code> if the API is rate-limited)</td>
+</tr>
+<tr>
+<td><strong>When</strong></td>
+<td>Once at application start, and when you click <strong>Check for updates</strong></td>
+</tr>
+<tr>
+<td><strong>Sent</strong></td>
+<td>An unauthenticated HTTPS <code>GET</code> with a static <code>User-Agent</code>. <strong>No account identifier, no machine identifier, no model data, no usage data.</strong></td>
+</tr>
+<tr>
+<td><strong>Purpose</strong></td>
+<td>Compare the latest published version against the running version</td>
+</tr>
+<tr>
+<td><strong>To disable</strong></td>
+<td>Turn off the update check in the app, or deploy <code>%APPDATA%\ThreatModelReviewer\update.json</code> containing <code>{ &quot;Enabled&quot;: false }</code> — see <a href="../enterprise-deployment/#controlling-updates">Enterprise deployment</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="32-github-copilot--only-when-you-invoke-an-ai-feature" tabindex="-1">3.2 GitHub Copilot — only when you invoke an AI feature</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 4"><table>
+<thead>
+<tr>
+<th scope="col">Property</th>
+<th scope="col">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Destination</strong></td>
+<td>GitHub Copilot, through the bundled GitHub Copilot CLI runtime, authenticated as <strong>your</strong> signed-in seat</td>
+</tr>
+<tr>
+<td><strong>When</strong></td>
+<td>On AI actions such as Explain, Deep analysis, Critique, Draft fix, DFD extraction and refinement</td>
+</tr>
+<tr>
+<td><strong>Sent</strong></td>
+<td>The context needed for the selected action. Finding tools use finding text and structural summaries; extraction/refinement can send supplied descriptions, document text, the current draft or the selected image.</td>
+</tr>
+<tr>
+<td><strong>Safeguards and limits</strong></td>
+<td>Text prompts use redaction safeguards. They do not prove that every sensitive value was removed, and images are not made safe by a text redactor. Check and sanitize inputs before choosing an AI action.</td>
+</tr>
+<tr>
+<td><strong>Processing terms</strong></td>
+<td>Your organization's existing GitHub Copilot agreement governs the request. Prompts are metered against your premium-request quota.</td>
+</tr>
+<tr>
+<td><strong>To disable</strong></td>
+<td>Do not sign in to Copilot, or simply do not use the AI buttons. The deterministic review is unaffected.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Account sign-in, account/model discovery and quota checks may also contact GitHub
+without a threat-model prompt. The bundled Copilot runtime handles its service
+requests under its own configuration and your organization's agreement.</p>
+<h3 id="33-openai-compatible-provider--optional-opt-in-self-configured" tabindex="-1">3.3 OpenAI-compatible provider — optional, opt-in, self-configured</h3>
+<p>If you prefer to keep inference inside your own boundary, the provider seam accepts any
+OpenAI-compatible endpoint — <strong>Azure OpenAI</strong>, a private gateway, or a locally hosted model.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 5"><table>
+<thead>
+<tr>
+<th scope="col">Property</th>
+<th scope="col">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Destination</strong></td>
+<td>The base URL <strong>you</strong> enter. There is no default and no vendor endpoint.</td>
+</tr>
+<tr>
+<td><strong>Credential</strong></td>
+<td>Stored locally and DPAPI-encrypted; sent only to your endpoint as a bearer token.</td>
+</tr>
+<tr>
+<td><strong>Use case</strong></td>
+<td>Regulated environments that require inference to remain in-tenant or on-premises.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="34-azure-resource-manager--only-when-you-build-from-a-resource-group" tabindex="-1">3.4 Azure Resource Manager — only when you build from a resource group</h3>
+<p>This discovery path is used by <strong>Create → Build from Azure…</strong> and the CLI's <code>azure</code>
+verb. Azure OpenAI and the optional Azure MCP server are separate paths.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 6"><table>
+<thead>
+<tr>
+<th scope="col">Property</th>
+<th scope="col">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Destination</strong></td>
+<td>Azure Resource Manager, reached through the <strong>Azure CLI already installed on your machine</strong>, authenticated as your existing <code>az login</code>. This tool ships no Azure credential and stores none.</td>
+</tr>
+<tr>
+<td><strong>When</strong></td>
+<td>Opening the Azure dialog reads account and group information; building a draft reads the selected group's inventory</td>
+</tr>
+<tr>
+<td><strong>Sent</strong></td>
+<td>Nothing but the read request itself: which subscription and resource group to list. <strong>No threat model content, no findings, no file contents, no telemetry.</strong></td>
+</tr>
+<tr>
+<td><strong>Read</strong></td>
+<td>The resources in the group and their configuration, role assignments over the group, and private endpoints</td>
+</tr>
+<tr>
+<td><strong>Never read</strong></td>
+<td>Keys, secrets, connection strings, credentials, or the contents of any data store. Those commands are <strong>not reachable</strong> — the wrapper cannot be handed a command, and every read is re-validated against an allowlist before it runs.</td>
+</tr>
+<tr>
+<td><strong>Never written</strong></td>
+<td>Nothing is created, changed or deleted. Discovery requires only the <strong>Reader</strong> role.</td>
+</tr>
+<tr>
+<td><strong>To disable</strong></td>
+<td>Do not open Build from Azure or run <code>azure</code>. Also leave Azure MCP disabled and do not configure an Azure-hosted AI provider if Azure egress must be avoided.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Every Azure build can write an evidence file listing the exact commands run and every fact used, so
+what was read is auditable rather than asserted.</p>
+<h3 id="35-assistant-data-sources-mcp--separately-enabled" tabindex="-1">3.5 Assistant data sources (MCP) — separately enabled</h3>
+<p><strong>Help &gt; Assistant data sources (MCP)</strong> has a master switch and per-server opt-in.
+Built-in sources are disabled initially. Enabling or testing them can start a
+connection or local process before a model-specific question is asked.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 7"><table>
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">Network and data implications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft Learn Docs</td>
+<td>HTTPS queries to <code>https://learn.microsoft.com/api/mcp</code>. Queries can contain technology names and wording derived from a finding.</td>
+</tr>
+<tr>
+<td>Azure MCP Server</td>
+<td>Starts <code>npx -y @azure/mcp@latest server start</code>; this can download a package from the npm registry. The server uses its Azure credential chain and contacts services allowed by that identity. Assistant tool arguments and results can become provider context.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The direct Azure discovery wrapper's fixed command list does <strong>not</strong> restrict the
+separate MCP process. Review the server's capabilities, permissions and settings
+before enabling it. Use least-privilege identities and leave MCP off for an
+offline-only workflow. Third-party server telemetry is governed by that server,
+not by the app's no-product-analytics statement.</p>
+<h3 id="36-authentication-and-installation" tabindex="-1">3.6 Authentication and installation</h3>
+<p>Interactive GitHub device-flow sign-in, the bundled Copilot runtime and Azure
+CLI/server credential acquisition use their respective identity endpoints.
+Installing or starting package-based integrations can also contact package
+registries. These requests are distinct from sending a threat-model prompt.</p>
+<h2 id="4-secret-redaction-before-any-prompt" tabindex="-1">4. Secret redaction before any prompt</h2>
+<p>Threat models frequently contain accidental secrets (a connection string pasted into a mitigation
+note, a token in a description). Before <strong>any</strong> text is sent to a model, the deterministic
+<code>PromptSafety</code> pass replaces high-confidence secret material with typed placeholders:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 8"><table>
+<thead>
+<tr>
+<th scope="col">Detected</th>
+<th scope="col">Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Private keys</td>
+<td><code>-----BEGIN … PRIVATE KEY-----</code></td>
+</tr>
+<tr>
+<td>Tokens</td>
+<td>JWTs, GitHub tokens (<code>ghp_</code>/<code>gho_</code>/<code>ghu_</code>/<code>ghs_</code>/<code>ghr_</code>), AWS access keys (<code>AKIA…</code>), <code>Bearer …</code></td>
+</tr>
+<tr>
+<td>Connection secrets</td>
+<td><code>password=</code>, <code>AccountKey=</code>, <code>SharedAccessKey=</code>, <code>client_secret=</code>, <code>api_key=</code></td>
+</tr>
+<tr>
+<td>Personal data</td>
+<td>Email addresses</td>
+</tr>
+</tbody>
+</table></div>
+<p>The same module flags known prompt-injection patterns embedded in model content.
+This is a defense-in-depth check, not proof that all injection attempts or
+sensitive data will be detected. Review AI suggestions and tool use accordingly.</p>
+<p>Redaction is deterministic, offline and applied regardless of which provider is configured.</p>
+<h2 id="5-storage-retention-and-removal" tabindex="-1">5. Storage, retention and removal</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 9"><table>
+<thead>
+<tr>
+<th scope="col">Path</th>
+<th scope="col">Contents</th>
+<th scope="col">Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%APPDATA%\ThreatModelReviewer\update.json</code></td>
+<td>Update preference, skipped version</td>
+<td>Until changed or deleted</td>
+</tr>
+<tr>
+<td><code>%APPDATA%\ThreatModelReviewer\</code> (provider settings, token store)</td>
+<td>AI provider configuration, DPAPI-encrypted credentials</td>
+<td>Until you sign out or delete the file</td>
+</tr>
+<tr>
+<td><code>%LOCALAPPDATA%\ThreatModelReviewer\history\</code></td>
+<td>Local activity history — see <a href="#51-local-activity-history">§5.1</a></td>
+<td>Your configured retention window (180 days by default)</td>
+</tr>
+<tr>
+<td><code>%LOCALAPPDATA%</code> update cache</td>
+<td>Downloaded installer for an in-app update</td>
+<td>Replaced on next update; safe to delete</td>
+</tr>
+</tbody>
+</table></div>
+<p>The application maintains <strong>no</strong> central database, no server-side account, and no cloud state.
+To remove all data: uninstall, then delete <code>%APPDATA%\ThreatModelReviewer\</code> and
+<code>%LOCALAPPDATA%\ThreatModelReviewer\</code>.</p>
+<h3 id="51-local-activity-history" tabindex="-1">5.1 Local activity history</h3>
+<p>The application can keep a private record of <strong>your own activity</strong> so you can answer questions like
+<em>&quot;is this threat model actually getting better?&quot;</em>. This is a personal audit trail, not telemetry: it
+is written to your disk, read only by the app on your machine, and <strong>never transmitted anywhere</strong>.
+There is no endpoint that receives it and no code path that sends it.</p>
+<p><strong>Where it lives.</strong> <code>%LOCALAPPDATA%\ThreatModelReviewer\history\</code>:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 10"><table>
+<thead>
+<tr>
+<th scope="col">File</th>
+<th scope="col">Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>history-YYYY-MM.NNN.jsonl</code></td>
+<td>The records themselves — newline-delimited JSON, one record per line, one file per calendar month, rolled to the next sequence number at 4 MB</td>
+</tr>
+<tr>
+<td><code>settings.json</code></td>
+<td>Your history preferences (below)</td>
+</tr>
+<tr>
+<td><code>salt.txt</code></td>
+<td>A random 32-byte salt generated once on this machine, used to hash model identities. Never leaves the machine, so a hash here cannot be matched against anyone else's history</td>
+</tr>
+</tbody>
+</table></div>
+<p>There is no database and no additional dependency — plain text files you can read, diff or delete
+yourself. A total cap (32 MB by default) and the retention window keep the folder bounded.</p>
+<p><strong>What a record contains.</strong> Every record carries a schema version, a UTC ISO-8601 timestamp, a
+session id, and one typed payload:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 11"><table>
+<thead>
+<tr>
+<th scope="col">Record</th>
+<th scope="col">What is stored</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SessionStarted</code> / <code>SessionEnded</code></td>
+<td>App version, session duration</td>
+</tr>
+<tr>
+<td><code>ModelOpened</code></td>
+<td>File <strong>name</strong> (not the folder), a salted model identity hash, a salted content hash, the model's own name, format, and the element / flow / boundary / threat counts</td>
+</tr>
+<tr>
+<td><code>ReviewCompleted</code></td>
+<td>Score, grade, verdict, band, rubric version, per-severity counts, gating and total finding counts, review duration, and the <strong>check ids</strong> that fired with counts</td>
+</tr>
+<tr>
+<td><code>ExportPerformed</code></td>
+<td>The format only (<code>pdf</code>, <code>html</code>, <code>sarif</code>, …) — not the destination</td>
+</tr>
+<tr>
+<td><code>AiActionPerformed</code></td>
+<td>Which action ran, the AI model id, duration, success, and a short failure classification</td>
+</tr>
+<tr>
+<td><code>FixApplied</code></td>
+<td>The rubric check ids addressed and how many edits landed</td>
+</tr>
+<tr>
+<td><code>PolicyApplied</code></td>
+<td>Policy name, policy hash, suppression and override counts</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>What a record can never contain.</strong> The following are absent <em>by construction</em> — the record types
+have no field capable of holding them, so there is no setting or bug that can turn them on:</p>
+<ul>
+<li>The contents of a threat model — no element names, descriptions, mitigations or properties.</li>
+<li>Any AI <strong>prompt</strong> or any AI <strong>response</strong>. <code>AiActionPerformed</code> has exactly five fields:
+action, model id, duration, success, error kind.</li>
+<li>Finding text — only the check id (e.g. <code>F5</code>), which is a fixed rubric identifier.</li>
+<li>Credentials, tokens or provider keys.</li>
+</ul>
+<p>Every free-text field is additionally length-capped (an AI action to 64 characters, a model id to
+128, a file name to 260), so no record can grow to hold smuggled prose, and control characters are
+stripped so a value can never break the one-record-per-line format.</p>
+<p><strong>Your controls.</strong> All four live in the app's <strong>History → Privacy</strong> tab and in
+<code>%LOCALAPPDATA%\ThreatModelReviewer\history\settings.json</code>:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 12"><table>
+<thead>
+<tr>
+<th scope="col">Setting</th>
+<th scope="col">Default</th>
+<th scope="col">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Enabled</code></td>
+<td><code>true</code></td>
+<td>The kill switch. With it off the store writes <strong>nothing at all</strong> — no records, no folder, not even the salt.</td>
+</tr>
+<tr>
+<td><code>RetentionDays</code></td>
+<td><code>180</code></td>
+<td>Period files that fall entirely outside the window are deleted, and reads exclude anything older, so nothing beyond the window is surfaced.</td>
+</tr>
+<tr>
+<td><code>StoreFilePaths</code></td>
+<td><strong><code>false</code></strong></td>
+<td>Off by default. With it off the <em>directory</em> your threat models live in is never written — only the file name plus a salted hash, which is enough for trends without recording where the file is.</td>
+</tr>
+<tr>
+<td><code>StoreModelNames</code></td>
+<td><code>true</code></td>
+<td>Turn off for a hash-only history: trends still work, but nothing human-readable is kept.</td>
+</tr>
+</tbody>
+</table></div>
+<p>These settings are enforced by the store itself, not by each call site: every record passes through
+a redaction pass on its way to disk, so a caller that supplies a full path still cannot get that
+path written when you have said no.</p>
+<p>Two further operations put you in control of the data:</p>
+<ul>
+<li><strong>Export my history</strong> writes everything retained, plus the settings that produced it, as indented
+JSON to a file you choose — so you can inspect exactly what is held.</li>
+<li><strong>Clear all history</strong> deletes every record <em>and</em> the salt, so identities recorded before the
+clear cannot be correlated with anything recorded after it.</li>
+</ul>
+<p><strong>Deployment note.</strong> To disable history fleet-wide, deploy
+<code>%LOCALAPPDATA%\ThreatModelReviewer\history\settings.json</code> containing <code>{ &quot;Enabled&quot;: false }</code>.</p>
+<h2 id="6-compliance-notes" tabindex="-1">6. Compliance notes</h2>
+<ul>
+<li><strong>Data residency.</strong> Because analysis is local, threat models never cross a regional boundary
+through this product. If you use Copilot features, residency is governed by your existing
+Copilot agreement; if that is unacceptable, use the OpenAI-compatible provider pointed at an
+in-region endpoint, or don't enable AI at all.</li>
+<li><strong>Personal data.</strong> The product is not designed to process personal data. Any personal data is
+incidental (for example an author's name inside a model) and remains local; email addresses are
+redacted before any prompt. The local activity history can incidentally hold a file name you chose
+(e.g. <code>jane-smith-review.tm7</code>); turn off <code>StoreModelNames</code> for a hash-only history, or turn history
+off entirely.</li>
+<li><strong>Air-gapped use.</strong> Fully supported. Deploy the portable ZIP or MSI, disable the update check,
+and do not sign in to Copilot — every deterministic capability continues to work.</li>
+<li><strong>Auditability.</strong> The verdict, score and findings are reproducible: the same input file always
+yields the same output, which is what makes the results defensible in an audit.</li>
+</ul>
+<h2 id="7-verifying-these-claims-yourself" tabindex="-1">7. Verifying these claims yourself</h2>
+<p>You do not have to take this document on trust:</p>
+<ol>
+<li><strong>Watch the network.</strong> Run the app behind a proxy or with Fiddler/Wireshark, review a model end
+to end, and confirm the only request is the release check (and nothing at all once updates are
+disabled).</li>
+<li><strong>Run it offline.</strong> Disconnect the machine and review a model — the verdict, score, findings
+and reports are unchanged.</li>
+<li><strong>Check determinism.</strong> Review the same model twice, with and without AI enrichment: the
+verdict and score are identical.</li>
+<li><strong>Inspect the packages.</strong> The full dependency set is listed in
+<a href="../third-party-notices/">THIRD-PARTY-NOTICES.md</a> — there is no analytics or telemetry package
+among them.</li>
+<li><strong>Read your own history.</strong> The files under <code>%LOCALAPPDATA%\ThreatModelReviewer\history\</code> are
+plain newline-delimited JSON. Open one in any editor and confirm for yourself that it holds
+counts, scores and hashes — no model content, no prompts and no responses — and that the folder
+never appears in any outbound request.</li>
+</ol>
+<hr>
+<p><strong>Questions or an issue with anything stated here?</strong> Please
+<a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">open an issue</a>, or report
+security concerns privately as described in <a href="../../../help/security/">SECURITY.md</a>.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

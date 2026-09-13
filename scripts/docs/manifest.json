@@ -1,0 +1,28 @@
+{
+  "channel": "stable-public",
+  "site": "https://arasanirohithreddy.github.io/app-releases/",
+  "repository": "ArasaniRohithReddy/app-releases",
+  "legacyLinks": {
+    "/ArasaniRohithReddy/app-releases/blob/docs/DATA-HANDLING.md": "products/threat-model-reviewer/DATA-HANDLING.md",
+    "/ArasaniRohithReddy/app-releases/blob/DATA-HANDLING.md": "products/threat-model-reviewer/DATA-HANDLING.md",
+    "/ArasaniRohithReddy/app-releases/blob/docs/CLI.md": "products/threat-model-reviewer/CLI.md"
+  },
+  "documents": [
+    { "source": "products/threat-model-reviewer/README.md", "route": "/threat-model-reviewer/docs/", "label": "Overview", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/INSTALL.md", "route": "/threat-model-reviewer/docs/install/", "label": "Install", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/USER-GUIDE.md", "route": "/threat-model-reviewer/docs/user-guide/", "label": "User guide", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/CLI.md", "route": "/threat-model-reviewer/docs/cli/", "label": "Command line", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/SKILL.md", "route": "/threat-model-reviewer/docs/skill/", "label": "Copilot CLI skill", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/FAQ.md", "route": "/threat-model-reviewer/docs/faq/", "label": "FAQ", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/DATA-HANDLING.md", "route": "/threat-model-reviewer/docs/data-handling/", "label": "Data handling & privacy", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md", "route": "/threat-model-reviewer/docs/enterprise-deployment/", "label": "Enterprise deployment", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/ARCHITECTURE.md", "route": "/threat-model-reviewer/docs/architecture/", "label": "Architecture", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/THIRD-PARTY-NOTICES.md", "route": "/threat-model-reviewer/docs/third-party-notices/", "label": "Third-party notices", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/RELEASING.md", "route": "/threat-model-reviewer/docs/releasing/", "label": "Release process", "group": "Product guides" },
+    { "source": "products/threat-model-reviewer/CHANGELOG.md", "route": "/threat-model-reviewer/docs/changelog/", "label": "Changelog", "group": "Product guides", "history": true },
+    { "source": "SUPPORT.md", "route": "/help/", "label": "Support", "group": "Help & policy" },
+    { "source": "SECURITY.md", "route": "/help/security/", "label": "Security policy", "group": "Help & policy" },
+    { "source": "LICENSE", "route": "/help/license/", "label": "License", "group": "Help & policy" },
+    { "source": "CODE_OF_CONDUCT.md", "route": "/help/conduct/", "label": "Code of conduct", "group": "Help & policy" }
+  ]
+}

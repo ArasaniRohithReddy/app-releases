@@ -29,6 +29,11 @@ No cleanup or deletion of old artifacts, releases or history is approved.
 ## Safe immediate path: validate snapshots without artifact storage
 
 The reviewed snapshot safeguard can be integrated independently of Pages migration:
+Native documentation is likewise compiled from the stable public Markdown and committed
+under `docs/`; legacy branch publishing can serve those HTML files directly. Regenerate
+with `npm run build:docs`, commit source/output together, and pass `npm run check:docs`
+before updating the publishing branch. No new artifact-dependent publishing path is
+required just to make guides readable on the site.
 
 ```text
 release / schedule / manual snapshot refresh
