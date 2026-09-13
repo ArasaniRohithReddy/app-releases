@@ -5,7 +5,10 @@
   const PREFIX = "threat-model-reviewer-v";
   const API = "https://api.github.com/repos/" + REPO + "/releases";
   const RELEASES = "https://github.com/" + REPO + "/releases";
-  const TAG = /^threat-model-reviewer-v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+  const TAG_SUFFIX = "\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$";
+  const TAG = new RegExp("^" + PREFIX + TAG_SUFFIX);
+  const tagPattern = prefix => prefix === PREFIX ? TAG
+    : new RegExp("^" + String(prefix).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + TAG_SUFFIX);
 
   function kindOf(name) {
     const n = typeof name === "string" ? name.toLowerCase() : "";
@@ -30,10 +33,13 @@
     return releases.slice().sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
   }
 
-  function normalize(json) {
+  // The hub publishes more than one application, so the caller names the tag prefix it owns.
+  // Without one, this is the Threat Model Reviewer feed these pages have always loaded.
+  function normalize(json, prefix = PREFIX) {
+    const tag = tagPattern(prefix);
     if (!Array.isArray(json)) throw new Error("The release service returned an invalid list.");
     const releases = json.filter(r =>
-      r && typeof r.tag_name === "string" && TAG.test(r.tag_name) &&
+      r && typeof r.tag_name === "string" && tag.test(r.tag_name) &&
       (r.draft === undefined || r.draft === false) && typeof r.prerelease === "boolean" &&
       typeof r.published_at === "string" && Number.isFinite(Date.parse(r.published_at)) &&
       Array.isArray(r.assets) && r.assets.every(a => validAsset(a, r.tag_name)) &&
@@ -44,8 +50,8 @@
     return sorted(releases);
   }
 
-  function latestStable(releases) {
-    return sorted(releases).find(r => !r.prerelease && !r.tag_name.slice(PREFIX.length).includes("-"));
+  function latestStable(releases, prefix = PREFIX) {
+    return sorted(releases).find(r => !r.prerelease && !r.tag_name.slice(prefix.length).includes("-"));
   }
 
   function releaseUrl(release) {
@@ -73,6 +79,9 @@
   async function load(snapshotUrl, onData, onError = function () {}, options = {}) {
     const fetcher = options.fetch || root.fetch.bind(root);
     const timeout = options.timeout ?? 10000;
+    // The hub publishes several applications from one repository, so a caller names the tag prefix
+    // whose releases it wants; the release list itself is shared.
+    const prefix = options.prefix || PREFIX;
     async function request(url, accept) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeout);
@@ -90,7 +99,7 @@
     }
 
     let releases = [];
-    try { releases = normalize((await request(snapshotUrl)).json); }
+    try { releases = normalize((await request(snapshotUrl)).json, prefix); }
     catch (_) { /* The live API may still work. Static links remain usable meanwhile. */ }
     if (releases.length) onData(releases, "snapshot");
 
@@ -109,7 +118,7 @@
         const match = response.link.match(/(?:^|,)\s*<([^>]+)>;\s*rel="next"/);
         next = match ? match[1] : "";
       }
-      releases = merge(releases, normalize(all));
+      releases = merge(releases, normalize(all, prefix));
       onData(releases, "live");
     } catch (error) {
       if (!releases.length) onError(error);

@@ -1,4 +1,4 @@
-// The one product currently published by this hub. Never prune saved history on API absence.
+// Each product on the hub keeps its own snapshot. Never prune saved history on API absence.
 const fs = require('node:fs');
 const releases = require('../docs/release-data.js');
 
@@ -18,17 +18,17 @@ function project(release) {
   };
 }
 
-function buildSnapshot(previous, pages) {
+function buildSnapshot(previous, pages, prefix = releases.PREFIX) {
   if (!Array.isArray(previous)) throw new Error('The saved snapshot is not an array; refusing to replace it.');
-  const saved = previous.length ? releases.normalize(previous) : [];
+  const saved = previous.length ? releases.normalize(previous, prefix) : [];
   if (saved.length !== previous.length) throw new Error('The saved snapshot contains invalid records.');
   if (!Array.isArray(pages) || !pages.length || pages.some(page => !Array.isArray(page)))
     throw new Error('Expected an array of API pages from gh api --paginate --slurp.');
   const records = pages.flat();
   if (records.some(record => !record || typeof record.tag_name !== 'string'))
     throw new Error('The release API returned malformed records.');
-  const candidates = records.filter(record => record.tag_name.startsWith(releases.PREFIX) && record.draft !== true);
-  const incoming = releases.normalize(candidates);
+  const candidates = records.filter(record => record.tag_name.startsWith(prefix) && record.draft !== true);
+  const incoming = releases.normalize(candidates, prefix);
   if (incoming.length !== candidates.length) throw new Error('The release API returned invalid product releases or assets.');
   for (const release of incoming) {
     if ((release.name != null && typeof release.name !== 'string') ||
@@ -41,9 +41,9 @@ function buildSnapshot(previous, pages) {
   return releases.merge(saved, incoming.map(project)).map(project);
 }
 
-function updateFile(file, pages) {
+function updateFile(file, pages, prefix) {
   const before = fs.readFileSync(file, 'utf8');
-  const snapshot = buildSnapshot(JSON.parse(before), pages);
+  const snapshot = buildSnapshot(JSON.parse(before), pages, prefix);
   const after = JSON.stringify(snapshot) + '\n';
   if (after !== before) {
     const temporary = file + '.tmp';
@@ -59,8 +59,8 @@ function updateFile(file, pages) {
 
 if (require.main === module) {
   try {
-    if (!process.argv[2]) throw new Error('Usage: node scripts/update-release-snapshot.js <existing-snapshot.json> (API pages on stdin)');
-    const result = updateFile(process.argv[2], JSON.parse(fs.readFileSync(0, 'utf8')));
+    if (!process.argv[2]) throw new Error('Usage: node scripts/update-release-snapshot.js <existing-snapshot.json> [tag-prefix] (API pages on stdin)');
+    const result = updateFile(process.argv[2], JSON.parse(fs.readFileSync(0, 'utf8')), process.argv[3] || releases.PREFIX);
     console.log(`Snapshot ${result.changed ? 'updated' : 'unchanged'}: ${result.releases} releases, ${result.assets} assets.`);
   } catch (error) {
     console.error(error.message);

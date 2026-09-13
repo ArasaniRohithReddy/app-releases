@@ -10,6 +10,7 @@ body:
       description: Which app is this for?
       options:
         - Threat Model Reviewer
+        - shot2code
         - Other / a new app idea
     validations:
       required: true

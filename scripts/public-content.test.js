@@ -8,11 +8,47 @@ const { buildSnapshot } = require('./update-release-snapshot.js');
 
 const root = path.resolve(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
+const exists = name => fs.existsSync(path.join(root, name));
+
+// One entry per application on the hub. Shared expectations are asserted from this list, so a new
+// product inherits them instead of needing its own copy of each test.
+const products = [
+  {
+    name: 'threat-model-reviewer',
+    prefix: 'threat-model-reviewer-v',
+    productPage: 'docs/threat-model-reviewer/index.html',
+    releasesPage: 'docs/threat-model-reviewer/releases/index.html',
+    snapshot: 'docs/threat-model-reviewer/releases/releases.json',
+    guides: 'products/threat-model-reviewer',
+    kinds: ['msi', 'portable', 'setup', 'cli', 'skill', 'msix', 'cer'],
+    recommendedKind: 'msi',
+    fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&expanded=true',
+    requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'CHANGELOG.md', 'DATA-HANDLING.md']
+  },
+  {
+    name: 'shot2code',
+    prefix: 'shot2code-v',
+    productPage: 'docs/shot2code/index.html',
+    releasesPage: 'docs/shot2code/releases/index.html',
+    snapshot: 'docs/shot2code/releases/releases.json',
+    guides: 'products/shot2code',
+    kinds: ['setup', 'msi', 'portable', 'checksums'],
+    recommendedKind: 'setup',
+    fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&expanded=true',
+    requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'ARCHITECTURE.md',
+      'DATA-HANDLING.md', 'RELEASING.md', 'CHANGELOG.md', 'SECURITY.md']
+  }
+];
+
+const pages = ['docs/index.html', ...products.flatMap(p => [p.productPage, p.releasesPage])];
 const product = read('docs/threat-model-reviewer/index.html');
+const shot2code = read('docs/shot2code/index.html');
 const sample = JSON.parse(read('docs/threat-model-reviewer/samples/customer-portal-review.json'));
 const snapshot = JSON.parse(read('docs/threat-model-reviewer/releases/releases.json'));
 const stable = releaseData.latestStable(releaseData.normalize(snapshot));
-const pages = ['docs/index.html', 'docs/threat-model-reviewer/index.html', 'docs/threat-model-reviewer/releases/index.html'];
+// Icon path data is full of number triples ("3.58 0 8c0 3.54 2.29"), so version scanning has to
+// look at the markup a reader actually gets, not at the artwork.
+const withoutArtwork = html => html.replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
 
 test('hero result describes the published synthetic sample', () => {
   for (const [attribute, value] of [['verdict', sample.verdict], ['score', sample.score], ['gating', sample.gatingFindings]]) {
@@ -35,13 +71,96 @@ test('current product copy does not carry retired feature or approval claims', (
   assert.doesNotMatch(product, /Every artifact is Authenticode-signed/);
 });
 
-test('only MSI is recommended in the product download grid', () => {
-  const recommended = [...product.matchAll(/<div class="dl-card recommended">([\s\S]*?)<\/div>\s*<div class="dl-card">/g)];
-  assert.equal(recommended.length, 1);
-  assert.match(recommended[0][1], /data-dl="msi"/);
-  assert.doesNotMatch(recommended[0][1], /data-dl="portable"/);
-  for (const kind of ['msi', 'portable', 'setup', 'cli', 'skill', 'msix', 'cer'])
-    assert.match(product, new RegExp(`data-dl="${kind}"`));
+test('only one download is recommended per product, and every kind is offered', () => {
+  for (const entry of products) {
+    const html = read(entry.productPage);
+    const recommended = [...html.matchAll(/<div class="dl-card recommended">([\s\S]*?)<\/div>\s*<div class="dl-card">/g)];
+    assert.equal(recommended.length, 1, entry.name);
+    assert.match(recommended[0][1], new RegExp(`data-dl="${entry.recommendedKind}"`), entry.name);
+    for (const kind of entry.kinds.filter(k => k !== entry.recommendedKind))
+      assert.doesNotMatch(recommended[0][1], new RegExp(`data-dl="${kind}"`), `${entry.name}: ${kind}`);
+    for (const kind of entry.kinds)
+      assert.match(html, new RegExp(`data-dl="${kind}"`), `${entry.name}: ${kind}`);
+  }
+});
+
+test('no page resolves downloads through the repository-wide latest release', () => {
+  // /releases/latest returns whichever product shipped most recently, so a second application would
+  // silently hand its build to the first one's download buttons. The shared loader is checked too,
+  // because the pages that include it resolve their downloads through it.
+  for (const name of [...pages, 'docs/release-data.js']) {
+    const html = read(name);
+    assert.doesNotMatch(html, /href="[^"]*\/releases\/latest"/, name);
+    assert.doesNotMatch(html, /api\.github\.com\/repos\/[^"']*\/releases\/latest/, name);
+    assert.doesNotMatch(html, /"downloadUrl":\s*"[^"]*\/releases\/latest"/, name);
+  }
+});
+
+test('every product page falls back to its own release list without JavaScript', () => {
+  for (const entry of products) {
+    const html = read(entry.productPage);
+    const escaped = entry.fallback.replace(/&/g, '&amp;');
+    const hrefs = [...html.matchAll(/(?:id="hero-download"|data-dl="[a-z]+")[^>]*href="([^"]+)"|href="([^"]+)"[^>]*(?:id="hero-download"|data-dl="[a-z]+")/g)]
+      .map(match => match[1] || match[2]);
+    assert.ok(hrefs.length >= entry.kinds.length, `${entry.name}: expected static download links`);
+    for (const href of hrefs) assert.equal(href, escaped, entry.name);
+    // A fallback that names a version goes stale the moment the next build ships.
+    assert.doesNotMatch(entry.fallback, /\d+\.\d+\.\d+/, `${entry.name}: the static fallback pins a version`);
+    assert.doesNotMatch(html, /releases\/tag\//, `${entry.name}: links to a pinned release tag`);
+  }
+});
+
+test('every product resolves its own releases by tag prefix', () => {
+  // A page either queries the release list inline or includes the shared loader that does; both
+  // must read the *list* and filter it, never the repository-wide latest release.
+  const loader = read('docs/release-data.js');
+  const usesLoader = html => /<script src="[^"]*release-data\.js"[^>]*>/.test(html);
+  const listsReleases = html => /releases\?per_page=100/.test(html) ||
+    (usesLoader(html) && loader.includes('"?per_page=100"'));
+  const filtersOn = (html, prefix) => html.includes(`"${prefix}"`) ||
+    (usesLoader(html) && loader.includes(`"${prefix}"`));
+  for (const entry of products) {
+    for (const page of [entry.productPage, entry.releasesPage]) {
+      const html = read(page);
+      assert.ok(listsReleases(html), `${page} does not read the release list`);
+      assert.ok(filtersOn(html, entry.prefix), `${page} does not filter on ${entry.prefix}`);
+    }
+  }
+  const portal = read('docs/index.html');
+  for (const entry of products) assert.ok(filtersOn(portal, entry.prefix), `portal does not resolve ${entry.name}`);
+  assert.ok(listsReleases(portal), 'the portal does not read the release list');
+});
+
+test('release snapshots are per product and carry the published assets', () => {
+  for (const entry of products) {
+    const snapshot = JSON.parse(read(entry.snapshot));
+    assert.ok(Array.isArray(snapshot) && snapshot.length > 0, entry.name);
+    for (const release of snapshot) {
+      assert.ok(release.tag_name.startsWith(entry.prefix), `${entry.name}: ${release.tag_name} is another product's release`);
+      assert.match(release.tag_name, new RegExp(`^${entry.prefix}\\d+\\.\\d+\\.\\d+`), `${entry.name}: ${release.tag_name}`);
+      assert.ok(Array.isArray(release.assets), entry.name);
+    }
+    const sorted = [...snapshot].sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+    assert.equal(snapshot[0].tag_name, sorted[0].tag_name, `${entry.name}: snapshot is not newest-first`);
+  }
+  // Shape, not version: the snapshot is regenerated by the workflow on every release, so pinning a
+  // version here would fail the next build instead of catching a real problem.
+  const latest = JSON.parse(read('docs/shot2code/releases/releases.json'))[0];
+  const version = latest.tag_name.replace('shot2code-v', '');
+  for (const pattern of [
+    /^SHA256SUMS/,
+    new RegExp(`^shot2code-${version.replace(/\./g, '\\.')}-x64\\.exe$`),
+    new RegExp(`^shot2code-${version.replace(/\./g, '\\.')}-x64\\.msi$`),
+    new RegExp(`^shot2code-${version.replace(/\./g, '\\.')}-x64\\.zip$`)
+  ]) assert.ok(latest.assets.some(a => pattern.test(a.name)), `shot2code is missing an asset matching ${pattern}`);
+  // Updater inputs may be attached to a release, but they are not hub downloads.
+  assert.ok(latest.assets.every(a => a.browser_download_url.includes(latest.tag_name)));
+});
+
+test('the snapshot workflow regenerates every product', () => {
+  const workflow = read('.github/workflows/update-releases-snapshot.yml');
+  for (const entry of products)
+    assert.match(workflow, new RegExp(`\\["${entry.prefix}"\\]="${entry.snapshot}"`), entry.name);
 });
 
 test('published guides have the public overview, quick start and current integration limits', () => {
@@ -114,13 +233,124 @@ test('stable enterprise signing and MSIX trust guidance keeps package and policy
   assert.doesNotMatch(guide, /ThreatModelReviewer\.Cli\.exe\s+(?:fleet|mcp)\b|^#{1,6}.*UNRELEASED.*MCP/im);
 });
 
-test('all three pages contain exactly one valid structured-data block and social image', () => {
+test('every product ships the guides its pages link to', () => {
+  for (const entry of products)
+    for (const guide of entry.requiredGuides)
+      assert.ok(exists(`${entry.guides}/${guide}`), `${entry.guides}/${guide} is missing`);
+});
+
+test('the shot2code guides describe the shipped build', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  assert.match(guide, /## Choosing a model provider/);
+  assert.match(guide, /## Exporting a project/);
+  assert.match(guide, /Separate pages[\s\S]*Responsive views[\s\S]*UI states[\s\S]*Supporting references/);
+  assert.match(guide, /Ctrl\+Alt\+E/);
+
+  const install = read('products/shot2code/INSTALL.md');
+  assert.match(install, /not \*\*code-signed\*\*|\*\*not code-signed\*\*/);
+  // The example names a placeholder, not a release that will age out of the guide.
+  assert.match(install, /Get-FileHash \.\\shot2code-<version>-x64\.exe -Algorithm SHA256/);
+  assert.doesNotMatch(install, /shot2code-\d+\.\d+\.\d+-x64/);
+  assert.match(install, /%LOCALAPPDATA%\\shot2code\\history\.sqlite3/);
+
+  const data = read('products/shot2code/DATA-HANDLING.md');
+  assert.match(data, /no analytics or telemetry SDK/i);
+  assert.match(data, /Imported projects are never executed|never executed/i);
+
+  const security = read('products/shot2code/SECURITY.md');
+  assert.match(security, /not code-signed/);
+  assert.match(security, /security\/advisories\/new/);
+  // Support is expressed as "the newest published release", so it stays true across releases.
+  assert.doesNotMatch(security, /\d+\.\d+\.\d+ *\| *✅/);
+
+  const changelog = read('products/shot2code/CHANGELOG.md');
+  assert.match(changelog, /## \[\d+\.\d+\.\d+\] — \d{4}-\d{2}-\d{2}/);
+  assert.match(changelog, /could start a second installer/);
+
+  // The hub documents the product; it does not re-host the source.
+  for (const name of ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'ARCHITECTURE.md', 'DATA-HANDLING.md', 'RELEASING.md', 'SECURITY.md'])
+    assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
+});
+
+test('the shot2code page states the platform, the provider requirement and the signing status', () => {
+  assert.match(shot2code, /Windows 10\/11 · x64/);
+  assert.match(shot2code, /not code-signed/);
+  assert.match(shot2code, /SmartScreen|Windows protected your PC/);
+  assert.match(shot2code, /GitHub Copilot/);
+  assert.match(shot2code, /Gemini, Anthropic, OpenAI/);
+  assert.match(shot2code, /SQLite|%LOCALAPPDATA%\\shot2code/);
+  assert.match(shot2code, /Twelve output stacks/);
+  assert.match(shot2code, /opaque-origin sandbox/);
+  assert.match(shot2code, /Ctrl\+\/|Ctrl\+Alt/);
+  assert.match(shot2code, /Restart &amp; install|Restart & install/);
+  assert.match(shot2code, /SHA256SUMS/);
+  // Twelve stacks, listed rather than claimed.
+  assert.equal([...shot2code.matchAll(/<li><span class="tick"/g)].length, 12);
+  // No borrowed claims from the other product on the hub.
+  assert.doesNotMatch(shot2code, /Authenticode|deterministic (verdict|checks)|threat model/i);
+});
+
+test('no page hard-codes a release version that the release feed should supply', () => {
+  // A published build can be superseded at any time; a version baked into markup cannot follow it.
+  // The portal and the shot2code page resolve every version they show. (The Threat Model Reviewer
+  // page still carries its published version statically — pre-existing, and left alone here.)
+  for (const name of ['docs/index.html', 'docs/shot2code/index.html']) {
+    const html = read(name);
+    assert.doesNotMatch(withoutArtwork(html), /\bv?\d+\.\d+\.\d+\b/, `${name}: a version is hard-coded into the page`);
+  }
+  const structured = JSON.parse(shot2code.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)[1]);
+  assert.equal(structured.softwareVersion, undefined, 'shot2code: structured data declares a static version');
+  assert.doesNotMatch(structured.downloadUrl, /\d+\.\d+\.\d+/, 'shot2code: structured data pins a download');
+  // Both version chips and the verification command are filled in from the resolved release.
+  assert.match(shot2code, /id="version-chip">latest</);
+  assert.match(shot2code, /id="version-chip-2">latest</);
+  assert.match(shot2code, /id="verify-command">Get-FileHash \.\\shot2code-&lt;version&gt;-x64\.exe/);
+  assert.match(shot2code, /id="structured-data"/);
+  assert.match(shot2code, /data\.softwareVersion = version/);
+});
+
+test('shot2code screenshots are published with the page', () => {
+  const images = [...shot2code.matchAll(/<img src="(img\/[^"]+)"/g)].map(match => match[1]);
+  assert.equal(new Set(images).size, 4);
+  for (const image of new Set(images)) assert.ok(exists(`docs/shot2code/${image}`), image);
+  for (const match of shot2code.matchAll(/<img[^>]*>/g)) assert.match(match[0], /alt="[^"]{25,}"/);
+});
+
+test('the hub portal and README present every product', () => {
+  const portal = read('docs/index.html');
+  const readme = read('README.md');
+  for (const entry of products) {
+    assert.match(portal, new RegExp(`href="\\./${entry.name}/"`), `portal: ${entry.name}`);
+    assert.match(readme, new RegExp(`products/${entry.name}/INSTALL\\.md`), `README: ${entry.name}`);
+  }
+  // The hub is not a single-product site any more, so its shared copy must not speak for one app.
+  assert.doesNotMatch(portal, /Start with Threat Model Reviewer/);
+  const jsonLd = JSON.parse(portal.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  assert.deepEqual(jsonLd.hasPart.map(part => part.name), ['Threat Model Reviewer', 'shot2code']);
+});
+
+test('issue templates cover every product', () => {
+  for (const template of ['bug_report.yml', 'feature_request.yml']) {
+    const text = read(`.github/ISSUE_TEMPLATE/${template}`);
+    for (const entry of products.map(p => p.name === 'shot2code' ? 'shot2code' : 'Threat Model Reviewer'))
+      assert.match(text, new RegExp(`- ${entry}`), `${template}: ${entry}`);
+  }
+  const bug = read('.github/ISSUE_TEMPLATE/bug_report.yml');
+  // The secret warning must stay at least as strong while covering more than threat models.
+  assert.match(bug, /no API keys or tokens/i);
+  assert.match(bug, /threat.model/i);
+  assert.match(bug, /- Installer \(MSI\)/);
+  assert.match(bug, /NSIS \.exe/);
+});
+
+test('all published pages contain exactly one valid structured-data block and social image', () => {
   for (const name of pages) {
     const html = read(name);
-    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)];
     assert.equal(blocks.length, 1, name);
     assert.equal(JSON.parse(blocks[0][1])['@context'], 'https://schema.org');
     assert.equal([...html.matchAll(/property="og:image"/g)].length, 1, name);
+    assert.match(html, /<link rel="canonical" href="https:\/\/arasanirohithreddy\.github\.io\/app-releases\/[^"]*" \/>/, name);
   }
 });
 
@@ -139,9 +369,15 @@ test('static software metadata and no-JavaScript downloads refer to the same pub
   const metadata = JSON.parse(product.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
   const release = snapshot.find(r => r.tag_name === releaseData.PREFIX + metadata.softwareVersion);
   assert.ok(release && !release.prerelease, 'Structured data must describe a published stable release');
-  assert.equal(metadata.downloadUrl, releaseData.releaseUrl(release));
+  // The published version is still declared, but every link without JavaScript resolves this
+  // product's release list instead of pinning that version's tag, so a newer build cannot leave
+  // the static markup handing out a superseded download.
+  const resilient = products.find(entry => entry.name === 'threat-model-reviewer').fallback;
+  assert.equal(metadata.downloadUrl, resilient);
+  assert.doesNotMatch(metadata.downloadUrl, /\/releases\/tag\//);
+  assert.ok(releaseData.releaseUrl(release).endsWith(release.tag_name), 'Tag links stay resolvable for the live refresh');
   for (const match of product.matchAll(/<a[^>]+(?:id="hero-download"|data-dl="[^"]+")[^>]+href="([^"]+)"/g))
-    assert.equal(match[1], metadata.downloadUrl);
+    assert.equal(match[1], resilient.replace(/&/g, '&amp;'));
 });
 
 test('page metadata, local assets and mapped public documentation links resolve', () => {

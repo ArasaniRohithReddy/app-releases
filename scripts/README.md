@@ -95,23 +95,52 @@ local generation or tests are not proof of a remote deployment.
 node scripts/verify-site.js docs
 ```
 
-Serves `docs/` under `/app-releases/` on a temporary loopback port (matching the Pages
-project path) and checks all three pages at widths from 320 to 1920 pixels and both colour schemes:
-no horizontal overflow, no JavaScript errors, no failed same-origin requests, exactly one `<h1>`,
-every image loaded and carrying alt text, and nothing that should stay on one line wrapping onto two.
-It also asserts the product page still has each of its sections, four screenshots, four steps and
-one JSON-LD block, so a section cannot quietly disappear in an edit. The sample
-result is checked against its published JSON, which source tests validate against
-the actual rubric. Download tests use the release snapshot rather than a live API,
-and confirm that the hero selects MSI and all seven asset kinds remain correctly linked.
+Serves `docs/` under `/app-releases/` on a temporary loopback port (matching the Pages project
+path) and checks **every page of every product** — the
+portal plus each product's page and releases page — at widths from 320 to 1920 pixels and in both
+colour schemes: no horizontal overflow, no JavaScript errors, no failed same-origin requests,
+exactly one `<h1>`, exactly one JSON-LD block and one `og:image`, every image loaded and carrying
+alt text, and nothing that should stay on one line wrapping onto two.
+
+Products are declared once, in the `products` array at the top of the file: tag prefix, expected
+sections, screenshot and step counts, download kinds, which asset the hero must select, and the
+static fallback link. Adding an application means adding an entry, not copying assertions. The
+per-product checks assert that a page still has all of its sections, its four screenshots and its
+four steps, that the hero selects the recommended package, that every `data-dl` kind resolves to a
+real asset in that product's release snapshot, and that the version chips show the version from
+that snapshot rather than one typed into the page.
+
+Because the repository publishes more than one application, the GitHub API is mocked with **all**
+products' snapshots merged into one release list, and a request to any endpoint other than the
+release list fails the run — `/releases/latest` is repository-wide and would hand one product
+another product's build. The portal is checked separately to confirm each card resolves its own
+newest stable release by tag prefix. Releases pages are checked to render only their own product,
+newest first, with download buttons pointing at real assets and never at updater internals
+(`latest.yml`, `.blockmap`).
+
+Threat Model Reviewer additionally verifies its sample result against its published JSON, which
+source tests validate against the actual rubric, and that the sample `.tm7` downloads. shot2code
+additionally verifies the twelve listed stacks, the unsigned-binary warning in the download
+section, that every screenshot in the gallery links to a file that exists, and that the version,
+the structured data and the SHA-256 verification command are all filled in from the resolved
+release rather than hard-coded.
+
+To rehearse a release, copy `docs/` aside, add a newer entry to a product's `releases.json`, and
+run the checks against the copy: everything on the page should follow the new version without a
+code change.
+
+Keyboard focus, theme persistence, reduced motion, text contrast, sticky-header clearance, API
+failure and JavaScript-disabled fallbacks are checked for each product. A page backed by a
+committed snapshot must keep offering the real files when the API is down; a page without one
+falls back to its own filtered release list, which carries no version to go stale.
+No private model, live Azure account or model provider is required. Use `npm run test:content`
+for only the fast copy/snapshot checks.
+
 The portal → product → MSI / CLI / skill → release history journey uses synthetic download
 responses, not real binaries. Every release card, historical note and all-files link is compared
-with the unmodified snapshot.
-
-Keyboard focus, light/dark/system choices, theme persistence (including blocked storage),
-reduced motion, text contrast, 200% text resizing, sample downloading, sticky-header clearance
-and JavaScript-disabled fallbacks are checked. A delayed live refresh must preserve filters,
-expanded notes/files and keyboard focus.
+with the unmodified snapshot. Light/dark/system choices, theme persistence (including blocked
+storage), 200% text resizing and a delayed live refresh — which must preserve filters, expanded
+notes/files and keyboard focus — are checked as well.
 
 `site-accessibility-checks.js` adds regressions for persistent prose-link underlines,
 the release filter's computed boundary/placeholder/focus contrast, synthetic pre-release
@@ -148,7 +177,8 @@ drafts and newer pre-releases cannot erase history or take over stable download 
 The fast Node tests also exercise live pagination, request timeouts, metadata and local/public-guide
 link targets. These are preservation checks, not a release inventory or installer-signature audit.
 
-To capture each route in both themes at desktop and mobile sizes:
+Set `SITE_SCREENSHOTS` to a directory to capture `<product>-desktop.png`, `<product>-tablet.png`
+and `<product>-mobile.png`, plus each route in both themes, while the checks run:
 
 ```powershell
 $env:SITE_SCREENSHOTS = Join-Path (Get-Location) 'test-results/site-preservation/local'
@@ -157,8 +187,6 @@ npm test
 
 Screenshots and dependencies are ignored by Git. The browser and temporary server are closed
 by the test runner; no user app or desktop session is touched.
-No private model or live Azure account is required. Use `npm run test:content` for
-only the fast copy/sample checks.
 
 The content suite also tests the snapshot generator with paginated, partial and invalid
 API fixtures, plus workflow guards that bind deployment to the checked SHA. The scheduled
@@ -185,7 +213,10 @@ a button narrow and watching it fail.
 
 ```bash
 node scripts/find-overflow.js docs /threat-model-reviewer/
+node scripts/find-overflow.js docs /shot2code/
+node scripts/find-overflow.js docs /shot2code/releases/
 ```
 
 When `verify-site.js` reports horizontal overflow, this attributes it: it lists the innermost
-elements extending past the viewport, so the cause is identified rather than guessed at.
+elements extending past the viewport, so the cause is identified rather than guessed at. The second
+argument is the route to inspect; it defaults to the Threat Model Reviewer page.

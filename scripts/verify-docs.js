@@ -141,7 +141,8 @@ async function main() {
       const page = await context.newPage();
       try {
         await page.goto(base + '/', { waitUntil: 'domcontentloaded' });
-        await page.getByRole('link', { name: 'Open app', exact: true }).click();
+        // Each portal card now names the application it opens, because the hub lists more than one.
+        await page.getByRole('link', { name: 'Open app — Threat Model Reviewer', exact: true }).click();
         await page.waitForURL(base + '/threat-model-reviewer/');
         await page.getByRole('link', { name: 'Follow the quick-start guide', exact: true }).click();
         await page.waitForURL(base + '/threat-model-reviewer/docs/user-guide/#try-the-sample-model');

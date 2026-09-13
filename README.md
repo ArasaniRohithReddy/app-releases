@@ -4,7 +4,7 @@
 
 **The official distribution hub for Windows desktop applications by [@ArasaniRohithReddy](https://github.com/ArasaniRohithReddy).**
 
-Signed releases · Documentation · Issue tracking
+Releases · Documentation · Issue tracking
 
 **[🌐 arasanirohithreddy.github.io/app-releases](https://arasanirohithreddy.github.io/app-releases/)**
 
@@ -16,8 +16,10 @@ Signed releases · Documentation · Issue tracking
 
 ---
 
-Application source code is maintained in private repositories. This public repository is the
-single place to **download** builds, read **documentation**, and file **issues**.
+Some applications are developed in private repositories and some in public ones — shot2code's
+source is public at [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code).
+Either way, this public repository is the single place to **download** builds, read
+**documentation**, and file **issues**.
 
 ## Applications
 
@@ -37,41 +39,74 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/) |
 | **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/) — every version, notes and files · or [latest on GitHub](https://github.com/ArasaniRohithReddy/app-releases/releases/latest) |
 | **Documentation** | [Read guides on the site](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/) — overview, installation, user guide, CLI, skill, FAQ and changelog |
+| **In this repository** | [Overview](products/threat-model-reviewer/) · [Install](products/threat-model-reviewer/INSTALL.md) · [User guide](products/threat-model-reviewer/USER-GUIDE.md) · [FAQ](products/threat-model-reviewer/FAQ.md) · [Changelog](products/threat-model-reviewer/CHANGELOG.md) |
 | **For enterprises** | [Data handling & privacy](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/) · [Enterprise deployment](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/) · [Third-party notices](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/third-party-notices/) |
 | **Platform** | Windows 10/11 x64 · self-contained (no .NET install) |
 
 > Additional applications will be published here over time, each under `products/<app>/` with its
 > own documentation and product-prefixed release tags.
 
-Guides and [support](https://arasanirohithreddy.github.io/app-releases/help/),
+### 🖼️ shot2code
+
+Turn **screenshots, mockups, URLs, written descriptions or screen recordings** into editable
+web code, on your own machine. Twelve output stacks, a multi-file project editor, local SQLite
+project history, a sandboxed preview, and single-HTML or Vite project export.
+
+shot2code ships **no model**: you bring a GitHub Copilot sign-in (no API key) or a Gemini,
+Anthropic or OpenAI key. Generated code is model output — review it before running it outside
+the sandboxed preview. The Windows builds are **not code-signed**; verify the published
+SHA-256 checksums.
+
+| Resource | Link |
+| --- | --- |
+| **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/shot2code/) |
+| **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) — every version, notes and files |
+| **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [FAQ](products/shot2code/FAQ.md) · [Changelog](products/shot2code/CHANGELOG.md) |
+| **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) |
+| **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) |
+| **Platform** | Windows 10/11 x64 · self-contained (backend and headless Chromium bundled) |
+
+Threat Model Reviewer's guides, along with [support](https://arasanirohithreddy.github.io/app-releases/help/),
 [security](https://arasanirohithreddy.github.io/app-releases/help/security/) and
-[license](https://arasanirohithreddy.github.io/app-releases/help/license/) pages are readable
-on the site without GitHub's API. This repository's public Markdown remains their canonical
-source; HTML is generated deterministically, with a secondary **View source on GitHub** link.
+[license](https://arasanirohithreddy.github.io/app-releases/help/license/), are readable on the
+site without GitHub's API; shot2code's guides are published as Markdown in this repository. Either
+way, this repository's public Markdown is the canonical source; site HTML is generated
+deterministically, with a secondary **View source on GitHub** link.
 Contributor workflow: [build and drift checks](scripts/README.md#native-documentation).
 
-## Download
-
-Choose **MSI (recommended)** for the desktop app, or the portable ZIP/per-user setup.
-The separate **CLI bundle** (`-cli-win-x64.zip`) supports Windows CI and scripting.
-The **Copilot CLI skill** (`-skill.zip`) needs that CLI bundle alongside it.
-See the [CLI](products/threat-model-reviewer/CLI.md) and [skill guides](products/threat-model-reviewer/SKILL.md).
-
-Browse every version — with its release notes, file sizes and direct downloads — on the
-**[releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)**.
-The **[website](https://arasanirohithreddy.github.io/app-releases/)** selects the latest stable
-Threat Model Reviewer release from a same-origin snapshot, then refreshes from GitHub when
-available. API errors do not remove the saved release history or its download links.
-The raw **[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)** list
-remains available, including when JavaScript is disabled.
+## Download
 
 Release tags are product-prefixed — `‹app›-v‹x.y.z›`, for example
-`threat-model-reviewer-vX.Y.Z`.
+`threat-model-reviewer-vX.Y.Z` and `shot2code-vX.Y.Z` — and each product's releases page
+lists only its own builds.
+
+**Threat Model Reviewer:** choose **MSI (recommended)** for the desktop app, or the portable
+ZIP/per-user setup. The separate **CLI bundle** (`-cli-win-x64.zip`) supports Windows CI and
+scripting, and the **Copilot CLI skill** (`-skill.zip`) needs that CLI bundle alongside it.
+See the [CLI](products/threat-model-reviewer/CLI.md) and [skill guides](products/threat-model-reviewer/SKILL.md).
+
+**shot2code:** choose the per-user **`.exe` installer (recommended)** — it is the only
+self-updating format — or the **MSI** for per-machine managed deployment, or the portable
+**ZIP**. `SHA256SUMS.txt` is attached for verification. See the
+[install guide](products/shot2code/INSTALL.md).
+
+Browse every version — with its release notes, file sizes and direct downloads — on each product's
+releases page:
+**[Threat Model Reviewer](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)** ·
+**[shot2code](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)**.
+The **[website](https://arasanirohithreddy.github.io/app-releases/)** links the latest build of each
+app: every product page selects its newest stable release from a same-origin snapshot first, then
+refreshes from GitHub when available, so an API error never removes the saved release history or
+its download links. The raw
+**[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)** list remains
+available, including when JavaScript is disabled.
 
 ### Verifying a download
 
-Executables and installers are **Authenticode-signed**; ZIP containers are not.
-Before deploying widely, confirm the signature and record the hash:
+Signing differs per product, so check the product's own guidance before deploying widely.
+
+**Threat Model Reviewer** — executables and installers are **Authenticode-signed**; ZIP
+containers are not. Confirm the signature and record the hash:
 
 ```powershell
 Get-AuthenticodeSignature .\ThreatModelReviewer-vX.Y.Z-x64.msi | Format-List Status, SignerCertificate
@@ -82,16 +117,32 @@ Artifacts are currently signed with a self-signed certificate, so Microsoft Defe
 may warn on first run — **More info → Run anyway**. Migration to a CA/EV certificate is planned.
 See [SECURITY.md](SECURITY.md#code-signing).
 
+**shot2code** — the builds are **not code-signed**, so there is no signature to check. Compare the
+hash against `SHA256SUMS.txt` attached to the same release:
+
+```powershell
+Get-FileHash .\shot2code-X.Y.Z-x64.exe -Algorithm SHA256
+```
+
+SmartScreen will warn on first run; that warning is expected and is not evidence that the download
+is good or bad. See [shot2code security](products/shot2code/SECURITY.md).
+
 ## Deploying in an organization
 
-Managed rollout — silent install switches, MSI `UpgradeCode` and Inno `AppId` for detection rules,
-Microsoft Intune / Configuration Manager / Group Policy, disabling update checks fleet-wide,
-air-gapped operation and CI/CD integration — is documented in
+**Threat Model Reviewer:** managed rollout — silent install switches, MSI `UpgradeCode` and Inno
+`AppId` for detection rules, Microsoft Intune / Configuration Manager / Group Policy, disabling
+update checks fleet-wide, air-gapped operation and CI/CD integration — is documented in
 **[Enterprise deployment](products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md)**.
 
-Security and privacy reviewers should start with
-**[Data handling & privacy](products/threat-model-reviewer/DATA-HANDLING.md)**, which enumerates
-every network destination and on-disk storage path, and confirms that no telemetry is collected.
+**shot2code:** the MSI is the per-machine deployment format. The app detects a Program Files
+install, disables self-update and reports that upgrades are administrator-managed; per-user `.exe`
+installs self-update from the public releases feed. See
+[Install](products/shot2code/INSTALL.md) and [Security](products/shot2code/SECURITY.md).
+
+Security and privacy reviewers should start with each product's data-handling guide —
+**[Threat Model Reviewer](products/threat-model-reviewer/DATA-HANDLING.md)** and
+**[shot2code](products/shot2code/DATA-HANDLING.md)** — which enumerate every network destination and
+on-disk storage path, and confirm that no telemetry is collected.
 
 ## Support
 
@@ -102,8 +153,9 @@ every network destination and on-disk storage path, and confirms that no telemet
 | **Security vulnerability** | [Report privately](https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new) — **never** in a public issue. See [SECURITY.md](SECURITY.md) |
 | **Community expectations** | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) |
 
-> ⚠️ **Never attach a real threat model to a public issue.** Threat models describe your attack
-> surface. Sanitize first, or describe the structure instead.
+> ⚠️ **Never attach sensitive material to a public issue.** A threat model describes your attack
+> surface, and logs, screenshots and generated projects can carry API keys, tokens or proprietary
+> code. Sanitize or redact first, or describe the structure instead.
 
 ## License
 

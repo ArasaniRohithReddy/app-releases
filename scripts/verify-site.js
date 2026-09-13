@@ -6,13 +6,60 @@ const { createSiteServer, mount } = require('./site-server.js');
 const accessibilityChecks = require('./site-accessibility-checks.js');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..', 'docs'));
-const snapshot = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'releases', 'releases.json'), 'utf8'));
-const latest = snapshot.find(r => r.tag_name.startsWith('threat-model-reviewer-v') && !r.draft && !r.prerelease);
-if (!latest) throw new Error('The release snapshot has no stable Threat Model Reviewer release.');
+
+// Every product on the hub is described once, here. The assertions below are written against this
+// list, so adding an application means adding an entry rather than copying a block of checks.
+const products = [
+  {
+    name: 'threat-model-reviewer',
+    url: '/threat-model-reviewer/',
+    prefix: 'threat-model-reviewer-v',
+    versionChip: 'tmr-version',
+    sections: ['try', 'screens', 'how', 'features', 'whats-new', 'download', 'enterprise', 'docs'],
+    screenshots: 4,
+    steps: 4,
+    kinds: ['msi', 'portable', 'setup', 'cli', 'skill', 'msix', 'cer'],
+    // The hero mirrors the card marked "Recommended" in the download grid.
+    recommended: asset => asset.name.endsWith('-x64.msi'),
+    // This page loads its committed snapshot before refreshing from the API, so a failed API call
+    // still leaves real downloads on the page.
+    snapshotBacked: true,
+    fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&expanded=true'
+  },
+  {
+    name: 'shot2code',
+    url: '/shot2code/',
+    prefix: 'shot2code-v',
+    versionChip: 'shot2code-version',
+    sections: ['what', 'screens', 'how', 'features', 'stacks', 'providers', 'whats-new', 'download', 'privacy', 'docs'],
+    screenshots: 4,
+    steps: 4,
+    kinds: ['setup', 'msi', 'portable', 'checksums'],
+    recommended: asset => /-x64\.exe$/.test(asset.name),
+    // The product page resolves downloads live; its release list keeps the committed snapshot.
+    snapshotBacked: false,
+    fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&expanded=true'
+  }
+];
+
+for (const product of products) {
+  product.snapshot = JSON.parse(fs.readFileSync(path.join(root, product.name, 'releases', 'releases.json'), 'utf8'));
+  product.latest = product.snapshot.find(r => r.tag_name.startsWith(product.prefix) && !r.draft && !r.prerelease);
+  if (!product.latest) throw new Error(`The ${product.name} release snapshot has no stable release.`);
+}
+// One repository, several products: the pages read the release *list* and pick the newest stable
+// release carrying their own tag prefix, so the mock has to serve every product at once.
+const allReleases = products
+  .flatMap(product => product.snapshot)
+  .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+
+// The preservation, history and accessibility journeys below exercise the release page bundle that
+// only the Threat Model Reviewer ships, so they are written against that product's saved history.
+const reviewer = products.find(product => product.name === 'threat-model-reviewer');
+const snapshot = reviewer.snapshot;
+const latest = reviewer.latest;
+
 const sample = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'samples', 'customer-portal-review.json'), 'utf8'));
-const metadata = JSON.parse(fs.readFileSync(path.join(root, 'threat-model-reviewer', 'index.html'), 'utf8')
-  .match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
-const staticDownload = metadata.downloadUrl;
 const pages = [['portal', '/'], ['product', '/threat-model-reviewer/'], ['releases', '/threat-model-reviewer/releases/']];
 const server = createSiteServer(root);
 
@@ -24,14 +71,21 @@ function check(condition, message) {
 }
 
 async function mockReleases(context, unavailable = false) {
+  // Anything the pages ask of the GitHub API other than the release list is recorded, because
+  // /releases/latest is repository-wide and would hand one product another product's build.
+  const unexpected = [];
   await context.route('https://api.github.com/repos/ArasaniRohithReddy/app-releases/**', route => {
-    const list = route.request().url().includes('/releases?');
-    return route.fulfill({
-      status: unavailable ? 503 : 200,
-      contentType: 'application/json',
-      body: JSON.stringify(unavailable ? { message: 'Unavailable' } : list ? snapshot : latest)
-    });
+    const url = route.request().url();
+    if (unavailable) {
+      return route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ message: 'Unavailable' }) });
+    }
+    if (!url.includes('/releases?')) {
+      unexpected.push(url);
+      return route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ message: 'Not Found' }) });
+    }
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(allReleases) });
   });
+  return unexpected;
 }
 
 async function ready(page) {
@@ -73,7 +127,8 @@ async function preservationChecks(browser, base) {
     await mockReleases(journey);
     const page = await journey.newPage();
     await visit(page, base + '/');
-    await page.getByRole('link', { name: 'Open app', exact: true }).click();
+    // Two products now share the portal, so each card names the application it opens.
+    await page.getByRole('link', { name: 'Open app — Threat Model Reviewer', exact: true }).click();
     await ready(page);
     check(page.url() === base + '/threat-model-reviewer/', 'journey: portal did not open the product');
     for (const kind of ['msi', 'cli', 'skill']) {
@@ -302,11 +357,19 @@ async function main() {
       timeout: 60000
     });
     console.log(`Browser: ${process.env.SITE_BROWSER_CHANNEL || 'bundled Chromium'} ${browser.version()}`);
-    for (const [name, url] of pages) {
+    // Every published page of every product, not just the first application on the hub.
+    const sitePages = [
+      ['portal', '/'],
+      ...products.flatMap(product => [
+        [`${product.name} product`, product.url],
+        [`${product.name} releases`, `${product.url}releases/`]
+      ])
+    ];
+    for (const [name, url] of sitePages) {
       for (const theme of ['light', 'dark']) {
         console.log(`Checking ${name}/${theme}`);
         const context = await browser.newContext({ colorScheme: theme, viewport: { width: 1440, height: 900 } });
-        await mockReleases(context);
+        const unexpectedApi = await mockReleases(context);
         const page = await context.newPage();
         const errors = [];
         const failedRequests = [];
@@ -316,7 +379,8 @@ async function main() {
         });
         await visit(page, base + url);
         check(await page.locator('h1').count() === 1, `${name}/${theme}: expected one h1`);
-        if (name === 'product') {
+        // Content-grid alignment is specific to the Threat Model Reviewer page's layout.
+        if (name === 'threat-model-reviewer product') {
           const alignment = await page.evaluate(() => {
             const rect = selector => document.querySelector(selector).getBoundingClientRect();
             const lefts = selector => [...document.querySelectorAll(selector)].map(el => el.getBoundingClientRect().left);
@@ -332,6 +396,9 @@ async function main() {
           for (const [part, aligned] of Object.entries(alignment))
             check(aligned, `product/${theme}: ${part} alignment/readability regression`);
         }
+        const structuredData = await page.locator('script[type="application/ld+json"]').count();
+        check(structuredData === 1, `${name}/${theme}: expected one JSON-LD block, found ${structuredData}`);
+        check(await page.locator('meta[property="og:image"]').count() === 1, `${name}/${theme}: expected one og:image`);
 
         // Scroll lazy images into view before judging whether they loaded.
         for (const image of await page.locator('img').all()) {
@@ -398,7 +465,7 @@ async function main() {
             return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
           }
           const problems = [];
-          for (const el of document.querySelectorAll('.btn, .lede, .boundary-note, .pillar p, .workflow p, .coverage-list dd')) {
+          for (const el of document.querySelectorAll('.btn, .lede, .boundary-note, .pillar p, .workflow p, .coverage-list dd, .stack-grid li, .callout p')) {
             if (el.getBoundingClientRect().width === 0) continue;
             const ancestors = [];
             for (let current = el; current; current = current.parentElement) ancestors.unshift(current);
@@ -424,86 +491,223 @@ async function main() {
             await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `${name}-${theme}-${size}.png`) });
           }
         }
+        check(unexpectedApi.length === 0, `${name}/${theme}: queried a non-list GitHub API endpoint: ${unexpectedApi.join(', ')}`);
         await context.close();
       }
     }
 
-    const context = await browser.newContext({ viewport: { width: 1366, height: 768 }, reducedMotion: 'reduce' });
-    await mockReleases(context);
-    const page = await context.newPage();
-    await visit(page, base + '/threat-model-reviewer/');
-    if (process.env.SITE_SCREENSHOTS) {
-      fs.mkdirSync(process.env.SITE_SCREENSHOTS, { recursive: true });
-      for (const [name, width, height] of [['desktop', 1366, 768], ['mobile', 390, 844]]) {
-        await page.setViewportSize({ width, height });
-        await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-        await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `${name}.png`) });
+    // The portal resolves each product independently, so the newest release overall cannot put its
+    // version on another application's card.
+    {
+      const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+      await mockReleases(context);
+      const page = await context.newPage();
+      await page.goto(base + '/', { waitUntil: 'networkidle' });
+      for (const product of products) {
+        const expected = 'v' + product.latest.tag_name.slice(product.prefix.length);
+        await page.waitForFunction(
+          ([id, value]) => document.getElementById(id)?.textContent.trim() === value,
+          [product.versionChip, expected],
+          { timeout: 5000 }
+        ).catch(() => {});
+        check((await page.locator(`#${product.versionChip}`).textContent()).trim() === expected,
+          `portal: ${product.name} card shows the wrong version`);
+        check(await page.locator(`.app-card a[href="./${product.name}/"]`).count() === 1,
+          `portal: missing a card linking to ${product.name}`);
       }
-      await page.setViewportSize({ width: 1366, height: 768 });
+      await context.close();
     }
-    for (const id of ['try', 'screens', 'how', 'features', 'whats-new', 'download', 'enterprise', 'docs'])
-      check(await page.locator(`#${id}`).count() === 1, `product: missing section ${id}`);
-    check(await page.locator('#screens img').count() === 4, 'product: expected four full screenshots');
-    check(await page.locator('#how .steps li').count() === 4, 'product: expected four explanation steps');
-    for (const [attribute, expected] of [['verdict', sample.verdict], ['score', sample.score], ['gating', sample.gatingFindings]])
-      check((await page.locator(`[data-sample-${attribute}]`).textContent()).trim() === String(expected), `product: sample ${attribute} drift`);
-    const primary = page.locator('#hero-download');
-    check(await primary.evaluate(el => {
-      const box = el.getBoundingClientRect();
-      return box.top >= 0 && box.bottom <= innerHeight;
-    }), 'product: primary download is below the fold on a 1366x768 laptop');
-    const msi = latest.assets.find(a => a.name.endsWith('-x64.msi'));
-    check(await primary.getAttribute('href') === msi.browser_download_url, 'product: hero does not select the recommended MSI');
-    for (const kind of ['msi', 'portable', 'setup', 'cli', 'skill', 'msix', 'cer']) {
-      const link = await page.locator(`[data-dl="${kind}"]`).first().getAttribute('href');
-      check(latest.assets.some(a => a.browser_download_url === link), `product: no real asset for ${kind}`);
+
+    for (const product of products) {
+      const context = await browser.newContext({ viewport: { width: 1366, height: 768 }, reducedMotion: 'reduce' });
+      await mockReleases(context);
+      const page = await context.newPage();
+      await page.goto(base + product.url, { waitUntil: 'networkidle' });
+      if (process.env.SITE_SCREENSHOTS) {
+        fs.mkdirSync(process.env.SITE_SCREENSHOTS, { recursive: true });
+        for (const [label, width, height] of [['desktop', 1366, 768], ['tablet', 768, 1024], ['mobile', 390, 844]]) {
+          await page.setViewportSize({ width, height });
+          await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+          await page.screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `${product.name}-${label}.png`) });
+        }
+        await page.setViewportSize({ width: 1366, height: 768 });
+      }
+      for (const id of product.sections)
+        check(await page.locator(`#${id}`).count() === 1, `${product.name}: missing section ${id}`);
+      check(await page.locator('#screens img').count() === product.screenshots,
+        `${product.name}: expected ${product.screenshots} full screenshots`);
+      check(await page.locator('#how .steps li').count() === product.steps,
+        `${product.name}: expected ${product.steps} explanation steps`);
+
+      const primary = page.locator('#hero-download');
+      check(await primary.evaluate(el => {
+        const box = el.getBoundingClientRect();
+        return box.top >= 0 && box.bottom <= innerHeight;
+      }), `${product.name}: primary download is below the fold on a 1366x768 laptop`);
+      const recommended = product.latest.assets.find(product.recommended);
+      check(recommended && await primary.getAttribute('href') === recommended.browser_download_url,
+        `${product.name}: hero does not select the recommended download`);
+      for (const kind of product.kinds) {
+        const link = await page.locator(`[data-dl="${kind}"]`).first().getAttribute('href');
+        check(product.latest.assets.some(a => a.browser_download_url === link), `${product.name}: no real asset for ${kind}`);
+      }
+      // The version is resolved from the release feed, so a new build cannot leave a stale number
+      // behind on the page.
+      const version = 'v' + product.latest.tag_name.slice(product.prefix.length);
+      for (const id of ['version-chip', 'version-chip-2'])
+        check((await page.locator(`#${id}`).textContent()).trim() === version,
+          `${product.name}: #${id} did not resolve to the published version`);
+
+      for (const id of ['how', 'features', 'download']) {
+        await page.evaluate(value => document.getElementById(value).scrollIntoView({ behavior: 'instant', block: 'start' }), id);
+        const clear = await page.evaluate(value => document.getElementById(value).getBoundingClientRect().top >= document.querySelector('header.site').getBoundingClientRect().bottom, id);
+        check(clear, `${product.name}: ${id} is covered by the sticky header`);
+      }
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.keyboard.press('Tab');
+      check(await page.locator(':focus').getAttribute('class') === 'skip', `${product.name}: skip link is not the first keyboard stop`);
+      const theme = page.locator('#theme-toggle');
+      const initial = await theme.getAttribute('aria-label');
+      await theme.focus();
+      check(await theme.evaluate(el => getComputedStyle(el).outlineStyle !== 'none'), `${product.name}: keyboard focus is not visible`);
+      await page.keyboard.press('Enter');
+      check(await theme.getAttribute('aria-label') !== initial, `${product.name}: keyboard theme toggle failed`);
+      const changed = await theme.getAttribute('aria-label');
+      await page.reload({ waitUntil: 'networkidle' });
+      check(await theme.getAttribute('aria-label') === changed, `${product.name}: theme preference did not persist`);
+      check(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior === 'auto'), `${product.name}: reduced motion ignored`);
+      await context.close();
+
+      // Both degraded paths must still hand the reader this product's own release, never the
+      // repository-wide latest, which now belongs to whichever application shipped most recently.
+      // A page backed by a committed snapshot keeps offering the real files when the API is down;
+      // one without a snapshot falls back to its own filtered release list.
+      const offline = await browser.newContext();
+      await mockReleases(offline, true);
+      const fallback = await offline.newPage();
+      await fallback.goto(base + product.url, { waitUntil: 'networkidle' });
+      if (product.snapshotBacked) {
+        const saved = product.latest.assets.find(product.recommended);
+        await fallback.waitForFunction(
+          expected => document.getElementById('hero-download')?.getAttribute('href') === expected,
+          saved.browser_download_url, { timeout: 5000 }
+        ).catch(() => {});
+        check(await fallback.locator('#hero-download').getAttribute('href') === saved.browser_download_url,
+          `${product.name}: API failure broke the snapshot download`);
+        for (const kind of product.kinds) {
+          const link = await fallback.locator(`[data-dl="${kind}"]`).first().getAttribute('href');
+          check(product.latest.assets.some(a => a.browser_download_url === link),
+            `${product.name}: ${kind} lost its snapshot download when the API failed`);
+        }
+      } else {
+        check(await fallback.locator('#hero-download').getAttribute('href') === product.fallback,
+          `${product.name}: API failure broke the download fallback`);
+        for (const kind of product.kinds) {
+          const link = await fallback.locator(`[data-dl="${kind}"]`).first().getAttribute('href');
+          check(link === product.fallback, `${product.name}: ${kind} has no working fallback when the API fails`);
+        }
+      }
+      await offline.close();
+
+      const noJs = await browser.newContext({ javaScriptEnabled: false });
+      const staticPage = await noJs.newPage();
+      await staticPage.goto(base + product.url);
+      check(await staticPage.locator('#hero-download').getAttribute('href') === product.fallback,
+        `${product.name}: static download unavailable`);
+      // Structured data and the links a reader can click must describe the same download.
+      const declared = JSON.parse(await staticPage.locator('script[type="application/ld+json"]').textContent()).downloadUrl;
+      check(declared === product.fallback,
+        `${product.name}: structured data and the no-JavaScript download disagree`);
+      for (const kind of product.kinds)
+        check(await staticPage.locator(`[data-dl="${kind}"]`).first().getAttribute('href') === product.fallback,
+          `${product.name}: ${kind} needs JavaScript to be downloadable`);
+      await noJs.close();
     }
-    const downloadEvent = page.waitForEvent('download');
-    await page.locator('#try a[download]').click();
-    const download = await downloadEvent;
-    check(download.suggestedFilename() === 'customer-portal.tm7' && await download.failure() === null, 'product: sample download failed');
 
-    for (const id of ['how', 'features', 'download']) {
-      await page.evaluate(value => document.getElementById(value).scrollIntoView({ behavior: 'instant', block: 'start' }), id);
-      const clear = await page.evaluate(value => document.getElementById(value).getBoundingClientRect().top >= document.querySelector('header.site').getBoundingClientRect().bottom, id);
-      check(clear, `product: ${id} is covered by the sticky header`);
+    // Product-specific content that only makes sense for one application.
+    {
+      const context = await browser.newContext({ viewport: { width: 1366, height: 768 } });
+      await mockReleases(context);
+      const page = await context.newPage();
+      await page.goto(base + '/threat-model-reviewer/', { waitUntil: 'networkidle' });
+      for (const [attribute, expected] of [['verdict', sample.verdict], ['score', sample.score], ['gating', sample.gatingFindings]])
+        check((await page.locator(`[data-sample-${attribute}]`).textContent()).trim() === String(expected), `threat-model-reviewer: sample ${attribute} drift`);
+      const downloadEvent = page.waitForEvent('download');
+      await page.locator('#try a[download]').click();
+      const download = await downloadEvent;
+      check(download.suggestedFilename() === 'customer-portal.tm7' && await download.failure() === null, 'threat-model-reviewer: sample download failed');
+      await context.close();
+
+      const noJs = await browser.newContext({ javaScriptEnabled: false });
+      const staticPage = await noJs.newPage();
+      await staticPage.goto(base + '/threat-model-reviewer/');
+      check(await staticPage.locator('#try a[download]').count() === 1, 'threat-model-reviewer: sample requires JavaScript');
+      await noJs.close();
     }
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await ready(page);
-    await page.keyboard.press('Tab');
-    check(await page.locator(':focus').getAttribute('class') === 'skip', 'product: skip link is not the first keyboard stop');
-    const theme = page.locator('#theme-toggle');
-    const initial = await theme.getAttribute('aria-label');
-    await theme.focus();
-    check(await theme.evaluate(el => getComputedStyle(el).outlineStyle !== 'none'), 'product: keyboard focus is not visible');
-    await page.keyboard.press('Enter');
-    check(await theme.getAttribute('aria-label') !== initial, 'product: keyboard theme toggle failed');
-    const changed = await theme.getAttribute('aria-label');
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await ready(page);
-    check(await theme.getAttribute('aria-label') === changed, 'product: theme preference did not persist');
-    check(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior === 'auto'), 'product: reduced motion ignored');
-    await context.close();
 
-    const offline = await browser.newContext();
-    await mockReleases(offline, true);
-    const fallback = await offline.newPage();
-    await visit(fallback, base + '/threat-model-reviewer/');
-    check(await fallback.locator('#hero-download').getAttribute('href') === msi.browser_download_url, 'product: API failure broke the snapshot MSI fallback');
-    await offline.close();
-
-    const noJs = await browser.newContext({ javaScriptEnabled: false });
-    const staticPage = await noJs.newPage();
-    await staticPage.goto(base + '/threat-model-reviewer/');
-    check(await staticPage.locator('#try a[download]').count() === 1, 'product: sample requires JavaScript');
-    check(await staticPage.locator('#hero-download').getAttribute('href') === staticDownload, 'product: static download unavailable');
-    await staticPage.goto(base + '/threat-model-reviewer/releases/');
-    check(await staticPage.getByRole('link', { name: 'View releases on GitHub', exact: true }).isVisible(), 'releases: history fallback requires JavaScript');
-    check(await staticPage.locator('.skel').count() === 0, 'releases: no-JavaScript page leaves loading skeletons');
-    await noJs.close();
+    // Only the no-JavaScript history fallback is specific to this product's releases page; the
+    // keyboard, theme and offline journeys above already run for every application on the hub.
+    {
+      const noJs = await browser.newContext({ javaScriptEnabled: false });
+      const staticPage = await noJs.newPage();
+      await staticPage.goto(base + '/threat-model-reviewer/releases/');
+      check(await staticPage.getByRole('link', { name: 'View releases on GitHub', exact: true }).isVisible(), 'releases: history fallback requires JavaScript');
+      check(await staticPage.locator('.skel').count() === 0, 'releases: no-JavaScript page leaves loading skeletons');
+      await noJs.close();
+    }
 
     await preservationChecks(browser, base);
     await accessibilityChecks({ browser, base, snapshot, check, mockReleases, visit });
+
+    {
+      const context = await browser.newContext({ viewport: { width: 1366, height: 768 } });
+      await mockReleases(context);
+      const page = await context.newPage();
+      await page.goto(base + '/shot2code/', { waitUntil: 'networkidle' });
+      check(await page.locator('#stacks .stack-grid li').count() === 12, 'shot2code: expected twelve output stacks');
+      const warning = (await page.locator('#download .note').textContent()).toLowerCase();
+      check(warning.includes('not code-signed') && warning.includes('windows protected your pc'),
+        'shot2code: the unsigned-binary warning is missing from the download section');
+
+      // Version-resilience: the structured data and the copy-paste verification command are both
+      // filled in from the release that was actually resolved.
+      const shot2codeProduct = products.find(entry => entry.name === 'shot2code');
+      const installer = shot2codeProduct.latest.assets.find(shot2codeProduct.recommended);
+      const structured = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
+      check(structured.softwareVersion === shot2codeProduct.latest.tag_name.slice(shot2codeProduct.prefix.length),
+        'shot2code: structured data did not take the resolved version');
+      check(structured.downloadUrl === installer.browser_download_url,
+        'shot2code: structured data did not take the resolved installer');
+      const verifyCommand = (await page.locator('#verify-command').textContent()).trim();
+      check(verifyCommand === `Get-FileHash .\\${installer.name} -Algorithm SHA256`,
+        `shot2code: the verification command still reads "${verifyCommand}"`);
+      // The gallery links to the full-resolution files, so those have to exist on the site.
+      for (const link of await page.locator('#screens a[href$=".png"]').all()) {
+        const href = await link.getAttribute('href');
+        const response = await page.request.get(new URL(href, base + '/shot2code/').toString());
+        check(response.ok(), `shot2code: gallery link ${href} did not resolve`);
+        check(Boolean((await link.getAttribute('aria-label'))?.trim()), `shot2code: gallery link ${href} has no accessible name`);
+      }
+      await context.close();
+    }
+
+    // Each releases page lists only its own product, and only the packages a person downloads.
+    for (const product of products) {
+      const context = await browser.newContext({ viewport: { width: 1366, height: 768 } });
+      await mockReleases(context);
+      const page = await context.newPage();
+      await page.goto(base + product.url + 'releases/', { waitUntil: 'networkidle' });
+      const versions = await page.locator('.rel .rel-ver').allTextContents();
+      check(versions.length === product.snapshot.length, `${product.name} releases: rendered ${versions.length} of ${product.snapshot.length} releases`);
+      check(versions[0]?.trim() === 'v' + product.latest.tag_name.slice(product.prefix.length),
+        `${product.name} releases: the newest card is not this product's latest release`);
+      const links = await page.locator('.rel.latest .dl-item a.btn').evaluateAll(nodes => nodes.map(n => n.href));
+      check(links.length > 0 && links.every(href => product.latest.assets.some(a => a.browser_download_url === href)),
+        `${product.name} releases: a download button does not point at a real asset`);
+      check(!links.some(href => /\.blockmap$|latest\.yml$/.test(href)),
+        `${product.name} releases: updater internals are offered as downloads`);
+      await context.close();
+    }
   }
   finally {
     await browser?.close();

@@ -7,12 +7,12 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>App Releases — desktop apps by ArasaniRohithReddy</title>
-  <meta name="description" content="The public release hub for the Windows desktop apps I build — each app has its own page and its own signed, self-contained releases. Start with Threat Model Reviewer." />
+  <meta name="description" content="The public release hub for the Windows desktop apps I build — each app has its own page, its own documentation and its own self-contained releases. Currently Threat Model Reviewer and shot2code." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="App Releases" />
-  <meta property="og:description" content="The public release hub for my Windows desktop apps — each app has its own page and signed releases." />
+  <meta property="og:description" content="The public release hub for my Windows desktop apps — each app has its own page, its own docs and its own releases." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
     <meta property="og:image:width" content="1200" />
@@ -36,6 +36,13 @@
         "applicationCategory": "SecurityApplication",
         "operatingSystem": "Windows 10, Windows 11",
         "url": "https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }, {
+        "@type": "SoftwareApplication",
+        "name": "shot2code",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Windows 10, Windows 11",
+        "url": "https://arasanirohithreddy.github.io/app-releases/shot2code/",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
       }]
     }
@@ -251,7 +258,7 @@
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           <span class="ghost-label">GitHub</span>
         </a>
-        <a class="btn btn-secondary rel-btn" href="./threat-model-reviewer/releases/">Releases</a>
+        <a class="btn btn-secondary rel-btn" href="https://github.com/ArasaniRohithReddy/app-releases/releases">Releases</a>
       </div>
     </div>
   </header>
@@ -263,10 +270,10 @@
       <div class="wrap">
         <span class="eyebrow"><span class="dot"></span> Public release hub</span>
         <h1 class="title">Desktop apps, released here.</h1>
-        <p class="lede">This is the home for the Windows apps I build and ship. Every app has its own page and its own signed, self-contained releases — all in one public hub, so there's a single place to download, read the changelog, and file issues.</p>
+        <p class="lede">This is the home for the Windows apps I build and ship. Every app has its own page, its own documentation and its own self-contained releases — all in one public hub, so there's a single place to download, read the changelog, and file issues.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#apps">Browse apps</a>
-          <a class="btn btn-secondary" href="./threat-model-reviewer/releases/">All releases</a>
+          <a class="btn btn-secondary" href="https://github.com/ArasaniRohithReddy/app-releases/releases">All releases</a>
         </div>
       </div>
     </section>
@@ -292,8 +299,27 @@
             <p class="desc">Find structural, coverage and triage gaps in Microsoft <code>.tm7</code> threat models before human review. Local deterministic checks, reviewable model changes and an optional Copilot assistant. Try a synthetic sample before opening your own model.</p>
             <div class="app-tags"><span>Windows 10/11</span><span>Desktop app</span><span>CLI</span><span>.tm7</span><span>GitHub Copilot</span></div>
             <div class="app-foot">
-              <a class="app-open stretch" href="./threat-model-reviewer/">Open app <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.5 3.5a.75.75 0 000 1.5h3.44L3.22 11.72a.75.75 0 101.06 1.06L11 6.06V9.5a.75.75 0 001.5 0v-5a.75.75 0 00-.75-.75h-5z"/></svg></a>
-              <span class="ver" id="tmr-version">v2.5.1</span>
+              <a class="app-open stretch" href="./threat-model-reviewer/" aria-label="Open app — Threat Model Reviewer">Open app <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.5 3.5a.75.75 0 000 1.5h3.44L3.22 11.72a.75.75 0 101.06 1.06L11 6.06V9.5a.75.75 0 001.5 0v-5a.75.75 0 00-.75-.75h-5z"/></svg></a>
+              <span class="ver" id="tmr-version">latest</span>
+            </div>
+          </article>
+
+          <!-- shot2code -->
+          <article class="app-card live">
+            <div class="app-top">
+              <span class="app-icon" aria-hidden="true">
+                <svg viewBox="0 0 46 46"><rect width="46" height="46" rx="12" fill="var(--accent-tint)"/><g transform="translate(9,11)"><rect x="0" y="0" width="28" height="20" rx="3.5" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M10.5 6.5L7.5 10l3 3.5M17.5 6.5L20.5 10l-3 3.5" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+              </span>
+              <div>
+                <h3 class="app-title">shot2code</h3>
+                <span class="status available"><span class="dot"></span> Available</span>
+              </div>
+            </div>
+            <p class="desc">Turn screenshots, mockups, URLs, descriptions or screen recordings into editable web code, on your own machine. Twelve output stacks, a multi-file editor, local SQLite project history and a sandboxed preview. Bring a GitHub Copilot sign-in or your own API key.</p>
+            <div class="app-tags"><span>Windows 10/11</span><span>Desktop app</span><span>12 stacks</span><span>Local-first</span><span>GitHub Copilot</span></div>
+            <div class="app-foot">
+              <a class="app-open stretch" href="./shot2code/" aria-label="Open app — shot2code">Open app <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.5 3.5a.75.75 0 000 1.5h3.44L3.22 11.72a.75.75 0 101.06 1.06L11 6.06V9.5a.75.75 0 001.5 0v-5a.75.75 0 00-.75-.75h-5z"/></svg></a>
+              <span class="ver" id="shot2code-version">latest</span>
             </div>
           </article>
 
@@ -316,7 +342,7 @@
         <div class="facts">
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6l8-4z"/></svg></span>
-            <div><h3>Signing information</h3><p>Executables and installers are signed with the current self-signed certificate. ZIP containers are not Authenticode-signed.</p></div>
+            <div><h3>Signing, stated plainly</h3><p>Each app's page says exactly how its binaries are signed — today a self-signed certificate for Threat Model Reviewer, unsigned builds for shot2code — and how to verify a download.</p></div>
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg></span>
@@ -332,7 +358,7 @@
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
-            <div><h3>Enterprise ready</h3><p>Silent install for Intune, SCCM and Group Policy, documented data handling, and no telemetry.</p></div>
+            <div><h3>Deployable</h3><p>An MSI for per-machine deployment alongside the per-user installer, documented data handling, and no product analytics in any app here.</p></div>
           </div>
         </div>
       </div>
@@ -361,14 +387,31 @@
 
   <script src="./release-data.js"></script>
   <script>
-    // Use the same product-scoped snapshot and stable-release selection as the download pages.
+    // Every product card resolves its own release. /releases/latest is repository-wide, so with
+    // more than one application it returns whichever app shipped most recently and would put that
+    // app's version on every card. Each product reads its own committed snapshot first and then
+    // refreshes from the shared release list, filtered by that product's tag prefix.
     (function () {
       if (!window.ReleaseData) return;
-      ReleaseData.load("./threat-model-reviewer/releases/releases.json", function (releases, source) {
-        var latest = ReleaseData.latestStable(releases);
-        if (latest) document.getElementById("tmr-version").textContent = "v" + latest.tag_name.slice(ReleaseData.PREFIX.length);
-        document.documentElement.dataset.releaseSource = source;
-      }).then(function () { document.documentElement.dataset.releaseReady = "true"; });
+      var PRODUCTS = [
+        { prefix: "threat-model-reviewer-v", chip: "tmr-version", snapshot: "./threat-model-reviewer/releases/releases.json" },
+        { prefix: "shot2code-v", chip: "shot2code-version", snapshot: "./shot2code/releases/releases.json" }
+      ];
+      var sources = {};
+      Promise.all(PRODUCTS.map(function (product) {
+        return ReleaseData.load(product.snapshot, function (releases, source) {
+          var newest = ReleaseData.latestStable(releases, product.prefix);
+          if (newest) {
+            var chip = document.getElementById(product.chip);
+            if (chip) chip.textContent = "v" + newest.tag_name.slice(product.prefix.length);
+          }
+          sources[product.prefix] = source;
+          // The page is only as live as its least current card.
+          document.documentElement.dataset.releaseSource = PRODUCTS.every(function (entry) {
+            return sources[entry.prefix] === "live";
+          }) ? "live" : "snapshot";
+        }, function () { /* the static chips already read "latest" */ }, { prefix: product.prefix });
+      })).then(function () { document.documentElement.dataset.releaseReady = "true"; });
     })();
   </script>
   <script src="./theme.js"></script>
