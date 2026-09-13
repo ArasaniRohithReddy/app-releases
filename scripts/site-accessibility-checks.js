@@ -146,12 +146,15 @@ module.exports = async function accessibilityChecks({ browser, base, snapshot, c
             return {
               height: element.getBoundingClientRect().height,
               aligned: [...element.querySelectorAll('.nav, .nav-links, .nav-actions')].every(singleRow),
+              groups: [...element.querySelector('.nav').children].map(child => ({
+                kind: child.className, width: Math.round(child.getBoundingClientRect().width)
+              })),
               guideLinks: [...element.querySelectorAll('a')].filter(link =>
                 link.textContent.trim() === 'Guides' && link.getBoundingClientRect().width > 0).length
             };
           });
           check(header.height <= 70 && header.aligned,
-            `${name}/${system}@${width}: normal-size header wraps or loses alignment (${header.height.toFixed(1)}px)`);
+            `${name}/${system}@${width}: normal-size header wraps or loses alignment (${header.height.toFixed(1)}px; ${JSON.stringify(header.groups)})`);
           check(header.guideLinks === 1, `${name}/${system}@${width}: expected one visible Guides entry, got ${header.guideLinks}`);
         }
 

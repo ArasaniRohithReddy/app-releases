@@ -205,7 +205,8 @@
       backdrop-filter: saturate(180%) blur(10px);
       border-bottom: 1px solid var(--line);
     }
-    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; min-height: 62px; }
+    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; min-height: 62px; }
+    .nav .btn { font-size: .875rem; padding: .45rem .7rem; }
     .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; white-space: nowrap; flex: none; }
     .brand:hover { text-decoration: none; }
     .brand .mark { width: 28px; height: 28px; flex: none; }
@@ -213,11 +214,12 @@
     .nav-links { display: flex; align-items: center; gap: .3rem; flex: none; }
     .nav-links a:not(.btn) { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
     .nav-links a:not(.btn):hover { color: var(--accent); background: var(--accent-tint); text-decoration: none; }
+    .nav-links.secondary a { padding-inline: .4rem; white-space: nowrap; }
     .nav .guide-action { display: none; }
     /* Keep the product identity and download action ahead of secondary section links. */
     @media (max-width: 1460px) {
       .nav { gap: .65rem; }
-      .nav-links { gap: .55rem; }
+      .nav-links { gap: .3rem; }
       .nav-links.secondary { font-size: .9rem; gap: .35rem; }
       .nav-links.secondary a { padding-left: .25rem; padding-right: .25rem; white-space: nowrap; }
     }

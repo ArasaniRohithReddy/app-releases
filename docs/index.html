@@ -158,7 +158,8 @@
 
     /* Header */
     header.site { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(10px); border-bottom: 1px solid var(--line); }
-    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; min-height: 62px; }
+    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; min-height: 62px; }
+    .nav .btn { font-size: .875rem; padding: .45rem .7rem; }
     .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; white-space: nowrap; flex: none; }
     .brand:hover { text-decoration: none; }
     .brand .mark { width: 28px; height: 28px; flex: none; }
@@ -167,7 +168,7 @@
     .nav-actions .btn-ghost.btn { font-size: var(--step--1); }
     @media (max-width: 560px) { .nav-actions .ghost-label { display: none; } }
     @media (max-width: 600px) { .nav-actions .rel-btn { display: none; } }
-    @media (max-width: 380px) { .nav .brand-text { display: none; } }
+    @media (max-width: 480px) { .nav .brand-text { display: none; } }
 
     /* Hero */
     .hero { padding-block: clamp(3rem, 8vw, 6.5rem) clamp(1.5rem, 4vw, 3rem); }
