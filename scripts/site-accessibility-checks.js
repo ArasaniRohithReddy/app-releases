@@ -134,6 +134,27 @@ module.exports = async function accessibilityChecks({ browser, base, snapshot, c
             'releases: accessible back-link name must contain its visible Overview label');
         }
 
+        for (const width of [320, 375, 390, 620, 621, 640, 700, 701, 820, 821, 980, 1280, 1460, 1461, 1600, 1920]) {
+          await page.setViewportSize({ width, height: 900 });
+          const header = await page.locator('header.site').evaluate(element => {
+            const singleRow = container => {
+              const centers = [...container.children].filter(child => !child.classList.contains('spacer'))
+                .map(child => child.getBoundingClientRect()).filter(box => box.width > 0 && box.height > 0)
+                .map(box => box.top + box.height / 2);
+              return centers.length < 2 || Math.max(...centers) - Math.min(...centers) <= 1;
+            };
+            return {
+              height: element.getBoundingClientRect().height,
+              aligned: [...element.querySelectorAll('.nav, .nav-links, .nav-actions')].every(singleRow),
+              guideLinks: [...element.querySelectorAll('a')].filter(link =>
+                link.textContent.trim() === 'Guides' && link.getBoundingClientRect().width > 0).length
+            };
+          });
+          check(header.height <= 70 && header.aligned,
+            `${name}/${system}@${width}: normal-size header wraps or loses alignment (${header.height.toFixed(1)}px)`);
+          check(header.guideLinks === 1, `${name}/${system}@${width}: expected one visible Guides entry, got ${header.guideLinks}`);
+        }
+
         // Real forward/backward Tab navigation, including the narrow wrapping-header layout.
         for (const width of [320, 1280]) {
           await page.setViewportSize({ width, height: 900 });
