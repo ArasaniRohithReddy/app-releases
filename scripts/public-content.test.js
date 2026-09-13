@@ -2,7 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const releaseData = require('../docs/release-data.js');
+const { buildSnapshot } = require('./update-release-snapshot.js');
 
 const root = path.resolve(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
@@ -269,4 +271,113 @@ test('stalled requests time out and invalid pagination never follows a different
   });
   assert.equal(calls.length, 2);
   assert.deepEqual(result, snapshot);
+});
+
+test('snapshot generation consumes all API pages without changing the existing schema or history', () => {
+  const otherProducts = Array.from({ length: 100 }, (_, i) => ({ tag_name: `other-app-v1.0.${i}`, draft: false }));
+  const api = snapshot.map(r => ({ ...r, draft: false, author: { login: 'not-part-of-the-snapshot' } }));
+  const before = JSON.stringify(snapshot);
+  assert.deepEqual(buildSnapshot(snapshot, [otherProducts, api]), snapshot);
+  assert.deepEqual(buildSnapshot([], [otherProducts, api]), snapshot, 'Product releases on page two must not be missed');
+  assert.equal(JSON.stringify(snapshot), before, 'The saved fixture must not be mutated');
+});
+
+test('snapshot generation preserves absent releases, assets and notes during partial refreshes', () => {
+  const partial = { ...stable, body_html: '', body: 'Ignored raw API body', assets: [{ ...stable.assets[0], download_count: 123 }] };
+  const result = buildSnapshot(snapshot, [[partial]]);
+  assert.equal(result.length, snapshot.length);
+  assert.equal(result.flatMap(r => r.assets).length, snapshot.flatMap(r => r.assets).length);
+  for (const old of snapshot) {
+    const saved = result.find(r => r.tag_name === old.tag_name);
+    assert.equal(saved.body_html, old.body_html, old.tag_name);
+    assert.deepEqual(saved.assets.map(a => a.browser_download_url), old.assets.map(a => a.browser_download_url));
+    assert.equal(Object.hasOwn(saved, 'body'), false);
+  }
+  assert.equal(result.find(r => r.tag_name === stable.tag_name).assets[0].download_count, 123);
+});
+
+test('snapshot generation rejects malformed or empty API data instead of replacing saved history', () => {
+  for (const pages of [null, {}, [], [null], [{}], [[]], [[null]], snapshot,
+    [[{ ...stable, assets: {} }]], [[{ ...stable, body_html: undefined }]],
+    [[{ ...stable, assets: [{ ...stable.assets[0], download_count: -1 }] }]]])
+    assert.throws(() => buildSnapshot(snapshot, pages));
+  assert.throws(() => buildSnapshot([null], [[stable]]));
+});
+
+test('snapshot CLI updates valid candidates and leaves an existing file intact on bad input', () => {
+  const evidence = path.join(root, 'test-results');
+  fs.mkdirSync(evidence, { recursive: true });
+  const temporary = fs.mkdtempSync(path.join(evidence, 'snapshot-test-'));
+  const file = path.join(temporary, 'releases.json');
+  const original = JSON.stringify(snapshot) + '\n';
+  try {
+    fs.writeFileSync(file, original);
+    const script = path.join(root, 'scripts/update-release-snapshot.js');
+    const bad = spawnSync(process.execPath, [script, file], { input: '[[]]', encoding: 'utf8' });
+    assert.equal(bad.status, 1);
+    assert.equal(fs.readFileSync(file, 'utf8'), original);
+    const good = spawnSync(process.execPath, [script, file], { input: JSON.stringify([snapshot]), encoding: 'utf8' });
+    assert.equal(good.status, 0, good.stderr);
+    assert.equal(fs.readFileSync(file, 'utf8'), original);
+    const update = [[{ ...stable, assets: [{ ...stable.assets[0], download_count: 123 }] }]];
+    const changed = spawnSync(process.execPath, [script, file], { input: JSON.stringify(update), encoding: 'utf8' });
+    assert.equal(changed.status, 0, changed.stderr);
+    assert.deepEqual(JSON.parse(fs.readFileSync(file, 'utf8')), buildSnapshot(snapshot, update));
+    assert.equal(fs.existsSync(file + '.tmp'), false);
+  } finally { fs.rmSync(temporary, { recursive: true, force: true }); }
+});
+
+test('Pages deployment consumes only its successful check job and SHA-specific artifact', () => {
+  const workflow = read('.github/workflows/site-checks.yml');
+  const deploy = workflow.split('\n  deploy:')[1];
+  assert.ok(deploy, 'Deployment must be part of the validation workflow');
+  assert.match(workflow, /ref: \$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /persist-credentials: false/);
+  const checks = workflow.indexOf('- run: npm test');
+  const archive = workflow.indexOf('git archive "${GITHUB_SHA}:docs"');
+  const upload = workflow.indexOf('uses: actions/upload-pages-artifact@v3');
+  assert.ok(checks >= 0 && checks < archive && archive < upload, 'Check the committed tree before archiving/uploading it');
+  assert.match(workflow, /git status --porcelain --untracked-files=all --ignored -- docs/);
+  assert.match(workflow, /name: github-pages-\$\{\{ github\.sha \}\}/);
+  assert.match(deploy, /needs: check/);
+  assert.match(deploy, /needs\.check\.result == 'success'/);
+  assert.match(deploy, /artifact_name: github-pages-\$\{\{ github\.sha \}\}/);
+  assert.match(deploy, /"\$main_sha" != "\$GITHUB_SHA"/);
+  assert.ok(deploy.indexOf('"$main_sha" != "$GITHUB_SHA"') < deploy.indexOf('uses: actions/deploy-pages@v4'));
+  assert.doesNotMatch(workflow, /workflow_run:|pull_request_target:|continue-on-error:/);
+});
+
+test('Pages deploy is opt-in, main-only and cannot silently enable legacy Pages', () => {
+  const workflow = read('.github/workflows/site-checks.yml');
+  const deploy = workflow.split('\n  deploy:')[1];
+  for (const guard of [
+    "github.repository == 'ArasaniRohithReddy/app-releases'",
+    "github.ref == 'refs/heads/main'",
+    "github.event_name != 'pull_request'",
+    "vars.PAGES_DEPLOY_ENABLED == 'true'"
+  ]) assert.equal(workflow.split(guard).length - 1, 3, `Stage, upload and deploy must all enforce: ${guard}`);
+  assert.match(deploy, /pages: write/);
+  assert.match(deploy, /id-token: write/);
+  assert.match(deploy, /name: github-pages/);
+  assert.match(deploy, /"\$build_type" != "workflow"/);
+  assert.match(deploy, /enablement: false/);
+  assert.doesNotMatch(workflow.split('\n  deploy:')[0], /pages: write|id-token: write/);
+  assert.match(workflow, /push:\s+branches: \[main\]\s+workflow_dispatch:/);
+});
+
+test('snapshot workflow validates before push and explicitly dispatches checks even on no change', () => {
+  const workflow = read('.github/workflows/update-releases-snapshot.yml');
+  assert.match(workflow, /--paginate --slurp/);
+  assert.match(workflow, /node scripts\/update-release-snapshot\.js/);
+  assert.match(workflow, /actions: write/);
+  assert.match(workflow, /ref: \$\{\{ github\.event\.repository\.default_branch \}\}/);
+  assert.doesNotMatch(workflow, /\[skip ci\]|\[ci skip\]|git add -A|git push[^\n]*--force|git pull[^\n]*--rebase/i);
+  const commit = workflow.indexOf('git commit -m');
+  const validate = workflow.indexOf('run: npm test');
+  const push = workflow.indexOf('git push origin');
+  const dispatch = workflow.indexOf('gh workflow run site-checks.yml');
+  assert.ok(commit >= 0 && commit < validate && validate < push && push < dispatch);
+  const dispatchStep = workflow.slice(workflow.indexOf('- name: Dispatch same-SHA'));
+  assert.doesNotMatch(dispatchStep, /\n\s+if:/, 'No-change refreshes must retry a previously missed dispatch');
+  assert.match(dispatchStep, /--ref "\$\{\{ github\.event\.repository\.default_branch \}\}"/);
 });

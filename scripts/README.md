@@ -1,5 +1,9 @@
 # Site verification
 
+For the validation-before-deployment workflow and the **coordinator-required Pages
+setting change**, see [Pages deployment and snapshot preservation](PAGES-DEPLOYMENT.md).
+Committing the workflows does not gate the existing build-from-branch deployment by itself.
+
 Install the locked development dependencies, then run the content and browser checks:
 
 ```powershell
@@ -61,6 +65,12 @@ Screenshots and dependencies are ignored by Git. The browser and temporary serve
 by the test runner; no user app or desktop session is touched.
 No private model or live Azure account is required. Use `npm run test:content` for
 only the fast copy/sample checks.
+
+The content suite also tests the snapshot generator with paginated, partial and invalid
+API fixtures, plus workflow guards that bind deployment to the checked SHA. The scheduled
+generator consumes `gh api --paginate --slurp` output; it preserves saved releases, notes
+and assets instead of pruning them on API absence. Do not regenerate the real snapshot
+by hand for a site change.
 
 For mirrored product guides, make the correction in the source repository and run
 its `scripts\sync-public-docs.ps1` export and `-Check` mode before committing here.
