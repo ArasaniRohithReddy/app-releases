@@ -157,7 +157,9 @@
     .badge { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:.2rem .55rem; border-radius:999px; white-space:normal; max-width:100%; }
     .badge.latest { background:var(--ok-tint); color:var(--ok); }
     .badge.pre { background:var(--warn-tint); color:var(--warn); }
-    .rel-date { color:var(--muted); font-size:var(--step--1); white-space:nowrap; }
+    /* The published date must reflow: at 320px with 200% text a nowrap date is wider than the card,
+       and a system-font fallback pushes it past the viewport. Keep it on one line where it fits. */
+    .rel-date { color:var(--muted); font-size:var(--step--1); max-width:100%; }
     .rel-sub { color:var(--muted); font-size:var(--step--1); margin:0 0 1rem; }
 
     /* Download grid */
