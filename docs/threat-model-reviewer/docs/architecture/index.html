@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/ARCHITECTURE.md (normalized SHA-256 368fff74fe6e9cfce36037c54dcaf99c440cce2973850c483548b214c5389332). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/ARCHITECTURE.md (normalized SHA-256 fd95fdd704e2677012a95168a089301f2c107c3aa44a348873a33d11125c4742). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="./" aria-current="page">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="./" aria-current="page">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -67,6 +67,8 @@
 The guiding rule: <strong>the deterministic core never depends on AI</strong>, so the verdict is
 reproducible. Deterministic review works offline; direct Azure discovery is a
 separate network-backed Core feature and AI/MCP integrations are optional.</p>
+<p>The integration boundaries below are included in <strong>v2.6.0</strong>. Release provenance
+records its accepted source and runtime; a source version alone is not release evidence.</p>
 <pre tabindex="0" aria-label="Text code example"><code>ThreatModelReviewer.Core   ──► no AI dependency (the deterministic engine)
         ▲
         │ uses
@@ -116,6 +118,12 @@ The baseline-carried writer preserves an existing TMT KnowledgeBase and Profile.
 Without a baseline, the app identifies newly generated output as reviewer-only.
 The CLI's <code>azure</code> command writes the richer <code>GenerationSpec</code>; the desktop form uses
 <code>CreateSpec</code>. Do not assume every rich property survives conversion through the form.</p>
+<p>In development source, rich metadata is retained separately from display names and
+matched back to edited rows only when identity is unambiguous. A single pipeline
+result supplies the final XML, displayed counts and evidence for both baseline
+and non-baseline generation. <code>GenerationArtifactWriter</code> stages the desktop output
+set and uses <code>model.tm7.generation.json</code> to establish ownership before replacing
+sidecars. See <a href="../user-guide/#evidence-files">the user workflow and limitations</a>.</p>
 <p><code>StencilImages</code> resolves and caches frozen artwork from an installed Microsoft TMT
 instance. The diagram uses vector fallbacks when matching artwork is unavailable.</p>
 <h2 id="trust-boundaries-of-the-tool-itself" tabindex="-1">Trust boundaries of the tool itself</h2>
@@ -148,11 +156,28 @@ Microsoft Learn uses HTTPS; Azure MCP can download and run a local npm package.
 The direct Azure CLI wrapper's allowlist does not govern that separate process.</li>
 </ul>
 <p>Full enumeration: <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
+<h3 id="connector-and-revision-boundaries" tabindex="-1">Connector and revision boundaries</h3>
+<p><code>McpSessionPolicy</code> constrains effective SDK defaults as well as the configured
+server list. <code>McpConnectionManager</code> owns probes and credential/consent state;
+the provider and final-window shutdown dispose their owned lifetimes with bounded
+escalation. Restricted Learn, Azure metadata and GitHub profiles remain opt-in.
+They are not an infrastructure-discovery replacement or an OS sandbox.</p>
+<p>The direct Azure runner instead invokes an allowlisted native Python/CLI process
+inside its own Windows Job Object. The picker returns both group and validated
+subscription ID; subsequent reads do not fall back to a mutable default account.</p>
+<p>Desktop Compare captures exact bytes, identity and evaluation options in an
+immutable snapshot, invalidating pending output on input changes. CLI SDL parses
+and hashes one captured byte sequence; semantic/path-only callers remain explicitly
+unverified. Reports are literal-rendered, and provenance is potentially sensitive.
+See <a href="../mcp/">MCP</a>, <a href="../azure-discovery/">Azure</a>, and <a href="../comparison/">Compare</a>.</p>
 <h2 id="cli-threatmodelreviewercli" tabindex="-1">Cli (<code>ThreatModelReviewer.Cli</code>)</h2>
 <p><code>review</code> / <code>fix</code> / <code>create</code> / <code>openapi</code> / <code>diff</code> / <code>eval</code>, plus <code>compare</code>, <code>generate</code>,
 <code>ingest</code>, <code>azure</code>, <code>sdl</code>, <code>ask</code>, <code>history</code>, <code>policy</code>, and report/issue-export flags.
 <code>review</code> exit codes: <code>0</code> ready-with-notes, <code>2</code> not ready, <code>1</code> error — designed so a build pipeline
 can gate on threat-model readiness.</p>
+<p>Development source also exposes local <code>mcp</code> configuration/credential commands,
+explicit connection testing, and <code>--mcp</code> for opted-in AI calls. A normal review
+or factual <code>ask</code> remains offline.</p>
 <h2 id="extending-the-rubric" tabindex="-1">Extending the rubric</h2>
 <p>Implement <code>IRubricCheck</code> and compose with the defaults:</p>
 <pre tabindex="0" aria-label="csharp code example"><code>var engine = RubricEngine.WithAdditionalChecks(new[] { new MyOrgPolicyCheck() });

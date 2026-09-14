@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/INSTALL.md (normalized SHA-256 4bc2cdfcd0b9c1cb2a8e04d76c3bc149eafbecd4876d9f857a822913e765098b). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/INSTALL.md (normalized SHA-256 2c4cebe6e00eb5dab625c88e227af2cb8b19b0fb08bf45725f197767c54769c3). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Installing Threat Model Reviewer — Threat Model Reviewer documentation</title>
-  <meta name="description" content="Threat Model Reviewer is a Windows desktop application with a command line and a GitHub Copilot CLI skill alongside it. Every download is attached to each release on the releases p" />
+  <meta name="description" content="Threat Model Reviewer is a Windows desktop application with a command line and a GitHub Copilot CLI skill alongside it. Every download is attached to each release on the Threat Mod" />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/install/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Installing Threat Model Reviewer — App Releases" />
-  <meta property="og:description" content="Threat Model Reviewer is a Windows desktop application with a command line and a GitHub Copilot CLI skill alongside it. Every download is attached to each release on the releases p" />
+  <meta property="og:description" content="Threat Model Reviewer is a Windows desktop application with a command line and a GitHub Copilot CLI skill alongside it. Every download is attached to each release on the Threat Mod" />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/install/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Installing Threat Model Reviewer","description":"Threat Model Reviewer is a Windows desktop application with a command line and a GitHub Copilot CLI skill alongside it. Every download is attached to each release on the releases p","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/install/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Installing Threat Model Reviewer","description":"Threat Model Reviewer is a Windows desktop application with a command line and a GitHub Copilot CLI skill alongside it. Every download is attached to each release on the Threat Mod","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/install/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="./" aria-current="page">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="./" aria-current="page">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -65,12 +65,14 @@
         <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#system-requirements">System requirements</a></li><li><a href="#option-1--msi-installer--recommended">Option 1 — MSI installer — recommended</a></li><li><a href="#option-2--portable-zip">Option 2 — Portable (zip)</a></li><li><a href="#option-3--inno-setup-installer-setupexe">Option 3 — Inno Setup installer (Setup.exe)</a></li><li><a href="#option-4--msix-package--experimental">Option 4 — MSIX package — experimental</a></li><li><a href="#about-the-smartscreen-warning">About the SmartScreen warning</a></li><li><a href="#signing-in-to-github-copilot">Signing in to GitHub Copilot</a></li><li><a href="#uninstalling">Uninstalling</a></li><li><a href="#troubleshooting">Troubleshooting</a></li><li><a href="#option-5--command-line">Option 5 — Command line</a></li><li><a href="#option-6--github-copilot-cli-skill">Option 6 — GitHub Copilot CLI skill</a></li></ul></nav></details>
         <div class="doc-content"><p>Threat Model Reviewer is a <strong>Windows desktop application</strong> with a command line and a GitHub Copilot
 CLI skill alongside it. Every download is attached to each release on the
-<strong><a href="https://github.com/ArasaniRohithReddy/app-releases/releases" rel="noopener noreferrer">releases page</a></strong> — pick one.</p>
+<strong><a href="../../releases/">Threat Model Reviewer releases page</a></strong> — pick the matching product package.</p>
 <h2 id="system-requirements" tabindex="-1">System requirements</h2>
 <ul>
 <li><strong>Windows 10 (1809 / build 17763) or Windows 11</strong>, 64-bit (x64).</li>
-<li>~400 MB free disk space.</li>
-<li><strong>No .NET install needed</strong> — every download is self-contained (the .NET runtime is bundled).</li>
+<li>Allow disk space for both the download and the extracted/installed bundle; release
+assets list compressed download sizes, not the complete installation footprint.</li>
+<li><strong>No .NET install needed</strong> for desktop and CLI bundles; the runtime is included.
+The skill bundle contains instructions and a resolver, and requires the separate CLI.</li>
 <li><strong>Optional:</strong> an <strong>active GitHub Copilot subscription</strong> (Individual, Business, or Enterprise),
 only if you want the AI features. The app uses your signed-in seat (see
 <a href="#signing-in-to-github-copilot">Signing in to GitHub Copilot</a>); the deterministic review
@@ -83,14 +85,14 @@ only if you want the AI features. The app uses your signed-in seat (see
 <li>Run it. The wizard lets you choose <strong>&quot;Install for all users&quot;</strong> (per-machine, into
 Program Files — needs admin once) or <strong>&quot;Install just for me&quot;</strong> (per-user, into your
 profile — no admin). It adds a Start-Menu shortcut and an entry in <em>Apps &amp; features</em>.</li>
-<li>If <strong>SmartScreen</strong> warns (see <a href="#about-the-smartscreen-warning">About the SmartScreen warning</a>),
-click <strong>More info → Run anyway</strong>.</li>
+<li>If <strong>SmartScreen</strong> warns, verify the source, signature and hash before proceeding.
+Follow <a href="#about-the-smartscreen-warning">the trust guidance</a> and your organization's policy.</li>
 </ol>
 <h2 id="option-2--portable-zip" tabindex="-1">Option 2 — Portable (zip)</h2>
 <ol>
 <li>Download <code>ThreatModelReviewer-vX.Y.Z-win-x64-portable.zip</code>.</li>
-<li>Right-click → <strong>Properties</strong> → tick <strong>Unblock</strong>, then <strong>Extract All</strong> to a folder you
-control (e.g. <code>C:\Apps\ThreatModelReviewer</code>).</li>
+<li>Verify the download, then <strong>Extract All</strong> to a folder you control
+(e.g. <code>C:\Apps\ThreatModelReviewer</code>). Do not bypass an administrator-enforced block.</li>
 <li>Run <strong><code>ThreatModelReviewer.exe</code></strong>.</li>
 </ol>
 <blockquote>
@@ -101,12 +103,13 @@ control (e.g. <code>C:\Apps\ThreatModelReviewer</code>).</li>
 <p>A per-user installer (no admin). Download <code>…-setup.exe</code> and run it. An alternative to the
 MSI if you prefer a single per-user <code>.exe</code>.</p>
 <h2 id="option-4--msix-package--experimental" tabindex="-1">Option 4 — MSIX package — <em>experimental</em></h2>
-<p>The MSIX is signed with a <strong>self-signed</strong> certificate, so you must trust it first:</p>
+<p>The MSIX uses a <strong>self-signed</strong> certificate. Confirm the expected publisher and
+obtain approval before adding trust; importing a certificate is not just extraction:</p>
 <ol>
-<li>Download <code>…-x64.msix</code> <strong>and</strong> <code>ThreatModelReviewer-publisher.cer</code>.</li>
+<li>Download <code>…-x64.msix</code> <strong>and</strong> <code>ThreatModelReviewer-publisher.cer</code> from the same release.</li>
 <li>Right-click <code>…-publisher.cer</code> → <strong>Install Certificate</strong> → <strong>Local Machine</strong> →
 <strong>Place all certificates in the following store</strong> → <strong>Trusted People</strong> → Finish.
-<em>(needs admin)</em></li>
+<em>(needs admin and approval under the device's trust policy)</em></li>
 <li>Double-click the <code>.msix</code> and <strong>Install</strong>.</li>
 </ol>
 <blockquote>
@@ -121,7 +124,7 @@ or <strong>portable</strong> options.</p>
 <strong>self-signed</strong> certificate; ZIP containers are not. SmartScreen or organization
 policy can still warn or block execution. Do not treat a warning as proof of safety
 or dismiss it automatically. Verify the download source, signature and hash, then
-follow your organization's software policy. See <a href="../../../help/security/#code-signing">SECURITY.md</a>.</p>
+follow your organization's software policy. See <a href="../security/#code-signing">SECURITY.md</a>.</p>
 <p>CA-issued, EV or Azure Trusted Signing certificates can establish publisher trust,
 but signing alone does not guarantee that SmartScreen or policy warnings disappear.
 That signing migration is planned, not shipped.</p>

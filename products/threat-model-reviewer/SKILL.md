@@ -7,7 +7,29 @@ nobody outside the team can clone. It got the right answer after nine minutes an
 With the skill, it runs one command.
 
 Download **`ThreatModelReviewer-vX.Y.Z-skill.zip`** from the
-[latest release](https://github.com/ArasaniRohithReddy/app-releases/releases/latest).
+[Threat Model Reviewer releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/).
+
+The **v2.6.0** skill and CLI include restricted MCP context and captured-revision/
+evidence safeguards. Keep the bundles matched; do not run unsupported commands
+against an older CLI or silently replace the engine with AI reasoning.
+
+For optional developer context, **MCP is the tool protocol**, the GitHub Copilot
+SDK hosts the sessions, and each tool is a named operation with an input schema
+backed by a service API. The OpenAI-compatible and Offline providers do not
+attach these MCP profiles. The skill must route to the existing CLI/manager
+instead of configuring another connector or implying universal SDK support.
+Use `mcp show <id>` for configured names/capabilities and explicitly consented
+`mcp test <server-id>` for one server, `mcp test <id> <id> ...` for an explicit
+selection, or plain `mcp test` for all enabled servers. Selection is per server,
+not per tool, and never enables a source or the master implicitly. Any invalid
+or unconsented requested source rejects the whole probe before startup.
+Probes close before reporting discovered names and SDK/schema readiness;
+historical probe success is not live AI-session connectivity or authenticated
+resource access. Saved consent still controls the next MCP-enabled AI request.
+Preserve the command's source/stage diagnostics. A generic timeout is not
+proof of an npm policy block, and a disabled GitHub profile's missing PAT
+does not explain Azure bootstrap. An explicit managed-security block requires
+IT approval, never a mirror/download fallback or disabled security controls.
 
 ---
 
@@ -94,6 +116,7 @@ copilot -p "review docs/threat-model.tm7 and list the gating findings" --allow-a
 | `references/rubric-and-verdict.md` | How the verdict is decided, the 8 gating checks, all 72 check ids |
 | `references/spec-schemas.md` | The `generate` and `create` spec schemas, which differ |
 | `references/ci-recipes.md` | GitHub Actions, Azure DevOps, pre-commit, batch review |
+| `references/developer-context.md` | MCP consent/credentials, saved-revision identity, and evidence recovery limits |
 | `scripts/Invoke-ThreatModelReviewer.ps1` | Finds the CLI and forwards the exit code unchanged |
 | `plugin.json` | Plugin manifest |
 
@@ -122,7 +145,7 @@ only a non-zero number to go on.
 
 ## What is guarded
 
-`ThreatModelReviewer.Tests/SkillPackagingTests.cs` holds 23 tests over the bundle, because nothing
+`ThreatModelReviewer.Tests/SkillPackagingTests.cs` guards the bundle, because nothing
 compiles it and a wrong sentence in a skill becomes a wrong command. They assert, among other
 things, that:
 
@@ -148,6 +171,8 @@ and `copilot skill add` refused it outright. Nothing in the build would have cau
 - **Generation enumerates; it does not analyse.** Every generated threat is *Needs Investigation*.
 - **AI operations need provider access.** Deterministic review and built-in fixes work offline.
   The `azure` verb is also deterministic, but requires Azure network access and sign-in.
+  MCP testing/context adds separate network and credential paths;
+  [MCP](MCP.md) explains consent and the restricted profiles. Read-only is not nonsensitive.
 - **Model fixes are not code fixes.** The owning team implements and verifies mitigations.
 - **Skill selection is not guaranteed.** An agent chooses a skill from its description. On a machine
   with hundreds of skills installed the list an agent sees can be truncated, and the skill may not

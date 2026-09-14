@@ -27,7 +27,7 @@
 
   <!-- Structured data. Kept deliberately narrow: only claims that are true of the shipped build
        and verifiable from this page, since a rich result that overstates is worse than none. -->
-  <script type="application/ld+json">
+  <script id="software-metadata" type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -37,7 +37,6 @@
     "operatingSystem": "Windows 10, Windows 11",
     "url": "https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/",
     "downloadUrl": "https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&expanded=true",
-    "softwareVersion": "2.5.1",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "description": "Reviews and helps correct Microsoft .tm7 threat models using 72 deterministic checks. The score measures the model, not system security; a readiness result is not Microsoft approval or proof that mitigations are implemented.",
     "featureList": [
@@ -453,7 +452,7 @@
           </div>
           <p class="download-hint">MSI recommended. No Copilot subscription needed for deterministic review.</p>
           <div class="meta-line">
-            <span class="chip" id="version-chip">v2.5.1</span>
+            <span class="chip" id="version-chip">See releases</span>
             <span>Windows 10/11 · x64</span>
             <span>Self-contained — no .NET install</span>
           </div>
@@ -629,7 +628,7 @@
           <p>The same deterministic review engine, with a surface suited to your task.</p>
         </div>
         <div class="workflow-list">
-          <article class="workflow"><h3>Desktop app</h3><p>Inspect the diagram, review findings, preview model edits and compare revisions. Start in Create or Assistant when you are drafting a model.</p><a href="./docs/user-guide/">Desktop guide</a></article>
+          <article class="workflow"><h3>Desktop app</h3><p>Inspect diagrams, review findings and preview model edits. Create and Assistant support drafting; Ask and floating Ask share local and optional AI modes.</p><a href="./docs/user-guide/">Desktop guide</a></article>
           <article class="workflow"><h3>Windows CLI</h3><p>Run reviews in CI, export SARIF, compare revisions or apply an organization policy with disclosure. The headless bundle is separate from the desktop installer.</p><a href="./docs/cli/">CLI guide</a></article>
           <article class="workflow"><h3>Copilot CLI skill</h3><p>Ask an agent to invoke the reviewer and report its actual results. Install the skill and the CLI bundle together; the instructions do not replace the engine.</p><a href="./docs/skill/">Skill guide</a></article>
         </div>
@@ -641,12 +640,12 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Pick the format you prefer — every build is self-contained, so there’s no .NET to install. A <strong>command-line bundle</strong> ships alongside them for CI and scripting, and a <strong>GitHub Copilot CLI skill</strong> for driving it from an AI agent. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">v2.5.1</span>.</p>
+          <p>Desktop and CLI bundles include .NET. The <strong>Copilot CLI skill</strong> is a separate download and requires the matching CLI. Current release: <span class="chip" id="version-chip-2" style="font-family:var(--mono)">See releases</span>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
             <div class="dl-head"><h3>Installer (MSI)</h3><span class="tag">Recommended</span></div>
-            <p>Standard installer &mdash; choose all-users or just-me at install time. Updates itself in place.</p>
+            <p>Standard installer &mdash; choose all-users or just-me at install time. Supports in-app updates; deployment policy still applies.</p>
             <a class="btn btn-primary" data-dl="msi" href="https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&amp;expanded=true">Download .msi</a>
             <span class="dl-size" data-size="msi"></span>
           </div>
@@ -678,13 +677,15 @@
           </div>
           <div class="dl-card">
             <div class="dl-head"><h3>MSIX</h3><span class="tag">Experimental</span></div>
-            <p>Packaged install &mdash; trust the <code>publisher.cer</code> first. AI may be limited under MSIX.</p>
+            <p>Packaged install &mdash; certificate trust requires approval under your device policy. AI may be limited under MSIX.</p>
             <a class="btn btn-secondary" data-dl="msix" href="https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&amp;expanded=true">Download .msix</a>
             <span class="dl-size" data-size="msix"></span>
             <div class="dl-size"><a data-dl="cer" href="https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&amp;expanded=true">publisher.cer</a></div>
           </div>
         </div>
+        <p class="dl-note">Release integrity: <a data-dl="checksums" href="https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&amp;expanded=true">SHA-256 checksums</a> and <a data-dl="provenance" href="https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&amp;expanded=true">source/runtime provenance</a> are supporting files, not installers. Older releases may not include them.</p>
         <p class="dl-note">On v1.0.4 or later the app updates itself — click <strong>Download &amp; install</strong> on the in-app banner, then <strong>Install &amp; restart</strong>. Every version, its notes and all files are on the <a href="./releases/">releases page</a>.</p>
+        <p class="dl-note">Optional developer context uses eight restricted operations across Microsoft Learn, Azure metadata and GitHub. Sources default to off, require consent, and do not affect the deterministic verdict. Read the <a href="./docs/mcp/">MCP setup guide</a> and <a href="./docs/microsoft-tmt/">Microsoft TMT compatibility limits</a>.</p>
         <div class="note">
           <strong>SmartScreen note:</strong> executables and installers use a self-signed certificate, so Windows may warn or block them. Verify the download and follow your organization's policy. A future trusted-publisher certificate does not guarantee that every warning disappears.
         </div>
@@ -811,7 +812,7 @@
             if (k && !byKind[k]) byKind[k] = a;
           });
           // Reset missing kinds as well, so a new version never retains an older version's ZIP.
-          ["msi", "portable", "setup", "cli", "skill", "msix", "cer"].forEach(function (k) {
+          ["msi", "portable", "setup", "cli", "skill", "msix", "cer", "checksums", "provenance"].forEach(function (k) {
             var a = byKind[k];
             document.querySelectorAll('[data-dl="' + k + '"]').forEach(function (el) { el.href = a ? a.browser_download_url : ReleaseData.releaseUrl(rel); });
             document.querySelectorAll('[data-size="' + k + '"]').forEach(function (el) { el.textContent = a ? mb(a.size) : ""; });
@@ -820,6 +821,11 @@
           var hero = document.getElementById("hero-download");
           if (hero && byKind.msi) hero.href = byKind.msi.browser_download_url;
           else if (hero) hero.href = ReleaseData.releaseUrl(rel);
+          var metadata = document.getElementById("software-metadata");
+          var application = JSON.parse(metadata.textContent);
+          application.softwareVersion = rel.tag_name.slice(ReleaseData.PREFIX.length);
+          application.downloadUrl = byKind.msi ? byKind.msi.browser_download_url : ReleaseData.releaseUrl(rel);
+          metadata.textContent = JSON.stringify(application);
           document.documentElement.dataset.releaseSource = source;
       }).then(function () { document.documentElement.dataset.releaseReady = "true"; });
     })();

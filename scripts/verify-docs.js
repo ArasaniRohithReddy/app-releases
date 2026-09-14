@@ -154,7 +154,7 @@ async function main() {
         await page.getByRole('navigation', { name: 'Documentation', exact: true }).getByRole('link', { name: 'Install', exact: true }).click();
         await page.waitForURL(base + '/threat-model-reviewer/docs/install/');
         await page.locator('.doc-content').getByRole('link', { name: 'SECURITY.md', exact: true }).click();
-        await page.waitForURL(base + '/help/security/#code-signing');
+        await page.waitForURL(base + '/threat-model-reviewer/docs/security/#code-signing');
         check(await page.locator('h1').textContent() === 'Security Policy', `journey@${width}: cross-guide link left the site`);
         await page.getByRole('link', { name: 'Back to product', exact: true }).click();
         await page.waitForURL(base + '/threat-model-reviewer/');

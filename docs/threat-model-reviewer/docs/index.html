@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/README.md (normalized SHA-256 7d3865ea7b05fd1bbf6a4c459783ab97c4e24341da927d4ffb68d27a74730e5e). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/README.md (normalized SHA-256 785dbc4c0b92fb97fe5adeb856094622e0ccf712c31733a574cc6f46f0a8fa7f). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="./" aria-current="page">Overview</a></li><li><a href="install/">Install</a></li><li><a href="user-guide/">User guide</a></li><li><a href="cli/">Command line</a></li><li><a href="skill/">Copilot CLI skill</a></li><li><a href="faq/">FAQ</a></li><li><a href="data-handling/">Data handling &amp; privacy</a></li><li><a href="enterprise-deployment/">Enterprise deployment</a></li><li><a href="architecture/">Architecture</a></li><li><a href="third-party-notices/">Third-party notices</a></li><li><a href="releasing/">Release process</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="./" aria-current="page">Overview</a></li><li><a href="install/">Install</a></li><li><a href="user-guide/">User guide</a></li><li><a href="cli/">Command line</a></li><li><a href="skill/">Copilot CLI skill</a></li><li><a href="mcp/">MCP developer context</a></li><li><a href="azure-discovery/">Azure discovery</a></li><li><a href="comparison/">Compare revisions</a></li><li><a href="microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="faq/">FAQ</a></li><li><a href="data-handling/">Data handling &amp; privacy</a></li><li><a href="security/">Product security</a></li><li><a href="license/">Product license</a></li><li><a href="enterprise-deployment/">Enterprise deployment</a></li><li><a href="architecture/">Architecture</a></li><li><a href="third-party-notices/">Third-party notices</a></li><li><a href="releasing/">Release process</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../help/">Support</a></li><li><a href="../../help/security/">Security policy</a></li><li><a href="../../help/license/">License</a></li><li><a href="../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -62,9 +62,11 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/README.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#start-with-a-safe-example">Start with a safe example</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#what-the-result-does-not-mean">What the result does not mean</a></li><li><a href="#choose-a-download">Choose a download</a></li><li><a href="#privacy-and-optional-ai">Privacy and optional AI</a></li><li><a href="#guides-and-support">Guides and support</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#start-with-a-safe-example">Start with a safe example</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#what-the-result-does-not-mean">What the result does not mean</a></li><li><a href="#choose-a-download">Choose a download</a></li><li><a href="#privacy-and-optional-ai">Privacy and optional AI</a></li><li><a href="#developer-context-and-evidence">Developer context and evidence</a></li><li><a href="#guides-and-support">Guides and support</a></li></ul></nav></details>
         <div class="doc-content"><p><strong>Find the gaps before your threat model review.</strong></p>
-<p><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest" rel="noopener noreferrer"><span class="image-alt">Latest release</span></a></p>
+<p><a href="../releases/"><span class="image-alt">Downloads</span></a></p>
+<p>Use the app, CLI and skill from the same product release. Updating a guide does
+not add new commands to an older installed binary.</p>
 <p>Review Microsoft Threat Modeling Tool <code>.tm7</code> and OWASP Threat Dragon <code>.json</code>
 models, work through specific findings, and save a corrected model for human
 review. The Windows app, CLI and Copilot CLI skill use the same deterministic
@@ -141,7 +143,9 @@ application: shared-key access, other resource groups and unknown resource types
 can leave gaps. Inspect the draft and its evidence before relying on it.</p>
 <p>Newly generated files need the supported baseline/template workflow when they
 must reopen in Microsoft TMT. Follow the Create guidance in the user guide;
-parsing a file in this reviewer alone does not prove TMT compatibility.</p>
+parsing a file in this reviewer alone does not prove TMT compatibility.
+The <a href="microsoft-tmt/">compatibility guide</a> distinguishes supported review and
+authoring workflows from native TMT features and template-dependent behavior.</p>
 <h2 id="what-the-result-does-not-mean" tabindex="-1">What the result does not mean</h2>
 <p>The score describes the <strong>model</strong>, not a measured reduction in system risk.
 <strong>READY WITH NOTES</strong> means there are no gating findings under the selected rubric
@@ -188,7 +192,7 @@ The owning team implements mitigations and supplies verification evidence.</p>
 a CLI resolver, not a replacement runtime. Executables and installers are signed
 with the project's current self-signed certificate. ZIP files are not
 Authenticode-signed containers. Check the <a href="install/">installation guide</a> and
-<a href="../../help/security/#code-signing">security policy</a> before installing.</p>
+<a href="security/#code-signing">security policy</a> before installing.</p>
 <h2 id="privacy-and-optional-ai" tabindex="-1">Privacy and optional AI</h2>
 <p>Deterministic model review works locally without network access. Optional AI
 features send context to the configured provider; image extraction sends the
@@ -196,9 +200,20 @@ image you select. Azure discovery and enabled MCP data sources use network
 access separately. Review <a href="data-handling/">Data handling</a> before enabling them.</p>
 <p>The app does not collect product analytics. Update checks can be disabled.
 External providers, CLI runtimes and MCP servers have their own terms and settings.</p>
+<h2 id="developer-context-and-evidence" tabindex="-1">Developer context and evidence</h2>
+<p>The application includes <a href="mcp/">restricted MCP developer context</a>, a
+<a href="azure-discovery/">shell-free Azure discovery runner</a>, and
+<a href="comparison/">captured-revision comparison</a>. Generation retains edited metadata
+and protects evidence ownership; SDL exports identify the evaluated source bytes
+and publish the manifest last. Use matching binaries and skill instructions;
+older releases do not implement every current command or safeguard.</p>
+<p>Microsoft Learn, Azure metadata and GitHub repository context are separate,
+default-off sources. Read-only access is not a privacy guarantee, and none changes
+the deterministic verdict. Azure DevOps MCP remains deferred, not a shipped option.</p>
 <h2 id="guides-and-support" tabindex="-1">Guides and support</h2>
 <p><a href="install/">Install</a> · <a href="user-guide/">User guide</a> · <a href="faq/">FAQ</a> ·
 <a href="cli/">CLI</a> · <a href="skill/">Skill</a> · <a href="architecture/">Architecture</a> ·
+<a href="microsoft-tmt/">Microsoft TMT compatibility</a> ·
 <a href="enterprise-deployment/">Enterprise deployment</a> ·
 <a href="third-party-notices/">Third-party notices</a> ·
 <a href="changelog/">Changelog</a></p>

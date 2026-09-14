@@ -28,7 +28,10 @@ Either way, this public repository is the single place to **download** builds, r
 Find structural, coverage and triage gaps in **Microsoft Threat Modeling Tool (`.tm7`)**
 and OWASP Threat Dragon (`.json`) models before human review. The readiness verdict
 and 0–100 score are computed locally by a deterministic rubric; Copilot is optional.
-Create and Assistant are available in the desktop app.
+Create and Assistant support draft authoring in the desktop app. Ask and floating
+Ask share one conversation, with explicit local/AI modes. Optional, default-off
+MCP context provides restricted Learn, Azure metadata and GitHub read operations
+through the Copilot SDK, with matching CLI and skill controls.
 
 Model fixes do **not** patch code or change infrastructure. The owning team implements
 and verifies mitigations; a readiness result is not Microsoft approval.
@@ -37,7 +40,7 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 | Resource | Link |
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/) |
-| **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/) — every version, notes and files · or [latest on GitHub](https://github.com/ArasaniRohithReddy/app-releases/releases/latest) |
+| **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/) — every version, notes and files · or [TMR releases on GitHub](https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&expanded=true) |
 | **Documentation** | [Read guides on the site](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/) — overview, installation, user guide, CLI, skill, FAQ and changelog |
 | **In this repository** | [Overview](products/threat-model-reviewer/) · [Install](products/threat-model-reviewer/INSTALL.md) · [User guide](products/threat-model-reviewer/USER-GUIDE.md) · [FAQ](products/threat-model-reviewer/FAQ.md) · [Changelog](products/threat-model-reviewer/CHANGELOG.md) |
 | **For enterprises** | [Data handling & privacy](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/) · [Enterprise deployment](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/) · [Third-party notices](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/third-party-notices/) |

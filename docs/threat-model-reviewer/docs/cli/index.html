@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/CLI.md (normalized SHA-256 e72126c5181947fb93b5dfe3c963061e0546c5feb91895e98e00083b8a9ac1da). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/CLI.md (normalized SHA-256 9e16fbb7518a2657670260a46b5b7e1ec9ab3ffe1165edf147b03dca75cfd686). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="./" aria-current="page">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="./" aria-current="page">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -62,11 +62,13 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/CLI.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#reviewing-a-model">Reviewing a model</a></li><li><a href="#other-verbs">Other verbs</a></li><li><a href="#building-from-a-deployed-azure-resource-group">Building from a deployed Azure resource group</a></li><li><a href="#ai-verbs-and-authentication">AI verbs and authentication</a></li><li><a href="#using-it-in-ci">Using it in CI</a></li><li><a href="#driving-it-from-an-ai-agent">Driving it from an AI agent</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#reviewing-a-model">Reviewing a model</a></li><li><a href="#other-verbs">Other verbs</a></li><li><a href="#generation-success-and-review-readiness">Generation success and review readiness</a></li><li><a href="#building-from-a-deployed-azure-resource-group">Building from a deployed Azure resource group</a></li><li><a href="#ai-verbs-and-authentication">AI verbs and authentication</a></li><li><a href="#optional-mcp-context">Optional MCP context</a></li><li><a href="#using-it-in-ci">Using it in CI</a></li><li><a href="#driving-it-from-an-ai-agent">Driving it from an AI agent</a></li></ul></nav></details>
         <div class="doc-content"><p><code>ThreatModelReviewer.Cli.exe</code> runs the same deterministic rubric engine as the desktop app, with no
 UI and no .NET installation required. It is intended for CI, batch review, and scripting.</p>
+<p>Use the CLI from the matching product release. Older binaries do not acquire new
+commands because this guide changes.</p>
 <p>Download <strong><code>ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip</code></strong> from the
-<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest" rel="noopener noreferrer">latest release</a>, extract it
+<a href="../../releases/">Threat Model Reviewer releases</a>, extract it
 anywhere, and run the executable. Nothing else to install.</p>
 <pre tabindex="0" aria-label="powershell code example"><code># Optional: put it on PATH for the current session
 $env:Path += &quot;;C:\tools\ThreatModelReviewer-cli&quot;
@@ -108,8 +110,6 @@ if ($LASTEXITCODE -eq 2) { throw &quot;Threat model is NOT READY - see the findi
 <pre tabindex="0" aria-label="powershell code example"><code>ThreatModelReviewer.Cli.exe &quot;Model.tm7&quot; `
   --html report.html --md summary.md --json findings.json --sarif findings.sarif --csv findings.csv
 </code></pre>
-<p><code>--sarif</code> writes a local SARIF file; it does not upload findings or transmit them automatically.
-Uploading the file requires a separately configured workflow or an explicit upload.</p>
 <p><code>--explain</code> adds Copilot commentary to the report. It never changes the verdict or the score; those
 come from the rubric engine alone.</p>
 <hr>
@@ -145,10 +145,31 @@ ThreatModelReviewer.Cli.exe sdl model.tm7 --out .\sdl-bundle
 # Answer a question from deterministic facts only - no AI, no network
 ThreatModelReviewer.Cli.exe ask model.tm7 &quot;why is it not ready?&quot;
 </code></pre>
+<h3 id="sdl-bundle-integrity" tabindex="-1">SDL bundle integrity</h3>
+<p>The SDL writer validates that every threat has a non-blank identifier that is unique after trimming
+before it creates the output directory. It writes <code>manifest.json</code> last and removes an older manifest
+before replacing artifacts. If a write fails, the absence of the manifest is the failure signal; unrelated
+files in the output directory are left alone.</p>
+<p>The CLI captures the source bytes once, decodes and parses that snapshot, and
+supplies one complete <code>SdlSourceIdentity</code> from those same bytes. The source path,
+format, SHA-256 and byte count therefore describe the evaluated revision, including
+its original encoding/BOM. The SDL writer never rereads a mutable source path or
+hashes reserialized XML to invent file identity.</p>
+<p>An in-process caller supplying only a semantic model/path gets an explicitly
+<strong>unverified</strong> source identity without a digest or byte count; it must provide
+captured identity to claim exact bytes. Incomplete or conflicting digest overrides
+are rejected. Artifact hashes remain independently verifiable.</p>
+<p>Artifact replacement is <strong>not transactional or power-loss atomic</strong>. A failed refresh can leave a mixture
+of old and new artifact files, but it must not leave a success-shaped manifest. Prefer a new or empty
+output directory, and trust a completed bundle only after verifying every available hash in <code>manifest.json</code>.</p>
+<p>Repository maintainers can run the standard-library-only artifact parser over captured test bundles:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>python scripts\tests\validate_sdl_bundle.py --root .\TestResults\sdl-phase-artifacts
+</code></pre>
+<hr>
+<h2 id="generation-success-and-review-readiness" tabindex="-1">Generation success and review readiness</h2>
 <p>For <code>generate</code>, exit <code>0</code> means generation succeeded. It does not establish a readiness verdict.
 Run a separate review of the output (<code>ThreatModelReviewer.Cli.exe &quot;model.tm7&quot;</code>) and use that
 review's actual verdict, score and findings.</p>
-<hr>
 <h2 id="building-from-a-deployed-azure-resource-group" tabindex="-1">Building from a deployed Azure resource group</h2>
 <p>Infrastructure code records what was <em>declared</em> and a diagram records what somebody <em>drew</em>. Neither
 is the same as what is running. The <code>azure</code> verb reads the deployed system instead.</p>
@@ -187,6 +208,12 @@ traffic or verify that an application uses the permission.</p>
 <p>The wrapper cannot be handed a command. Every read is a named method that builds its own arguments
 and re-validates them against an allowlist before running. Nothing can create, change or delete a
 resource, and no command that reads a key, secret, connection string or credential is reachable.</p>
+<p>The native Azure CLI Python module runs without a command
+shell. Use the installed MSI/ZIP/virtual-environment interpreter, or an explicit
+<code>TMR_AZURE_CLI_PYTHON</code> absolute path for another trusted installation layout.
+The selected subscription is captured and passed through the discovery operation;
+malformed responses, access errors and unconfirmed cleanup cannot become empty
+successes. See <a href="../azure-discovery/">the supported I/O contract</a>.</p>
 <h3 id="what-it-cannot-tell-you" tabindex="-1">What it cannot tell you</h3>
 <p>Always pass <code>--evidence</code>, and read the limits it records. The two that matter most:</p>
 <ul>
@@ -207,6 +234,81 @@ verbs that ask Copilot for commentary need a signed-in seat.</p>
 </code></pre>
 <p>Classic <code>ghp_</code> tokens are not supported. See <a href="../data-handling/">DATA-HANDLING.md</a> for exactly what is
 sent and when.</p>
+<h2 id="optional-mcp-context" tabindex="-1">Optional MCP context</h2>
+<p>MCP adds optional context to Copilot, not another source of verdicts. It requires
+both master and per-profile consent, and an AI invocation must also request
+<code>--mcp</code>. The installed v2.5.1 CLI does not have these commands.
+This integration uses the <strong>GitHub Copilot SDK only</strong>. OpenAI-compatible and
+Offline providers do not attach MCP profiles. MCP is a tool protocol, the SDK
+hosts its sessions, and individual tools expose named operations/input schemas
+over a service API; these are not interchangeable capabilities.</p>
+<pre tabindex="0" aria-label="powershell code example"><code># Local inspection only; no server connection
+ThreatModelReviewer.Cli.exe mcp list
+ThreatModelReviewer.Cli.exe mcp show github-review-context
+ThreatModelReviewer.Cli.exe mcp status
+
+# Store a separate fine-grained PAT using masked input; never pass a token literal
+ThreatModelReviewer.Cli.exe mcp credential github-review-context
+ThreatModelReviewer.Cli.exe mcp enable github-review-context --consent
+ThreatModelReviewer.Cli.exe mcp on --consent
+
+# Single-server probe; no other configured source starts
+ThreatModelReviewer.Cli.exe mcp test github-review-context
+
+# Several servers, only after each has separately been enabled/consented
+ThreatModelReviewer.Cli.exe mcp test microsoft-learn github-review-context
+
+# Backward-compatible all-enabled probe; includes Azure/npx if Azure is enabled
+ThreatModelReviewer.Cli.exe mcp test
+
+# Opt in for this AI request; the rubric still runs locally
+ThreatModelReviewer.Cli.exe &quot;Model.tm7&quot; --explain --mcp
+ThreatModelReviewer.Cli.exe fix &quot;Model.tm7&quot; --ai --mcp --out &quot;Model.draft.tm7&quot;
+
+# Disable future use and separately remove the stored credential
+ThreatModelReviewer.Cli.exe mcp off
+ThreatModelReviewer.Cli.exe mcp forget-credential github-review-context
+</code></pre>
+<p>Built-ins are Microsoft Learn, Azure <strong>subscription/group metadata only</strong>, and
+GitHub file/issue/pull-request reads. GitHub context needs its own PAT for selected
+repositories; do not reuse a Copilot seat token or broad automation credential.
+Read-only data can still be sensitive and enter provider context. Normal review
+and factual <code>ask</code> require none of this. For exact tools, custom-import restrictions,
+credential lifecycle and troubleshooting, see <a href="../mcp/">MCP</a>.</p>
+<p><code>mcp show &lt;id&gt;</code> already provides per-profile configured names/capabilities;
+it is local and does not claim discovery. <code>mcp test</code> prints each allowed tool's
+discovery, SDK availability and input-schema state. Transport-connected is
+not tools-ready, and available metadata is not proof of an authenticated
+resource operation. Missing names/schemas or unavailable/deferred tools fail
+readiness explicitly. No resource tools are invoked by this command.</p>
+<p>Scope is per <strong>server</strong>, not per tool. <code>mcp test &lt;id&gt;</code> tests one server;
+<code>mcp test &lt;id&gt; &lt;id&gt; ...</code> tests exactly that selection; plain <code>mcp test</code> remains
+all enabled. The master and every requested profile must already be enabled.
+All requested IDs, consent and credentials are validated before startup:
+unknown/disabled/unconsented/missing-credential selections fail as a whole,
+without starting a valid subset or enabling anything. Hosted-only selection
+never starts Azure/npx, even when Azure is saved enabled.</p>
+<p>Every probe closes its diagnostic runtime before reporting. A passed probe
+is historical transport/tool/schema evidence, <strong>not a live AI-session
+connection</strong>. Cleanup failures remain explicit and return 1. <code>show</code>/<code>status</code>
+remain local configuration inspection; probe history is not persisted across
+CLI invocations. Testing does not change the saved enabled-source selection
+used by the next <code>--explain --mcp</code> or <code>fix --ai --mcp</code> request.</p>
+<p>Test failures include the source ID and last observed stage, rather than
+blaming every failure on a GitHub credential. Azure stdio/bootstrap guidance
+distinguishes Node.js/npx prerequisites from source authentication and from
+an <strong>explicitly reported IT policy block</strong>. A timeout/unreported server alone
+does not establish such a block. If managed security reports one, stop and
+request IT approval; do not bypass controls or switch download sources.
+Pending Azure does not erase completed hosted-source results once the SDK
+session exists; shared runtime/session failures remain shared and explicit.
+Only an administrator-approved preinstalled entrypoint/descriptor may use
+the existing credential-free custom-import path; no automatic alternative
+package or executable path is selected. See <a href="../mcp/">MCP</a> for that boundary.</p>
+<p>Local stdio is not a sandbox. Known Copilot/GitHub-seat and AI-provider
+credential environment keys are masked in the transmitted overlay, but other
+variables, the intended Azure identity chain and local files can remain
+accessible. Remote GitHub Authorization uses only its separate named PAT.</p>
 <hr>
 <h2 id="using-it-in-ci" tabindex="-1">Using it in CI</h2>
 <pre tabindex="0" aria-label="yaml code example"><code>- name: Review the threat model
@@ -216,13 +318,15 @@ sent and when.</p>
     if ($LASTEXITCODE -eq 2) { exit 1 }   # gate the build on a NOT READY verdict
 
 - name: Publish findings
+  if: ${{ always() &amp;&amp; hashFiles(&#39;findings.sarif&#39;) != &#39;&#39; }}
   uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: findings.sarif
 </code></pre>
-<p>The review step writes <code>findings.sarif</code> locally. The separate <code>upload-sarif</code> step publishes
-it to GitHub code scanning; findings appear in the Security tab only if that step runs
-successfully and code scanning is available for the repository. <code>--sarif</code> alone does not upload it.</p>
+<p><code>--sarif</code> writes a local SARIF file. It does not upload findings or transmit them automatically.
+The separate upload-sarif step publishes those findings to GitHub code scanning only if that step
+runs successfully and the repository is configured to accept them. Review the file for sensitive
+model content and apply the repository's access policy before uploading.</p>
 <hr>
 <h2 id="driving-it-from-an-ai-agent" tabindex="-1">Driving it from an AI agent</h2>
 <p>Everything above is also reachable through the <strong>GitHub Copilot CLI skill</strong>, shipped as

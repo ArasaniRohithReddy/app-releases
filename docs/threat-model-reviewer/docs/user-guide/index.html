@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/USER-GUIDE.md (normalized SHA-256 285fd6e53a3eff4e4910cdb4bb61186ea14661ac687e5a28ce4688a4429420c0). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/USER-GUIDE.md (normalized SHA-256 8497b06d0d33007fb987fe64f76350c6a0c801b67e186c6181cf222d4ec573ae). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="./" aria-current="page">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="./" aria-current="page">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -96,6 +96,27 @@ and clearing the gate does not mean every threat has been resolved.</p>
 <li>Click <strong>Open .tm7</strong> in the header, or</li>
 <li>Launch the app with a path (<code>ThreatModelReviewer.exe &quot;C:\path\Model.tm7&quot;</code>), or &quot;Open with&quot;.</li>
 </ul>
+<p>When opens overlap, only the latest open can install its review,
+change navigation, or start the optional AI pass selected for that open. A delayed success
+or failure from an earlier open does not replace the latest model or its loading/error state.</p>
+<h3 id="unsaved-changes-and-separate-windows" tabindex="-1">Unsaved changes and separate windows</h3>
+<p>Open (including History and file drop), Close model, generated-model
+replacement and window exit ask whether to <strong>Save</strong>, <strong>Don't save</strong>, or <strong>Cancel</strong> when
+the current diagram has unsaved changes. Save must succeed before replacement or exit;
+a cancelled, failed or obsolete save keeps the current review and its unsaved state.
+Only <code>.tm7</code> diagram changes can be saved back this way. For other formats, cancel or
+explicitly choose to discard; do not interpret an unavailable Save as a completed save.</p>
+<p>Decisions belong to the exact document and edits that were shown. A late confirmation
+or save cannot discard edits made while it was pending. An original-file write already
+started may finish, but it cannot replace newer in-memory work. A new Open can supersede
+an old operation after any required discard confirmation; choosing Save again requires
+the active save/refresh to finish first. Diagram pop-outs close when their model is
+replaced so they cannot keep editing an obsolete document.</p>
+<p><strong>New window</strong> (<code>Ctrl + Shift + N</code>) starts a separate application window/process without
+closing this model or copying its unsaved changes. Each window owns one active review;
+Compare still compares saved revisions rather than editing two documents in one view.
+The independent Create/Assistant draft survives Close model within its window, but is
+not a persisted session: generate and retain its files before exiting the application.</p>
 <p>The header shows one <strong>verdict</strong> — NOT READY or READY WITH NOTES — with the <strong>review score</strong>
 as supporting detail. They answer different questions. The <strong>score (0–100)</strong> measures
 <em>maturity</em>: how thoroughly the model is built. The <strong>verdict</strong> is a <em>gate</em>: any must-fix
@@ -106,36 +127,154 @@ machine-readable name for NOT READY. Toggle <strong>Strict SDL bar</strong> to m
 gating.</p>
 <h2 id="the-tabs" tabindex="-1">The tabs</h2>
 <h3 id="overview" tabindex="-1">Overview</h3>
-<p>The at-a-glance dashboard:</p>
+<p>The review layout keeps readiness, score, evidence and optional guidance separate.</p>
 <ul>
-<li><strong>Verdict &amp; readiness</strong> — why the model is gated, grouped by check.</li>
-<li><strong>Review score</strong> — the 0–100 maturity score broken into the four dimensions
-(scope, coverage, response/hygiene, validation).</li>
-<li><strong>Stat cards</strong>, <strong>STRIDE coverage</strong>, and <strong>AI/LLM components</strong>.</li>
+<li><strong>Readiness gate</strong> — why the current review is gated, grouped by check. <strong>Review gating
+findings</strong> opens the Findings tab with its gating filter; <strong>Open Fix tab</strong> opens the plan workspace.</li>
+<li><strong>Maturity score</strong> — the separate 0–100 score and four weighted dimensions
+(scope, coverage, response/hygiene, validation). A high score cannot cancel a gating finding.
+Neither the score nor READY WITH NOTES is Microsoft approval or proof that controls work.</li>
+<li><strong>Model facts</strong>, <strong>STRIDE coverage</strong>, and <strong>AI/LLM components</strong> describe the model.</li>
 <li><strong>Threats by interaction</strong> — every threat regrouped onto its data flow, worst-gap-first,
-with an independent <strong>Prioritize with Copilot</strong> button.</li>
+with an independent <strong>Prioritize interactions</strong> action.</li>
 <li><strong>Framework coverage</strong> — a deterministic scorecard (OWASP Top 10 2021 + STRIDE): which
-categories your threats address, with an independent <strong>Analyze gaps with Copilot</strong> button.</li>
-<li><strong>Copilot critique pass</strong> — an optional whole-model SDL critique.</li>
+categories your threats address. Coverage status is written in text as well as colour.
+<strong>Analyze gaps</strong> requests optional suggestions.</li>
+<li><strong>Optional model critique</strong> — uses the configured AI provider, like the prioritization and
+gap actions. Output identifies its producing provider; Offline output is labelled as a
+placeholder with no AI inference. These actions never change the deterministic verdict.</li>
 </ul>
+<p>Opening/reloading/closing a model, changing the review options,
+or starting a structural re-review invalidates optional guidance and the current fix plan.
+Pending advisory requests are cancelled locally; late content, progress and errors from their
+old review are discarded rather than displayed as current. A provider may already have received
+the request, so local cancellation is not a promise to undo provider work or charges.</p>
 <h3 id="diagram" tabindex="-1">Diagram</h3>
-<p>The data-flow diagram with correct DFD shapes, each node labelled with its <strong>stencil type</strong>
-(e.g. &quot;Azure Key Vault&quot;, &quot;Web Application&quot;); zoomable. A Copilot chat can answer questions
-and propose diagram edits.</p>
+<p>The DFD is deliberately a <strong>light document sheet</strong>, including in the dark app theme.
+When matching artwork is available in the installed Microsoft Threat Modeling Tool,
+the renderer uses it; otherwise it retains the vector fallback. This is not a claim
+of native TMT visual or pixel parity.</p>
+<p>The Diagram workspace has wrapping action rows, a viewport-aware <strong>Fit</strong> action,
+10–600% zoom controls, and one side pane at a time so the document remains usable in
+a compact window.</p>
+<ul>
+<li><strong>Edit diagram → Edit tools</strong> exposes the selected element's full name, kind and
+stencil type. Select on the canvas or use the labelled element list. Long document
+labels are bounded rather than overflowing shapes; their full names remain in
+tooltips and accessibility names. Label rendering does not change model topology.</li>
+<li><strong>Keyboard:</strong> Tab to an element or flow label. Enter selects an element; arrow
+keys move it one document unit and Shift+arrows move it ten. Flow-label arrows
+reposition the label; Enter or F2 starts a rename, Enter applies it, and Escape
+cancels it and returns focus to the canvas. <strong>Add data flow</strong> provides labelled
+source/target pickers as the keyboard alternative to drag-to-connect.</li>
+<li>Focus the canvas and use arrows/scrollbars to pan. Ctrl+plus/minus zooms,
+Ctrl+0 fits the available viewport, and Ctrl+Home restores 100%. The existing
+Ctrl+1…7 tab shortcuts are unchanged.</li>
+<li><strong>Save changes</strong> writes positions and structural edits to the <code>.tm7</code> and
+re-reviews it. <strong>Reset to saved</strong> discards unsaved diagram edits. Closing a side
+pane does not discard edits or a proposal.</li>
+</ul>
+<p><strong>Edit diagram → Copilot edits</strong> separates the instruction, attachments, recovery
+messages and proposed-change review from the always-reachable request/review actions.
+Propose changes is replaced by Apply / Discard when a proposal is ready; discard
+to revise the request. Example instructions are optional. The pane uses the existing
+global provider, model and optional MCP settings; it does not create a separate
+connection configuration. <strong>Ask Copilot</strong> is the advisory conversation, not the
+proposal-application control.</p>
+<p>Proposals require <strong>human review</strong>. Applying one changes the threat model only;
+it does not patch application code, configure infrastructure or deploy mitigations.
+Review every change and warning against the current model before applying. If the
+model or edit request changes, pending Diagram AI work and prepared proposals are
+cancelled/discarded with an explicit status. Request a new proposal for the current
+model. This protection is a <strong>separate source-only safety follow-up</strong>, not a claim
+that the earlier UI polish alone fixed model-revision safety.</p>
+<p>Proposals are bound to the originating model, edit session, surface and existing
+edit/reparse sequence. Apply works on a private copy and checks that context again
+before publishing anything into the open model. Opening/reloading/closing a model,
+resetting or saving the diagram, manual model edits, and changing the edit instruction
+or attachments invalidate obsolete work. Model-bound Diagram chat history is also
+discarded on replacement or structural changes, so old answers/citations do not
+ground a new document's conversation. Late completion, failure or progress from an
+obsolete request cannot replace a newer request's state.</p>
+<p>Cancellation signals the provider and releases the local command; a provider that
+ignores cancellation may still finish remotely. Its late result is discarded.
+If a cancellation callback fails, the document transition still completes and a
+generic callback-failure/discard notice is shown; old results remain ineligible.
+These guards do not validate the proposal's architectural claims or implement
+mitigations, and Save changes is still required to write accepted model edits.</p>
+<p><strong>Image privacy:</strong> a selected image may be sent to the configured provider when
+you request a proposal. <strong>Text redaction does not sanitize pixels.</strong> Remove
+sensitive content from images yourself before attaching them. Model summaries and
+attached text may also be sent; remove secrets rather than relying on redaction.</p>
 <h3 id="findings" tabindex="-1">Findings</h3>
-<p>The prioritized findings list. Each finding shows its severity, whether it's <strong>gating</strong>,
-the target element/flow, the message, <strong>framework references</strong> (OWASP / MITRE / CWE /
-Microsoft Learn), and built-in <strong>what-it-means / how-to-fix</strong> guidance. Per finding you can
-<strong>Explain with Copilot</strong> or run <strong>Deep analysis</strong> (DREAD + attack tree + Gherkin tests) —
-each independent. <strong>Export ▾</strong> offers HTML / PDF / Markdown / CSV / JSON / SARIF and
-work-item exports (GitHub / Azure DevOps / Jira), with an optional &quot;include Copilot
-guidance / deep analysis&quot; step.</p>
+<p>Search check, severity, title, target, message or references;
+combine <strong>Severity</strong> and <strong>Only gating</strong> to narrow the list. The count shows visible versus total
+findings. <strong>Reset</strong> clears filters without discarding column sorting. Column headers sort the view;
+the virtualized rows stay compact for large reviews. Ellipses indicate abbreviated titles/targets,
+not different findings.</p>
+<p>Use Up/Down in the list to select a finding. <strong>Selected finding details</strong> shows the full target,
+selectable message, built-in <strong>what-it-means / how-to-fix</strong> guidance, and <strong>framework references</strong>
+(OWASP / MITRE / CWE / Microsoft Learn). The gate column explicitly distinguishes <strong>Gating</strong>
+from <strong>Advisory</strong>; severity alone does not decide readiness.</p>
+<p>Expand <strong>Optional AI guidance and analysis</strong> to explain the selected finding or run <strong>Deep analysis</strong>
+(an advisory DREAD estimate, mitigation plan, attack tree and Gherkin tests). Each row retains its
+own output, provider label and progress/error state. Built-in guidance remains separate; Offline
+placeholders are not labelled as Copilot inference.</p>
+<p>Changing the selected finding does not redirect work: guidance and analysis still belong to the
+row that requested them. A failed row can be retried without discarding its built-in guidance.
+AI-enriched exports stop if the originating review changes during the options, generation or
+save-choice steps. An export does not treat an analysis that is still running as completed content;
+wait and retry, or export without optional AI analysis.</p>
+<p><strong>Review totals and risk</strong>, <strong>Explain all</strong>, <strong>Deep analysis for all</strong>, and <strong>Export ▾</strong> use the
+<strong>full review, not the filtered list</strong>. Export offers HTML / PDF / Markdown / CSV / JSON / SARIF
+and work-item exports (GitHub / Azure DevOps / Jira), with an optional AI-content inclusion step.</p>
 <h3 id="fix" tabindex="-1">Fix</h3>
-<p>Generate a <strong>remediation plan</strong>: add missing threats, triage Not-Started threats, draft
-justifications, and fill out-of-scope reasons. For each item pick <strong>Built-in</strong> or <strong>Copilot</strong>
-(draft the specifics with your seat). Review the preview, then <strong>Apply &amp; Save</strong> a corrected
-<code>.tm7</code> that re-opens cleanly in the Microsoft Threat Modeling Tool.</p>
+<ol>
+<li><strong>Generate fix plan</strong> creates built-in proposals for supported findings: missing threats,
+triage, justifications and out-of-scope reasons. Regenerating replaces the old plan and selections.
+No automatic fixes is not the same as no findings or a ready model.</li>
+<li>Select a row to read the <strong>exact selected fix content</strong>. The preview is read-only, selectable
+and copyable. Selecting a row and including it for saving are separate actions: use its <strong>Apply</strong>
+checkbox, or <strong>Include this fix when saving</strong> in the detail pane.</li>
+<li><strong>Draft all with AI</strong> or <strong>Draft this fix with AI</strong> optionally drafts specifics using the configured
+provider. Pick <strong>Built-in</strong> or the available draft under <strong>Content source</strong>; switching sources
+updates the preview. Offline variants are explicitly labelled as placeholders, not AI inference.
+Review placeholders even after switching back from a draft.</li>
+<li><strong>Plan options ▾</strong> selects/clears all fixes or switches all rows to built-in content or available
+drafts. The save bar counts included built-in, AI-drafted and (when present) offline items.</li>
+<li><strong>Apply &amp; Save fixed .tm7</strong> is available when at least one fix is included. Prefer a new file.
+It writes and re-reviews the model; confirm the saved file in the Microsoft Threat Modeling Tool
+and edit any model-specific text there.</li>
+</ol>
+<p>Changing threat state or writing a mitigation description does <strong>not</strong> implement or verify a
+security control, patch application code, or change deployed infrastructure.</p>
+<p>Regenerating a plan cancels its outstanding draft requests. A delayed draft for an earlier plan
+cannot replace the new plan's content merely because an action has the same check/target ID.</p>
+<p>Changing the model/review or regenerating the plan while choosing a save destination prevents
+that obsolete plan from starting a write. If writing has already begun, the original selected
+file may still finish; its late completion will not reopen it over a newer model or overwrite
+the newer workspace's status. This is not transactional file rollback. Keep reviewing the
+saved artifact in the Threat Modeling Tool.</p>
 <h3 id="create" tabindex="-1">Create</h3>
+<p><strong>Development source only:</strong> the authoring layout below is not yet in the public v2.5.1
+binary. The score, verdict and generation rules are unchanged.</p>
+<ol>
+<li>Open <strong>Choose a starting point / replace this draft</strong> for a template, a local architecture
+import, <strong>Use Assistant…</strong>, or <strong>Start empty</strong>. Azure discovery is an optional disclosure
+inside this section; nothing connects automatically. Loading a source replaces the draft
+rows and source notes, not an existing saved model.</li>
+<li>Enter a <strong>Model name</strong>, then edit <strong>Components</strong>, <strong>Data flows</strong> and <strong>Trust boundaries</strong>.
+The add row shares the existing rows' labelled columns. An Add action is disabled until its
+required fields have values. Flow source/target pickers accept a component selection or typed text.</li>
+<li>Use <strong>Review validation</strong> to jump to the full list of blocking issues and advisory warnings.
+<strong>Metadata &amp; source notes</strong> shows all import warnings and the effective generation input:
+stable IDs, ownership, assumptions, dependencies, stencils, scope and security properties.
+Changing endpoints is reflected there; obsolete interaction assertions are not displayed as
+current facts. <strong>Live diagram preview</strong> is optional and shows only the valid part of the draft.</li>
+<li>The <strong>Generate .tm7</strong> command and <strong>Write evidence file</strong> option stay visible while the draft
+scrolls. Errors wrap in a selectable, scrollable status area so long messages do not hide retry
+controls. <strong>Generation &amp; baseline details</strong> explains the optional baseline prompt and file ownership.</li>
+</ol>
 <p><strong>Import architecture…</strong> builds a draft from a file your team already maintains — Bicep, an ARM
 template, Terraform, or a draw.io / Excalidraw / Graphviz / Mermaid / Visio diagram. The reading is
 deterministic and uses the same code as the CLI's <code>ingest</code> verb.</p>
@@ -146,6 +285,19 @@ baseline. You can also describe a system or load an architecture / IaC / OpenAPI
 document and let Copilot extract a DFD you review before generating. Every generated threat is
 recorded as <em>Needs Investigation</em> — an enumerated starting point for you to triage, not a
 finished review.</p>
+<p>Component names/kinds, flow names/endpoints and boundary
+names/members can be edited in place. An unambiguous component rename updates its flow and boundary
+references. Clearing a name while typing does not erase those references: they retain the last valid
+name until a nonblank, unambiguous replacement is entered. A blank draft cannot be generated, and a
+temporary duplicate name does not redirect another component's references. Restoring the original
+name cancels the rename. Imported rich facts stay with that row rather than its display name or list position;
+removing a row does not restore it on Generate. A changed component kind drops an incompatible stencil,
+and changed flow endpoints clear the old interaction's transport/security facts. A flow label by
+itself does not assert a protocol or data classification.
+Flows use the generic TMT connector with any explicitly supplied protocol/security facts retained as
+properties; an encrypted transport is not relabelled HTTPS or assigned a guessed template stencil ID.
+An explicitly declared HTTP transport retains its plaintext signal for the existing F3 check even
+with a neutral flow name and no separate encryption flag. Both writers retain flow type identifiers.</p>
 <p><strong>Build from Azure…</strong> goes one step further: instead of reading what was <em>declared</em>, it reads what is
 actually <strong>deployed</strong>. Pick a resource group you already have access to and it drafts a model from
 the resources in it.</p>
@@ -155,46 +307,192 @@ grant control over configuration (Contributor, Reader, Owner) are not drawn, and
 made across the whole subscription or a management group, which are almost always inherited
 governance rather than this system talking to itself.</p>
 <p>You need the <a href="https://learn.microsoft.com/cli/azure/install-azure-cli" rel="noopener noreferrer">Azure CLI</a>, a completed
-<code>az login</code>, and the <strong>Reader</strong> role. Discovery is read-only by construction: it cannot create,
+<code>az login</code>, and <strong>Reader</strong> or equivalent read permissions at the selected scope.
+Denied or inaccessible metadata can leave gaps. Discovery is read-only: it cannot create,
 change or delete anything, and no command that reads a key, secret or connection string is
 reachable from the tool at all.</p>
 <p>Tick <strong>Write evidence file</strong> before generating, and read what it says discovery <em>cannot</em> see.
-Retain that evidence and explicitly record relevant assumptions in the model:</p>
+In current source builds, Azure stencil hints, discovery assumptions, dependencies and gap notes
+are retained through the editable draft and written into the generated model. Review those assumptions:</p>
 <ul>
 <li>A role shows what is <strong>authorised</strong>, not what happens — a granted role may be unused.</li>
 <li>Access using a <strong>shared key</strong> leaves no role assignment, so it is invisible here and will be
 missing from the diagram entirely.</li>
+<li>An inferred caller path does not establish its protocol, public reachability, authentication or
+encryption. Data sensitivity and deployed mitigations are not inferred from a resource type.</li>
 </ul>
 <p>For Microsoft TMT compatibility, use the Create workflow's baseline prompt to carry
 the embedded KnowledgeBase and Profile from a suitable existing <code>.tm7</code>. Without a
 baseline, the app identifies the output as reviewer-only. Always open the final
 artifact in Microsoft TMT before submitting it; a successful reviewer parse is not
 the same compatibility check.</p>
+<p>In current source builds, carrying a baseline changes the container, not the analysis: its old
+diagrams, threats, model notes and narrative fields are replaced with the generated draft. The written threat set,
+reported count and evidence come from the same generation result. Native automatic threat generation
+is disabled so it does not replace that set on first open. An already-open reviewer-only file is not
+automatically treated as a native baseline.</p>
+<p><strong>Reproduce native serializer validation from a source checkout (Windows):</strong></p>
+<pre tabindex="0" aria-label="powershell code example"><code>pwsh -NoProfile -File .\ThreatModelReviewer.Tests\Native\Validate-Generation.ps1 -KeepArtifacts
+</code></pre>
+<p>This opt-in test discovers the installed Azure template using the same ClickOnce-aware discovery
+as the stencil extractor. It acquires the fleet validation mutex, creates a disposable baseline using
+Microsoft's installed data contracts, and exercises Microsoft's serializer in an isolated x86
+.NET Framework process. It checks rich, Azure-derived and neutral-name HTTP synthetic drafts through
+read/save/reload, including metadata, stencil IDs, properties, threat counts, F3 parity and evidence. The console records the
+serializer/template fingerprints. <code>-KeepArtifacts</code> retains the disposable models under the checkout's
+ignored <code>artifacts</code> directory; without it they are deleted. These local models embed installed vendor
+KB content and must not be committed or redistributed.</p>
+<p>Serializer acceptance is a distinct check from this product's parser, but is still not a TMT
+UI/dashboard test or a compatibility guarantee for every template/version. Full
+dashboard acceptance still requires a disposable, isolated Windows environment:
+open/save a synthetic artifact there, inspect the diagram/dashboard and recheck
+counts and narrative. Do not substitute a user's active TMT session or allow its
+online template refresh to modify that user's installation/profile. No existing
+user process or real model is used by the automated serializer test.</p>
+<h3 id="assistant-and-draft-replacement" tabindex="-1">Assistant and draft replacement</h3>
+<p>Assistant separates input selection, extraction, draft review and
+generation. Choose an input source:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 1"><table>
+<thead>
+<tr>
+<th scope="col">Input</th>
+<th scope="col">What happens before extraction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>Type the actors, components, connections and trust boundaries, or load the synthetic example. State unknowns explicitly.</td>
+</tr>
+<tr>
+<td><strong>Document</strong></td>
+<td>Paste text or <strong>Load / replace document…</strong> into an editable local copy. A load replaces text instead of silently appending it; it does not yet replace the Create draft. Documents are limited to 2 MB and the first 24,000 characters; truncation is disclosed. <strong>Map OpenAPI locally (no AI)</strong> uses the deterministic mapper instead of a provider.</td>
+</tr>
+<tr>
+<td><strong>Image</strong></td>
+<td><strong>Choose / replace image…</strong> stages a validated PNG, JPEG, GIF, WebP or BMP up to 8 MB. The name and size are shown; selection alone does not send the image. Text and image input are separate, not combined.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Choose <strong>Extract text draft</strong> or <strong>Extract image draft</strong> when ready. Extraction sends the selected
+input to the configured provider and opens a successful draft in Create for review. It does not
+generate a file. The image path uses the selected model when vision-capable, otherwise an available
+vision model, and reports when none is available.</p>
+<p><strong>Image privacy:</strong> the selected image is sent to the provider when you extract. <strong>Text redaction
+does not sanitize images.</strong> Review and redact sensitive pixels before selecting a file. Remove
+secrets from text too; prompt redaction is not a reason to submit them.</p>
+<p><strong>Provider, model &amp; optional context</strong> uses the app's global model and provider selection.
+<strong>MCP context settings…</strong> opens the existing global settings; it does not enable connections or
+create a separate credential setup. Optional MCP context remains off by default.</p>
+<p>Errors keep the input and current draft so you can correct the problem and retry. <strong>Cancel
+extraction</strong> stops local waiting and requests cancellation; it cannot undo input already received
+by a provider. Late results are not applied after cancellation, after changing input source or
+content, or after editing/replacing the draft. An empty provider response does not erase a draft.
+<strong>Review draft in Create</strong> returns to the current editable draft without another provider call.</p>
+<p>Text/image extraction, architecture import, OpenAPI mapping and loading a template replace the
+Create draft. In current source builds, replacement clears the previous Azure observations and
+row metadata. In Create, <strong>Refine the draft with AI (optional) → Refine draft</strong> instead edits the
+current draft: original observations remain
+historical evidence, and only rows matched uniquely in both the input and output retain rich
+metadata. Duplicate refinement flows/boundaries get fresh IDs rather than all inheriting one
+original identity. A name-only Assistant response cannot prove that a renamed row is the same
+Azure resource; edit its name in place to keep
+that identity. A refinement response is not applied if the draft was edited or replaced while it
+was running, including while the provider was connecting. <strong>Cancel refinement</strong> keeps the draft
+and instruction. A new follow-up instruction typed while waiting is not erased by the earlier
+response. Review the result before generating; AI does not change the deterministic review rubric.</p>
 <h3 id="compare" tabindex="-1">Compare</h3>
 <p>Pick two revisions — or use the model you already have open as the baseline — and see what
 changed, what got worse and what got better, with the score and verdict movement. Elements,
-flows, boundaries and threats are matched by identity, so a rename reads as a rename rather than
-a delete plus an add. <strong>Explain with Copilot</strong> adds a plain-English read; the numbers are computed
+flows, boundaries and threats use identity matching where possible; uncertain matches are disclosed
+rather than guaranteed. <strong>Explain with Copilot</strong> adds a plain-English read; the numbers are computed
 first and are never altered by it. Exports to HTML, Markdown or CSV.</p>
+<p>Compare evaluates saved-file snapshots, including when <strong>Use
+open</strong> selects a file. Save in-memory edits first. Changing or reselecting an input
+invalidates pending results and explanations; a later file write needs another
+Compare, because this is not a live file watcher. Exports disclose the captured
+paths, byte hashes, rubric/options and matching warnings. Duplicate threats may
+remain ambiguous rather than being presented as confirmed matches. See
+<a href="../comparison/">comparing saved revisions</a>.</p>
+<p>The inputs and result scroll together at compact window sizes. Expand <strong>Snapshot identity,
+paths, hashes and options</strong> to inspect or copy the full provenance; it is not only a tooltip.
+<strong>Export snapshot…</strong> writes the captured result, including its warnings. <strong>Cancel comparison</strong>
+and <strong>Cancel explanation</strong> appear while their respective operations are running.</p>
 <h3 id="ask" tabindex="-1">Ask</h3>
 <p>An assistant scoped to the model you have open. Common questions — your score, why a model is not
 ready, how many threats are unmitigated, which flows cross a trust boundary — are answered
-<strong>straight from the model's own numbers with no AI call</strong>, so no answer can contradict the review.
-Each reply says which of the two it was. Open-ended questions go to Copilot, grounded in the same
-facts and required to cite them.</p>
+<strong>straight from the model's own numbers with no AI call</strong> by default. Open-ended questions use the
+app's selected shared AI provider (Copilot by default), grounded in bounded facts from that review.
+AI drafts are advisory and grounding checks are not a guarantee of correctness; verify them.</p>
 <p>There is also a <strong>floating Ask panel</strong> in the bottom-left corner, available from any tab, so asking
 a question does not cost you your place in a long findings list. It is the <em>same conversation</em> as
-this tab: maximising the panel hands its history to the tab rather than starting again, and closing
-the model dismisses it.</p>
+this tab: <strong>Open tab</strong> moves focus to the full-size question box without starting again. <strong>Hide</strong>
+only hides the panel; it does not cancel a request or lose your draft.</p>
+<p>Both surfaces bind the same
+question, conversation, answer mode, commands and source labels:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 2"><table>
+<thead>
+<tr>
+<th scope="col">Answer mode</th>
+<th scope="col">Behavior when you explicitly select <strong>Ask</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Automatic · local facts first</strong> (default)</td>
+<td>Factual lookups remain offline. Only open-ended questions call the existing selected AI provider.</td>
+</tr>
+<tr>
+<td><strong>Local only · no AI</strong></td>
+<td>Never calls AI. If no local lookup fits, explains the limitation and shows a labelled local summary.</td>
+</tr>
+<tr>
+<td><strong>Copilot / selected AI · advisory</strong></td>
+<td>Explicitly requests the existing selected provider, even for a factual question; may use quota. Selecting this mode does not sign in, switch providers, change MCP configuration or create a separate client.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ask uses the same provider and MCP owner as the rest of the app. Optional <strong>SDK MCP context is
+Copilot-only</strong>; choosing an OpenAI-compatible/Other provider does not enable that SDK MCP path.
+An explicitly sent Copilot request uses the existing enabled-source configuration. A completed
+source test is a historical diagnostic result, <strong>not proof that an AI session is already live</strong>.
+The selected-provider label and an answer's provenance do not turn a test result into live activity.</p>
+<p><strong>Ctrl+Enter</strong> sends; Enter adds a line. Suggestions fill the input without sending. While an
+answer is pending, either surface can <strong>Cancel answer</strong>; a next-question draft is kept.
+<strong>Clear chat</strong> clears both surfaces and discards pending output. Disconnected, empty, failed and
+cancelled requests are labelled as such—not as AI drafts. <strong>Retry this question</strong> is an explicit
+new request using the <strong>currently visible answer mode</strong> and selected provider/model. Switching to
+Local only also prevents an older AI turn's Retry button from making an AI call.
+No retry, provider connection or local-to-AI promotion happens in the background.</p>
+<p>Each turn identifies its originating review. Replacing/reloading/closing the model, or changing
+its review (including the strict SDL bar), clears the shared conversation and resets the mode to
+Automatic. Late replies are discarded even if a provider ignores cancellation. Verified reference
+lists are scoped text, not clickable links into a later model's findings. Ask conversations remain
+in memory and are not written to local activity history or production prompt/response logs.
+Fake-provider tests exercise routing and lifecycle behavior. The packaged provider's live model
+catalogue was separately verified without inference; that does not certify every authenticated
+MCP service or AI response.</p>
+<p>The Ask launcher occupies its own status-bar column. The panel
+fits the workspace height, puts focus in <strong>Question</strong>, and keeps Tab/Shift+Tab within its
+controls while open. <strong>Escape</strong> or <strong>Ctrl+K</strong> closes it and restores the previous visible
+control. Moving to another shell region or tab dismisses the panel, so focus cannot remain
+behind it. <strong>Open Ask tab</strong> keeps the same conversation and focuses the full-size question box.</p>
 <h3 id="history" tabindex="-1">History</h3>
-<p>Every review you run, recorded on this machine, with a per-model score trend and <strong>what you did</strong> to
+<p>Optional retained activity on this machine, with a per-model score trend and <strong>what you did</strong> to
 each model — opens, exports, fixes applied and Copilot actions. The tab names the folder the data
 lives in and can open it, so you can verify that nothing leaves your machine rather than taking it
-on trust. One click clears it.</p>
-<p><strong>Reopening a model.</strong> Double-click a row, or use the button at the end of it. File paths are <em>not</em>
-recorded by default, so usually you will be asked where the file is; the app then compares the file
-you pick against the content hash it recorded and tells you whether it is the same revision that was
-reviewed, or has changed since.</p>
+on trust. <strong>Clear history…</strong> asks for confirmation before deletion. Clearing records does not turn
+recording off.</p>
+<p><strong>Privacy &amp; export…</strong> opens the history controls for recording,
+model names, file paths, retention, export and deletion. <strong>What is kept and where</strong> shows the actual
+preferences and selectable storage location. Prompts and responses are never history records.</p>
+<p><strong>Reopening a model.</strong> Double-click a row, press Enter on the selected row, or use its <strong>Open</strong> /
+<strong>Locate…</strong> button. File paths are <em>not</em> recorded by default, so you may be asked to locate the file.
+Both a stored path and a newly located path are checked against the recorded content hash before
+opening. The status distinguishes matched bytes, changed bytes and unavailable hashes. Matching a
+filename is not proof of the original revision. This is a pre-open content check, not an atomic
+snapshot of the subsequent load: reopening always runs a fresh review and never reuses the recorded
+score. The date column is <strong>Last activity</strong>, not a claim that the last event was a review.</p>
 <h2 id="appearance" tabindex="-1">Appearance</h2>
 <p><strong>Help → Appearance</strong> switches between <strong>Light</strong>, <strong>Dark</strong>, and <strong>Match Windows</strong>. The choice is
 remembered and applies immediately — no restart.</p>
@@ -203,7 +501,7 @@ compared against the Microsoft Threat Modeling Tool and exported for review, so 
 fixed; only the frame around it follows the theme.</p>
 <h2 id="keyboard-shortcuts" tabindex="-1">Keyboard shortcuts</h2>
 <p><strong>Help → Keyboard shortcuts</strong>, or <strong>F1</strong>, lists every accelerator. The most useful:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 1"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 3"><table>
 <thead>
 <tr>
 <th scope="col">Keys</th>
@@ -245,13 +543,66 @@ fixed; only the frame around it follows the theme.</p>
 </tr>
 </tbody>
 </table></div>
+<h3 id="shell-navigation" tabindex="-1">Shell navigation</h3>
+<p>The app also provides:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 4"><table>
+<thead>
+<tr>
+<th scope="col">Keys</th>
+<th scope="col">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl + 8</code> / <code>Ctrl + 9</code></td>
+<td>Create / Assistant (existing Ctrl+1…7 assignments stay unchanged)</td>
+</tr>
+<tr>
+<td><code>Ctrl + Shift + N</code></td>
+<td>Open a separate review window without replacing this model</td>
+</tr>
+<tr>
+<td><code>Ctrl + Tab</code> / <code>Ctrl + Shift + Tab</code></td>
+<td>Next / previous available tab, from any pane</td>
+</tr>
+<tr>
+<td><code>F6</code> / <code>Shift + F6</code></td>
+<td>Cycle commands → workspace tab strip → status bar, forwards / backwards</td>
+</tr>
+<tr>
+<td><code>Alt + C</code></td>
+<td>Close a model (Ctrl+O opens one)</td>
+</tr>
+<tr>
+<td><code>Alt + L</code> / <code>Alt + S</code></td>
+<td>Focus the AI model picker / refresh models</td>
+</tr>
+<tr>
+<td><code>Alt + P</code> / <code>Alt + H</code> / <code>Alt + A</code></td>
+<td>Provider / Help / Ask panel</td>
+</tr>
+</tbody>
+</table></div>
+<p>Tab shortcuts respect availability: Diagram, Findings and Fix need an open model.
+After jumping to a tab, use <strong>Left/Right</strong> to move along the native tab strip and <strong>Tab</strong>
+to enter its content. <strong>Shift+Tab</strong> reverses the order. The Help menu includes this list.
+Existing authoring mnemonics remain available: Alt+M for the model name and Alt+D/O/I
+for Assistant's Description/Document/Image choices.</p>
+<p>The loaded-model title and verdict have their own header row; long titles trim with the
+full text available as a tooltip. Commands can wrap instead of extending off the window.
+Shared controls have explicit keyboard focus and disabled states in Light, Dark and
+Match Windows. Rendered Markdown code highlights and quoted caveats also follow
+theme switches without rerunning the answer. Contrast and keyboard checks are
+targeted desktop improvements, not
+a claim of complete WCAG 2.2/WCAG2ICT conformance or full screen-reader certification.</p>
 <hr>
 <h2 id="evidence-files" tabindex="-1">Evidence files</h2>
 <p>A generated threat model is only trustworthy if the reader can check how it was built. Passing
 <code>--evidence</code> (or leaving <strong>Write evidence file</strong> ticked in the app's Create tab) writes a
 <code>.evidence.md</code> beside the <code>.tm7</code> recording:</p>
 <ul>
-<li><strong>Declared inputs</strong> — components, flows, boundaries and assumptions, exactly as supplied.</li>
+<li><strong>Declared inputs</strong> — components, flows, boundaries and assumptions supplied to the generator.
+These can include upstream inferences and human edits; they are not all observed facts.</li>
 <li><strong>The resulting model</strong> — every component, its stencil, whether it is in scope, and its boundary.</li>
 <li><strong>Threats enumerated</strong> — the count by STRIDE category, and <strong>every rule that fired and how often</strong>,
 so the enumeration itself can be challenged rather than only the individual threats.</li>
@@ -265,26 +616,50 @@ tool can perform for you.</li>
 Evidence files include a capture timestamp, so repeated runs need not produce
 byte-identical evidence. AI-supplied wording is disclosed where applicable.
 Attach it to a review and a reader can audit the model instead of trusting it.</p>
+<p>Generation also records the companion <code>.tm7</code>'s SHA-256 hash and input-adaptation warnings
+(for example an ambiguous duplicate name). The desktop validates before writing and stages the
+model/evidence set before publication. Cancellation or an ordinary write failure leaves an existing
+set unchanged, or no new files on a first attempt. Reusing an output name with evidence disabled
+removes only provably owned, unchanged sidecars; replacing an Azure draft with another input removes
+only its provably owned, unchanged Azure sidecar.</p>
+<p>The desktop writes <code>model.tm7.generation.json</code> as an ownership record. It retains the model extension
+and binds the exact previous <code>.tm7</code> bytes and each generated sidecar's bytes with SHA-256 hashes.
+A matching basename alone is not ownership: <code>model.azure-evidence.md</code> could belong to <code>model.json</code>
+or be maintained by a person. An unproven, edited or legacy sidecar without a matching ownership
+record is preserved and generation reports a conflict <strong>without replacing the existing file set</strong>.
+Choose another output name, or review/move the conflicting files yourself. Keep the ownership
+record with the model/evidence set if you expect to regenerate in place; an external model edit or
+native re-save changes its hash and invalidates the previous ownership proof.</p>
+<p>This is rollback protection for ordinary failures, not a power-loss transaction. If rollback itself
+fails, the error identifies the <code>.tmr-*.backup</code> files kept beside the output for recovery.
+Generation notes (including Azure discovery gaps) are included in the evidence and appended under
+<strong>Generation notes</strong> in the model's high-level system description. They are not written as a custom
+<code>MetaInformation/Notes</code> member, which Microsoft's serializer silently discards when saving.</p>
 <h3 id="azure-discovery-evidence" tabindex="-1">Azure discovery evidence</h3>
 <p>A model built from a live subscription is the easiest kind to over-trust, because it describes
 something real. Building from Azure therefore writes a second file, <code>.azure-evidence.md</code>, recording:</p>
 <ul>
-<li><strong>Every Azure command that was run</strong> — the complete list, all of them reads.</li>
-<li><strong>How each flow was inferred</strong> — which role assignment produced it, and where a data-plane role was
-read but <em>not</em> drawn, the reason.</li>
-<li><strong>Every resource left off the diagram</strong>, grouped by type, with why. Nothing is dropped silently:
-a reader who believes the model is complete when it is not is worse off than one who has no file.</li>
+<li><strong>The read-only Azure command vocabulary</strong> — an allowlist, not a per-call execution trace.</li>
+<li><strong>Observed role assignments and the original flow-inference rules</strong> — permission is not traffic.</li>
+<li><strong>Observed resources and mapping eligibility</strong>, including why supporting or unrecognised types
+were excluded from the original draft.</li>
 <li><strong>Configuration worth reviewing</strong>, such as public network access or shared-key auth being enabled.</li>
 <li><strong>What could not be read at all</strong> — including resources referenced by a private endpoint that your
 account cannot see, which is proof the picture is incomplete.</li>
 <li><strong>What discovery cannot tell you</strong>, stated plainly rather than left to be discovered later.</li>
 </ul>
+<p>This file separates <strong>original Azure observations</strong>, the
+<strong>original inferred draft</strong>, and the <strong>edited draft used for generation</strong>. Identity-based tables show
+renamed/edited, removed and added entries, and its hash identifies the companion model. An original
+resource or role may still appear as an observation after you remove it from the draft; it is not
+claimed to remain in the generated model. Generate does not re-read Azure or reapply the original
+inventory over your edits.</p>
 <h2 id="assistant-data-sources-mcp" tabindex="-1">Assistant data sources (MCP)</h2>
-<p><strong>Help → Assistant data sources (MCP)</strong> lets the assistant consult systems you already have access
-to, so it can check a model's assumptions against reality rather than guessing — for example whether
-a storage account really is private.</p>
-<p>Two sources ship with the app:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 2"><table>
+<p><strong>Help → Assistant data sources (MCP)</strong> adds optional external context to the
+assistant. It does not independently verify a system's security controls.</p>
+<p>Version <strong>2.6.0</strong> includes the following restricted profiles and matching CLI controls.
+An older installed release does not acquire them until updated:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 5"><table>
 <thead>
 <tr>
 <th scope="col">Source</th>
@@ -294,31 +669,42 @@ a storage account really is private.</p>
 <tbody>
 <tr>
 <td><strong>Microsoft Learn Docs</strong></td>
-<td>Grounds remediation advice in current official documentation rather than model training data.</td>
+<td>Official documentation search, fetch and code-sample search</td>
 </tr>
 <tr>
-<td><strong>Azure MCP Server</strong></td>
-<td>Reads the Azure subscriptions, resource groups and resource configuration that <em>you</em> can already read. Requires Node.js and an existing <code>az login</code>.</td>
+<td><strong>Azure metadata</strong></td>
+<td>Subscription/group listing only, using pinned <code>@azure/mcp@2.0.5</code> with read-only and explicit-tool flags; requires Node.js and a usable Azure identity</td>
+</tr>
+<tr>
+<td><strong>GitHub review context</strong></td>
+<td>Read selected repository files, issues and pull requests using a separate fine-grained PAT; does not reuse the Copilot seat token</td>
 </tr>
 </tbody>
 </table></div>
-<p>Everything is <strong>off until you turn it on</strong>, behind two switches: a master toggle and a per-source
-tick. Nothing starts a process, and no configuration is written, until you enable something. Each
-source states plainly what it can reach before you enable it, because turning one on grants a local
-process access to your own accounts.</p>
+<p>New profiles are <strong>off initially</strong>, behind a master switch and per-source consent.
+Configuration changes are local; an explicit connection test or enabled assistant
+session can start processes, authenticate and connect. Read the disclosure before
+enabling a source. Older unrestricted profiles require renewed consent. Read-only
+results may still contain private information and become AI-provider context.</p>
 <p>None of this affects the verdict or the score. Those come from the rubric engine, which never
-consults an external source.</p>
+consults an external source.
+Use <strong>Build from Azure</strong> for the deterministic resource-inventory workflow; the
+restricted Azure MCP profile does not inspect storage/network configuration.
+See <a href="../mcp/">MCP setup and limits</a> and <a href="../data-handling/">data handling</a>.</p>
 <h2 id="how-ai-is-used-and-not-used" tabindex="-1">How AI is used (and not used)</h2>
 <ul>
 <li>The <strong>verdict, score, and findings are deterministic</strong> — they never depend on AI.</li>
 <li>Copilot buttons are <strong>additive and independent</strong>: running one never blocks the others.</li>
-<li>Only minimal, <strong>redacted</strong> context is sent (finding text, a DFD summary) — never the raw
-<code>.tm7</code>. Prompts use <strong>your GitHub Copilot seat</strong>.</li>
+<li>Finding actions send contextual text; extraction/refinement can send supplied
+documents, the current draft or the selected image. Text redaction does not
+sanitize images or guarantee that every sensitive value is removed.</li>
+<li>Prompts use your selected provider. Enabled MCP tool arguments and results can
+also become provider context; deterministic review needs none of these paths.</li>
 </ul>
 <h2 id="exit-codes-cli" tabindex="-1">Exit codes (CLI)</h2>
 <p>Interpret exit codes in the context of the selected command; generation success is not
 a readiness verdict:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 3"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 6"><table>
 <thead>
 <tr>
 <th scope="col">Code</th>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/AZURE-DISCOVERY.md (normalized SHA-256 c01db4c176fde1ae82293f9ea275d7fd86724bbc915dd914374a4a7b77f1e063). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Deterministic Azure discovery: I/O contract — Threat Model Reviewer documentation</title>
+  <meta name="description" content="This guide describes the read-only runner included in v2.6.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to " />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Deterministic Azure discovery: I/O contract — App Releases" />
+  <meta property="og:description" content="This guide describes the read-only runner included in v2.6.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to " />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Deterministic Azure discovery: I/O contract","description":"This guide describes the read-only runner included in v2.6.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to ","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="./" aria-current="page">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Azure discovery</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="deterministic-azure-discovery-io-contract" tabindex="-1">Deterministic Azure discovery: I/O contract</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/AZURE-DISCOVERY.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#requirements-and-supported-execution">Requirements and supported execution</a></li><li><a href="#exact-reads-and-argument-boundaries">Exact reads and argument boundaries</a></li><li><a href="#results-and-errors">Results and errors</a></li><li><a href="#process-lifetime-and-safety-boundaries">Process lifetime and safety boundaries</a></li><li><a href="#focused-account-independent-verification">Focused, account-independent verification</a></li><li><a href="#public-references">Public references</a></li></ul></nav></details>
+        <div class="doc-content"><p>This guide describes the read-only runner included in <strong>v2.6.0</strong>.
+This reader is independent of the AI/MCP connectors. It does not change the review
+rubric or give an AI permission to choose commands.</p>
+<h2 id="requirements-and-supported-execution" tabindex="-1">Requirements and supported execution</h2>
+<ul>
+<li><strong>Windows 10 / Windows Server 2016 or later</strong>, with the application's supported
+.NET runtime. The runner requires Windows process-job attributes. Non-Windows
+hosts return an explicit <code>Failed</code> result <strong>before starting anything</strong>: there is
+no less-safe fallback that promises to clean up children it cannot contain.</li>
+<li>A trusted Azure CLI installation. The normal MSI (<code>wbin</code>) and ZIP (<code>bin</code>) layouts
+put <code>python.exe</code> beside or immediately above the <code>az.cmd</code>/<code>az.bat</code> directory on
+<code>PATH</code>. Python virtual environments with an adjacent interpreter are supported
+too. The first CLI marker on an absolute <code>PATH</code> entry wins; an unsupported first
+installation is not silently replaced with another one.</li>
+<li>For other layouts, set <strong><code>TMR_AZURE_CLI_PYTHON</code></strong> in the app/CLI process environment
+to the <strong>absolute path of a native <code>python.exe</code> with <code>azure-cli</code> installed</strong>.
+A dedicated Python virtual environment is suitable. The override takes priority;
+invalid overrides fail rather than falling back. Shell aliases, batch files, and
+command strings are not interpreter paths.</li>
+<li>A usable account in that CLI environment, authenticated <strong>by the engineer</strong>.
+Discovery never runs login, refreshes a UI sign-in, or changes the selected
+subscription. The CLI itself may use/refresh its cached credentials normally.</li>
+<li>Permission to read the requested metadata. Reader at the requested scope, or
+equivalent custom-role permissions, is normally sufficient. Deny assignments,
+inaccessible scopes, cloud/tenant selection, or authentication policy can still
+prevent reads. A denial is not evidence that the scope is empty.</li>
+</ul>
+<p>Windows launches the CLI's Python module directly:</p>
+<pre tabindex="0" aria-label="text code example"><code>&lt;absolute-python.exe&gt; -I -B -X utf8 -m azure.cli &lt;fixed read arguments&gt;
+</code></pre>
+<p>There is <strong>no <code>cmd.exe /c</code>, PowerShell command string, or installed-wrapper parsing</strong>.
+Isolated mode (<code>-I</code>) excludes the current directory, <code>PYTHONPATH</code>, and Python's
+user-site packages. Install the CLI into the selected interpreter/environment,
+not only with <code>pip --user</code>. UTF-8 mode preserves non-ASCII names in redirected
+output. Dynamic extension installation, CLI auto-upgrade, and CLI telemetry are
+disabled in the child environment. Stdin is closed; no interactive prompt can wait
+for an engineer to answer.</p>
+<p>This intentionally narrows the old non-Windows/batch-wrapper fallback. Other host
+platforms need a separately implemented and tested process-containment backend,
+not merely different quoting.</p>
+<h2 id="exact-reads-and-argument-boundaries" tabindex="-1">Exact reads and argument boundaries</h2>
+<p>These are the entire accepted shapes, before the fixed output flags are appended.
+Brackets indicate an optional pair, not literal characters.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Deterministic Azure discovery: I/O contract table 1"><table>
+<thead>
+<tr>
+<th scope="col">Named read</th>
+<th scope="col">Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account metadata</td>
+<td><code>account show [--subscription VALUE]</code></td>
+</tr>
+<tr>
+<td>Visible resource groups</td>
+<td><code>group list [--subscription VALUE]</code></td>
+</tr>
+<tr>
+<td>Group inventory</td>
+<td><code>resource list --resource-group VALUE [--subscription VALUE]</code></td>
+</tr>
+<tr>
+<td>One resource's configuration</td>
+<td><code>resource show --ids VALUE</code></td>
+</tr>
+<tr>
+<td>Group/inherited role assignments</td>
+<td><code>role assignment list --resource-group VALUE --include-inherited [--subscription VALUE]</code></td>
+</tr>
+<tr>
+<td>Private endpoints</td>
+<td><code>network private-endpoint list --resource-group VALUE [--subscription VALUE]</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>The public account method still reads the selected account. Discovery uses an
+internal overload to resolve an explicitly requested subscription with
+<code>account show --subscription</code>, then uses its returned ID for subsequent scoped
+reads. The inventory's subscription ID and display name therefore refer to the
+same subscription; no <code>account set</code> is necessary.</p>
+<h3 id="desktop-picker-scope-hand-off" tabindex="-1">Desktop picker scope hand-off</h3>
+<p><code>AzureDiscoverDialog</code> validates the account's subscription ID as a nonempty GUID
+and captures its canonical form <strong>before listing groups</strong>. It explicitly passes
+that ID to the group-list read and carries it on each immutable group row.
+Returned group identities must match that subscription and the displayed group
+name. A missing/invalid account ID or inconsistent group identity disables
+selection and reports an error; it never retries against the mutable default.</p>
+<p>Accepting a row returns both <code>SelectedResourceGroup</code> and
+<code>SelectedSubscriptionId</code>. Refresh clears any previous committed pair. An unscoped,
+foreign, or stale row cannot be accepted. Group names, locations, accessible row
+text, refresh, cancel, and successful dialog behavior otherwise stay the same.</p>
+<p>The integrated <code>MainViewModel</code> passes both returned values to discovery. A cancelled
+dialog leaves the draft unchanged. An accepted dialog with an incomplete selection
+reports an error; it does not silently substitute the current default subscription.</p>
+<p>This pins the entire hand-off even if another process changes the CLI's selected
+subscription between reading the account, listing groups, and building the draft.
+Two subscriptions having a group with the same name does not make them the same
+scope.</p>
+<h3 id="command-validation" tabindex="-1">Command validation</h3>
+<p>The executor checks every argument position, option, and value boundary. Extra
+verbs, unknown/duplicate/reordered options, queries, caller-selected output
+formats, and extra positional arguments are rejected. The unused <code>account list</code>
+and <code>group show</code> entries are no longer advertised in <code>ReadOnlyVerbs</code>.
+<code>IsReadOnly</code> validates these complete, pre-output shapes; it is <strong>not</strong> a
+shell-escaping API. <code>ForbiddenWords</code> remains available for compatibility, but a
+word blacklist does not enforce this boundary.</p>
+<p>Each value is transported as <strong>one <code>--option=value</code> argv token</strong>, with native
+Windows argument quoting, followed by fixed <code>--output=json --only-show-errors</code>.
+Even a leading <code>-</code>, embedded quotation mark, shell punctuation, space, Unicode
+character, or trailing backslash in a supplied value cannot introduce another
+argument or shell command. Names such as <code>secrets</code> and <code>start</code> remain names.</p>
+<p>Null optional subscriptions mean “use the selected subscription”; empty or
+whitespace-only supplied subscriptions are errors, not silently omitted options.
+Required values must be nonblank and contain no control characters (including
+NUL, CR, LF and tabs). A resource ID must begin with <code>/</code> and have more than one
+character; a URL is not accepted in its place.</p>
+<p>This is <strong>not an ID-only subscription contract</strong>: names containing spaces/Unicode
+are preserved. A subscription GUID is preferable when display names are ambiguous.
+Azure still validates its service-specific naming/ID rules. In particular, Azure
+resource-group names support Unicode letters/digits and <code>_-().</code>, but not spaces,
+and cannot end in a period. The runner does not try to duplicate every service's
+naming rules or turn an invalid Azure name into an empty result.</p>
+<h2 id="results-and-errors" tabindex="-1">Results and errors</h2>
+<p>The existing public constructors, named-read methods, discovery signature, and
+inventory/model definitions are preserved. <code>MalformedOutput</code> and
+<code>InvalidArguments</code> are appended enum members; existing enum numeric values are
+unchanged. Existing app/CLI callers already display returned messages and gaps.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Deterministic Azure discovery: I/O contract table 2"><table>
+<thead>
+<tr>
+<th scope="col">Outcome</th>
+<th scope="col">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NotInstalled</code></td>
+<td>No supported CLI interpreter, executable missing at launch, or the selected Python environment has no <code>azure</code>/<code>azure.cli</code> module. Install/repair the CLI or correct the explicit interpreter path.</td>
+</tr>
+<tr>
+<td><code>NotSignedIn</code></td>
+<td>CLI reports no usable login or a recognized expired/revoked session. The engineer must authenticate outside discovery.</td>
+</tr>
+<tr>
+<td><code>NotAuthorized</code></td>
+<td>CLI reports a recognized authorization denial, such as <code>AuthorizationFailed</code> or <code>Forbidden</code>. Review the denied operation/scope.</td>
+</tr>
+<tr>
+<td><code>InvalidArguments</code></td>
+<td>A required value or full command shape was rejected before launch.</td>
+</tr>
+<tr>
+<td><code>MalformedOutput</code></td>
+<td>Empty stdout, invalid UTF-8/JSON, a wrong root shape, or malformed records in a required collection. No data from that read is accepted.</td>
+</tr>
+<tr>
+<td><code>TimedOut</code></td>
+<td>The individual read exceeded its timeout and its process tree was reaped. Default: <strong>120 seconds per read</strong>, not a single deadline for the whole resource group.</td>
+</tr>
+<tr>
+<td><code>Failed</code></td>
+<td>Other nonzero exits, unsupported process containment, executable access/format failures, or explicit I/O/cleanup failures. Unknown CLI diagnostics retain one bounded, control-character-sanitized line, or the exit code if stderr is empty.</td>
+</tr>
+<tr>
+<td>User cancellation</td>
+<td>Throws <code>OperationCanceledException</code> with the caller's token <strong>after cleanup</strong>. It is not relabelled as a timeout or returned as a partial success.</td>
+</tr>
+</tbody>
+</table></div>
+<p>A zero exit code alone is insufficient. Account output requires an object with
+nonblank <code>id</code> and <code>name</code>. Group/resource lists require arrays of usable objects;
+resources require <code>id</code>, <code>name</code>, and <code>type</code>, with correctly shaped optional identity
+and configuration metadata. Role records require a principal and scope. Missing
+role names are retained as unresolved assignments with an explicit inference gap.
+Private endpoint output must have named entries with the expected
+<code>privateLinkServiceConnections</code> array and usable connection records.</p>
+<p><code>[]</code> is a legitimate empty list. Empty text, <code>null</code>, <code>{}</code> in place of a list,
+<code>[null]</code>, or records missing their required identity fields are <strong>not</strong> empty
+inventories. Extra JSON fields are retained in the raw read result; validation
+does not discard useful metadata to make a malformed list look successful.</p>
+<p>Account/resource-list failures are fatal to discovery. Optional role/private
+endpoint/configuration failures retain the readable resource inventory and
+explicit gaps. Configuration failures include their classification and reason.
+Previously observed identity, location, and security notes are preserved; detail
+notes are merged rather than replacing earlier metadata. No malformed optional
+output is quietly reported as “there were no assignments/endpoints/settings.”</p>
+<h2 id="process-lifetime-and-safety-boundaries" tabindex="-1">Process lifetime and safety boundaries</h2>
+<p>The native Windows launcher assigns a newly created process to a <strong>private,
+unnamed kill-on-close job atomically at creation</strong>. There is no start-then-attach
+window in which a child can escape. Only the three standard pipe handles are
+inherited. Stdout and stderr are drained concurrently.</p>
+<p>Timeout and user cancellation terminate that job and wait for its active process
+count to reach zero. Cleanup is not cancelled by the user's token and has a
+separate 10-second verification limit; failure to verify cleanup is reported as
+<code>Failed</code>, not claimed as successful termination. The job is also closed as a
+last-resort cleanup on exceptional unwinding.</p>
+<p>Even after a normal or malformed-output parent exit, remaining descendants are
+terminated before returning/parsing the result. A child holding a pipe open
+cannot turn malformed output into a hanging read. No process-name enumeration or
+process-name-based termination is used; another engineer's CLI/Python process or
+another concurrent wrapper invocation is not in this job.</p>
+<p>These guarantees assume a trusted local OS, interpreter and CLI installation,
+including any already-installed CLI extensions. This is not a sandbox for
+malicious local executable code or a replacement for Azure RBAC. If a host's job
+policy prevents containment, discovery fails; it does not launch uncontained.</p>
+<p>The reads request management metadata, role assignments and network configuration,
+not keys, token values, app settings, connection strings or secret contents. Read
+only means <strong>no Azure resource mutations</strong>, not zero local CLI cache/log writes or
+zero network use. Owners may themselves place sensitive information in metadata;
+inventory/evidence files must still be handled privately.</p>
+<p>Permission is <strong>not proof of traffic, an effective network boundary, or an
+implemented mitigation</strong>. Role-name-based data-access inference, invisible
+shared-key access, resources outside the readable scope, and the existing
+private-endpoint interpretation remain limitations of a draft. This I/O change
+does not widen the DFD builder, interpret additional connection types, or change
+the rubric. Engineers must verify the generated model and actual controls.
+The sequence of Azure reads is not a transactional snapshot: deployment state and
+permissions can change between reads.</p>
+<h2 id="focused-account-independent-verification" tabindex="-1">Focused, account-independent verification</h2>
+<p>Tests require the Windows .NET 10 SDK and Python 3 on <code>PATH</code>, <strong>not</strong> Azure CLI or an
+Azure account. Each fixture creates a private virtual environment without pip
+under a unique test <code>obj/azure-cli-io-*</code> directory in this worktree. Its only
+<code>azure.cli</code> module is a synthetic fixture. The fake batch file is a marker, not an
+executable wrapper. No sign-in, selected-subscription change, real Azure read, or
+resource mutation occurs.</p>
+<p>Tests cover exact argv observed by that module (including inert punctuation and
+Unicode), missing/broken installations, classified stderr, malformed roots and
+records, simultaneous large stdout/stderr, integration gaps/metadata, cancellation,
+timeouts, and a parent exiting before its child. Concurrent identical-interpreter
+fixtures verify that cleanup leaves the unrelated tree running.
+End-to-end tests also run the existing CLI executable against that fake module:
+group-read errors remain failures, malformed inventory does not write a draft,
+and optional-read gaps appear on stderr. Those CLI tests need no CLI edits.
+Picker tests use real WPF controls on an STA dispatcher without showing a window
+or creating a global application. A fake CLI changes its default from A to B
+after returning account A; both subscriptions contain a group named <code>shared</code>.
+The tests verify the picker still lists A, returns A with the selected group,
+and discovers A when that pair is forwarded as in the required caller patch.
+They also cover invalid account IDs, foreign group identities/rows, and clearing
+stale selections on a failed refresh.</p>
+<p>Run from the assigned repository root. For this fleet validation, hold the named
+mutex for the complete build/test command and release it in <code>finally</code>:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>$mutex = [System.Threading.Mutex]::new($false, &#39;Local\TMR-Fleet-Validation-20260913&#39;)
+$acquired = $false
+try {
+    try { $acquired = $mutex.WaitOne([TimeSpan]::FromMinutes(10)) }
+    catch [System.Threading.AbandonedMutexException] { $acquired = $true }
+    if (-not $acquired) { throw &#39;Timed out acquiring fleet validation mutex.&#39; }
+    dotnet test ThreatModelReviewer.Tests/ThreatModelReviewer.Tests.csproj `
+        --filter &#39;FullyQualifiedName~AzureCliIoTests|FullyQualifiedName~AzureDiscoveryTests|FullyQualifiedName~AzureDiscoverDialogTests&#39; `
+        --nologo --disable-build-servers -p:CopilotSkipCliDownload=true `
+        -p:UseSharedCompilation=false -m:1 --logger &#39;console;verbosity=minimal&#39;
+    if ($LASTEXITCODE -ne 0) { throw &quot;Azure tests failed: $LASTEXITCODE&quot; }
+}
+finally {
+    if ($acquired) { $mutex.ReleaseMutex() }
+    $mutex.Dispose()
+}
+</code></pre>
+<p><code>CopilotSkipCliDownload</code> is the existing SDK's build-time opt-out for downloading
+its unrelated Copilot binary; these tests do not execute AI connectors. It does
+not change a package version or constitute app/AI release validation.</p>
+<h2 id="public-references" tabindex="-1">Public references</h2>
+<p>Reviewed <strong>2026-09-13</strong>; these are product/OS references, not claims that a real
+subscription was tested:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/cli/azure/install-azure-cli-windows" rel="noopener noreferrer">Install Azure CLI on Windows (MSI/ZIP)</a></li>
+<li><a href="https://learn.microsoft.com/cli/azure/account" rel="noopener noreferrer">Azure CLI account commands (<code>--subscription</code> name or ID)</a></li>
+<li><a href="https://learn.microsoft.com/cli/azure/group" rel="noopener noreferrer">Azure CLI group commands</a>,
+<a href="https://learn.microsoft.com/cli/azure/resource" rel="noopener noreferrer">resource commands</a>,
+<a href="https://learn.microsoft.com/cli/azure/role/assignment" rel="noopener noreferrer">role assignments</a>,
+<a href="https://learn.microsoft.com/cli/azure/network/private-endpoint" rel="noopener noreferrer">private endpoints</a></li>
+<li><a href="https://learn.microsoft.com/azure/azure-resource-manager/management/resource-name-rules" rel="noopener noreferrer">Azure resource naming rules</a></li>
+<li><a href="https://learn.microsoft.com/cli/azure/azure-cli-configuration" rel="noopener noreferrer">Azure CLI configuration</a></li>
+<li><a href="https://github.com/Azure/azure-cli/blob/dev/build_scripts/windows/scripts/az_zip.cmd" rel="noopener noreferrer">Official Azure CLI ZIP launcher source (module/relative interpreter layout)</a></li>
+<li><a href="https://github.com/Azure/azure-cli/blob/dev/src/azure-cli/az.bat" rel="noopener noreferrer">Official Azure CLI Python launcher source</a></li>
+<li><a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute" rel="noopener noreferrer">Windows process attributes: handle and job lists</a></li>
+<li><a href="https://learn.microsoft.com/windows/win32/procthread/job-objects" rel="noopener noreferrer">Windows job objects</a></li>
+</ul>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

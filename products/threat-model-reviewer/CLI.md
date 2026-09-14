@@ -3,8 +3,11 @@
 `ThreatModelReviewer.Cli.exe` runs the same deterministic rubric engine as the desktop app, with no
 UI and no .NET installation required. It is intended for CI, batch review, and scripting.
 
+Use the CLI from the matching product release. Older binaries do not acquire new
+commands because this guide changes.
+
 Download **`ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip`** from the
-[latest release](https://github.com/ArasaniRohithReddy/app-releases/releases/latest), extract it
+[Threat Model Reviewer releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/), extract it
 anywhere, and run the executable. Nothing else to install.
 
 ```powershell
@@ -44,9 +47,6 @@ if ($LASTEXITCODE -eq 2) { throw "Threat model is NOT READY - see the findings a
 ThreatModelReviewer.Cli.exe "Model.tm7" `
   --html report.html --md summary.md --json findings.json --sarif findings.sarif --csv findings.csv
 ```
-
-`--sarif` writes a local SARIF file; it does not upload findings or transmit them automatically.
-Uploading the file requires a separately configured workflow or an explicit upload.
 
 `--explain` adds Copilot commentary to the report. It never changes the verdict or the score; those
 come from the rubric engine alone.
@@ -88,11 +88,41 @@ ThreatModelReviewer.Cli.exe sdl model.tm7 --out .\sdl-bundle
 ThreatModelReviewer.Cli.exe ask model.tm7 "why is it not ready?"
 ```
 
+### SDL bundle integrity
+
+The SDL writer validates that every threat has a non-blank identifier that is unique after trimming
+before it creates the output directory. It writes `manifest.json` last and removes an older manifest
+before replacing artifacts. If a write fails, the absence of the manifest is the failure signal; unrelated
+files in the output directory are left alone.
+
+The CLI captures the source bytes once, decodes and parses that snapshot, and
+supplies one complete `SdlSourceIdentity` from those same bytes. The source path,
+format, SHA-256 and byte count therefore describe the evaluated revision, including
+its original encoding/BOM. The SDL writer never rereads a mutable source path or
+hashes reserialized XML to invent file identity.
+
+An in-process caller supplying only a semantic model/path gets an explicitly
+**unverified** source identity without a digest or byte count; it must provide
+captured identity to claim exact bytes. Incomplete or conflicting digest overrides
+are rejected. Artifact hashes remain independently verifiable.
+
+Artifact replacement is **not transactional or power-loss atomic**. A failed refresh can leave a mixture
+of old and new artifact files, but it must not leave a success-shaped manifest. Prefer a new or empty
+output directory, and trust a completed bundle only after verifying every available hash in `manifest.json`.
+
+Repository maintainers can run the standard-library-only artifact parser over captured test bundles:
+
+```powershell
+python scripts\tests\validate_sdl_bundle.py --root .\TestResults\sdl-phase-artifacts
+```
+
+---
+
+## Generation success and review readiness
+
 For `generate`, exit `0` means generation succeeded. It does not establish a readiness verdict.
 Run a separate review of the output (`ThreatModelReviewer.Cli.exe "model.tm7"`) and use that
 review's actual verdict, score and findings.
-
----
 
 ## Building from a deployed Azure resource group
 
@@ -130,6 +160,13 @@ The wrapper cannot be handed a command. Every read is a named method that builds
 and re-validates them against an allowlist before running. Nothing can create, change or delete a
 resource, and no command that reads a key, secret, connection string or credential is reachable.
 
+The native Azure CLI Python module runs without a command
+shell. Use the installed MSI/ZIP/virtual-environment interpreter, or an explicit
+`TMR_AZURE_CLI_PYTHON` absolute path for another trusted installation layout.
+The selected subscription is captured and passed through the discovery operation;
+malformed responses, access errors and unconfirmed cleanup cannot become empty
+successes. See [the supported I/O contract](AZURE-DISCOVERY.md).
+
 ### What it cannot tell you
 
 Always pass `--evidence`, and read the limits it records. The two that matter most:
@@ -159,6 +196,91 @@ $env:COPILOT_GITHUB_TOKEN = "<fine-grained PAT with Copilot Requests>"
 Classic `ghp_` tokens are not supported. See [DATA-HANDLING.md](DATA-HANDLING.md) for exactly what is
 sent and when.
 
+## Optional MCP context
+
+MCP adds optional context to Copilot, not another source of verdicts. It requires
+both master and per-profile consent, and an AI invocation must also request
+`--mcp`. The installed v2.5.1 CLI does not have these commands.
+This integration uses the **GitHub Copilot SDK only**. OpenAI-compatible and
+Offline providers do not attach MCP profiles. MCP is a tool protocol, the SDK
+hosts its sessions, and individual tools expose named operations/input schemas
+over a service API; these are not interchangeable capabilities.
+
+```powershell
+# Local inspection only; no server connection
+ThreatModelReviewer.Cli.exe mcp list
+ThreatModelReviewer.Cli.exe mcp show github-review-context
+ThreatModelReviewer.Cli.exe mcp status
+
+# Store a separate fine-grained PAT using masked input; never pass a token literal
+ThreatModelReviewer.Cli.exe mcp credential github-review-context
+ThreatModelReviewer.Cli.exe mcp enable github-review-context --consent
+ThreatModelReviewer.Cli.exe mcp on --consent
+
+# Single-server probe; no other configured source starts
+ThreatModelReviewer.Cli.exe mcp test github-review-context
+
+# Several servers, only after each has separately been enabled/consented
+ThreatModelReviewer.Cli.exe mcp test microsoft-learn github-review-context
+
+# Backward-compatible all-enabled probe; includes Azure/npx if Azure is enabled
+ThreatModelReviewer.Cli.exe mcp test
+
+# Opt in for this AI request; the rubric still runs locally
+ThreatModelReviewer.Cli.exe "Model.tm7" --explain --mcp
+ThreatModelReviewer.Cli.exe fix "Model.tm7" --ai --mcp --out "Model.draft.tm7"
+
+# Disable future use and separately remove the stored credential
+ThreatModelReviewer.Cli.exe mcp off
+ThreatModelReviewer.Cli.exe mcp forget-credential github-review-context
+```
+
+Built-ins are Microsoft Learn, Azure **subscription/group metadata only**, and
+GitHub file/issue/pull-request reads. GitHub context needs its own PAT for selected
+repositories; do not reuse a Copilot seat token or broad automation credential.
+Read-only data can still be sensitive and enter provider context. Normal review
+and factual `ask` require none of this. For exact tools, custom-import restrictions,
+credential lifecycle and troubleshooting, see [MCP](MCP.md).
+
+`mcp show <id>` already provides per-profile configured names/capabilities;
+it is local and does not claim discovery. `mcp test` prints each allowed tool's
+discovery, SDK availability and input-schema state. Transport-connected is
+not tools-ready, and available metadata is not proof of an authenticated
+resource operation. Missing names/schemas or unavailable/deferred tools fail
+readiness explicitly. No resource tools are invoked by this command.
+
+Scope is per **server**, not per tool. `mcp test <id>` tests one server;
+`mcp test <id> <id> ...` tests exactly that selection; plain `mcp test` remains
+all enabled. The master and every requested profile must already be enabled.
+All requested IDs, consent and credentials are validated before startup:
+unknown/disabled/unconsented/missing-credential selections fail as a whole,
+without starting a valid subset or enabling anything. Hosted-only selection
+never starts Azure/npx, even when Azure is saved enabled.
+
+Every probe closes its diagnostic runtime before reporting. A passed probe
+is historical transport/tool/schema evidence, **not a live AI-session
+connection**. Cleanup failures remain explicit and return 1. `show`/`status`
+remain local configuration inspection; probe history is not persisted across
+CLI invocations. Testing does not change the saved enabled-source selection
+used by the next `--explain --mcp` or `fix --ai --mcp` request.
+
+Test failures include the source ID and last observed stage, rather than
+blaming every failure on a GitHub credential. Azure stdio/bootstrap guidance
+distinguishes Node.js/npx prerequisites from source authentication and from
+an **explicitly reported IT policy block**. A timeout/unreported server alone
+does not establish such a block. If managed security reports one, stop and
+request IT approval; do not bypass controls or switch download sources.
+Pending Azure does not erase completed hosted-source results once the SDK
+session exists; shared runtime/session failures remain shared and explicit.
+Only an administrator-approved preinstalled entrypoint/descriptor may use
+the existing credential-free custom-import path; no automatic alternative
+package or executable path is selected. See [MCP](MCP.md) for that boundary.
+
+Local stdio is not a sandbox. Known Copilot/GitHub-seat and AI-provider
+credential environment keys are masked in the transmitted overlay, but other
+variables, the intended Azure identity chain and local files can remain
+accessible. Remote GitHub Authorization uses only its separate named PAT.
+
 ---
 
 ## Using it in CI
@@ -171,14 +293,16 @@ sent and when.
     if ($LASTEXITCODE -eq 2) { exit 1 }   # gate the build on a NOT READY verdict
 
 - name: Publish findings
+  if: ${{ always() && hashFiles('findings.sarif') != '' }}
   uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: findings.sarif
 ```
 
-The review step writes `findings.sarif` locally. The separate `upload-sarif` step publishes
-it to GitHub code scanning; findings appear in the Security tab only if that step runs
-successfully and code scanning is available for the repository. `--sarif` alone does not upload it.
+`--sarif` writes a local SARIF file. It does not upload findings or transmit them automatically.
+The separate upload-sarif step publishes those findings to GitHub code scanning only if that step
+runs successfully and the repository is configured to accept them. Review the file for sensitive
+model content and apply the repository's access policy before uploading.
 
 ---
 
