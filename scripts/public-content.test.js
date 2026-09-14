@@ -758,9 +758,16 @@ test('all snapshot packages classify without conflating desktop, CLI or skill ZI
   for (const release of snapshot)
     for (const asset of release.assets) assert.ok(releaseData.kindOf(asset.name), asset.name);
   const kinds = stable.assets.map(a => releaseData.kindOf(a.name)).sort();
-  assert.deepEqual(kinds, ['cer', 'cli', 'msi', 'msix', 'portable', 'setup', 'skill']);
+  const expected = ['cer', 'cli', 'msi', 'msix', 'portable', 'setup', 'skill'];
+  if (compareVersions(stable.tag_name.slice(releaseData.PREFIX.length), '2.6.0') >= 0)
+    expected.push('checksums', 'provenance');
+  assert.deepEqual(kinds, expected.sort());
+  assert.equal(releaseData.kindOf('ThreatModelReviewer-v2.6.0-release.json'), 'provenance');
+  assert.equal(releaseData.kindOf('ThreatModelReviewer-v2.6.0-SHA256SUMS.txt'), 'checksums');
   assert.equal(releaseData.kindOf('unknown-client.zip'), null);
   assert.equal(releaseData.kindOf('unknown-tool.exe'), null);
+  assert.equal(releaseData.kindOf('unrelated-release.json'), null);
+  assert.equal(releaseData.kindOf('other-product-v2.6.0-SHA256SUMS.txt'), null);
   assert.equal(releaseData.kindOf(null), null);
   assert.equal(JSON.stringify(snapshot), before, 'Classification must not mutate the generated snapshot');
 });
