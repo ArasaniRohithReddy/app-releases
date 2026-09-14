@@ -27,10 +27,12 @@ catalogue is served to the UI by the local backend on `/api/models`, which
 reports provider availability and model capabilities and **never returns a key or
 token**.
 
-Nothing else is contacted in normal use. Previews may load CDN-hosted framework
-assets declared by the generated page itself (for example a Tailwind or Bootstrap
-CDN); those requests come from the preview document, not from a background
-service.
+Nothing else is contacted in normal use. Opening a link from the in-app **Help**
+centre hands the URL to your default browser — the app itself fetches nothing for
+Help, and every target is a public page on this hub or the source repository.
+Previews may load CDN-hosted framework assets declared by the generated page
+itself (for example a Tailwind or Bootstrap CDN); those requests come from the
+preview document, not from a background service.
 
 ## 2. What is stored on disk
 
@@ -39,11 +41,15 @@ service.
 | `%LOCALAPPDATA%\shot2code\history.sqlite3` | Projects, versions, variants, prompts and variant messages | Deleting a project in **Recent projects**, or deleting the folder |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state and `shot2code-backend.log` | Deleting the folder |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped — process paths and outcome, no project data | Deleting the file |
-| The app's own local storage | Provider API keys, selected models and UI preferences | Clearing them in **Settings** |
+| The app's own local storage | Provider API keys, selected models, pane widths and UI preferences | Clearing them in **Settings** |
 | `backend/.env` (*source only*) | `REPLICATE_API_KEY`, optional `OPENAI_BASE_URL` | Editing the file |
 
 The history database is **not encrypted**. Treat it like any other local project
 folder: it contains your prompts and your generated code.
+
+Layout preferences — the chat and file-explorer pane widths — are view state in
+the app's own local storage, never in the history database. Resizing a pane
+cannot create or alter a project version, an option or a retry.
 
 The database location can be redirected with `SHOT2CODE_DATA_DIR` or
 `SHOT2CODE_HISTORY_DB_PATH`.

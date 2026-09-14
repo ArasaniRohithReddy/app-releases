@@ -14,20 +14,30 @@ runbook. The application itself is developed at
 - [Using more than one screenshot](#using-more-than-one-screenshot)
 - [Refining the result](#refining-the-result)
 - [The Code tab](#the-code-tab)
+- [Sizing the workspace](#sizing-the-workspace)
 - [History and retries](#history-and-retries)
 - [Recent projects](#recent-projects)
 - [Importing an existing project](#importing-an-existing-project)
 - [Preview, CodePen and sharing](#preview-codepen-and-sharing)
 - [Exporting a project](#exporting-a-project)
 - [Keyboard shortcuts](#keyboard-shortcuts)
+- [The Help centre](#the-help-centre)
 - [Settings](#settings)
 - [When something goes wrong](#when-something-goes-wrong)
 
 ## First run
 
-Install it with the [install guide](INSTALL.md), then start it. The first launch
-takes about a minute while the bundled backend comes up; the splash screen stays
-until it answers.
+Install it with the [install guide](INSTALL.md), then start it. The splash screen
+stays until the bundled backend answers its health check, which from 0.3.3 is
+normally a few seconds — around 5–11 seconds on a warm machine, and longer the
+first time a fresh portable copy or a freshly updated install has to be scanned.
+The shell gives up after 90 seconds rather than waiting indefinitely; if you hit
+that, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md#the-app-will-not-start).
+
+Only the core routes have to be ready for the window to open. Generation,
+evaluation and project tooling are loaded the first time you use them, and the
+Chromium and Copilot checks run in the background — so an optional capability
+that is slow or missing no longer holds up the app.
 
 The chat panel shows a **provider status callout**. It only states what the app
 can actually see from the window:
@@ -198,7 +208,47 @@ file tabs (shown once a project has more than one file), and an editor.
   the hint *"Tab moves focus outside the editor; Ctrl+] indents"*, and the reason
   CodePen is unavailable when it is.
 - The file explorer is collapsible and remembers your choice; it opens by default
-  only when a project has more than one file.
+  only when a project has more than one file. On a multi-file project you can
+  also drag the divider between the tree and the editor — see
+  [Sizing the workspace](#sizing-the-workspace).
+
+## Sizing the workspace
+
+On wide windows (≥ 1280px) you decide how the width is shared. Two dividers do
+this:
+
+| Divider | Between |
+| --- | --- |
+| Chat divider | The conversation/History panel and Preview or Code |
+| Explorer divider | The project file tree and the editor, on multi-file projects |
+
+Drag either one, or focus it and use the keyboard:
+
+| Key | Effect |
+| --- | --- |
+| `←` / `→` | Move the divider 16px |
+| `Shift` + `←` / `→` | Move it 64px |
+| `Home` / `End` | Jump to the narrowest / widest allowed width |
+| `Enter`, or double-click | Restore the default width |
+| `Escape` | Cancel a drag that is in progress |
+
+Each divider is a real separator for assistive technology: it reports its
+orientation, its current, minimum and maximum values, readable value text, and
+which pane it controls, and it carries a 44-pixel interaction gutter with visible
+focus.
+
+Two things worth knowing:
+
+- **Widths are clamped to the window.** Neither the chat panel nor the main
+  workspace can be dragged into uselessness, and the widths re-clamp if you
+  resize the window.
+- **A width is a view preference, nothing more.** Your widths are remembered
+  across restarts and across collapse/reopen cycles, and they are stored
+  separately from your projects. Resizing a pane can never change or create a
+  version, an option, a retry or anything in History.
+
+Below that breakpoint nothing changes: **Preview**, **Chat** and **History**
+remain three separate destinations and no divider is shown.
 
 ## History and retries
 
@@ -300,7 +350,8 @@ broken scaffold.
 
 ## Keyboard shortcuts
 
-Press **Ctrl+/** (or the keyboard button in the rail) for the complete reference.
+Press **Ctrl+/** (or **Help** in the rail) to open the [Help centre](#the-help-centre),
+which carries the complete reference.
 
 | Shortcut | Action |
 | --- | --- |
@@ -312,10 +363,46 @@ Press **Ctrl+/** (or the keyboard button in the rail) for the complete reference
 | `Ctrl+Alt+U` | Upload |
 | `Ctrl+Alt+S` | Settings |
 | `Ctrl+Alt+E` | Export the current project |
-| `Ctrl+/` | Shortcut reference |
+| `Ctrl+/` | Help centre, including the shortcut reference |
 | `Tab` / `Ctrl+]` (in the editor) | Move focus out of the editor / indent |
+| `←` `→` / `Shift`+`←` `→` / `Home` `End` (on a divider) | Resize a pane — see [Sizing the workspace](#sizing-the-workspace) |
+
+In the **desktop app** only, zoom is explicit:
+
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl+=` or `Ctrl++` (numpad add works too) | Zoom in |
+| `Ctrl+-` (numpad subtract works too) | Zoom out |
+| `Ctrl+0` | Reset to 100% |
+
+Zoom moves in 10-point steps and stops at 50% and 300%. The recognised zoom keys
+replace Chromium's own handling rather than firing twice, and they leave ordinary
+editor input, AltGr and IME composition alone.
 
 Navigation shortcuts pause while you are typing or while a dialog is open.
+
+## The Help centre
+
+**Ctrl+/**, or **Help** in the rail, opens four sections:
+
+| Section | What it holds |
+| --- | --- |
+| **Get started** | Connecting a model provider, then going from a screenshot to an export |
+| **Guides** | The published architecture, data-handling, security, changelog, releasing and contributing documents |
+| **Support** | The FAQ, the troubleshooting runbook, the issue tracker and the source repository |
+| **Keyboard shortcuts** | The full reference |
+
+Every link opens in your browser and points at the authoritative copy — the
+[product page](https://arasanirohithreddy.github.io/app-releases/shot2code/), the
+[complete release history](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/),
+or the guide in this repository — so Help never drifts from what is published.
+
+In the packaged desktop app, **Support** also offers **Open diagnostic logs**,
+which opens the folder holding
+`%APPDATA%\shot2code-desktop\shot2code-backend.log` and tells you whether that
+succeeded. That log is the first thing to attach to a bug report. The browser
+development build writes no such log and says so instead of showing a button
+that cannot work.
 
 ## Settings
 
@@ -341,8 +428,9 @@ starts from an older build is protected as well — see
 file to read for each one — the backend log at
 `%APPDATA%\shot2code-desktop\shot2code-backend.log` for a blank window or a
 failed start, and `%TEMP%\shot2code-installer-preinstall.log` for an install or
-update that stopped. The [FAQ](FAQ.md) answers the *why* behind the behaviour;
-the runbook gets you unstuck.
+update that stopped. In the desktop app, **Help → Support → Open diagnostic
+logs** opens the first of those folders for you. The [FAQ](FAQ.md) answers the
+*why* behind the behaviour; the runbook gets you unstuck.
 
 When a problem needs an issue, [open one in this hub](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose)
 and pick **shot2code**, including the details under

@@ -46,9 +46,12 @@ Four checks resolve most reports before they become issues:
 | Projects, versions and prompts | `%LOCALAPPDATA%\shot2code\history.sqlite3` |
 | Everything else the app stores on this device | `%LOCALAPPDATA%\shot2code\` |
 
-Paste a path into the Explorer address bar to open it. The backend log is plain
-text and is the file to read first for a blank window, a splash screen that never
-clears, or an update that did not install.
+Paste a path into the Explorer address bar to open it. In the packaged desktop
+app, **Help → Support → Open diagnostic logs** opens the backend log's folder
+directly and reports whether it succeeded; the browser development build has no
+such log and says so. The backend log is plain text and is the file to read first
+for a blank window, a splash screen that never clears, or an update that did not
+install.
 
 The database is **not** encrypted: it holds your prompts and generated code, so
 treat it like any other local project folder. [DATA-HANDLING.md](DATA-HANDLING.md)
@@ -58,9 +61,11 @@ lists every path and every network destination.
 
 | Symptom | Cause and fix |
 | --- | --- |
-| First launch sits on the splash screen for up to a minute | Expected. A cold start boots the frozen Python backend and probes Chromium and Copilot; the splash stays until the backend answers. Later launches are faster because the Copilot check is cached. |
-| The window is blank, or never appears at all | Read `shot2code-backend.log`. It records backend startup, `did-fail-load`, renderer crashes and console errors, which is the difference between "the backend never came up" and "the UI failed to load". |
+| First launch sits on the splash screen for a few seconds | Expected. The splash stays until the frozen Python backend answers its health check — normally about 5–11 seconds from 0.3.3. A fresh portable copy or the first launch after an update takes longer (around 40 seconds) while Windows scans the newly written tree. |
+| The splash screen never clears | The shell gives up after 90 seconds and logs how long readiness took. Read `shot2code-backend.log`: it records whether the backend exited, failed to spawn, or answered health with something other than `{"ok": true}`. Startup no longer waits on Chromium or Copilot, so a missing optional capability is not the cause. |
+| The window is blank, or never appears at all | Read `shot2code-backend.log`. It records backend startup, `did-fail-load`, renderer crashes and console errors, which is the difference between "the backend never came up" and "the UI failed to load". In the packaged app, **Help → Support → Open diagnostic logs** opens that folder for you. |
 | "Backend did not become ready in time" | Usually a partially replaced install: an older updater could overwrite files while the backend was still running, leaving native modules missing. Download the newest installer from the releases page and run it manually (right-click → **Properties** → **Unblock** first). |
+| Generation fails on a backend that reported healthy earlier | A deferred feature failed to load. Those routers are imported on first use; if one cannot load, the request returns an error and health starts failing too, so the log will show it. Restart the app and read `shot2code-backend.log`. |
 | The app starts, but everything says no provider | Nothing is wrong with the app. Go to [Providers and the model catalogue](#providers-and-the-model-catalogue). |
 | Windows says "Windows protected your PC" | Expected — the builds are not code-signed. Verify the SHA-256 hash against `SHA256SUMS.txt` from the same release first, then **More info → Run anyway**. See [INSTALL.md](INSTALL.md#about-the-smartscreen-warning) and [SECURITY.md](SECURITY.md). |
 
@@ -145,6 +150,17 @@ separate destination on narrow windows.
 | A project is gone from **Recent projects** | Deleting a project removes it and all of its versions from the device. There is no cloud copy and no undo. |
 | Recent work is missing after reinstalling | Projects live in `%LOCALAPPDATA%\shot2code\history.sqlite3`. An uninstall that removed that folder removed the history with it. |
 
+## The workspace layout
+
+| Symptom | Cause and fix |
+| --- | --- |
+| There is no divider to drag | Dividers appear on windows at least 1280px wide. Below that, **Preview**, **Chat** and **History** stay separate destinations by design. The explorer divider also needs a project with more than one file. |
+| A pane is too narrow to use | Widths are clamped to the window, so neither side can be dragged away entirely. Press **Enter** or double-click a divider to restore its default, or **Home**/**End** to jump to the allowed limits. |
+| Widths changed after resizing the window | Expected: saved widths re-clamp to the current viewport so both panes stay usable. |
+| A pane cannot be moved with the keyboard | Focus the divider first, then use `←`/`→` (16px), `Shift`+`←`/`→` (64px), `Home`/`End`, `Enter` to reset, `Escape` to cancel a drag. |
+| Resizing seems to have created a version | It cannot. Pane widths are a view preference stored separately from project data; resizing never creates or changes a version, an option, a retry or anything in History. |
+| The app is too small or too large to read | In the desktop app, `Ctrl+=`/`Ctrl++` zoom in, `Ctrl+-` zooms out and `Ctrl+0` resets, in 10-point steps between 50% and 300%. Numpad add and subtract work with `Ctrl` too. |
+
 ## Installing and updating
 
 | Symptom | Cause and fix |
@@ -172,7 +188,8 @@ Include, and a fix gets much faster:
 3. **What you expected, what happened**, and the exact wording of any error.
 4. **Which provider and which model** were selected — Copilot, OpenAI, Anthropic
    or Gemini — and whether the failure also happens with a different one.
-5. **The tail of `shot2code-backend.log`**, and
+5. **The tail of `shot2code-backend.log`** — **Help → Support → Open diagnostic
+   logs** finds it for you — and
    `%TEMP%\shot2code-installer-preinstall.log` for an install or update problem.
 6. **The input**, if you can share it: the screenshot, URL or description, the
    output stack, and the multi-screenshot mode you chose.

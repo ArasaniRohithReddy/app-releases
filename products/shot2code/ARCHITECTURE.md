@@ -8,9 +8,9 @@ who want to know what runs where. The implementation lives in the
 
 | Piece | Technology | Role |
 | --- | --- | --- |
-| Renderer | React + Vite | The whole UI: chat, preview, Code tab, History, settings |
+| Renderer | React + Vite | The whole UI: chat, preview, Code tab, History, Help, settings |
 | Backend | FastAPI (Python) | The agent loop, tools, model catalogue, project history, import scanning, export |
-| Desktop shell | Electron | Starts the backend, waits for it, loads the built UI |
+| Desktop shell | Electron | Starts the backend, verifies readiness, loads the built UI, owns zoom and the log folder |
 
 In the packaged app the shell starts the frozen backend on a **free local port**,
 waits for its `/api/health` endpoint, and only then loads the built frontend from
@@ -19,6 +19,28 @@ environment variables in at build time and cannot know it.
 
 Generation streams over a **WebSocket** to that local backend; everything else is
 plain HTTP on the same loopback origin.
+
+## Startup
+
+Startup is deliberately staged, because the packaged backend is a frozen Python
+tree that Windows may still be scanning:
+
+1. **Core routes first.** Health, settings and model catalogue, design system and
+   history are imported before the server starts answering.
+2. **Heavy routers on first use.** Generation, evaluation and the project tools
+   are imported the first time a request needs them, not during startup.
+3. **Optional probes in the background.** Chromium and Copilot discovery run as
+   bounded background work; neither can delay `/api/health`.
+
+The shell's readiness check is strict rather than optimistic: it requires
+HTTP 200 *and* a genuine `{"ok": true}` body, aborts at once if the backend
+process exits or cannot be spawned, records how long readiness took in the log,
+and applies a 90-second cold-start deadline.
+
+Deferred imports fail loudly. If a lazily loaded router cannot be imported, that
+request returns an error and health fails from then on, so a backend that cannot
+generate never reports itself healthy. Chromium is advertised as available only
+after it has actually launched, and it is closed during backend shutdown.
 
 ## The agent loop
 
@@ -62,6 +84,28 @@ its own planning loop, while shot2code's engine also owns a loop. The provider
 bridges the two: each Copilot tool invocation is parked and handed back to the
 shot2code engine, which resolves it once the tool has actually run. Copilot's own
 file and shell tools are excluded — only shot2code's tools are exposed.
+
+## Workspace layout state
+
+Pane widths — the chat/History divider and the multi-file explorer divider — are
+**view state**, held in the renderer's own local storage and clamped to the
+current viewport on every resize. They are stored apart from project data on
+purpose: the history database records commits, options, retries and prompts, and
+nothing about how wide a pane was. Dragging a divider therefore cannot create or
+mutate a version.
+
+The dividers are exposed as `role="separator"` controls with orientation,
+current/minimum/maximum values, value text and the pane they control, so they are
+operable from the keyboard as well as the mouse.
+
+Help is a renderer dialog whose links all point at the published hub — the
+product page, the release history and the guides in `products/shot2code/` — so it
+cannot drift from what is actually published. Its one privileged action is
+"open diagnostic logs", which asks the shell to reveal the backend log's folder;
+in the browser development build there is no such log and the action reports that
+instead of failing silently. Zoom lives in the shell, in deterministic 10-point
+steps bounded to 50–300%, replacing Chromium's own accelerator handling so a
+single keystroke does not zoom twice.
 
 ## Project history
 

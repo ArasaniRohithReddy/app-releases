@@ -45,6 +45,8 @@
       "Twelve output stacks, including HTML + Tailwind, React, Vue, Preact, Bootstrap and Material 3",
       "Model selection across GitHub Copilot, OpenAI, Anthropic and Google Gemini, with one option generated per selected model",
       "Multi-file project editor with a file tree, whitespace-only formatting and local History",
+      "Resizable chat and file-explorer panes with keyboard-operable separators and remembered widths",
+      "In-app Help centre linking the published guides, and an action that opens the backend log folder",
       "Local SQLite project history stored under %LOCALAPPDATA%\\shot2code",
       "Imports an existing folder, ZIP or source files as design context without executing them",
       "Sandboxed preview with a restrictive Content-Security-Policy and opaque origin",
@@ -458,6 +460,10 @@
             <p>The Code tab is a multi-file project tree with an editor, file tabs, <code>Entry</code>, <code>Preview</code>, <code>Read-only</code> and <code>Generated</code> badges, and a whitespace-only <strong>Format</strong> action. Select an element in the preview and describe the change.</p>
           </article>
           <article class="pillar">
+            <h3>Size it the way you work</h3>
+            <p>On wide windows, drag the divider between Chat and the preview, or between the file tree and the editor. Both are keyboard-operable separators, both remember your width across restarts, and both are clamped so neither side becomes unusable. A pane width is a view preference — resizing never creates or changes a version.</p>
+          </article>
+          <article class="pillar">
             <h3>Keep your history on the device</h3>
             <p>Projects, versions and prompts live in a local SQLite database under <code>%LOCALAPPDATA%\shot2code\</code>. <strong>History</strong> steps back through every version, <strong>Recent projects</strong> picks up where you left off, and deleting a project removes it and its versions from the device.</p>
           </article>
@@ -564,6 +570,9 @@
           <div><dt>Inputs</dt><dd>Screenshots, multiple related screenshots, a URL, a text description, or a screen recording. Video input needs a Gemini key.</dd></div>
           <div><dt>Model choice</dt><dd>Pick models from GitHub Copilot, OpenAI, Anthropic and Google Gemini in Settings or beside the composer. One option per selected model; tick nothing to leave it automatic.</dd></div>
           <div><dt>Editing</dt><dd>Multi-file tree, file tabs, a collapsible explorer, select-and-edit from the preview, and a formatter that only ever changes whitespace and refuses component source.</dd></div>
+          <div><dt>Layout</dt><dd>On wide windows, drag or keyboard-move the dividers between Chat and the workspace, and between the file tree and the editor. Widths persist, clamp to the window, and stay a view preference — resizing never creates a version.</dd></div>
+          <div><dt>Startup</dt><dd>Core routes come up first; generation, evaluation and project tooling load on first use, and the Chromium and Copilot probes run in the background. The shell requires a genuine health response and gives up after 90 seconds rather than hanging.</dd></div>
+          <div><dt>Help</dt><dd><span class="kbd">Ctrl+/</span> opens Get started, Guides, Support and the shortcut reference, linking these published guides. In the desktop app it also opens the backend log folder for a bug report.</dd></div>
           <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts and retry ancestry, and records the model behind each option. Nothing is uploaded; deleting a project deletes it from disk.</dd></div>
           <div><dt>Import</dt><dd>Point at a folder, ZIP or selected source files. The scanner parses text only — it never executes the project's configuration or code — then offers design context or an editable project.</dd></div>
           <div><dt>Preview</dt><dd>A derived, self-contained artifact rendered in an opaque-origin sandbox with a restrictive Content-Security-Policy. At 100% a fixed-width canvas is centred in a neutral frame. When a build cannot be represented safely it shows a diagnostic instead of guessing.</dd></div>
@@ -573,7 +582,7 @@
         <div class="features" style="margin-top:1.6rem">
           <div class="feature">
             <h3><span class="tick">✓</span> Keyboard-first</h3>
-            <p><span class="kbd">Ctrl+/</span> opens the full shortcut reference. <span class="kbd">Ctrl+1–4</span> switch Preview, Code, Chat and History; <span class="kbd">Ctrl+3</span> again collapses the chat panel on wide windows. Project actions use <span class="kbd">Ctrl+Alt</span> combinations — <span class="kbd">N</span> new, <span class="kbd">I</span> import, <span class="kbd">U</span> upload, <span class="kbd">S</span> settings, <span class="kbd">E</span> export.</p>
+            <p><span class="kbd">Ctrl+/</span> opens the Help centre, which carries the full shortcut reference. <span class="kbd">Ctrl+1–4</span> switch Preview, Code, Chat and History; <span class="kbd">Ctrl+3</span> again collapses the chat panel on wide windows. Project actions use <span class="kbd">Ctrl+Alt</span> combinations — <span class="kbd">N</span> new, <span class="kbd">I</span> import, <span class="kbd">U</span> upload, <span class="kbd">S</span> settings, <span class="kbd">E</span> export. Pane dividers take arrow keys, <span class="kbd">Shift</span> for larger steps, <span class="kbd">Home</span>/<span class="kbd">End</span> and <span class="kbd">Enter</span> to reset. In the desktop app, <span class="kbd">Ctrl+=</span> and <span class="kbd">Ctrl+-</span> zoom in fixed steps between 50% and 300%, and <span class="kbd">Ctrl+0</span> resets.</p>
           </div>
           <div class="feature">
             <h3><span class="tick">✓</span> Sharing that asks first</h3>
@@ -645,20 +654,20 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="whats-new-h">Recently improved</h2>
-          <p>The most recent work went into protecting an update that starts from an older build, opening model choice to every provider, and finishing the Preview and History layout.</p>
+          <p>The most recent work went into starting fast, letting you set how the workspace splits its width, and putting the guides and the log you need inside the app.</p>
         </div>
         <div class="features">
           <div class="feature">
-            <h3><span class="tick">✓</span> The safeguard moved into the installer</h3>
-            <p>A guard inside the app cannot help a machine still running an older build. The installer now stops the installed backend itself before replacing anything — matching processes by path under <code>resources\backend</code>, never by name — and refuses to continue if it cannot confirm they are gone, leaving a log behind to say why.</p>
+            <h3><span class="tick">✓</span> It starts in seconds</h3>
+            <p>Only the core routes have to be ready before the window opens — generation, evaluation and project tooling load on first use, and the Chromium and Copilot checks run in the background. The shell demands a real health response rather than any reply, gives up after 90 seconds instead of hanging, and logs how long readiness took.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Model choice for every provider</h3>
-            <p>Settings and the composer picker group the models you can use under GitHub Copilot, OpenAI, Anthropic and Google Gemini. Tick as many as you like and each run produces one option per selected model; leave them untouched and it stays automatic.</p>
+            <h3><span class="tick">✓</span> A workspace you can resize</h3>
+            <p>Drag the divider between Chat and the preview, or between the file tree and the editor. Arrow keys move it, <strong>Shift</strong> moves it further, <strong>Home</strong> and <strong>End</strong> jump to the limits, <strong>Enter</strong> resets and <strong>Escape</strong> cancels a drag. Widths persist, clamp to the window, and never touch a project's versions.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Preview centred, History named</h3>
-            <p>A fixed-width canvas at 100% now sits centred in a neutral frame instead of hugging the left edge, scale and version are separate labelled controls, and <strong>History</strong> is a destination of its own beside Preview and Chat on narrow windows.</p>
+            <h3><span class="tick">✓</span> Help, and the log, in the app</h3>
+            <p><strong>Ctrl+/</strong> now opens a Help centre — Get started, Guides, Support and the full shortcut reference — linking the published guides rather than a private copy. In the desktop app it also opens the backend log folder, which is the first thing to attach to a bug report. Zoom is explicit too: <strong>Ctrl+=</strong>, <strong>Ctrl+-</strong> and <strong>Ctrl+0</strong>, in fixed steps between 50% and 300%.</p>
           </div>
         </div>
         <p class="dl-note">Every version, its notes and all its files are on the <a href="./releases/">releases page</a>. The full history lives in the <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">changelog</a>.</p>
@@ -704,7 +713,7 @@
           <pre tabindex="0" aria-label="PowerShell command to check a download's SHA-256 hash"><code id="verify-command">Get-FileHash .\shot2code-&lt;version&gt;-x64.exe -Algorithm SHA256</code></pre>
         </div>
 
-        <p class="dl-note">Only the per-user <code>.exe</code> updates itself: <strong>Settings</strong> shows the running version, the update state and <strong>Restart &amp; install</strong> once a download is ready. Before anything is replaced, the installed backend is stopped and that shutdown is verified — by the app, and again by the installer itself, so an update that starts from an older build is protected too. If it cannot be confirmed, the install stops rather than overwriting a running app. MSI upgrades stay with the administrator and portable builds do not update.</p>
+        <p class="dl-note">Only the per-user <code>.exe</code> updates itself: <strong>Settings</strong> shows the running version, the update state and <strong>Restart &amp; install</strong> once a download is ready. Before anything is replaced, the installed backend is stopped and that shutdown is verified — by the app, and again by the installer itself, so an update that starts from an older build is protected too. The installer now stops the installed backend itself before replacing anything, matching processes by path under <code>resources\backend</code>, never by name, and if it cannot confirm they are gone the install stops rather than overwriting a running app. MSI upgrades stay with the administrator and portable builds do not update.</p>
 
         <div class="note">
           <strong>These builds are not code-signed.</strong> Windows will show

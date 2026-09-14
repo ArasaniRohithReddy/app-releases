@@ -461,20 +461,87 @@ test('the shot2code guides describe the shipped build', () => {
     assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
 });
 
-test('the shot2code changelog leads with the published release and keeps every earlier entry', () => {
-  // The version is taken from the generated snapshot rather than written here, so this asserts the
-  // release contract in RELEASING.md ("update the changelog with the new version") without pinning
-  // a build that the next release supersedes.
+test('the shot2code changelog documents every published release it claims to cover', () => {
+  // Versions come from the generated snapshot rather than being written here, so this asserts the
+  // release contract in RELEASING.md without pinning a build that the next release supersedes.
+  // Documentation lands before the snapshot workflow refreshes the feed, so the changelog is
+  // allowed to be *ahead* of the snapshot — never behind it.
   const changelog = read('products/shot2code/CHANGELOG.md');
   const entries = [...changelog.matchAll(/^## \[(\d+\.\d+\.\d+)\] — (\d{4}-\d{2}-\d{2})$/gm)].map(m => m[1]);
   const published = releaseData.normalize(JSON.parse(read('docs/shot2code/releases/releases.json')), 'shot2code-v');
   const newest = releaseData.latestStable(published).tag_name.replace('shot2code-v', '');
-  assert.equal(entries[0], newest, 'The newest published release has no changelog entry');
-  // History is cumulative: an entry is never rewritten out of the file by a later release.
-  for (const older of ['0.3.1', '0.3.0']) assert.ok(entries.includes(older), `${older} was dropped from the changelog`);
+  assert.ok(compareVersions(entries[0], newest) >= 0,
+    `the changelog leads with ${entries[0]}, which is older than the published ${newest}`);
+  // Every tracked release has an entry. Anything before 0.3.0 predates the changelog and is
+  // downloadable without one, which the file says in as many words.
+  for (const release of published) {
+    const version = release.tag_name.replace('shot2code-v', '');
+    if (compareVersions(version, '0.3.0') < 0) continue;
+    assert.ok(entries.includes(version), `${version} is published but has no changelog entry`);
+  }
   assert.deepEqual(entries, [...entries].sort((a, b) => compareVersions(b, a)), 'Entries are not newest-first');
-  // Builds older than the changelog are still downloadable, so say so instead of implying a gap.
   assert.match(changelog, /Versions before 0\.3\.0 were not tracked in a changelog/);
+});
+
+test('the shot2code guides describe deferred startup, resizable panes, Help and zoom', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  const changelog = read('products/shot2code/CHANGELOG.md');
+  const architecture = read('products/shot2code/ARCHITECTURE.md');
+  const runbook = read('products/shot2code/TROUBLESHOOTING.md');
+  const faq = read('products/shot2code/FAQ.md');
+  const data = read('products/shot2code/DATA-HANDLING.md');
+  const install = read('products/shot2code/INSTALL.md');
+
+  // Startup is staged, and readiness is asserted rather than assumed. The measured evidence is
+  // stated once, in the changelog, because that is where a claim about a build belongs.
+  assert.match(changelog, /10 of 10 relaunches with no timeouts/);
+  assert.match(changelog, /299–347 seconds/, 'the changelog does not say what was actually wrong');
+  for (const text of [changelog, guide, architecture, install])
+    assert.match(text, /90-second|90 seconds/, 'a guide omits the cold-start deadline');
+  assert.match(architecture, /^## Startup$/m);
+  assert.match(architecture, /\{"ok": true\}/, 'ARCHITECTURE.md does not state the strict health contract');
+  assert.match(architecture, /Heavy routers on first use|on first use/);
+  assert.match(architecture, /bounded background work/);
+  assert.match(architecture, /health fails from then on|health starts failing/i);
+  assert.match(guide, /Chromium and Copilot checks run in the background|Chromium and Copilot checks run in\s+the background/);
+  // The old "about a minute" promise must not survive anywhere.
+  for (const [name, text] of [['USER-GUIDE.md', guide], ['INSTALL.md', install], ['FAQ.md', faq],
+    ['TROUBLESHOOTING.md', runbook]])
+    assert.doesNotMatch(text, /first launch takes about a minute|takes about a minute|splash screen for up to a minute/i,
+      `${name} still promises a minute-long first launch`);
+
+  // Resizable panes: where they appear, how the keyboard drives them, and what they are not.
+  assert.match(guide, /^## Sizing the workspace$/m);
+  assert.match(guide, /1280px/);
+  for (const key of [/`Home` \/ `End`/, /`Shift` \+ `←` \/ `→`/, /`Escape`/, /16px/, /64px/])
+    assert.match(guide, key, 'USER-GUIDE.md does not document a pane-resize key');
+  assert.match(guide, /role.*separator|real separator/i);
+  // UI-only persistence is the promise that matters: a view preference is not project data.
+  for (const [name, text] of [['USER-GUIDE.md', guide], ['CHANGELOG.md', changelog],
+    ['ARCHITECTURE.md', architecture], ['DATA-HANDLING.md', data], ['TROUBLESHOOTING.md', runbook]])
+    assert.match(text.replace(/\s+/g, ' '),
+      /(?:cannot|never|can never)[^.]{0,80}(?:create|change|alter)[^.]{0,40}version/i,
+      `${name} does not say that resizing leaves project history alone`);
+  assert.match(data.replace(/\s+/g, ' '), /view state in the app's own local storage, never in the history database/);
+  assert.match(runbook, /^## The workspace layout$/m);
+
+  // Help centre: the four sections, the published links, and the log action.
+  assert.match(guide, /^## The Help centre$/m);
+  for (const section of ['Get started', 'Guides', 'Support', 'Keyboard shortcuts'])
+    assert.ok(guide.includes(section), `USER-GUIDE.md does not list the Help section "${section}"`);
+  for (const [name, text] of [['USER-GUIDE.md', guide], ['TROUBLESHOOTING.md', runbook], ['FAQ.md', faq]])
+    assert.match(text, /Open diagnostic logs/, `${name} does not mention the log action`);
+  assert.match(guide, /browser\s+development build (?:writes no such log|has no)/i);
+
+  // Zoom is desktop-only, bounded and deterministic.
+  for (const [name, text] of [['USER-GUIDE.md', guide], ['CHANGELOG.md', changelog], ['FAQ.md', faq],
+    ['TROUBLESHOOTING.md', runbook]]) {
+    assert.match(text, /Ctrl\+=/, `${name} does not document zoom in`);
+    assert.match(text, /Ctrl\+0/, `${name} does not document the zoom reset`);
+    assert.match(text, /50%\s*(?:and|to|-|–)\s*300%/, `${name} does not state the zoom bounds`);
+  }
+  assert.match(guide, /10-point steps/);
+  assert.match(changelog, /AltGr/, 'the changelog does not record the input-safety work');
 });
 
 test('the shot2code guides describe the v0.3.2 installer safeguard, model choice and History', () => {
@@ -578,6 +645,38 @@ test('the shot2code page describes model choice, History and the installer safeg
   assert.match(copy, /installer now stops the installed backend itself/);
   assert.match(copy, /matching processes by path under resources\\backend\s*, never by name/);
   assert.match(copy, /again by the installer itself/);
+});
+
+test('the shot2code page advertises fast startup, resizable panes, Help and zoom', () => {
+  const copy = visibleText(shot2code);
+  // Startup, stated as behaviour a reader can check rather than as a benchmark.
+  assert.match(copy, /Only the core routes have to be ready/);
+  assert.match(copy, /load on first use/);
+  assert.match(copy, /run in the background/);
+  assert.match(copy, /gives up after 90 seconds/);
+  // Resizable panes, including the promise that a width is not project data.
+  assert.match(copy, /drag the divider between Chat and the preview/i);
+  assert.match(copy, /file tree and the editor/);
+  assert.match(copy, /never (?:creates or changes|touch(?:es)? a project's versions|creates a version)/i);
+  assert.match(copy, /Home and End jump to the limits|Home.*End.*limits/);
+  // Help and the log action.
+  assert.match(copy, /Help centre/);
+  for (const section of ['Get started', 'Guides', 'Support'])
+    assert.ok(copy.includes(section), `the product page does not name the Help section "${section}"`);
+  assert.match(copy, /opens the backend log folder/);
+  // Zoom, with its real bounds.
+  assert.match(copy, /Ctrl\+= and Ctrl\+- zoom in fixed steps between 50% and 300%/);
+  assert.match(copy, /Ctrl\+0/);
+  // The claims stay tied to behaviour, never to the build that introduced them.
+  const newest = releaseData.latestStable(
+    releaseData.normalize(JSON.parse(read('docs/shot2code/releases/releases.json')), 'shot2code-v')
+  ).tag_name.replace('shot2code-v', '');
+  assert.doesNotMatch(withoutArtwork(shot2code), new RegExp(`\\bv?${newest.replace(/\./g, '\\.')}\\b`),
+    'the product page names the current published version');
+  // Structured data describes the same capabilities the copy does.
+  const features = JSON.parse(shot2code.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)[1]).featureList;
+  assert.ok(features.some(f => /Resizable chat and file-explorer panes/.test(f)), 'featureList omits resizable panes');
+  assert.ok(features.some(f => /Help centre/.test(f)), 'featureList omits the Help centre');
 });
 
 test('the shot2code page states the platform, the provider requirement and the signing status', () => {

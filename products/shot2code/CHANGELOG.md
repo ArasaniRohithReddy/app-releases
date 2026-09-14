@@ -13,6 +13,90 @@ The full engineering changelog lives with the code:
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.
 
+## [0.3.3] — 2026-09-14
+
+[Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.3.3) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.3.3)
+
+The current release. It makes the packaged app start in seconds instead of
+minutes, lets you decide how the workspace splits its width, and replaces the
+shortcuts-only dialog with a Help centre that can open the log you need to
+attach to a bug report.
+
+### Fixed
+
+- **Startup no longer waits for features you have not used yet.** The frozen
+  backend used to import the generation, evaluation and project-tool
+  dependencies *before* health could answer, then launch Playwright
+  synchronously. On a slow machine that delayed readiness by 299–347 seconds and
+  blew past the shell's timeout — the splash screen that never cleared. Core
+  routes now come up first, the heavy routers load on first use, and Chromium
+  and Copilot discovery run as bounded background work.
+- **Readiness is checked strictly, not hopefully.** The desktop shell now
+  requires HTTP 200 *and* a real `{"ok": true}` body, gives up immediately if the
+  backend exits or cannot be spawned, records how long readiness took, and uses a
+  90-second cold-start deadline instead of waiting on optional capabilities.
+  Final packaged validation was **10 of 10 relaunches with no timeouts** —
+  5.2 s fastest, 8.3 s median, 11.2 s slowest to a ready shell; 10.6 s on a fresh
+  profile and 40.9 s for a fresh portable or post-update first run.
+- **A deferred feature that fails stays failed.** If one of the lazily imported
+  routers cannot load, the request returns an error and health starts failing
+  from then on, rather than reporting a healthy backend that cannot generate.
+  Chromium is advertised only after it has actually launched, and it is closed
+  when the backend shuts down.
+
+### Added
+
+- **A resizable Chat and History panel.** On wide windows (≥ 1280px) drag the
+  divider between the conversation/History panel and Preview or Code. It is a
+  real separator, not a decoration: arrow keys move it 16px, **Shift**+arrow
+  64px, **Home**/**End** jump to the narrowest and widest allowed widths,
+  **Enter** or a double-click restores the default, and **Escape** cancels a drag
+  in progress.
+- **A resizable project file explorer** with its own divider on multi-file Code
+  workspaces, and minimum widths for both the tree and the editor. Single-file
+  projects still show no tree, so no space is wasted on an empty one.
+- **Pane widths that persist — and stay a view preference.** Chat and explorer
+  widths survive a restart and a collapse/reopen cycle, and are clamped to the
+  current window so neither side can be squeezed into uselessness. They are kept
+  entirely apart from project data: **resizing a pane cannot change or create a
+  version**, an option, a retry or anything in History.
+- **An in-app Help centre.** The rail's **Help** action and **Ctrl+/** open four
+  sections — *Get started*, *Guides*, *Support* and *Keyboard shortcuts*. Its
+  links point at this hub: the product page, the complete release history, and
+  the install, user, FAQ, troubleshooting, architecture, data-handling, security,
+  changelog, contributing, third-party and releasing guides, plus the issue
+  tracker and the source repository.
+- **Open diagnostic logs.** In the packaged desktop app, Help opens the folder
+  holding the backend log and says plainly whether that worked. The browser
+  development build has no such log and explains why the action is unavailable
+  instead of offering a dead button.
+- **Real desktop zoom.** `Ctrl+=` and `Ctrl++` zoom in, `Ctrl+-` zooms out, the
+  numpad add and subtract keys work with `Ctrl`, and `Ctrl+0` resets. Zoom moves
+  in deterministic 10-point steps and is bounded between 50% and 300%.
+
+### Changed
+
+- Below the desktop split breakpoint nothing moves: the **Preview**, **Chat** and
+  **History** destinations behave exactly as before and no drag handle is shown.
+- Chat spacing and the composer reflow at the narrowest supported panel width
+  without hiding **Send**, the model picker or the design-system controls.
+- The shortcuts-only dialog became the Help centre; the full shortcut reference
+  is still inside it.
+
+### Accessibility
+
+- Every pane handle is a `role="separator"` with vertical orientation, current,
+  minimum and maximum values, readable value text, an explicit link to the pane
+  it controls, keyboard instructions, visible focus and a 44-pixel interaction
+  gutter.
+- Help keeps focus trapped while open, labels each external link descriptively,
+  uses 44-pixel tabs and rows, scrolls its tabs horizontally on narrow windows,
+  and shows honest disabled states.
+- The recognised zoom keys suppress Chromium's duplicate handling without
+  swallowing ordinary editor input, AltGr or composition events.
+
 ## [0.3.2] — 2026-09-14
 
 [Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
@@ -22,6 +106,8 @@ mirrored on the releases page have downloads and notes but no entry here.
 The current release. It protects an update that starts from an older client,
 extends model selection to every supported code provider, and finishes the
 responsive **Preview** and **History** work.
+
+Superseded by 0.3.3, which makes the packaged app start in seconds.
 
 ### Fixed
 

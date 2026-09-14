@@ -79,18 +79,25 @@ Portable builds do not self-update. Replace the folder with a newer build.
 
 ## First launch
 
-The first start takes about a minute: the bundled Python backend has to come up
-before the window is usable, and the splash screen stays visible until it answers
-its health check. Later launches are faster.
+The splash screen stays until the bundled Python backend answers its health
+check. From 0.3.3 that is normally a few seconds — about 5–11 seconds on a warm
+machine — because only the core routes have to be ready; generation, evaluation
+and project tooling load on first use, and the Chromium and Copilot checks run in
+the background. A fresh portable copy, or the first launch after an update, takes
+longer (around 40 seconds) while Windows scans the newly written tree. The shell
+gives up after 90 seconds rather than waiting forever.
 
 If the window stays blank or never appears, read the log — it records backend
-startup, renderer load failures, crashes and console errors:
+startup, how long readiness took, renderer load failures, crashes and console
+errors:
 
 ```
 %APPDATA%\shot2code-desktop\shot2code-backend.log
 ```
 
-Include the tail of that file if you open an issue.
+In the app, **Help → Support → Open diagnostic logs** opens that folder for you.
+Include the tail of that file if you open an issue, and see
+[TROUBLESHOOTING.md](TROUBLESHOOTING.md) for the symptom-by-symptom runbook.
 
 ## About the SmartScreen warning
 
@@ -146,7 +153,7 @@ project removes it and its versions from the device.
 | `%LOCALAPPDATA%\shot2code\` | `history.sqlite3` — projects, versions, prompts |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state and `shot2code-backend.log` |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped |
-| The app's own local storage | Provider API keys, your model selection and UI preferences entered in Settings |
+| The app's own local storage | Provider API keys, your model selection, pane widths and UI preferences entered in Settings |
 
 See [DATA-HANDLING.md](DATA-HANDLING.md) for the full list, including every
 network destination.

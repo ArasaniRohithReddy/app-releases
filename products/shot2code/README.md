@@ -38,9 +38,11 @@ model and cannot generate anything on its own.
 | Choose which models try it | **Settings → Models**, or the picker beside the composer | One option per selected model, across Copilot, OpenAI, Anthropic and Gemini |
 | Refine it | Chat panel, or select an element in the preview | A new version that keeps the previous one |
 | Edit the source | Code tab | Multi-file tree, editor, whitespace-only **Format**, file badges |
+| Set how the width is shared | Drag (or keyboard-move) the chat and file-explorer dividers | A remembered view preference that never touches a project's versions |
 | Step back through earlier attempts | **History** | Every version, the model behind each option, and a retry that re-rolls one |
 | Reopen earlier work | **Recent projects** | Projects, versions and prompts restored from the local database |
 | Reuse an existing project | **Import → Folder, ZIP or source files** | Design context, or a normalized editable project |
+| Find a guide, or the log to attach | **Help** in the rail, or **Ctrl+/** | Get started, Guides, Support, shortcuts — and **Open diagnostic logs** in the desktop app |
 | Take it away | **Download** | A single self-contained HTML file, or a Vite project folder |
 
 ## Output stacks
@@ -86,7 +88,7 @@ they belong to. See [DATA-HANDLING.md](DATA-HANDLING.md).
 | Guide | What it covers |
 | --- | --- |
 | [INSTALL.md](INSTALL.md) | Downloads, checksum verification, SmartScreen, updates, uninstall |
-| [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, model selection, generating, editing, History, import, export, shortcuts |
+| [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, model selection, generating, editing, resizing, History, import, export, shortcuts, Help |
 | [FAQ.md](FAQ.md) | Common questions, in the order people ask them |
 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Symptom-first runbook: startup, providers, Chromium, import, export, updates, where the logs live |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the app, backend, agent loop and packaging fit together |

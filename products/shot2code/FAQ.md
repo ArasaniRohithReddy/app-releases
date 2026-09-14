@@ -51,10 +51,37 @@ you want nothing written outside a folder you control.
 
 ## Starting the app
 
-**First launch is slow.**
-A cold start boots the bundled Python backend and probes Chromium and Copilot. The
-splash screen stays up until the backend answers. Later launches are faster
-because the Copilot check is cached.
+**How long should startup take?**
+From 0.3.3, a few seconds — roughly 5–11 seconds to a usable window on a warm
+machine. The splash screen waits for the bundled backend's health check, and the
+shell gives up after 90 seconds rather than hanging. A fresh portable copy, or the
+first launch after an update, is slower (around 40 seconds) because Windows has
+to scan a newly written tree.
+
+Earlier builds imported the generation, evaluation and project tooling before
+health could answer and launched Chromium synchronously, which on slow machines
+pushed readiness past five minutes. Those now load on first use and in the
+background, so an optional capability can no longer hold up the app.
+
+**Can I make the chat panel wider?**
+Yes, on windows at least 1280px wide. Drag the divider between the chat panel and
+the preview, or the one between the file tree and the editor, or focus it and use
+the arrow keys (`Shift` for bigger steps, `Home`/`End` for the limits, `Enter` to
+reset). The widths are remembered, are clamped so neither side becomes unusable,
+and are a view preference only — resizing never creates or changes a version. On
+narrower windows Preview, Chat and History stay separate destinations and no
+divider appears.
+
+**Where is the in-app help?**
+**Ctrl+/**, or **Help** in the rail. It has Get started, Guides, Support and
+Keyboard shortcuts, and every link opens the published copy on this hub. In the
+desktop app, Support also has **Open diagnostic logs**, which opens the folder
+holding the backend log — the file to attach to a bug report.
+
+**The app is too small or too large to read.**
+In the desktop app use `Ctrl+=` / `Ctrl++` to zoom in, `Ctrl+-` to zoom out and
+`Ctrl+0` to reset; the numpad add and subtract keys work too. Zoom moves in
+10-point steps between 50% and 300%.
 
 **The window is blank, or never appears.**
 Read the log and include its tail in an issue:
