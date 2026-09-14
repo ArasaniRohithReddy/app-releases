@@ -12,6 +12,8 @@
 
   function kindOf(name) {
     const n = typeof name === "string" ? name.toLowerCase() : "";
+    if (/^threatmodelreviewer-v\d+\.\d+\.\d+-sha256sums\.txt$/.test(n)) return "checksums";
+    if (/^threatmodelreviewer-v\d+\.\d+\.\d+-release\.json$/.test(n)) return "provenance";
     if (n.endsWith("-skill.zip")) return "skill";
     if (n.endsWith("-cli-win-x64.zip")) return "cli";
     if (n.endsWith("-portable.zip")) return "portable";
