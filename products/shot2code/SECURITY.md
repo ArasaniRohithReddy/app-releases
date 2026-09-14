@@ -19,8 +19,11 @@ release rather than as patches to an older installer.
 | The newest release on the [releases page](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) | ✅ Supported |
 | Anything older | ❌ Not supported — update to the newest release |
 
-Note that 0.3.0 in particular should not be kept: its silent updater could start a
-second installer, which the corrective 0.3.1 release fixed. See the
+The page resolves that release from the release feed, so this stays accurate
+without anyone editing a version into it. Two older builds are worth calling out
+by name: 0.3.0's silent updater could start a second installer, and the fix in
+0.3.1 could only protect a machine already running 0.3.1 — the guard that also
+protects an update *from* an older client is in the 0.3.2 installer. See the
 [changelog](CHANGELOG.md).
 
 ## Reporting a vulnerability
@@ -75,6 +78,9 @@ If a hash does not match, stop and report it.
 - Provider keys entered in **Settings** are stored on your device only and sent to
   the provider they belong to with a generation request. There is no server to
   store them on.
+- The local `/api/models` route reports which providers are usable and what each
+  model supports. It never returns a key or a token, and your model selection is
+  a local preference rather than an account setting.
 - `REPLICATE_API_KEY` has no Settings field; it must be set in `backend/.env` and
   only applies when running from source.
 - GitHub Copilot credentials are resolved at request time and are not persisted or
@@ -99,6 +105,14 @@ If a hash does not match, stop and report it.
 - Before installing, the bundled backend, Copilot CLI and Chromium process tree is
   stopped and the shutdown is **verified**. If it cannot be confirmed, the update
   is not started; it stays retryable rather than replacing a running app.
+- **The installer enforces the same rule independently.** An app-side guard only
+  protects machines already running the fixed build, so the NSIS installer checks
+  before it uninstalls or replaces anything: it matches processes by executable
+  path under the installed `resources\backend` directory — never by process name,
+  so an unrelated program sharing an executable name is not touched — stops each
+  tree, and confirms none survives. It fails closed: an unconfirmed shutdown
+  aborts the replacement with an actionable message or a distinct silent-install
+  exit code, and writes `%TEMP%\shot2code-installer-preinstall.log`.
 - MSI installs are per-machine managed deployments: self-update is disabled and
   upgrades are left to the administrator.
 - Releases are published from a locally verified build so that `latest.yml` always

@@ -50,20 +50,22 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 
 Turn **screenshots, mockups, URLs, written descriptions or screen recordings** into editable
 web code, on your own machine. Twelve output stacks, a multi-file project editor, local SQLite
-project history, a sandboxed preview, and single-HTML or Vite project export.
+project **History**, a sandboxed preview, and single-HTML or Vite project export.
 
 shot2code ships **no model**: you bring a GitHub Copilot sign-in (no API key) or a Gemini,
-Anthropic or OpenAI key. Generated code is model output — review it before running it outside
+Anthropic or OpenAI key. Whichever you bring, **Settings** lets you pick which of that provider's
+models run — one generated option per selected model, across GitHub Copilot, OpenAI, Anthropic
+and Google Gemini. Generated code is model output — review it before running it outside
 the sandboxed preview. The Windows builds are **not code-signed**; verify the published
 SHA-256 checksums.
 
 | Resource | Link |
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/shot2code/) |
-| **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) — every version, notes and files |
+| **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) — every mirrored version, its notes and the files it actually carries |
 | **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [FAQ](products/shot2code/FAQ.md) · [Changelog](products/shot2code/CHANGELOG.md) |
 | **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) |
-| **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) |
+| **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) — the canonical `vX.Y.Z` history and the updater feed |
 | **Platform** | Windows 10/11 x64 · self-contained (backend and headless Chromium bundled) |
 
 Threat Model Reviewer's guides, along with [support](https://arasanirohithreddy.github.io/app-releases/help/),
@@ -87,7 +89,8 @@ See the [CLI](products/threat-model-reviewer/CLI.md) and [skill guides](products
 
 **shot2code:** choose the per-user **`.exe` installer (recommended)** — it is the only
 self-updating format — or the **MSI** for per-machine managed deployment, or the portable
-**ZIP**. `SHA256SUMS.txt` is attached for verification. See the
+**ZIP**. `SHA256SUMS.txt` is attached for verification. Older builds predate some of those
+formats, and each release card lists only the files that release actually carries. See the
 [install guide](products/shot2code/INSTALL.md).
 
 Browse every version — with its release notes, file sizes and direct downloads — on each product's

@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Releases — shot2code</title>
-  <meta name="description" content="Every release of shot2code: downloads, release notes, asset sizes and checksum verification. Windows 10/11 x64, self-contained, unsigned binaries." />
+  <meta name="description" content="Every shot2code release mirrored in this hub: downloads, release notes, asset sizes and checksum verification. Windows 10/11 x64, self-contained, unsigned binaries." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/releases/" />
 
   <meta property="og:type" content="website" />
@@ -17,7 +17,7 @@
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
   <meta property="og:image:width" content="1920" />
   <meta property="og:image:height" content="1080" />
-  <meta property="og:image:alt" content="The shot2code workspace: a chat panel beside the Code tab showing a generated index.html." />
+  <meta property="og:image:alt" content="The shot2code workspace: a chat panel with generated model options beside a desktop preview centred in a neutral frame." />
   <meta property="og:site_name" content="App Releases" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
@@ -27,7 +27,7 @@
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "shot2code — releases",
-    "description": "Every published release of shot2code, with its notes and downloadable files.",
+    "description": "Every shot2code release mirrored in this hub, with its notes and downloadable files.",
     "url": "https://arasanirohithreddy.github.io/app-releases/shot2code/releases/",
     "isPartOf": {
       "@type": "WebSite",
@@ -268,7 +268,7 @@
       <div class="wrap">
         <span class="eyebrow"><span class="dot"></span> shot2code</span>
         <h1 class="title">Releases</h1>
-        <p class="lede">Every published build, with its release notes, downloads and file sizes. Each package is self-contained — the Python backend and a headless Chromium ship inside it — and the binaries are unsigned, so verify the checksums.</p>
+        <p class="lede">Every build this hub has published, with its release notes, downloads and file sizes. Each package is self-contained — the Python backend and a headless Chromium ship inside it — and the binaries are unsigned, so verify the checksums.</p>
         <div class="hero-meta">
           <span class="chip" id="hm-latest">—</span>
           <span id="hm-count">Loading releases…</span>
@@ -301,6 +301,22 @@
           <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/SECURITY.md">shot2code security notes</a>
           and the <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/INSTALL.md">install guide</a>.
           Only the per-user <code>.exe</code> self-updates; MSI upgrades are administrator-managed.
+        </div>
+
+        <div class="note">
+          <strong>Why some versions offer fewer files.</strong> This list mirrors every shot2code
+          release published in this hub, and each card shows only what that release actually
+          carries — not every build shipped all four formats, and published checksums arrived
+          with 0.3.1, so earlier releases are not advertised as having them. <strong>All
+          files</strong> under a release is the complete attachment list, including the updater's
+          own inputs (<code>latest.yml</code> and the <code>.exe.blockmap</code>); those are how
+          the app updates itself, so they are never offered as one of the download choices above.
+          The canonical history, tagged <code>vX.Y.Z</code> and used as the updater feed, lives in
+          the <a href="https://github.com/ArasaniRohithReddy/shot2code/releases">source repository</a>,
+          and this hub mirrors it under <code>shot2code-vX.Y.Z</code> tags. Release notes are
+          published with each build; the summarised
+          <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">changelog</a>
+          starts at 0.3.0, because nothing earlier was tracked in one.
         </div>
       </div>
     </section>

@@ -49,6 +49,19 @@ const stable = releaseData.latestStable(releaseData.normalize(snapshot));
 // Icon path data is full of number triples ("3.58 0 8c0 3.54 2.29"), so version scanning has to
 // look at the markup a reader actually gets, not at the artwork.
 const withoutArtwork = html => html.replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
+// The copy a reader is left with: no artwork, no stylesheet, no script, and no tags.
+const visibleText = html => withoutArtwork(html)
+  .replace(/<script[\s\S]*?<\/script>/g, '')
+  .replace(/<[^>]*>/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/\s+/g, ' ')
+  .trim();
+// Newest-first ordering for "0.3.10" vs "0.3.9", which a string sort gets backwards.
+const compareVersions = (a, b) => {
+  const left = a.split('.').map(Number), right = b.split('.').map(Number);
+  for (let i = 0; i < 3; i++) if (left[i] !== right[i]) return left[i] - right[i];
+  return 0;
+};
 
 test('hero result describes the published synthetic sample', () => {
   for (const [attribute, value] of [['verdict', sample.verdict], ['score', sample.score], ['gating', sample.gatingFindings]]) {
@@ -272,6 +285,125 @@ test('the shot2code guides describe the shipped build', () => {
     assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
 });
 
+test('the shot2code changelog leads with the published release and keeps every earlier entry', () => {
+  // The version is taken from the generated snapshot rather than written here, so this asserts the
+  // release contract in RELEASING.md ("update the changelog with the new version") without pinning
+  // a build that the next release supersedes.
+  const changelog = read('products/shot2code/CHANGELOG.md');
+  const entries = [...changelog.matchAll(/^## \[(\d+\.\d+\.\d+)\] — (\d{4}-\d{2}-\d{2})$/gm)].map(m => m[1]);
+  const published = releaseData.normalize(JSON.parse(read('docs/shot2code/releases/releases.json')), 'shot2code-v');
+  const newest = releaseData.latestStable(published).tag_name.replace('shot2code-v', '');
+  assert.equal(entries[0], newest, 'The newest published release has no changelog entry');
+  // History is cumulative: an entry is never rewritten out of the file by a later release.
+  for (const older of ['0.3.1', '0.3.0']) assert.ok(entries.includes(older), `${older} was dropped from the changelog`);
+  assert.deepEqual(entries, [...entries].sort((a, b) => compareVersions(b, a)), 'Entries are not newest-first');
+  // Builds older than the changelog are still downloadable, so say so instead of implying a gap.
+  assert.match(changelog, /Versions before 0\.3\.0 were not tracked in a changelog/);
+});
+
+test('the shot2code guides describe the v0.3.2 installer safeguard, model choice and History', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  // Model selection is no longer a Copilot-only feature: all four code providers are named.
+  assert.match(guide, /^## Choosing which models run$/m);
+  for (const provider of ['GitHub Copilot', 'OpenAI', 'Anthropic', 'Google Gemini'])
+    assert.match(guide, new RegExp(`\\*\\*${provider}\\*\\*`), `USER-GUIDE.md: ${provider} is not offered as a model group`);
+  assert.match(guide, /Tick nothing\*\* — \*automatic\*/);
+  assert.match(guide, /one option per selected model/i);
+  assert.match(guide, /Up to 4[\s\S]*Up to 2[\s\S]*Up to 2/, 'USER-GUIDE.md: the per-run option limits are not stated');
+  assert.match(guide, /only the first\s+models up to the limit are used/i);
+  assert.match(guide, /can no longer run/, 'USER-GUIDE.md: stale picks are not explained');
+  assert.match(guide, /Deprecated models are hidden/);
+  assert.match(guide, /video mode the list is filtered to models that can read video/i);
+  // History replaced Versions in the user-facing vocabulary, including the shortcut reference.
+  assert.match(guide, /^## History and retries$/m);
+  assert.match(guide, /`Ctrl\+1` … `Ctrl\+4` \| Preview, Code, Chat, History/);
+  assert.doesNotMatch(guide, /Preview, Code, Chat, Versions|\bVersions\b tab/);
+  assert.match(guide, /centred inside a neutral framed\s+viewport/);
+
+  const install = read('products/shot2code/INSTALL.md');
+  assert.match(install, /installer repeats that check itself|pre-install safeguard/i);
+  assert.match(install, /%TEMP%\\shot2code-installer-preinstall\.log/);
+  assert.match(install, /never kills by process name|never kill by process name|by executable path|It never kills by process name/i);
+
+  const security = read('products/shot2code/SECURITY.md');
+  assert.match(security, /installer enforces the same rule independently|installer checks before it uninstalls/i);
+  assert.match(security, /fails closed|fail closed|It fails closed/i);
+  assert.match(security, /resources\\backend/);
+
+  const architecture = read('products/shot2code/ARCHITECTURE.md');
+  assert.match(architecture, /`\/api\/models`/);
+  assert.match(architecture, /\*\*without\s+returning the credential itself\*\*/);
+  assert.match(architecture, /cp1252/);
+
+  const data = read('products/shot2code/DATA-HANDLING.md');
+  assert.match(data, /`\/api\/models`/);
+  assert.match(data, /never returns a key or\s+(?:a )?token/i);
+  assert.match(data, /%TEMP%\\shot2code-installer-preinstall\.log/);
+
+  const faq = read('products/shot2code/FAQ.md');
+  assert.match(faq, /Can I run more than one model on the same screenshot\?/);
+  assert.match(faq, /can no longer run/);
+});
+
+test('release-history copy names the canonical repository and the mirrored assets', () => {
+  const releasing = read('products/shot2code/RELEASING.md');
+  const plain = releasing.replace(/[*`]/g, '').replace(/\s+/g, ' ');
+  assert.match(plain, /The complete release history is kept in \*{0,2}both\*{0,2} repositories/);
+  assert.match(plain, /Canonical\./, 'RELEASING.md: the source repository is not identified as canonical');
+  assert.match(plain, /feed electron-updater reads/);
+  assert.match(plain, /mirrors the same build, with every file that release carries/);
+  assert.match(plain, /public cards deliberately do not do is offer them as downloads/);
+  assert.match(plain, /Nothing is pruned/);
+  // Both repositories are named, so a reader can find the other half of the history.
+  assert.match(releasing, /github\.com\/ArasaniRohithReddy\/shot2code\/releases/);
+  assert.match(releasing, /github\.com\/ArasaniRohithReddy\/app-releases\/releases/);
+
+  const releases = read('docs/shot2code/releases/index.html');
+  const copy = visibleText(releases);
+  assert.match(copy, /mirrors every shot2code release published in this hub/);
+  assert.match(copy, /each card shows only what that release actually carries/);
+  assert.match(copy, /not every build shipped all four formats/);
+  assert.match(copy, /never offered as one of the download choices/);
+  assert.match(copy, /canonical history, tagged vX\.Y\.Z and used as the updater feed/);
+  // The loader itself stays generic: kinds are classified, not enumerated per release in markup.
+  assert.match(releases, /function kindOf\(name\)/);
+  // Every version on this page comes from the snapshot or the API. The copy may name the two
+  // historical boundaries that never move — where checksums began and where the changelog starts —
+  // but never the current build, which the next release would leave stale.
+  const published = releaseData.normalize(JSON.parse(read('docs/shot2code/releases/releases.json')), 'shot2code-v');
+  const newest = releaseData.latestStable(published).tag_name.replace('shot2code-v', '');
+  assert.doesNotMatch(withoutArtwork(releases), new RegExp(`\\bv?${newest.replace(/\./g, '\\.')}\\b`),
+    'the releases page hard-codes the current published version');
+  for (const named of copy.match(/\bv?\d+\.\d+\.\d+\b/g) ?? [])
+    assert.ok(['0.3.0', '0.3.1'].includes(named), `the releases page copy names ${named}`);
+  // Those boundaries have to be true of the snapshot the page actually renders.
+  const checksummed = published.filter(r => r.assets.some(a => /sha256sums/i.test(a.name)));
+  assert.equal(
+    checksummed.map(r => r.tag_name.replace('shot2code-v', '')).sort(compareVersions)[0], '0.3.1',
+    'checksums no longer start at the version the page claims'
+  );
+  assert.ok(published.length > checksummed.length, 'every release has checksums, so the caveat is wrong');
+});
+
+test('the shot2code page describes model choice, History and the installer safeguard', () => {
+  const copy = visibleText(shot2code);
+  // Every code provider the app can select models for is named in copy a reader actually sees.
+  for (const provider of ['GitHub Copilot', 'OpenAI', 'Anthropic', 'Google Gemini'])
+    assert.ok(copy.includes(provider), `shot2code page: ${provider} is missing from the model-selection copy`);
+  assert.match(copy, /Settings → Models/);
+  assert.match(copy, /one option per selected model/);
+  assert.match(copy, /tick nothing and the choice stays automatic/i);
+  assert.match(copy, /deprecated models stay hidden/i);
+  // History, not Versions, and the centred preview.
+  assert.match(copy, /Ctrl\+1–4 switch Preview, Code, Chat and History/);
+  assert.ok(!/\bVersions\b/.test(copy), 'shot2code page: the retired "Versions" label is still used');
+  assert.match(copy, /centred in a neutral frame|centred instead of pinned/);
+  // The installer-level safeguard, stated as what it does rather than as a version number.
+  assert.match(copy, /installer now stops the installed backend itself/);
+  assert.match(copy, /matching processes by path under resources\\backend\s*, never by name/);
+  assert.match(copy, /again by the installer itself/);
+});
+
 test('the shot2code page states the platform, the provider requirement and the signing status', () => {
   assert.match(shot2code, /Windows 10\/11 · x64/);
   assert.match(shot2code, /not code-signed/);
@@ -314,6 +446,33 @@ test('shot2code screenshots are published with the page', () => {
   assert.equal(new Set(images).size, 4);
   for (const image of new Set(images)) assert.ok(exists(`docs/shot2code/${image}`), image);
   for (const match of shot2code.matchAll(/<img[^>]*>/g)) assert.match(match[0], /alt="[^"]{25,}"/);
+});
+
+test('shot2code screenshot markup matches the files and the alternative text describes them', () => {
+  // Declared intrinsic sizes reserve layout space before the image decodes, so a replaced
+  // screenshot with different dimensions silently reintroduces a layout shift. The alternative
+  // text names those dimensions too, so both are checked against the file on disk.
+  const tags = [...shot2code.matchAll(/<img[^>]*src="(img\/[^"]+)"[^>]*>/g)];
+  assert.equal(tags.length, 5, 'the hero re-uses one screenshot and the gallery shows four');
+  for (const [tag, src] of tags) {
+    const png = fs.readFileSync(path.join(root, 'docs/shot2code', src));
+    assert.equal(png.readUInt32BE(12), 0x49484452, `${src}: not a PNG`);
+    const [width, height] = [png.readUInt32BE(16), png.readUInt32BE(20)];
+    assert.equal(Number(tag.match(/ width="(\d+)"/)[1]), width, `${src}: declared width does not match the file`);
+    assert.equal(Number(tag.match(/ height="(\d+)"/)[1]), height, `${src}: declared height does not match the file`);
+    const alt = tag.match(/alt="([^"]+)"/)[1];
+    const claimed = alt.match(/(\d+) by (\d+)/);
+    assert.ok(claimed, `${src}: the alternative text does not say what size the screenshot is`);
+    assert.deepEqual([Number(claimed[1]), Number(claimed[2])], [width, height], `${src}: the alternative text names the wrong size`);
+    // The screenshots were retaken for the current build: they must describe it, not the old one.
+    assert.doesNotMatch(alt, /\bVersions\b/, `${src}: the alternative text still says "Versions"`);
+  }
+  const gallery = tags.slice(1).map(([, src]) => src);
+  assert.deepEqual(new Set(gallery).size, 4, 'each gallery figure shows a different screenshot');
+  // Between them the screenshots have to show History, the model options and the centred preview.
+  const alts = tags.map(([tag]) => tag.match(/alt="([^"]+)"/)[1]).join(' ');
+  for (const subject of [/History/, /model options|model options|generated model options/, /centered|centred/])
+    assert.match(alts, subject, `the screenshots do not describe ${subject}`);
 });
 
 test('the hub portal and README present every product', () => {

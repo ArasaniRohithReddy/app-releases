@@ -33,9 +33,11 @@ model and cannot generate anything on its own.
 
 | Task | Where | Result |
 | --- | --- | --- |
-| Generate from a reference | Upload a screenshot, paste a URL, describe a screen, or record one | A working page in the stack you chose, usually as several parallel variants |
+| Generate from a reference | Upload a screenshot, paste a URL, describe a screen, or record one | A working page in the stack you chose, usually as several parallel options |
+| Choose which models try it | **Settings → Models**, or the picker beside the composer | One option per selected model, across Copilot, OpenAI, Anthropic and Gemini |
 | Refine it | Chat panel, or select an element in the preview | A new version that keeps the previous one |
 | Edit the source | Code tab | Multi-file tree, editor, whitespace-only **Format**, file badges |
+| Step back through earlier attempts | **History** | Every version, the model behind each option, and a retry that re-rolls one |
 | Reopen earlier work | **Recent projects** | Projects, versions and prompts restored from the local database |
 | Reuse an existing project | **Import → Folder, ZIP or source files** | Design context, or a normalized editable project |
 | Take it away | **Download** | A single self-contained HTML file, or a Vite project folder |
@@ -54,11 +56,17 @@ download builds rather than being a plausible-looking scaffold. See
 
 | Provider | Setup | Notes |
 | --- | --- | --- |
-| **GitHub Copilot** | `gh auth login` (or `copilot`) — needs an active Copilot subscription | No API key to manage; reaches Claude, GPT, Gemini and Grok models |
+| **GitHub Copilot** | `gh auth login` (or `copilot`) — needs an active Copilot subscription | No API key to manage; reaches Claude, GPT, Gemini and Grok models. The model list is discovered from your account |
 | Gemini | API key in **Settings** | Also powers video input and asset extraction |
 | Anthropic | API key in **Settings** | |
 | OpenAI | API key in **Settings** | |
 | Replicate | `REPLICATE_API_KEY` in `backend/.env` | Image generation, editing and background removal; source runs only |
+
+All four code providers support **model selection**: tick as many models as you
+like in **Settings → Models** or in the picker beside the composer, and each run
+produces one option per selected model, up to the per-run limit. Tick nothing to
+leave it automatic. See
+[USER-GUIDE.md](USER-GUIDE.md#choosing-which-models-run).
 
 Keys entered in Settings are stored on your device and sent only to the provider
 they belong to. See [DATA-HANDLING.md](DATA-HANDLING.md).
@@ -77,7 +85,7 @@ they belong to. See [DATA-HANDLING.md](DATA-HANDLING.md).
 | Guide | What it covers |
 | --- | --- |
 | [INSTALL.md](INSTALL.md) | Downloads, checksum verification, SmartScreen, updates, uninstall |
-| [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, generating, editing, versions, import, export, shortcuts |
+| [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, model selection, generating, editing, History, import, export, shortcuts |
 | [FAQ.md](FAQ.md) | Common questions and troubleshooting |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the app, backend, agent loop and packaging fit together |
 | [DATA-HANDLING.md](DATA-HANDLING.md) | Every network destination and on-disk path |

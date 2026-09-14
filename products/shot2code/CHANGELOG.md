@@ -10,7 +10,77 @@ which is generated from the release feed; this file summarises each one.
 
 The full engineering changelog lives with the code:
 [CHANGELOG.md](https://github.com/ArasaniRohithReddy/shot2code/blob/main/CHANGELOG.md).
-Versions before 0.3.0 were not tracked in a changelog.
+Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
+mirrored on the releases page have downloads and notes but no entry here.
+
+## [0.3.2] — 2026-09-14
+
+[Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.3.2) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.3.2)
+
+The current release. It protects an update that starts from an older client,
+extends model selection to every supported code provider, and finishes the
+responsive **Preview** and **History** work.
+
+### Fixed
+
+- **An old client can no longer be replaced while its backend is running.** The
+  0.3.1 guard lives in the *app*, so a machine still on an older build could not
+  use it. The NSIS installer now runs its own pre-install safeguard before it
+  uninstalls or replaces anything: it identifies processes by executable path
+  under the installed `resources\backend` directory, terminates each captured
+  process tree synchronously, and verifies that no matching process is left.
+  It never kills by process name, so an unrelated program that happens to share
+  an executable name is left alone.
+- **That safeguard fails closed and says why.** If the installed backend tree
+  cannot be confirmed stopped, the replacement is aborted — with an actionable
+  message for an interactive install, or a distinct exit code for a silent one.
+  Diagnostics are written to
+  `%TEMP%\shot2code-installer-preinstall.log`.
+- **The 100% preview no longer hugs the left edge.** A fixed-width desktop
+  canvas is centred inside a neutral framed viewport. Narrower windows keep
+  deliberate horizontal scrolling instead of clipping the start of the canvas.
+- **History is discoverable at every width.** The user-facing name is now
+  **History** everywhere it used to read *Versions*, with its own labelled
+  destination beside **Preview** and **Chat** when the window is too narrow for
+  the split view. History rows are real buttons with better focus, larger
+  targets and stronger contrast.
+- **A strict Windows console can no longer crash prompt logging.** Prompt-preview
+  diagnostics are encoded for whatever the active output stream can actually
+  represent, including a strict cp1252 console, instead of letting box-drawing
+  characters or prompt text raise `UnicodeEncodeError` mid-generation. This
+  affects running from source; the packaged app logs to a file.
+
+### Added
+
+- **Model selection for every code-generation provider.** Settings and the
+  compact picker beside the composer group the available models under **GitHub
+  Copilot**, **OpenAI**, **Anthropic** and **Google Gemini**. Tick as many as you
+  like: one option is generated per selected model, up to the per-run variant
+  limit. Selecting nothing keeps the automatic behaviour.
+- **A credential-aware model catalogue.** `/api/models` reports which providers
+  are usable and what each model can do — without returning any secret. Copilot
+  models are discovered from the signed-in account; the API-key providers use
+  maintained, validated catalogues.
+- **Safe migration and honest handling of stale picks.** An existing
+  `copilotModels` list, or a `codeGenerationModel` that was actually changed from
+  its old default, is migrated into the provider-neutral selection. Removed
+  credentials, retired models and choices the current input mode cannot use are
+  reported explicitly instead of silently dropped.
+- **Installer-level regression coverage.** Desktop tests cover the NSIS wiring,
+  the installed process-tree shutdown, the survival of an unrelated process with
+  the same executable name, the fail-closed path, and the updater lifecycle.
+
+### Changed
+
+- Preview controls are grouped by purpose: a **Fit / 100%** segmented control and
+  a labelled **History _n_/_m_** control instead of loose buttons.
+- A retry reuses the provider and model choices its source generation actually
+  used, and history records the concrete model behind each variant.
+- The published screenshots and these guides were retaken and rewritten for the
+  centred preview, the History naming, the responsive destinations and the
+  multi-provider model interface.
 
 ## [0.3.1] — 2026-09-13
 
@@ -21,6 +91,9 @@ Versions before 0.3.0 were not tracked in a changelog.
 A corrective release: it closes a race in the silent updater shipped in 0.3.0, and
 reworks the workspace around the chat panel, the code editor and the provider
 status the app can honestly report.
+
+Superseded by 0.3.2, which moves the shutdown guard into the installer so it also
+protects machines updating *from* an older client.
 
 ### Fixed
 

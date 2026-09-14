@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>shot2code — turn screenshots into working code on your own machine</title>
-  <meta name="description" content="A local-first Windows desktop app that turns screenshots, mockups, URLs, descriptions or screen recordings into editable web code. GitHub Copilot or your own API key, 12 output stacks, local SQLite project history." />
+  <meta name="description" content="A local-first Windows desktop app that turns screenshots, mockups, URLs, descriptions or screen recordings into editable web code. GitHub Copilot or your own API key, model selection across four providers, 12 output stacks, local SQLite project history." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -20,7 +20,7 @@
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
   <meta property="og:image:width" content="1920" />
   <meta property="og:image:height" content="1080" />
-  <meta property="og:image:alt" content="The shot2code workspace: an icon rail, a chat panel and the Code tab showing a generated index.html." />
+  <meta property="og:image:alt" content="The shot2code workspace: an icon rail, a chat panel with two generated model options, and a desktop preview centred in a neutral frame." />
   <meta property="og:site_name" content="App Releases" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
@@ -43,7 +43,8 @@
     "featureList": [
       "Generates a working page from screenshots, a URL, a description or a screen recording",
       "Twelve output stacks, including HTML + Tailwind, React, Vue, Preact, Bootstrap and Material 3",
-      "Multi-file project editor with a file tree, whitespace-only formatting and version history",
+      "Model selection across GitHub Copilot, OpenAI, Anthropic and Google Gemini, with one option generated per selected model",
+      "Multi-file project editor with a file tree, whitespace-only formatting and local History",
       "Local SQLite project history stored under %LOCALAPPDATA%\\shot2code",
       "Imports an existing folder, ZIP or source files as design context without executing them",
       "Sandboxed preview with a restrictive Content-Security-Policy and opaque origin",
@@ -422,11 +423,11 @@
         <figure class="hero-proof">
           <a href="#screens" aria-label="See the workspace screenshots at a larger size">
             <img src="img/workspace-full-hd.png" width="1920" height="1080" fetchpriority="high" decoding="async"
-                 alt="The shot2code workspace at 1920 by 1080: an icon rail with Chat, Versions, New, Shortcuts and Settings, a chat panel asking what should change, and the Code tab showing a generated index.html with Format, Copy, Download and CodePen actions." />
+                 alt="The shot2code workspace at 1920 by 1080: an icon rail with Chat, History, New, Shortcuts and Settings, two generated model options in the conversation panel, and a 1366-pixel desktop preview centered on a neutral backdrop with Fit, 100 percent and History controls." />
           </a>
           <figcaption>
-            The generated project is a real file tree you can edit — not a single blob of HTML you
-            have to accept or throw away.
+            The generated page stays centered and readable while Chat, History and the complete
+            editable project remain one action away.
           </figcaption>
         </figure>
       </div>
@@ -458,7 +459,7 @@
           </article>
           <article class="pillar">
             <h3>Keep your history on the device</h3>
-            <p>Projects, versions and prompts live in a local SQLite database under <code>%LOCALAPPDATA%\shot2code\</code>. <strong>Recent projects</strong> picks up where you left off; deleting a project removes it and its versions from the device.</p>
+            <p>Projects, versions and prompts live in a local SQLite database under <code>%LOCALAPPDATA%\shot2code\</code>. <strong>History</strong> steps back through every version, <strong>Recent projects</strong> picks up where you left off, and deleting a project removes it and its versions from the device.</p>
           </article>
           <article class="pillar">
             <h3>Take the result with you</h3>
@@ -480,24 +481,24 @@
         <figure class="shot shot-lead">
           <a href="img/workspace-full-hd.png" aria-label="Open the full-resolution 1920 by 1080 workspace screenshot">
             <img src="img/workspace-full-hd.png" width="1920" height="1080" loading="lazy" decoding="async"
-                 alt="shot2code at 1920 by 1080: the icon rail on the left, a chat panel showing a No model provider saved in this browser callout with Add a key in Settings and Setup guide actions, an Imported existing code message, and starter suggestions; on the right the Code tab shows index.html with Entry and Preview badges, Format, Copy, Download and CodePen actions, and a status bar reading HTML, 26 lines." />
+                 alt="shot2code at 1920 by 1080: the rail labels Chat, History, New, Shortcuts and Settings; the conversation panel shows two generated model options and activity; the main workspace centers a 1366-pixel desktop preview with Desktop, Mobile and Code tabs, Fit and 100 percent controls, History 2 of 2, Select and edit, download and refresh actions." />
           </a>
-          <figcaption><strong>The workspace at 1920×1080.</strong> Chat on the left, the project on the right. The provider callout states only what the app can actually see — it never claims a provider is connected or verified.</figcaption>
+          <figcaption><strong>The workspace at 1920×1080.</strong> The fixed-width preview is centred instead of pinned to one side, and Chat can collapse when the canvas needs the full window.</figcaption>
         </figure>
 
         <div class="shot-grid">
           <figure class="shot">
             <a href="img/code-workspace.png" aria-label="Open the full-resolution light-theme workspace screenshot">
-              <img src="img/code-workspace.png" width="1440" height="900" loading="lazy" decoding="async"
-                   alt="The shot2code workspace at 1440 by 900 in the light theme: a light icon rail and chat panel on the left, and the Code tab with index.html open in a syntax-highlighted editor, a Version 1 — Latest stepper above it and an HTML, 26 lines status bar below." />
+              <img src="img/code-workspace.png" width="1920" height="1080" loading="lazy" decoding="async"
+                   alt="The shot2code Code workspace at 1920 by 1080 in the light theme: two generated model options appear in Chat, while index.html is formatted across 88 lines with Entry and Preview badges, Format, Copy, Download and CodePen actions, and a language and line-count status bar." />
             </a>
-            <figcaption><strong>Light theme.</strong> Every generation becomes a version you can step back through, and a retried version keeps a link to the version it re-rolls.</figcaption>
+            <figcaption><strong>Light theme.</strong> Every generation becomes a version you can step back through in <strong>History</strong>, which records the model behind each option, and a retried version keeps a link to the version it re-rolls.</figcaption>
           </figure>
 
           <figure class="shot">
             <a href="img/code-workspace-dark.png" aria-label="Open the full-resolution dark-theme workspace screenshot">
               <img src="img/code-workspace-dark.png" width="1440" height="900" loading="lazy" decoding="async"
-                   alt="The same 1440 by 900 workspace in the dark theme: the icon rail, chat panel and Code tab all use dark surfaces, with the same index.html file open and the HTML, 26 lines status bar at the bottom." />
+                   alt="The shot2code Code workspace at 1440 by 900 in the dark theme: the rail, Chat, toolbar, file header and syntax-highlighted editor use coordinated dark surfaces while keeping the same History, model-option and file actions." />
             </a>
             <figcaption><strong>Dark theme.</strong> The editor highlights the active line and gutter and uses theme-correct surfaces, so the code stays legible in either theme.</figcaption>
           </figure>
@@ -506,9 +507,9 @@
         <figure class="shot shot-portrait">
           <a href="img/chat-tablet.png" aria-label="Open the full-resolution tablet-width chat panel screenshot">
             <img src="img/chat-tablet.png" width="768" height="1024" loading="lazy" decoding="async"
-                 alt="The shot2code chat panel in a 768 by 1024 window: the icon rail becomes a top bar above a Preview and Chat switcher, followed by the provider callout, an Imported existing code message, and a card offering Make the layout responsive, Fix accessibility issues and Polish spacing and typography above the composer." />
+                 alt="The shot2code Chat workspace at 768 by 1024: the rail becomes a top bar, Preview and Chat are paired beside a separate History button, two generated model options are visible, and agent activity plus the update composer remain usable in one column." />
           </a>
-          <figcaption><strong>Narrow windows.</strong> At tablet width the rail becomes a top bar and a switcher replaces the split view, so an edit is still one sentence away. The starter suggestions <em>insert</em> a full instruction into the composer — nothing is sent on your behalf.</figcaption>
+          <figcaption><strong>Narrow windows.</strong> Preview, Chat and History remain separate, labelled destinations, and model options plus the update composer reflow without horizontal scrolling.</figcaption>
         </figure>
       </div>
     </section>
@@ -525,7 +526,7 @@
           <li>
             <span class="step-n">1</span>
             <h3>Give it a reference</h3>
-            <p>Upload screenshots, paste a URL, describe the screen, or record it. Pick the output stack, and optionally tick the specific models your plan offers.</p>
+            <p>Upload screenshots, paste a URL, describe the screen, or record it. Pick the output stack, and optionally tick the models you want to try — from GitHub Copilot, OpenAI, Anthropic or Google Gemini.</p>
           </li>
           <li>
             <span class="step-n">2</span>
@@ -535,12 +536,12 @@
           <li>
             <span class="step-n">3</span>
             <h3>Compare and refine</h3>
-            <p>Several variants are generated in parallel, so you pick the closest one. Then say what to change, or select an element in the preview and describe the edit.</p>
+            <p>One option is generated per selected model, in parallel, so you pick the closest one. Then say what to change, or select an element in the preview and describe the edit.</p>
           </li>
           <li>
             <span class="step-n">4</span>
             <h3>Keep or export it</h3>
-            <p>Every version is saved locally and can be reopened from <strong>Recent projects</strong>. Export a single HTML file or a Vite project folder when you are happy.</p>
+            <p>Every version is saved locally and reachable from <strong>History</strong> or <strong>Recent projects</strong>. Export a single HTML file or a Vite project folder when you are happy.</p>
           </li>
         </ol>
 
@@ -561,17 +562,18 @@
         </div>
         <dl class="coverage-list">
           <div><dt>Inputs</dt><dd>Screenshots, multiple related screenshots, a URL, a text description, or a screen recording. Video input needs a Gemini key.</dd></div>
+          <div><dt>Model choice</dt><dd>Pick models from GitHub Copilot, OpenAI, Anthropic and Google Gemini in Settings or beside the composer. One option per selected model; tick nothing to leave it automatic.</dd></div>
           <div><dt>Editing</dt><dd>Multi-file tree, file tabs, a collapsible explorer, select-and-edit from the preview, and a formatter that only ever changes whitespace and refuses component source.</dd></div>
-          <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts and retry ancestry. Nothing is uploaded; deleting a project deletes it from disk.</dd></div>
+          <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts and retry ancestry, and records the model behind each option. Nothing is uploaded; deleting a project deletes it from disk.</dd></div>
           <div><dt>Import</dt><dd>Point at a folder, ZIP or selected source files. The scanner parses text only — it never executes the project's configuration or code — then offers design context or an editable project.</dd></div>
-          <div><dt>Preview</dt><dd>A derived, self-contained artifact rendered in an opaque-origin sandbox with a restrictive Content-Security-Policy. When a build cannot be represented safely it shows a diagnostic instead of guessing.</dd></div>
+          <div><dt>Preview</dt><dd>A derived, self-contained artifact rendered in an opaque-origin sandbox with a restrictive Content-Security-Policy. At 100% a fixed-width canvas is centred in a neutral frame. When a build cannot be represented safely it shows a diagnostic instead of guessing.</dd></div>
           <div><dt>Assets and images</dt><dd>Asset extraction reuses the real logos from your screenshot (Gemini key). Image generation, editing and background removal need a Replicate key set in <code>backend/.env</code>.</dd></div>
         </dl>
 
         <div class="features" style="margin-top:1.6rem">
           <div class="feature">
             <h3><span class="tick">✓</span> Keyboard-first</h3>
-            <p><span class="kbd">Ctrl+/</span> opens the full shortcut reference. <span class="kbd">Ctrl+1–4</span> switch Preview, Code, Chat and Versions; <span class="kbd">Ctrl+3</span> again collapses the chat panel on wide windows. Project actions use <span class="kbd">Ctrl+Alt</span> combinations — <span class="kbd">N</span> new, <span class="kbd">I</span> import, <span class="kbd">U</span> upload, <span class="kbd">S</span> settings, <span class="kbd">E</span> export.</p>
+            <p><span class="kbd">Ctrl+/</span> opens the full shortcut reference. <span class="kbd">Ctrl+1–4</span> switch Preview, Code, Chat and History; <span class="kbd">Ctrl+3</span> again collapses the chat panel on wide windows. Project actions use <span class="kbd">Ctrl+Alt</span> combinations — <span class="kbd">N</span> new, <span class="kbd">I</span> import, <span class="kbd">U</span> upload, <span class="kbd">S</span> settings, <span class="kbd">E</span> export.</p>
           </div>
           <div class="feature">
             <h3><span class="tick">✓</span> Sharing that asks first</h3>
@@ -615,17 +617,17 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="providers-h">Bring your own model</h2>
-          <p>One provider is enough. Keys are stored on your device and sent only to the provider they belong to.</p>
+          <p>One provider is enough — and whichever you bring, you choose which of its models actually run. Keys are stored on your device and sent only to the provider they belong to.</p>
         </div>
         <div class="workflow-list">
           <article class="workflow">
             <h3>GitHub Copilot</h3>
-            <p>The easiest option, because there is no API key to manage: run <code>gh auth login</code> (or <code>copilot</code>) once and shot2code picks the sign-in up. Needs an active Copilot subscription, and reaches Claude, GPT, Gemini and Grok models through it. Settings lists the image-capable models your plan actually offers.</p>
+            <p>The easiest option, because there is no API key to manage: run <code>gh auth login</code> (or <code>copilot</code>) once and shot2code picks the sign-in up. Needs an active Copilot subscription, and reaches Claude, GPT, Gemini and Grok models through it. The model list is discovered live from the signed-in account, so it is your plan's real entitlement.</p>
             <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md#choosing-a-model-provider">Provider guide</a>
           </article>
           <article class="workflow">
             <h3>Gemini, Anthropic, OpenAI</h3>
-            <p>Paste an API key into <strong>Settings</strong>. It is kept on this device and sent with the generation request to that provider only. Gemini additionally powers video input and asset extraction.</p>
+            <p>Paste an API key into <strong>Settings</strong>. It is kept on this device and sent with the generation request to that provider only. Each of these providers has a maintained, validated model list, so picking models for them contacts nobody. Gemini additionally powers video input and asset extraction.</p>
             <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md#choosing-a-model-provider">Key setup</a>
           </article>
           <article class="workflow">
@@ -634,6 +636,7 @@
             <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/FAQ.md">What needs which key</a>
           </article>
         </div>
+        <p class="scope-note"><strong>Choosing models is part of Settings, not a Copilot-only extra.</strong> <strong>Settings → Models</strong> — and the compact picker beside the composer — group every model you can currently use under <strong>GitHub Copilot</strong>, <strong>OpenAI</strong>, <strong>Anthropic</strong> and <strong>Google Gemini</strong>. Tick as many as you like, across providers, and each run produces one option per selected model, up to 4 for a first generation and 2 for an update or a video; tick nothing and the choice stays automatic. Models that cannot read the input you gave — video in particular — are filtered out rather than offered and failed, deprecated models stay hidden unless you ask for them or already picked one, and a saved model that can no longer run is reported and skipped instead of silently deleted. A provider only appears once the app can actually see a credential for it.</p>
       </div>
     </section>
 
@@ -642,20 +645,20 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="whats-new-h">Recently improved</h2>
-          <p>The most recent work went into the update path and into quieting the workspace down.</p>
+          <p>The most recent work went into protecting an update that starts from an older build, opening model choice to every provider, and finishing the Preview and History layout.</p>
         </div>
         <div class="features">
           <div class="feature">
-            <h3><span class="tick">✓</span> One installer, never two</h3>
-            <p>The automatic install and <strong>Restart &amp; install</strong> now share a single guarded entry point, so a queued click or an install-on-quit cannot start a second NSIS process behind the first.</p>
+            <h3><span class="tick">✓</span> The safeguard moved into the installer</h3>
+            <p>A guard inside the app cannot help a machine still running an older build. The installer now stops the installed backend itself before replacing anything — matching processes by path under <code>resources\backend</code>, never by name — and refuses to continue if it cannot confirm they are gone, leaving a log behind to say why.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Shutdown is verified, not assumed</h3>
-            <p>The bundled backend, Copilot CLI and Chromium tree is stopped with a bounded timeout and re-probed. If it cannot be confirmed stopped, the update is <em>not</em> started — it stays retryable instead of overwriting a running app.</p>
+            <h3><span class="tick">✓</span> Model choice for every provider</h3>
+            <p>Settings and the composer picker group the models you can use under GitHub Copilot, OpenAI, Anthropic and Google Gemini. Tick as many as you like and each run produces one option per selected model; leave them untouched and it stays automatic.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> A workspace you can quiet down</h3>
-            <p>Collapse the chat panel on wide layouts, a starter empty state that inserts (never sends) an instruction, a Format action, an editor status bar, and a provider callout that only states what it can see.</p>
+            <h3><span class="tick">✓</span> Preview centred, History named</h3>
+            <p>A fixed-width canvas at 100% now sits centred in a neutral frame instead of hugging the left edge, scale and version are separate labelled controls, and <strong>History</strong> is a destination of its own beside Preview and Chat on narrow windows.</p>
           </div>
         </div>
         <p class="dl-note">Every version, its notes and all its files are on the <a href="./releases/">releases page</a>. The full history lives in the <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">changelog</a>.</p>
@@ -667,7 +670,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="dl-h">Download</h2>
-          <p>Windows 10/11 x64. Each build carries its own Python backend and a headless Chromium, so there is nothing else to install. <span class="chip" id="version-chip-2">latest</span> is the current published build; every version is on the <a href="./releases/">releases page</a>.</p>
+          <p>Windows 10/11 x64. Each build carries its own Python backend and a headless Chromium, so there is nothing else to install. <span class="chip" id="version-chip-2">latest</span> is the current published build; every version this hub has published — with the files it actually carries — is on the <a href="./releases/">releases page</a>.</p>
         </div>
         <div class="dl-grid">
           <div class="dl-card recommended">
@@ -700,6 +703,8 @@
           <p class="dl-note">Compare the hash of the file you downloaded against the published list:</p>
           <pre tabindex="0" aria-label="PowerShell command to check a download's SHA-256 hash"><code id="verify-command">Get-FileHash .\shot2code-&lt;version&gt;-x64.exe -Algorithm SHA256</code></pre>
         </div>
+
+        <p class="dl-note">Only the per-user <code>.exe</code> updates itself: <strong>Settings</strong> shows the running version, the update state and <strong>Restart &amp; install</strong> once a download is ready. Before anything is replaced, the installed backend is stopped and that shutdown is verified — by the app, and again by the installer itself, so an update that starts from an older build is protected too. If it cannot be confirmed, the install stops rather than overwriting a running app. MSI upgrades stay with the administrator and portable builds do not update.</p>
 
         <div class="note">
           <strong>These builds are not code-signed.</strong> Windows will show

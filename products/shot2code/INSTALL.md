@@ -26,7 +26,13 @@ Release tags in this hub are product-prefixed: `shot2code-vX.Y.Z`.
 | `SHA256SUMS.txt` | Checksums for the files in that release. |
 
 The `.exe.blockmap` and `latest.yml` files produced by the build are inputs for
-the auto-updater, not downloads for people.
+the auto-updater, not downloads for people. They are attached to the release, and
+appear in its complete file listing, but the download cards never offer them.
+
+Every published build is mirrored on that releases page. Not every one of them
+shipped all four files — published checksums arrived with 0.3.1, and some earlier
+builds had no MSI — so the page lists exactly the files each release actually
+carries rather than four placeholders.
 
 ## Verify before you install
 
@@ -106,6 +112,15 @@ After verifying the checksum, either:
   backend, Copilot CLI and Chromium process tree is stopped and that shutdown is
   verified. If it cannot be confirmed, the update is **not** started and stays
   retryable rather than replacing a running app.
+- **The installer repeats that check itself.** An app-side guard cannot protect a
+  machine that is still on an older build, so from 0.3.2 the NSIS installer runs
+  a pre-install safeguard before it uninstalls or replaces anything: it finds
+  processes by executable path under the installed `resources\backend` folder,
+  stops each tree, and confirms none is left. It never kills by process name, so
+  an unrelated program with the same executable name is untouched. If the tree
+  cannot be confirmed stopped, the install is aborted — with a message you can
+  act on, or a distinct exit code for a silent install — and it writes
+  diagnostics to `%TEMP%\shot2code-installer-preinstall.log`.
 - MSI installs are administrator-managed and do not self-update.
 - Portable builds do not update; download a new ZIP.
 
@@ -130,7 +145,8 @@ project removes it and its versions from the device.
 | --- | --- |
 | `%LOCALAPPDATA%\shot2code\` | `history.sqlite3` — projects, versions, prompts |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state and `shot2code-backend.log` |
-| The app's own local storage | Provider API keys and UI preferences entered in Settings |
+| `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped |
+| The app's own local storage | Provider API keys, your model selection and UI preferences entered in Settings |
 
 See [DATA-HANDLING.md](DATA-HANDLING.md) for the full list, including every
 network destination.

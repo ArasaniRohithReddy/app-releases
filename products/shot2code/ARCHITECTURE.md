@@ -8,8 +8,8 @@ who want to know what runs where. The implementation lives in the
 
 | Piece | Technology | Role |
 | --- | --- | --- |
-| Renderer | React + Vite | The whole UI: chat, preview, Code tab, versions, settings |
-| Backend | FastAPI (Python) | The agent loop, tools, project history, import scanning, export |
+| Renderer | React + Vite | The whole UI: chat, preview, Code tab, History, settings |
+| Backend | FastAPI (Python) | The agent loop, tools, model catalogue, project history, import scanning, export |
 | Desktop shell | Electron | Starts the backend, waits for it, loads the built UI |
 
 In the packaged app the shell starts the frozen backend on a **free local port**,
@@ -31,8 +31,26 @@ The backend runs an agent loop rather than a single prompt:
 3. shot2code executes each tool **locally** and feeds the result back.
 4. The loop ends with a project: a set of files and a declared entry point.
 
-Several variants can run in parallel, one per selected model, which is why a
-generation can produce more than one candidate.
+Several options can run in parallel, one per selected model, which is why a
+generation can produce more than one candidate. The number is capped per run: up
+to four for a first generation, two for an update or a video.
+
+### The model catalogue
+
+`/api/models` answers what can actually be used right now. It reports which
+providers have a usable credential and what each model supports — **without
+returning the credential itself**. GitHub Copilot models are discovered from the
+signed-in account, so the list is that account's real entitlement; OpenAI,
+Anthropic and Google Gemini come from maintained catalogues that are validated
+against the models the build knows how to drive.
+
+The renderer keeps a provider-neutral list of selected model ids. Older settings
+blobs are migrated into it: a `copilotModels` list moves across verbatim, and a
+single `codeGenerationModel` is only treated as a real choice when it differs
+from the historical default, so upgrading does not silently pin everyone to one
+model. Ids the catalogue no longer knows are reported as stale and skipped rather
+than deleted — and if the catalogue cannot be loaded at all, the saved selection
+is left alone instead of being reset.
 
 ### Providers
 
@@ -58,7 +76,9 @@ selection, delete).
 - Override with `SHOT2CODE_DATA_DIR` or `SHOT2CODE_HISTORY_DB_PATH`
 
 Commits record both a parent and, for a retry, the commit they re-roll, so retry
-ancestry is explicit; ancestry walks detect and reject cycles. Saves are debounced.
+ancestry is explicit; ancestry walks detect and reject cycles. A retry reuses the
+provider and model choices its source generation used, and each variant stores
+the concrete model behind it. Saves are debounced.
 
 ## Preview
 
@@ -68,6 +88,12 @@ and encoded fonts are embedded when that can be done safely. When a framework
 build or a local asset cannot be represented, the preview renders a deterministic
 fallback or diagnostic instead of guessing, and every source file remains
 editable and downloadable.
+
+At **100%** the fixed-width desktop canvas is centred inside a neutral framed
+viewport rather than anchored to the left edge; a window narrower than the canvas
+scrolls the frame horizontally instead of clipping the start of the page. Scale
+(**Fit / 100%**) and version (**History _n_/_m_**) are separate, labelled
+controls.
 
 Security properties of a preview document:
 
@@ -133,6 +159,16 @@ reports that it could not shut down safely, rather than overwriting a live
 PyInstaller tree. Installs under Program Files (the MSI layout) are treated as
 managed: self-update is disabled.
 
+That guard lives in the *running* app, which cannot help a machine still on an
+older build. The NSIS installer therefore repeats the check before it uninstalls
+or replaces anything: it enumerates processes whose executable path sits under
+the installed `resources\backend` directory, terminates each of those trees
+synchronously, and verifies that none remains. Matching is by path, never by
+process name, so an unrelated program with the same executable name is left
+running. A tree that cannot be confirmed stopped aborts the replacement — an
+actionable message interactively, a distinct exit code silently — and both paths
+write to `%TEMP%\shot2code-installer-preinstall.log`.
+
 ## Diagnostics
 
 ```
@@ -141,4 +177,11 @@ managed: self-update is disabled.
 
 Backend startup, renderer load failures, crashes and console errors all land
 there. It is the first thing to read for a blank window or a backend that never
-becomes ready.
+becomes ready. An install that refuses to replace a running backend leaves its
+own trail in `%TEMP%\shot2code-installer-preinstall.log`.
+
+Console diagnostics — the prompt preview in particular — are encoded for whatever
+the active output stream can represent, including a strict cp1252 Windows
+console, so box-drawing characters or prompt text cannot raise a
+`UnicodeEncodeError` in the middle of a generation. That path matters when
+running from source; the packaged app writes to the log file above.

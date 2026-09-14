@@ -75,10 +75,30 @@ The app looks for a token in Settings, then `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` 
 found, sign in again and restart the app so the check re-runs. A fine-grained
 token with the **Copilot Requests** permission also works.
 
-**No Copilot models are listed.**
-Only models that accept images are shown, because turning a screenshot into code
-requires image input. An empty list usually means your plan currently has no
-vision-capable model.
+**No models are listed for a provider.**
+A provider only appears once shot2code can see a credential for it, so check the
+key in **Settings** (or the Copilot sign-in) first. For GitHub Copilot, only
+models that accept images are offered, because turning a screenshot into code
+requires image input — an empty Copilot list usually means your plan currently
+has no vision-capable model. In video mode, every provider's list is filtered to
+models that can read video.
+
+**Can I run more than one model on the same screenshot?**
+Yes. Tick several models in **Settings → Models**, or in the picker beside the
+composer — they can come from different providers. You get one option per
+selected model, capped at 4 for a first generation and 2 for an update or a
+video. Tick nothing to leave the choice automatic. The picker states the outcome
+in words, including when you have selected more models than the run can use.
+
+**Settings says some of my saved models "can no longer run".**
+The key for them was removed, or the provider retired them. They are ignored
+rather than silently deleted; use **Remove** to clear them. If the catalogue
+cannot be loaded at all, your selection is left untouched instead of being reset.
+
+**A model I used before has disappeared from the list.**
+Deprecated models are hidden unless you tick **Show deprecated models** — or
+unless one is already selected, in which case it stays visible where you chose
+it.
 
 **Only one of my screenshots appears in the result.**
 Upload them together and choose **Separate pages**. That mode requires one
@@ -129,10 +149,34 @@ That is the safe outcome, not a failure to worry about: the updater refuses to
 replace files while the bundled backend tree may still be running. Quit the app
 completely and try again.
 
+**The installer stopped and said it could not stop the installed shot2code
+backend.**
+From 0.3.2 the safeguard is in the installer as well as the app, so an update
+that starts from an older client is protected too. It identifies processes by
+their executable path under the installed `resources\backend` folder, stops each
+tree, and refuses to replace anything it cannot confirm is stopped. Close
+shot2code (and any leftover backend process) and run the installer again. A
+silent install returns a distinct exit code instead of a dialog, and both write
+diagnostics to:
+
+```
+%TEMP%\shot2code-installer-preinstall.log
+```
+
 **Can I go back to an older version?**
 Download the older release from the
 [releases page](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)
-and install it. The updater itself never downgrades.
+and install it. The updater itself never downgrades. Not every older build was
+published with all four files — checksums arrived with 0.3.1, and some earlier
+builds had no MSI — so the page shows exactly what each release actually carries.
+
+**Why does the releases page list versions the changelog does not?**
+The complete history is kept in both repositories: this hub mirrors each build as
+a `shot2code-vX.Y.Z` release with every file it was published with, and the
+[source repository](https://github.com/ArasaniRohithReddy/shot2code/releases) is
+the canonical `vX.Y.Z` history and the feed the updater reads. Only releases from
+0.3.0 onwards have changelog entries, because nothing earlier was tracked in a
+changelog.
 
 ## Data and privacy
 
@@ -146,7 +190,9 @@ from the device), then uninstall and delete `%LOCALAPPDATA%\shot2code\`.
 
 **Where are my API keys?**
 Stored locally by the app for the device you entered them on, and sent only to the
-provider they belong to. `REPLICATE_API_KEY` lives in `backend/.env` instead.
+provider they belong to. Your model selection is stored the same way — a
+preference on this device, not an account setting. `REPLICATE_API_KEY` lives in
+`backend/.env` instead.
 
 ## Getting help
 

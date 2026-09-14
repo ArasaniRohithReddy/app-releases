@@ -14,11 +14,18 @@ configured, the update check, and anything you explicitly share.
 | Destination | When | What is sent |
 | --- | --- | --- |
 | The model provider you configured (GitHub Copilot, Gemini, Anthropic or OpenAI) | You start or refine a generation | Your prompt, the screenshots/URL/description you supplied, and the working project context the agent needs |
+| GitHub Copilot | Listing the models your account can use | The Copilot credential, to ask which models the signed-in plan offers. No prompt, project or screenshot is sent |
 | Gemini | Asset extraction, or video/screen-recording input | The selected image or recording |
 | Replicate (*source only*) | Image generation, editing or background removal | The prompt and the image you act on |
 | `github.com` | Update check on per-user NSIS installs | Nothing about you: a request for the release feed |
 | A URL you paste | You generate from a URL | A request to that URL to capture it |
 | CodePen | You confirm a share | The code being shared |
+
+The model lists for OpenAI, Anthropic and Gemini are **maintained catalogues
+inside the app**, so choosing models for those providers contacts nobody. The
+catalogue is served to the UI by the local backend on `/api/models`, which
+reports provider availability and model capabilities and **never returns a key or
+token**.
 
 Nothing else is contacted in normal use. Previews may load CDN-hosted framework
 assets declared by the generated page itself (for example a Tailwind or Bootstrap
@@ -31,6 +38,7 @@ service.
 | --- | --- | --- |
 | `%LOCALAPPDATA%\shot2code\history.sqlite3` | Projects, versions, variants, prompts and variant messages | Deleting a project in **Recent projects**, or deleting the folder |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state and `shot2code-backend.log` | Deleting the folder |
+| `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped — process paths and outcome, no project data | Deleting the file |
 | The app's own local storage | Provider API keys, selected models and UI preferences | Clearing them in **Settings** |
 | `backend/.env` (*source only*) | `REPLICATE_API_KEY`, optional `OPENAI_BASE_URL` | Editing the file |
 
@@ -46,6 +54,9 @@ The database location can be redirected with `SHOT2CODE_DATA_DIR` or
   sent to the backend with a generation request and used to call that provider —
   they are not stored server-side (there is no server) and are not sent anywhere
   else.
+- The local `/api/models` route uses those credentials only to decide which
+  providers are usable and, for Copilot, to read the account's model list. It
+  returns provider availability and model capabilities, never a key or token.
 - `REPLICATE_API_KEY` has no Settings field by design. It must be set in
   `backend/.env`, which means it is only usable when running from source.
 - GitHub Copilot credentials are resolved at request time: a token in Settings,

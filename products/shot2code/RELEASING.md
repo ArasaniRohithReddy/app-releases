@@ -18,6 +18,29 @@ The version is the one in the project's `desktop/package.json`, which is what
 electron-builder stamps into the installer filename, what `latest.yml` advertises,
 and what **Settings** displays. Tags are never moved or reused.
 
+## Two repositories, one history
+
+The complete release history is kept in **both** repositories, and each has a job:
+
+| Repository | Tag | Role |
+| --- | --- | --- |
+| [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code/releases) | `vX.Y.Z` | **Canonical.** The source of the build and the feed `electron-updater` reads, so `latest.yml` must keep describing the binaries attached beside it |
+| [ArasaniRohithReddy/app-releases](https://github.com/ArasaniRohithReddy/app-releases/releases) (this hub) | `shot2code-vX.Y.Z` | The published download and documentation home. It mirrors the same build, with **every** file that release carries |
+
+Mirroring means mirroring: a hub release keeps the updater's own inputs
+(`latest.yml`, the `.exe.blockmap`) attached alongside the installers, and they
+show up in a release's complete file listing on the releases page. What the
+public cards deliberately do **not** do is offer them as downloads — they are
+machine inputs, and presenting them next to an installer would invite someone to
+download the wrong file. Hiding them from the cards is a presentation choice, not
+a gap in the mirror.
+
+Nothing is pruned. Builds that predate the MSI or `SHA256SUMS.txt` stay listed
+with exactly the files they were published with, so the page never implies a
+download that does not exist. Only releases from 0.3.0 onwards have entries in
+[CHANGELOG.md](CHANGELOG.md), because nothing earlier was tracked in a changelog;
+their notes still live on the releases in both repositories.
+
 ## Assets attached to a hub release
 
 | File | Purpose |
@@ -30,9 +53,10 @@ and what **Settings** displays. Tags are never moved or reused.
 The project's own release additionally carries `shot2code-<version>-x64.exe.blockmap`
 and `latest.yml`. Those are **updater inputs**, not downloads for people:
 `latest.yml` is the `electron-updater` manifest (version, filename, size, SHA-512)
-and the blockmap is what makes a differential download possible. The hub's pages
-therefore never present them as download options, although they do appear in a
-release's complete file listing when they are attached.
+and the blockmap is what makes a differential download possible. Attach them to
+the hub release too — the mirror is only complete if it carries every file — but
+the hub's download cards never present them as options, although they do appear
+in a release's complete file listing.
 
 Because the binaries are unsigned, `SHA256SUMS.txt` is the verification story —
 publish it with every release.
