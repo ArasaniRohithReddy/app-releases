@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/RELEASING.md (normalized SHA-256 d6fd6609b73bccd0cc8bcafedc88a1c6df845c717b2c6e380cfa0920f0ca71c9). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/RELEASING.md (normalized SHA-256 86c961752756461202ade2a93a4d77bd6c7622b71b2ef602ed351d7fd895ca4e). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Releasing — Threat Model Reviewer documentation</title>
-  <meta name="description" content="Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release publishes the built artifacts there as a GitH" />
+  <meta name="description" content="Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release promotes an accepted, signed candidate there " />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Releasing — App Releases" />
-  <meta property="og:description" content="Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release publishes the built artifacts there as a GitH" />
+  <meta property="og:description" content="Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release promotes an accepted, signed candidate there " />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Releasing","description":"Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release publishes the built artifacts there as a GitH","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Releasing","description":"Source lives in the private repo; binaries, docs, and issues live in the public release hub ArasaniRohithReddy/app-releases. A release promotes an accepted, signed candidate there ","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/releasing/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="./" aria-current="page">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="./" aria-current="page">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -62,10 +62,11 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/RELEASING.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#why-dotnet-build-not-dotnet-publish">Why dotnet build, not dotnet publish</a></li><li><a href="#build-the-artifacts">Build the artifacts</a></li><li><a href="#publish-the-github-release-public-repo">Publish the GitHub Release (public repo)</a></li><li><a href="#versioning--tags">Versioning &amp; tags</a></li><li><a href="#documentation-must-move-with-the-release">Documentation must move with the release</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#why-dotnet-build-not-dotnet-publish">Why dotnet build, not dotnet publish</a></li><li><a href="#build-the-artifacts">Build the artifacts</a></li><li><a href="#acceptance-gates-do-not-publish-on-build-success-alone">Acceptance gates (do not publish on build success alone)</a></li><li><a href="#publish-the-github-release-public-repo">Publish the GitHub Release (public repo)</a></li><li><a href="#versioning--tags">Versioning &amp; tags</a></li><li><a href="#documentation-must-move-with-the-release">Documentation must move with the release</a></li></ul></nav></details>
         <div class="doc-content"><p>Source lives in the <strong>private</strong> repo; binaries, docs, and issues live in the <strong>public</strong>
 release hub <strong><a href="https://github.com/ArasaniRohithReddy/app-releases" rel="noopener noreferrer">ArasaniRohithReddy/app-releases</a></strong>.
-A release publishes the built artifacts there as a GitHub Release.</p>
+A release promotes an accepted, signed candidate there as a GitHub Release. Building,
+signing, uploading a draft, and making it public are separate authorization gates.</p>
 <h2 id="why-dotnet-build-not-dotnet-publish" tabindex="-1">Why <code>dotnet build</code>, not <code>dotnet publish</code></h2>
 <p>The app embeds the <strong>GitHub Copilot SDK</strong>, which bundles a CLI runtime at
 <code>runtimes\win-x64\native\copilot.exe</code> and <strong>spawns it as a child process</strong>. That file is
@@ -80,16 +81,25 @@ spawn it.</li>
 and ships the resulting <strong>folder</strong>. (The folder is also what the installer and MSIX package.)</p>
 <blockquote>
 <p>Paths containing apostrophes can cause SDK copy-task problems. The build script
-stages to an apostrophe-free folder under <code>%TEMP%</code> before zipping/packaging.</p>
+builds into a fresh, apostrophe-free folder under <code>%TEMP%</code> before zipping/packaging.
+It does not reuse an older <code>bin\Release</code> payload.</p>
 </blockquote>
 <h2 id="build-the-artifacts" tabindex="-1">Build the artifacts</h2>
-<pre tabindex="0" aria-label="powershell code example"><code># Requires: .NET 10 SDK; Inno Setup (winget install JRSoftware.InnoSetup);
-#           Windows SDK for MSIX (winget install Microsoft.WindowsSDK.10.0.26100)
+<pre tabindex="0" aria-label="powershell code example"><code># Only after the exact source head, version, runtime and signer are approved.
+# Requires installed .NET 10 SDK, WiX 5.0.2 + UI extension, Inno Setup 6,
+# and Windows SDK makeappx/signtool. See the read-only preflight below first.
 $ver = ([xml](Get-Content .\ThreatModelReviewer.App\ThreatModelReviewer.App.csproj)).Project.PropertyGroup.Version |
     Where-Object { $_ } | Select-Object -First 1
-pwsh scripts\build-release.ps1 -Version $ver
+pwsh scripts\build-release.ps1 -Version $ver -CertThumbprint $approvedThumbprint `
+    -ExpectedSourceCommit $acceptedHead `
+    -CopilotCliBinaryPath $approvedRuntime -ExpectedCopilotCliSha256 $approvedRuntimeHash
 </code></pre>
-<p>Outputs to <code>dist\</code> (git-ignored):</p>
+<p>Outputs to <strong><code>dist\vX.Y.Z\</code></strong> (git-ignored), or the explicit <code>-OutputDirectory</code>.
+The directory must be new or empty. A retry must use a new empty directory rather
+than deleting historical packages, screenshots or another build's output.
+Bundled quick-start instructions come from <code>docs/PACKAGE-README.md</code> and
+<code>docs/PACKAGE-CLI.md</code>, not the private source README's candidate/publication notices.
+Missing bundled guides or licenses fail the build.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Releasing table 1"><table>
 <thead>
 <tr>
@@ -108,7 +118,7 @@ pwsh scripts\build-release.ps1 -Version $ver
 </tr>
 <tr>
 <td><code>ThreatModelReviewer-vX.Y.Z-setup.exe</code></td>
-<td>Per-user Inno Setup installer.</td>
+<td>Per-user-default Inno Setup installer, with an optional elevated all-users mode.</td>
 </tr>
 <tr>
 <td><code>ThreatModelReviewer-vX.Y.Z-x64.msix</code></td>
@@ -124,51 +134,274 @@ pwsh scripts\build-release.ps1 -Version $ver
 </tr>
 <tr>
 <td><code>ThreatModelReviewer-publisher.cer</code></td>
-<td>Public cert users trust for the MSIX.</td>
+<td>Public signing certificate; trust requires an approved deployment policy.</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-release.json</code></td>
+<td>Source SHA, SDK/runtime/framework versions, runtime hashes, signing observations and artifact digests. Not an installation acceptance claim.</td>
+</tr>
+<tr>
+<td><code>ThreatModelReviewer-vX.Y.Z-SHA256SUMS.txt</code></td>
+<td>SHA-256 for the seven distribution files and the release report.</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>MSI is the recommended desktop distribution. The skill ZIP is not the CLI</strong>:
+users must obtain the separate CLI ZIP and configure its resolver. An ordinary
+release requires all seven distribution files. <code>-SkipMsi</code>, <code>-SkipInstaller</code> and
+<code>-SkipMsix</code> are deliberate partial-development builds, not substitutes for release
+acceptance. Missing tools or missing requested outputs now fail instead of
+silently producing an unsigned/incomplete candidate.
+Use <code>build-release.ps1</code> as the release entry point: the standalone legacy
+<code>build-msi.ps1</code> does not provide this complete prerequisite/evidence gate.</p>
+<h3 id="runtime-acquisition-in-managed-environments" tabindex="-1">Runtime acquisition in managed environments</h3>
+<p>The release script defaults to the app project's declared version and rejects a
+different <code>-Version</code>; an artifact filename must not claim a different build version.
+Each invocation uses its own staging directory rather than deleting another
+concurrent build's staging files.</p>
+<p>Run a side-effect-free preflight before staging or signing:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>pwsh scripts\build-release.ps1 -PreflightOnly -CheckPackagingTools `
+    -CopilotCliBinaryPath $approvedRuntime -ExpectedCopilotCliSha256 $approvedRuntimeHash `
+    -CertThumbprint $approvedThumbprint -ExpectedSourceCommit $acceptedHead
+</code></pre>
+<p>It checks the app version, supported <code>win-x64</code> target, SDK-pinned runtime version,
+and supplied runtime metadata/hash. <code>-CheckPackagingTools</code> also checks the installed
+tools, app file/assembly versions, empty output directory, and the selected
+certificate's private-key association, validity, Code Signing EKU and exact MSIX
+publisher match. It reads certificate metadata but creates/imports/trusts nothing.
+<code>HasPrivateKey</code> does not prove key-provider/ACL access; only a separately authorized
+signing attempt can establish that. <code>SourceClean=false</code> is not an accepted release head.
+<code>PackagingVerified</code> is deliberately <code>false</code>: preflight is
+not an installer, signature, packaged-runtime or upgrade test.
+Preflight does not restore dependencies. On a fresh worktree it can read the
+<strong>exact declared SDK version's</strong> existing NuGet <code>GitHub.Copilot.SDK.props</code> when
+<code>obj</code> imports are absent; it never picks the newest cached SDK. If neither the
+evaluated pin nor those cached props are available, it stops. A normal authorized
+build may restore the declared projects and recheck the pin before staging.</p>
+<p>Do <strong>not</strong> use <code>CopilotSkipCliDownload=true</code> for a release. That option is useful
+for synthetic tests but can leave the real Copilot runtime absent or stale.
+If managed security blocks runtime acquisition, <strong>stop</strong>; do not disable controls,
+bootstrap <code>npx</code>, switch download routes or copy unapproved packages. Use an
+already-approved runtime through the documented override:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>pwsh scripts\build-release.ps1 -Version $ver -ExpectedSourceCommit $acceptedHead `
+    -CopilotCliBinaryPath $approvedRuntime -ExpectedCopilotCliSha256 $approvedRuntimeHash `
+    -CertThumbprint $approvedThumbprint
+</code></pre>
+<p>This uses the SDK's supported <code>CopilotCliBinaryPath</code> property. The script checks
+the copied runtime's file version against <code>CopilotCliVersion</code> from the installed
+SDK and, for an explicitly supplied binary, compares its SHA-256 after both
+app and CLI builds, and requires both payloads to contain the same bytes. App,
+CLI and setup executable file versions must equal <code>X.Y.Z.0</code>; the CLI build is
+version-stamped without editing project metadata. MSI ProductVersion/UpgradeCode
+and self-contained .NET 10 runtime files/configs are checked too.
+A compile-only pass is not packaged-runtime validation.
+Inspect the actual runtime behavior as well; package/file metadata and a
+launcher-reported version are separate observations.</p>
 <h3 id="tools" tabindex="-1">Tools</h3>
+<p>The lightweight packaging regression harness writes an actual counted JSON report:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>pwsh packaging\Test-ReleasePreflight.ps1 -ApprovedRuntimePath $approvedRuntime `
+    -ReportPath C:\release-evidence\packaging-fixtures.json
+</code></pre>
+<p>Use a new report path. Require <code>Status: Passed</code> and a nonzero <code>Executed</code> count;
+a printed success line does not replace the report or a successful exit code.</p>
 <ul>
 <li><strong>WiX v5</strong> for the MSI: <code>dotnet tool install --global wix --version 5.0.2</code> then
 <code>wix extension add -g WixToolset.UI.wixext/5.0.2</code>. <em>(WiX v7 requires a paid OSMF EULA — pin to v5.)</em></li>
 <li><strong>Inno Setup</strong>: <code>winget install JRSoftware.InnoSetup</code>.</li>
 <li><strong>Windows SDK</strong> (MSIX: <code>makeappx</code> + <code>signtool</code>): <code>winget install Microsoft.WindowsSDK.10.0.26100</code>.</li>
 </ul>
+<p>These are provisioning instructions, not permission to install tools on a managed
+host. Prefer already-installed approved tools. An existing <code>winapp</code> installation
+can be inspected with <code>winapp --cli-schema</code>; do not bootstrap another copy.
+This WPF app does not need <code>winapp init</code> or Windows App SDK version metadata to
+package its existing build. The maintained manifest is
+<code>packaging\msix\AppxManifest.xml</code>; its version is stamped only into staging.</p>
+<h3 id="sdk-and-bundled-runtime-update-policy" tabindex="-1">SDK and bundled-runtime update policy</h3>
+<p><strong>v2.6.0 baseline qualified 2026-09-14:</strong> <code>GitHub.Copilot.SDK</code> <strong>1.0.11</strong>
+with the SDK-pinned Windows runtime <strong>1.0.79</strong>. Package/file metadata and the
+local RPC status reported that runtime version; RPC protocol <strong>3</strong> identifies the
+SDK/runtime transport, not the MCP specification version. A standalone installed
+CLI's banner is not evidence about the bundled runtime; use the approved file's
+metadata/hash and actual SDK RPC behavior, not a different launcher.</p>
+<p>The model catalogue is fetched for the user's signed-in seat. A newer model
+appearing in that catalogue does not by itself require an SDK update. Offline
+verification hosts intentionally do not establish account/model availability.</p>
+<p>An SDK <strong>1.0.13</strong> update is available for review, not automatically approved.
+Its published changes include host-tool cancellation, optional client identity,
+session credential callbacks and additional session behavior. Assess each new
+default and capability against the existing consent, authentication, environment
+and tool restrictions; do not enable a new channel merely because it exists.</p>
+<p>For each candidate, use an isolated branch and record:</p>
+<ol>
+<li>The exact package version and its declared runtime pin. Acquire required
+binaries only through approved channels; never bypass an organizational block.</li>
+<li>Build, model discovery and actual SDK wire/tool-permission compatibility,
+including default-off/single/selected/all MCP behavior and shutdown.</li>
+<li>The complete relevant suite and packaged-runtime checks. Keep intermittent
+failures and unverified authenticated/native paths explicit; one passing
+rerun does not prove an earlier failure's cause was resolved.</li>
+<li>Updated dependency notices, feature/privacy documentation and skill syntax
+before release. Keep the previous accepted pin until the candidate qualifies.</li>
+</ol>
+<p>See the upstream <a href="https://github.com/github/copilot-sdk/releases" rel="noopener noreferrer">SDK releases</a>
+and the runtime acquisition and preflight instructions above.</p>
 <h3 id="signing" tabindex="-1">Signing</h3>
 <p><code>scripts\build-release.ps1</code> signs application executables and installers, not ZIP containers:</p>
 <ul>
 <li>with <strong>your certificate</strong> when you pass <code>-CertPfx &lt;file&gt; [-CertPassword &lt;pw&gt;]</code> or
 <code>-CertThumbprint &lt;thumb&gt;</code> — use an appropriately issued certificate or
 Azure Trusted Signing for publisher trust; signing does not guarantee SmartScreen reputation;</li>
-<li>otherwise with a generated <strong>self-signed</strong> cert (so artifacts are signed and the MSIX
-installs, but SmartScreen still warns publicly).</li>
+<li>otherwise with a reused/generated <strong>development-only self-signed</strong> certificate.
+That is not public publisher trust and does not by itself make an MSIX installable.</li>
 </ul>
+<p>All five signed files (desktop/CLI hosts, MSI, setup and MSIX) use the same selected
+certificate and RFC 3161 timestamping. <code>-CertPfx</code> is passed through to MSIX, not
+replaced by another certificate. <code>-CertThumbprint</code> defaults to <code>CurrentUser\My</code>;
+use <code>-CertStoreLocation LocalMachine</code> explicitly for a machine-store key. No key
+is exported just to accommodate a store-backed certificate. PFX inspection uses
+ephemeral key storage; the scripts never import certificate trust.</p>
+<p>The MSIX publisher remains <strong><code>CN=ArasaniRohithReddy</code></strong>. A differently named
+certificate is a release blocker, not a reason to silently change the package
+identity. Preserve the MSI UpgradeCode, Inno AppId and MSIX Name/Application Id.
+Certificate validity and key presence do not establish signer reputation.
+Windows can report an untrusted self-signed root as <code>UnknownError</code>; the release
+report preserves that status and <code>TrustVerified=false</code>, rather than calling it a
+pass. <code>winapp cert install</code> requires an <strong>administrator</strong> terminal and separate
+approval in the disposable acceptance environment, never routine preflight.</p>
+<h2 id="acceptance-gates-do-not-publish-on-build-success-alone" tabindex="-1">Acceptance gates (do not publish on build success alone)</h2>
+<ol>
+<li>
+<p><strong>Accepted source:</strong> the coordinator chooses the version and exact clean SHA,
+updates app/skill/docs metadata, and accepts the exact-head CI result. Passing
+an earlier head is insufficient. Source <code>main</code>, other worktrees and stable
+public documentation are not changed by packaging.</p>
+</li>
+<li>
+<p><strong>Read-only preflight:</strong> run the command above and the lightweight fixture suite:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>pwsh packaging\Test-ReleasePreflight.ps1 -ApprovedRuntimePath $approvedRuntime
+</code></pre>
+<p>Neither command compiles or signs. On shared validation hosts, coordinate before
+the real build; do not overlap another agent's validation.</p>
+</li>
+<li>
+<p><strong>Authorized build/sign, once:</strong> keep the same thread holding the bounded lease
+for the entire child build and release it in <code>finally</code>:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>$lease = [Threading.Mutex]::new($false, &#39;Local\TMR-Fleet-Validation-20260913&#39;)
+$held = $false
+try {
+    try { $held = $lease.WaitOne([TimeSpan]::FromSeconds(30)) }
+    catch [Threading.AbandonedMutexException] { $held = $true }
+    if (-not $held) { throw &#39;Another validation owns the lease; coordinate and retry later.&#39; }
+    &amp; .\scripts\build-release.ps1 -Version $ver -ExpectedSourceCommit $acceptedHead `
+        -CopilotCliBinaryPath $approvedRuntime -ExpectedCopilotCliSha256 $approvedRuntimeHash `
+        -CertThumbprint $approvedThumbprint
+} finally {
+    if ($held) { $lease.ReleaseMutex() }
+    $lease.Dispose()
+}
+</code></pre>
+</li>
+<li>
+<p><strong>Artifact integrity and metadata:</strong> read the immutable output; do not mix local
+MSIX with a different CI build/signer. Never use <code>dist/*</code> for publication.</p>
+<pre tabindex="0" aria-label="powershell code example"><code>. .\packaging\Release.Common.ps1
+$out = Join-Path $PWD &quot;dist\v$ver&quot;
+Test-TmrReleaseEvidence -Directory $out -Version $ver `
+    -ExpectedSourceCommit $acceptedHead -ExpectedCopilotCliSha256 $approvedRuntimeHash
+foreach ($name in @(&quot;ThreatModelReviewer-v$ver-x64.msi&quot;,
+                    &quot;ThreatModelReviewer-v$ver-setup.exe&quot;,
+                    &quot;ThreatModelReviewer-v$ver-x64.msix&quot;)) {
+    Get-TmrSignatureCheck (Join-Path $out $name) $approvedThumbprint
+}
+Get-TmrMsiProperty (Join-Path $out &quot;ThreatModelReviewer-v$ver-x64.msi&quot;) ProductVersion
+Get-TmrMsiProperty (Join-Path $out &quot;ThreatModelReviewer-v$ver-x64.msi&quot;) UpgradeCode
+</code></pre>
+<p>The evidence check is only an integrity/provenance check. Independently inspect
+the ZIP/MSIX entries: root app/CLI executables; <code>runtimes/win-x64/native/copilot.exe</code>
+with the approved SHA-256 in <strong>each</strong> app, CLI and MSIX payload; .NET 10
+<code>includedFrameworks</code>; the declared SDK in <code>.deps.json</code>; MSIX version <code>X.Y.Z.0</code>,
+x64 architecture, unchanged publisher/identity, required logos and
+<code>AppxSignature.p7x</code>. Check the skill's <code>plugin.json</code>, resolver and separate-CLI
+instructions. Hashes are not a substitute for Authenticode verification.</p>
+</li>
+<li>
+<p><strong>Disposable Windows acceptance, separately authorized:</strong> verify the actual
+signatures/timestamps under the intended trust policy and executable versions
+after extraction; clean MSI install and previous-stable → candidate upgrades in
+both scopes; setup install/upgrade; portable and CLI launch on a VM without
+preinstalled .NET; the separate skill-to-CLI resolver; MSIX install/upgrade
+where policy permits. Use synthetic files and no real OneDrive/Documents profile.
+Verify the <strong>packaged</strong> SDK/runtime path and expected RPC behavior, not a
+globally installed CLI banner. Do not launch native TMT on the shared profile.
+Hash-verified files, a signed file and a working/accepted installation are three
+different claims. Record unverified authenticated/native paths explicitly.</p>
+</li>
+<li>
+<p><strong>Publication approval:</strong> the coordinator accepts the evidence, trust limitations,
+full runtime/upgrade results and documentation/link fixes before promotion.</p>
+</li>
+</ol>
 <h2 id="publish-the-github-release-public-repo" tabindex="-1">Publish the GitHub Release (public repo)</h2>
-<p><strong>Manual (gh CLI):</strong></p>
+<p><strong>Manual (gh CLI), only after upload authorization:</strong></p>
 <pre tabindex="0" aria-label="powershell code example"><code>$tag = &quot;threat-model-reviewer-v$ver&quot;
-$assets = @(
-    &quot;dist\ThreatModelReviewer-v$ver-x64.msi&quot;,
-    &quot;dist\ThreatModelReviewer-v$ver-win-x64-portable.zip&quot;,
-    &quot;dist\ThreatModelReviewer-v$ver-setup.exe&quot;,
-    &quot;dist\ThreatModelReviewer-v$ver-cli-win-x64.zip&quot;,
-    &quot;dist\ThreatModelReviewer-v$ver-skill.zip&quot;,
-    &quot;dist\ThreatModelReviewer-v$ver-x64.msix&quot;,
-    &quot;dist\ThreatModelReviewer-publisher.cer&quot;
-)
-# Omit the MSIX/certificate entries only when that packaging step was deliberately skipped.
+. .\packaging\Release.Common.ps1
+$out = Join-Path $PWD &quot;dist\v$ver&quot;
+Test-TmrReleaseEvidence -Directory $out -Version $ver `
+    -ExpectedSourceCommit $acceptedHead -ExpectedCopilotCliSha256 $approvedRuntimeHash
+$assets = @(Get-TmrReleaseAssetNames -Version $ver -IncludeEvidence |
+    ForEach-Object { Join-Path $out $_ })
 gh release create $tag @assets `
   --repo ArasaniRohithReddy/app-releases `
+  --draft --latest=false --target main `
   --title &quot;Threat Model Reviewer v$ver&quot; `
   --notes-file docs\release-notes\v$ver.md
+if ($LASTEXITCODE -ne 0) { throw &#39;Inspect the failed draft/upload; do not delete or overwrite existing releases.&#39; }
 </code></pre>
-<p><strong>Automated (GitHub Actions):</strong> push a tag <code>threat-model-reviewer-vX.Y.Z</code> to the private
-repo. The <code>.github/workflows/release.yml</code> workflow builds the artifacts and creates the
-Release in <code>app-releases</code> using the <code>RELEASE_TOKEN</code> secret (a PAT with <code>contents:write</code> on
-the public repo). Set that secret once in the private repo's settings.</p>
+<p><strong>Stop after draft creation.</strong> Inspect its exact nine assets and complete acceptance.
+The following is a separate operation, only after the coordinator authorizes
+public promotion:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>gh release edit $tag --repo ArasaniRohithReddy/app-releases --draft=false --latest=false
+</code></pre>
+<p>The hub is <strong>multi-product</strong>. Never interpret <code>/releases/latest</code> as &quot;latest TMR&quot;,
+make TMR global latest, or edit/deprecate/delete another product's release to fix
+discovery. As of the 2026-09-14 preflight, global latest is <code>shot2code-v0.3.2</code>;
+TMR stable is <code>threat-model-reviewer-v2.5.1</code>. Discover by prefix, ignore drafts
+and prereleases, and choose the highest product version:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>gh api --paginate &#39;repos/ArasaniRohithReddy/app-releases/releases?per_page=100&#39; `
+  --jq &#39;.[] | select((.tag_name | startswith(&quot;threat-model-reviewer-v&quot;)) and (.draft | not) and (.prerelease | not)) | {tag_name,html_url}&#39;
+gh api repos/ArasaniRohithReddy/app-releases/releases/tags/threat-model-reviewer-v2.5.1
+gh api repos/ArasaniRohithReddy/app-releases/pages --jq &#39;{build_type,source,status}&#39;
+</code></pre>
+<p>Use exact tag/download links in versioned docs, and a product-filtered listing for
+moving discovery links. The in-app checker filters the prefix rather than using
+global latest, but its API window is currently only 50 releases and Atom is finite;
+pagination/exhaustion and prerelease fallback remain updater-owner follow-ups.</p>
+<p><code>--target main</code> above identifies the <strong>hub's</strong> existing documentation commit when
+GitHub creates the new hub tag; it does not push/merge source <code>main</code>. The build's
+private-source SHA is recorded in the release report. Do not use <code>--clobber</code>,
+auto-generated hub-wide notes, release deletion, force tags or history rewrites.
+If upload fails, inspect the draft and resume only the new candidate's missing
+assets with explicit approval. Preserve all prior release assets and screenshots.</p>
+<p><strong>Automated (GitHub Actions):</strong> an authorized product-prefixed private tag (or
+manual dispatch) invokes <code>.github/workflows/release.yml</code>. It requires successful
+CI for the exact head and the <strong><code>release</code> environment</strong>, which administrators must
+configure with required reviewers before enabling it. Required secrets are
+<code>RELEASE_TOKEN</code> (hub <code>contents:write</code>), <code>RELEASE_CERT_PFX_BASE64</code> and the appropriate
+<code>RELEASE_CERT_PASSWORD</code>. It builds <strong>all formats with one approved signer</strong> and
+creates a <strong>draft</strong> with <code>--latest=false</code>, never directly publishes stable.
+The approved runtime must be obtainable under that runner's organizational policy;
+do not use hosted execution as a workaround for a managed host's acquisition block.
+For the currently blocked local environment use only the approved existing binary
+override, and do not trigger a second hosted build to replace that candidate.</p>
+<p>Actions backup upload is opt-in and <code>continue-on-error</code>; exhausted Actions storage
+must not block the separate Release asset upload, and is never a reason to delete
+existing artifacts. At the 2026-09-14 preflight only <code>RELEASE_TOKEN</code> was configured;
+the protected environment and approved signing secrets were still prerequisites.</p>
 <h2 id="versioning--tags" tabindex="-1">Versioning &amp; tags</h2>
 <ul>
 <li>Bump <code>&lt;Version&gt;</code> in <code>ThreatModelReviewer.App\ThreatModelReviewer.App.csproj</code>.</li>
+<li>Keep its <code>&lt;AssemblyVersion&gt;</code>/<code>&lt;FileVersion&gt;</code> at <code>X.Y.Z.0</code>, and update the skill
+version/docs under the coordinator's ownership before approving a release head.</li>
 <li>Tag format is <strong>product-prefixed</strong> so the hub can host multiple apps:
 <code>threat-model-reviewer-vX.Y.Z</code> (a future app would use <code>other-app-vX.Y.Z</code>).</li>
 <li>Add a <code>CHANGELOG.md</code> entry and a <code>docs\release-notes\vX.Y.Z.md</code>.</li>
@@ -227,10 +460,20 @@ README, user/CLI/skill guides, security guidance and synthetic sample.</p>
 <pre tabindex="0" aria-label="powershell code example"><code>pwsh scripts\sync-public-docs.ps1 -HubPath C:\work\app-releases
 pwsh scripts\sync-public-docs.ps1 -HubPath C:\work\app-releases -Check
 </code></pre>
+<p>Those commands require a stable documentation channel. During development,
+<code>docs\publication.json</code> is marked <code>development</code>; use <code>-AllowDevelopment</code> only
+with a separate preview worktree. Do not overwrite the stable v2.5.1 guides with
+new MCP command instructions before publishing matching app, CLI and skill
+bundles. <code>docs\DOCUMENTATION.md</code> describes the stable-source
+and preview workflows.</p>
 <p>Review the hub portal README and all Pages surfaces separately: hero claims,
 screenshots, version fallbacks, JSON-LD, MSI recommendation, CLI/skill links and
 asset classifiers. The copy command does not certify those manual surfaces.
-After publishing, run the hub release-snapshot workflow and verify the live result.</p>
+After publishing, run the hub release-snapshot workflow and verify the live result.
+Preserve the working <strong>legacy Pages source <code>main:/docs</code></strong>; a product release is not
+authorization to migrate Pages, enable a different deployment mode, or replace the
+portal with one application's site. Recheck the Pages API and live product pages,
+historical downloads and screenshots after any separately approved docs update.</p>
 <p>Do not label a source change as shipped just because the project still carries the
 last release's version. Preserve historical release notes; document unreleased work
 separately until new packages are built and verified.</p>

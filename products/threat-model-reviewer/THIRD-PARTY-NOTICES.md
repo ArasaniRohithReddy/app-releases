@@ -2,7 +2,7 @@
 
 Threat Model Reviewer incorporates the third-party components listed below. This file is provided
 for license-compliance review. Threat Model Reviewer itself is licensed under the
-[MIT License](../../LICENSE).
+[MIT License](LICENSE).
 
 *Direct package references aligned with the current source on 13 September 2026.
 This is not a complete transitive SBOM. Inspect the exact release's bundled license

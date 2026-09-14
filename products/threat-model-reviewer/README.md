@@ -2,7 +2,10 @@
 
 **Find the gaps before your threat model review.**
 
-[![Latest release](https://img.shields.io/github/v/release/ArasaniRohithReddy/app-releases?label=latest&color=4F46E5)](https://github.com/ArasaniRohithReddy/app-releases/releases/latest)
+[![Downloads](https://img.shields.io/badge/downloads-Threat_Model_Reviewer-4F46E5)](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)
+
+Use the app, CLI and skill from the same product release. Updating a guide does
+not add new commands to an older installed binary.
 
 Review Microsoft Threat Modeling Tool `.tm7` and OWASP Threat Dragon `.json`
 models, work through specific findings, and save a corrected model for human
@@ -51,6 +54,8 @@ can leave gaps. Inspect the draft and its evidence before relying on it.
 Newly generated files need the supported baseline/template workflow when they
 must reopen in Microsoft TMT. Follow the Create guidance in the user guide;
 parsing a file in this reviewer alone does not prove TMT compatibility.
+The [compatibility guide](MICROSOFT-TMT.md) distinguishes supported review and
+authoring workflows from native TMT features and template-dependent behavior.
 
 ## What the result does not mean
 
@@ -77,7 +82,7 @@ Windows 10/11 x64. App and CLI bundles include .NET; the skill is instructions a
 a CLI resolver, not a replacement runtime. Executables and installers are signed
 with the project's current self-signed certificate. ZIP files are not
 Authenticode-signed containers. Check the [installation guide](INSTALL.md) and
-[security policy](../../SECURITY.md#code-signing) before installing.
+[security policy](SECURITY.md#code-signing) before installing.
 
 ## Privacy and optional AI
 
@@ -89,10 +94,24 @@ access separately. Review [Data handling](DATA-HANDLING.md) before enabling them
 The app does not collect product analytics. Update checks can be disabled.
 External providers, CLI runtimes and MCP servers have their own terms and settings.
 
+## Developer context and evidence
+
+The application includes [restricted MCP developer context](MCP.md), a
+[shell-free Azure discovery runner](AZURE-DISCOVERY.md), and
+[captured-revision comparison](COMPARISON.md). Generation retains edited metadata
+and protects evidence ownership; SDL exports identify the evaluated source bytes
+and publish the manifest last. Use matching binaries and skill instructions;
+older releases do not implement every current command or safeguard.
+
+Microsoft Learn, Azure metadata and GitHub repository context are separate,
+default-off sources. Read-only access is not a privacy guarantee, and none changes
+the deterministic verdict. Azure DevOps MCP remains deferred, not a shipped option.
+
 ## Guides and support
 
 [Install](INSTALL.md) · [User guide](USER-GUIDE.md) · [FAQ](FAQ.md) ·
 [CLI](CLI.md) · [Skill](SKILL.md) · [Architecture](ARCHITECTURE.md) ·
+[Microsoft TMT compatibility](MICROSOFT-TMT.md) ·
 [Enterprise deployment](ENTERPRISE-DEPLOYMENT.md) ·
 [Third-party notices](THIRD-PARTY-NOTICES.md) ·
 [Changelog](CHANGELOG.md)

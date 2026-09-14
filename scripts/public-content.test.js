@@ -20,7 +20,7 @@ const products = [
     releasesPage: 'docs/threat-model-reviewer/releases/index.html',
     snapshot: 'docs/threat-model-reviewer/releases/releases.json',
     guides: 'products/threat-model-reviewer',
-    kinds: ['msi', 'portable', 'setup', 'cli', 'skill', 'msix', 'cer'],
+    kinds: ['msi', 'portable', 'setup', 'cli', 'skill', 'msix', 'cer', 'checksums', 'provenance'],
     recommendedKind: 'msi',
     fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&expanded=true',
     requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'CHANGELOG.md', 'DATA-HANDLING.md']
@@ -250,14 +250,16 @@ test('stable SARIF copy distinguishes local output from a separately configured 
 
 test('stable enterprise MSI examples uninstall the deployed package, never its UpgradeCode', () => {
   const guide = read('products/threat-model-reviewer/ENTERPRISE-DEPLOYMENT.md');
-  const installer = 'ThreatModelReviewer-v2.5.1-x64.msi';
-  assert.ok(snapshot.find(r => r.tag_name === 'threat-model-reviewer-v2.5.1').assets.some(a => a.name === installer));
+  const declared = /Applies to Threat Model Reviewer v(\d+\.\d+\.\d+)\b/.exec(guide);
+  assert.ok(declared, 'Deployment examples must identify their published product version');
+  const version = declared[1];
+  const installer = `ThreatModelReviewer-v${version}-x64.msi`;
+  assert.ok(snapshot.find(r => r.tag_name === releaseData.PREFIX + version)?.assets.some(a => a.name === installer));
   const uninstalls = [...guide.matchAll(/^\s*msiexec\s+\/x\s+("[^"]+"|\S+).*$/gmi)];
   assert.equal(uninstalls.length, 3, 'Silent install, Intune and removal examples must all be checked');
   for (const [, target] of uninstalls) assert.equal(target, `"${installer}"`);
-  assert.match(guide, /Applies to Threat Model Reviewer v2\.5\.1\b/);
   const versions = [...guide.matchAll(/ThreatModelReviewer-v(\d+\.\d+\.\d+)-/g)].map(m => m[1]);
-  assert.deepEqual([...new Set(versions)], ['2.5.1']);
+  assert.deepEqual([...new Set(versions)], [version]);
   assert.doesNotMatch(guide, /v2\.1\.2\b|\bINSTALLFOLDER\b/);
   assert.match(guide, /`APPLICATIONFOLDER="<path>"`/);
   const plain = guide.replace(/^>\s?/gm, '').replace(/[*`]/g, '').replace(/\s+/g, ' ');
@@ -679,7 +681,7 @@ test('issue templates cover every product', () => {
 test('all published pages contain exactly one valid structured-data block and social image', () => {
   for (const name of pages) {
     const html = read(name);
-    const blocks = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)];
+    const blocks = [...html.matchAll(/<script\b[^>]*\btype="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)];
     assert.equal(blocks.length, 1, name);
     assert.equal(JSON.parse(blocks[0][1])['@context'], 'https://schema.org');
     assert.equal([...html.matchAll(/property="og:image"/g)].length, 1, name);
@@ -698,17 +700,15 @@ test('current copy distinguishes signing, private reports and released command s
     assert.doesNotMatch(read(name), /ThreatModelReviewer\.Cli\.exe\s+(?:fleet|mcp)\b/i, name);
 });
 
-test('static software metadata and no-JavaScript downloads refer to the same published version', () => {
-  const metadata = JSON.parse(product.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
-  const release = snapshot.find(r => r.tag_name === releaseData.PREFIX + metadata.softwareVersion);
-  assert.ok(release && !release.prerelease, 'Structured data must describe a published stable release');
-  // The published version is still declared, but every link without JavaScript resolves this
-  // product's release list instead of pinning that version's tag, so a newer build cannot leave
-  // the static markup handing out a superseded download.
+test('software metadata uses the resolved release and static downloads remain product scoped', () => {
+  const metadata = JSON.parse(product.match(/<script\b[^>]*\btype="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)[1]);
+  assert.equal(metadata.softwareVersion, undefined, 'Static metadata must not pin a superseded release');
   const resilient = products.find(entry => entry.name === 'threat-model-reviewer').fallback;
   assert.equal(metadata.downloadUrl, resilient);
   assert.doesNotMatch(metadata.downloadUrl, /\/releases\/tag\//);
-  assert.ok(releaseData.releaseUrl(release).endsWith(release.tag_name), 'Tag links stay resolvable for the live refresh');
+  assert.match(product, /application\.softwareVersion = rel\.tag_name\.slice\(ReleaseData\.PREFIX\.length\)/);
+  assert.match(product, /application\.downloadUrl = byKind\.msi \? byKind\.msi\.browser_download_url/);
+  assert.doesNotMatch(product, /id="version-chip(?:-2)?"[^>]*>v\d+\.\d+\.\d+</);
   for (const match of product.matchAll(/<a[^>]+(?:id="hero-download"|data-dl="[^"]+")[^>]+href="([^"]+)"/g))
     assert.equal(match[1], resilient.replace(/&/g, '&amp;'));
 });

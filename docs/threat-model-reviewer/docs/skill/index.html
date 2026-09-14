@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/SKILL.md (normalized SHA-256 b23e4fcfe694e35a70c72c4b132bac74753d8db5dee178682eb4c8e8d742b87d). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/SKILL.md (normalized SHA-256 845a6b99ffbb21ec29bf66fd9716940be2b288bd196091f184072e4d3b058379). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="./" aria-current="page">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="./" aria-current="page">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -69,7 +69,27 @@ exit codes mean — and when we tested that, it read the source and built the CL
 nobody outside the team can clone. It got the right answer after nine minutes and 354 AI credits.
 With the skill, it runs one command.</p>
 <p>Download <strong><code>ThreatModelReviewer-vX.Y.Z-skill.zip</code></strong> from the
-<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/latest" rel="noopener noreferrer">latest release</a>.</p>
+<a href="../../releases/">Threat Model Reviewer releases</a>.</p>
+<p>The <strong>v2.6.0</strong> skill and CLI include restricted MCP context and captured-revision/
+evidence safeguards. Keep the bundles matched; do not run unsupported commands
+against an older CLI or silently replace the engine with AI reasoning.</p>
+<p>For optional developer context, <strong>MCP is the tool protocol</strong>, the GitHub Copilot
+SDK hosts the sessions, and each tool is a named operation with an input schema
+backed by a service API. The OpenAI-compatible and Offline providers do not
+attach these MCP profiles. The skill must route to the existing CLI/manager
+instead of configuring another connector or implying universal SDK support.
+Use <code>mcp show &lt;id&gt;</code> for configured names/capabilities and explicitly consented
+<code>mcp test &lt;server-id&gt;</code> for one server, <code>mcp test &lt;id&gt; &lt;id&gt; ...</code> for an explicit
+selection, or plain <code>mcp test</code> for all enabled servers. Selection is per server,
+not per tool, and never enables a source or the master implicitly. Any invalid
+or unconsented requested source rejects the whole probe before startup.
+Probes close before reporting discovered names and SDK/schema readiness;
+historical probe success is not live AI-session connectivity or authenticated
+resource access. Saved consent still controls the next MCP-enabled AI request.
+Preserve the command's source/stage diagnostics. A generic timeout is not
+proof of an npm policy block, and a disabled GitHub profile's missing PAT
+does not explain Azure bootstrap. An explicit managed-security block requires
+IT approval, never a mirror/download fallback or disabled security controls.</p>
 <hr>
 <h2 id="what-it-does" tabindex="-1">What it does</h2>
 <p>The skill teaches an agent five jobs, each mapped to what a developer actually asks rather than to
@@ -179,6 +199,10 @@ repository's <code>.github/skills/</code>. It can also be loaded as a plugin, wh
 <td>GitHub Actions, Azure DevOps, pre-commit, batch review</td>
 </tr>
 <tr>
+<td><code>references/developer-context.md</code></td>
+<td>MCP consent/credentials, saved-revision identity, and evidence recovery limits</td>
+</tr>
+<tr>
 <td><code>scripts/Invoke-ThreatModelReviewer.ps1</code></td>
 <td>Finds the CLI and forwards the exit code unchanged</td>
 </tr>
@@ -204,7 +228,7 @@ failing CI gate into a passing one, so it deliberately adds nothing.</p>
 verdict, because &quot;the command was wrong&quot; and &quot;the model is bad&quot; look identical to an agent that has
 only a non-zero number to go on.</p>
 <h2 id="what-is-guarded" tabindex="-1">What is guarded</h2>
-<p><code>ThreatModelReviewer.Tests/SkillPackagingTests.cs</code> holds 23 tests over the bundle, because nothing
+<p><code>ThreatModelReviewer.Tests/SkillPackagingTests.cs</code> guards the bundle, because nothing
 compiles it and a wrong sentence in a skill becomes a wrong command. They assert, among other
 things, that:</p>
 <ul>
@@ -227,7 +251,9 @@ and <code>copilot skill add</code> refused it outright. Nothing in the build wou
 actually deployed.</li>
 <li><strong>Generation enumerates; it does not analyse.</strong> Every generated threat is <em>Needs Investigation</em>.</li>
 <li><strong>AI operations need provider access.</strong> Deterministic review and built-in fixes work offline.
-The <code>azure</code> verb is also deterministic, but requires Azure network access and sign-in.</li>
+The <code>azure</code> verb is also deterministic, but requires Azure network access and sign-in.
+MCP testing/context adds separate network and credential paths;
+<a href="../mcp/">MCP</a> explains consent and the restricted profiles. Read-only is not nonsensitive.</li>
 <li><strong>Model fixes are not code fixes.</strong> The owning team implements and verifies mitigations.</li>
 <li><strong>Skill selection is not guaranteed.</strong> An agent chooses a skill from its description. On a machine
 with hundreds of skills installed the list an agent sees can be truncated, and the skill may not

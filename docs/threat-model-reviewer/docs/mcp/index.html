@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/MCP.md (normalized SHA-256 d76618c680833991fa2940bfa62ccf620bb2e0f9d88e3f43747cbfea2c22d9bd). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Optional MCP review context — Threat Model Reviewer documentation</title>
+  <meta name="description" content="The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.6.0. Use matching app, CLI and skill releases." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Optional MCP review context — App Releases" />
+  <meta property="og:description" content="The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.6.0. Use matching app, CLI and skill releases." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Optional MCP review context","description":"The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.6.0. Use matching app, CLI and skill releases.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="./" aria-current="page">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">MCP developer context</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="optional-mcp-review-context" tabindex="-1">Optional MCP review context</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/MCP.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#defaults-and-network-boundaries">Defaults and network boundaries</a></li><li><a href="#restricted-profiles">Restricted profiles</a></li><li><a href="#github-credential-setup-in-the-app">GitHub credential setup in the app</a></li><li><a href="#one-server-or-multiple-servers">One server or multiple servers</a></li><li><a href="#cli-setup-and-use">CLI setup and use</a></li><li><a href="#storage-upgrades-and-long-running-application-instances">Storage, upgrades and long-running application instances</a></li><li><a href="#troubleshooting-and-validation-limits">Troubleshooting and validation limits</a></li><li><a href="#coordinator-app-integration-reference-already-applied">Coordinator app integration reference (already applied)</a></li><li><a href="#researched-follow-up-azure-devops">Researched follow-up: Azure DevOps</a></li><li><a href="#primary-sources-verified-2026-09-13">Primary sources (verified 2026-09-13)</a></li></ul></nav></details>
+        <div class="doc-content"><p>The restricted profiles, <code>mcp</code> CLI controls, separate credentials and SDK
+context/tool restrictions described here are included in <strong>v2.6.0</strong>.
+Use matching app, CLI and skill releases.</p>
+<p>Upstream settings were verified on <strong>2026-09-13</strong> using the primary sources below.</p>
+<p>The release checks include synthetic SDK protocol/permission coverage, package
+runtime hashes and live model-catalogue discovery without inference. These do not
+establish access to every repository, Azure scope or external MCP service.</p>
+<p>MCP adds tools to <strong>Copilot advisory AI requests</strong>, not to the deterministic
+rubric. Reading repository evidence or Azure metadata cannot establish that a
+mitigation is implemented, deployed, effective, or approved by Microsoft.
+Retrieved content is untrusted evidence to review, not instructions to obey.</p>
+<p><strong>MCP, SDK, API and tool are different layers.</strong> MCP is the protocol for
+discovering and calling named tools over HTTP or stdio. The pinned GitHub
+Copilot SDK is this app's client/runtime integration and owns those sessions.
+A tool (for example <code>issue_read</code>) is a named operation with an input schema;
+its server may call a service API behind it. Adding a descriptor does not
+install another AI SDK or prove that any tool is available or executable.</p>
+<h2 id="defaults-and-network-boundaries" tabindex="-1">Defaults and network boundaries</h2>
+<ul>
+<li>The MCP master switch and <strong>every
+individual profile default off</strong>.</li>
+<li>Opening MCP settings, listing/showing configuration, checking local credential
+readiness, storing/forgetting a PAT, and changing switches do <strong>not</strong> start an
+MCP service or perform a network authentication probe.</li>
+<li>A connection starts only on an explicit single/selected/all-enabled probe,
+or on an applicable Copilot AI request after both switches permit it.</li>
+<li>CLI AI requests additionally require <code>--mcp</code> on that invocation. Normal
+<code>&lt;model.tm7&gt;</code> review and deterministic <code>ask</code> remain offline, even with saved
+MCP settings enabled. <code>--mcp</code> alone is a usage error, not implicit AI consent.</li>
+<li>MCP is not attached to the offline or OpenAI-compatible provider. Existing
+Copilot sign-in/model listing and the app's optional update checks are separate
+from these MCP gates; this is not a claim that the whole desktop startup is
+network-free.</li>
+</ul>
+<p>Read the disclosure and tool list before enabling each profile. <strong>Read-only is
+not the same as nonsensitive.</strong> Tool arguments may contain details from a finding
+or question; returned data can enter Copilot's provider context. Do not query
+private material unless your organisation permits sending it to that provider.</p>
+<h2 id="restricted-profiles" tabindex="-1">Restricted profiles</h2>
+<p>The SDK <code>Tools</code> field is an enforced, nonempty allowlist—not the informational
+<code>DeclaredCapabilities</code> field and never a factory wildcard.</p>
+<p>There is also a <strong>session-wide source-qualified allowlist</strong> containing only the
+selected MCP tools (<code>mcp:&lt;server&gt;-&lt;tool&gt;</code> via SDK <code>ToolSet.AddMcp</code>). When MCP is
+off, the session has an explicitly empty tool list. Native coding/shell tools
+are not enabled by this advisory provider. Configuration discovery, ambient
+plugins, skills and file hooks are disabled so a user's unrelated Copilot CLI
+configuration cannot silently attach other sources.
+Tool-search deferral is explicitly disabled for these small allowlists.
+The permission handler independently rejects native, unknown, cross-profile
+and managed-approval-required tool requests rather than using blanket approval.</p>
+<p>Tool filtering alone is <strong>not</strong> an ambient-context policy. We explicitly retain
+<code>CopilotClientMode.CopilotCli</code> solely to preserve intentional CLI/keychain seat
+authentication, without redirecting its auth filesystem or extracting tokens.
+The remaining ambient defaults are explicitly closed:</p>
+<ul>
+<li>host git operations and file-change tracking: off;</li>
+<li>embedding retrieval: skipped; any embedding cache: in-memory, not persistent;</li>
+<li>session memory, session store, infinite sessions and session telemetry: off;</li>
+<li>experimental mode, remote session export/steering and MCP Apps: off;</li>
+<li>custom-instruction discovery, skills, file hooks and coauthor/scheduler
+features: off; custom agents limited locally, with no agents supplied;</li>
+<li>the coding-agent system prompt is <strong>replaced</strong>, not appended to; its
+<code>environment_context</code>, working-directory, git, directory-listing and runtime
+instruction sections are not implicitly carried into the model;</li>
+<li>after SDK default application, an additional mandatory options update sets
+<code>installedPlugins=[]</code> and repeats the instruction/agent/coauthor/scheduler
+restrictions <strong>before the session is returned to any caller</strong>. Failure closes
+the session rather than continuing with permissive defaults.</li>
+</ul>
+<p>This is the explicit-closure alternative to SDK Empty mode. Empty mode changes
+<code>COPILOT_HOME</code>/keytar behavior and requires a dedicated filesystem arrangement;
+changing modes without supplying a compatible auth path would break existing
+CLI sign-ins. Tests execute the installed <strong>1.0.11</strong> defaulting methods and
+capture its actual post-default JSON-RPC payloads, not just our input POCO.</p>
+<p>The SDK's <strong>implicit <code>github-mcp-server</code> is explicitly disabled</strong>, including on
+connection-test and advisory sessions. This is important: SDK 1.0.11
+defaults to Copilot CLI behavior, which is not the same as this application's
+consent. Only the separately named <code>github-review-context</code> profile can provide
+the shipped GitHub tools. Disabling the implicit server does not bypass or
+disable authentication/elicitation on selected servers.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Optional MCP review context table 1"><table>
+<thead>
+<tr>
+<th scope="col">Profile ID</th>
+<th scope="col">Transport / destination</th>
+<th scope="col">SDK tool allowlist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>microsoft-learn</code></td>
+<td>HTTP, <code>https://learn.microsoft.com/api/mcp</code></td>
+<td><code>microsoft_docs_search</code>, <code>microsoft_docs_fetch</code>, <code>microsoft_code_sample_search</code></td>
+</tr>
+<tr>
+<td><code>azure</code></td>
+<td>Local stdio via the pinned command below</td>
+<td><code>group_list</code>, <code>subscription_list</code></td>
+</tr>
+<tr>
+<td><code>github-review-context</code></td>
+<td>HTTP, <code>https://api.githubcopilot.com/mcp/readonly</code></td>
+<td><code>get_file_contents</code>, <code>issue_read</code>, <code>pull_request_read</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Microsoft Learn:</strong> no credential is required. Query terms go to Microsoft
+Learn; documentation returned to the assistant can ground recommendations.
+Query text can still reveal model details. It does not inspect your deployment.</p>
+<p><strong>Azure metadata:</strong> the exact server arguments are:</p>
+<pre tabindex="0" aria-label="text code example"><code>npx -y @azure/mcp@2.0.5 server start --read-only --tool group_list --tool subscription_list
+</code></pre>
+<p>This can download a package from npm and start a local process. It requires
+Node.js/npx and a usable Azure Identity sign-in (for example <code>az login</code>).
+Authentication and elicitation are <strong>not disabled</strong>. Server filtering and the
+SDK allowlist both limit the tools. Subscription/resource-group names, IDs, tags
+and other returned metadata may be sensitive.</p>
+<p><strong>Managed package policy still applies.</strong> If Windows Security reports
+&quot;This content is blocked by your IT admin&quot; / <code>[TE] NPM URL Block</code>, stop the
+affected bootstrap and request IT approval. That notification is policy
+evidence; it does not identify a blocked URL unless the notification or
+administrator provides one. Do not disable security controls, switch
+registries/mirrors/CDNs, copy unapproved packages, or remove tool/authentication
+restrictions to evade it. The application does not attempt an alternate
+download. A missing PAT for a <strong>disabled GitHub profile</strong> is not an explanation
+for Azure's local npm bootstrap failure.</p>
+<p>The upstream <strong>2.0.5</strong> server-start tests verify these unprefixed names.
+<code>@latest</code> pointed to <strong>3.0.0-beta.43</strong> at verification time; it is deliberately
+not used. <code>azmcp_</code>-prefixed examples are not the pinned-version contract.
+<code>group_resource_list</code> and <code>storage_account_get</code> are <strong>not enabled</strong>: their
+pinned-version behavior was not independently validated for this implementation.
+No secret retrieval, data-plane content, CLI extension, namespace proxy, or
+broad resource-configuration tool is included. Direct deterministic Azure
+discovery remains a separate feature.</p>
+<p><strong>GitHub review context:</strong> the server map includes exactly these non-secret
+headers, in addition to a late-bound Authorization header:</p>
+<pre tabindex="0" aria-label="text code example"><code>X-MCP-Readonly: true
+X-MCP-Tools: get_file_contents,issue_read,pull_request_read
+</code></pre>
+<p>The Authorization value is resolved from the DPAPI-protected named secret
+<code>github-review-context-pat</code>. It is never a descriptor literal or a command-line
+argument. The read-only endpoint, headers and SDK tool selection are enforced
+together; changing the endpoint does not leave a misleading “read-only” badge.
+Custom descriptors cannot reference that reserved GitHub secret name to forward
+the PAT to a different service.</p>
+<p>The selected tools may return file contents, issue bodies/comments, PR
+descriptions/diffs/reviews and other repository information. A useful app
+assistant question identifies an <strong>authorised repository and specific file,
+issue, or PR</strong> and asks what that evidence supports or leaves unverified.
+For example, using synthetic/public examples only: “Compare the authentication
+assumptions in this finding with the design file I identified; cite the file
+revision and distinguish design intent from deployment evidence.”</p>
+<h2 id="github-credential-setup-in-the-app" tabindex="-1">GitHub credential setup in the app</h2>
+<ol>
+<li>Open <strong>Assistant data sources (MCP)</strong> from the app's Help menu.</li>
+<li>Read the GitHub card's destination, tool list and disclosure.</li>
+<li>In GitHub's <strong>Settings → Developer settings</strong>, create a <strong>separate
+fine-grained PAT</strong>. Select only the repositories needed for this review.
+Grant <strong>Contents: read</strong>, <strong>Issues: read</strong>, <strong>Pull requests: read</strong>, and
+GitHub's required <strong>Metadata: read</strong>. Choose a short expiry and obtain any
+organisation approval required by GitHub.</li>
+<li>Choose <strong>Set / replace PAT…</strong> and paste that PAT into the password field.
+The field clears before asynchronous storage, on errors and on close.
+There is no password data binding or retained token property.</li>
+<li>Saving does <strong>not</strong> enable GitHub. Review the disclosure, enable that source,
+then enable the master switch.</li>
+<li>Optionally choose <strong>Test only this source</strong> on the GitHub card. It initializes
+GitHub and lists its allowed tools, without starting other configured
+sources. It sends no threat-model content and invokes no resource tools.
+The initialization itself can contact services. The probe runtime closes
+before its result is reported.</li>
+</ol>
+<p>The application <strong>never extracts <code>gh</code> credentials</strong>, acquires a GitHub PAT
+automatically, or reuses the Copilot device-flow token as an MCP credential.
+Copilot seat authentication and the GitHub MCP PAT are different concerns.</p>
+<p>“Ready locally” means the descriptor, PAT shape and local DPAPI decryption
+passed. It is <strong>not</strong> a remote validation of repository selection, permissions,
+expiry, subscription entitlement or organisation approval. Even successful
+tool listing does not prove access to a particular private repository.</p>
+<p><strong>Forget credential</strong> deletes the stored value, disables every dependent
+profile and tears down the manager's connection-test runtime. Replacing the PAT
+also disables dependents so a potentially different scope requires a new enable
+decision. Revoke the PAT in GitHub when it is no longer needed; forgetting a
+local copy is not remote revocation.</p>
+<h2 id="one-server-or-multiple-servers" tabindex="-1">One server or multiple servers</h2>
+<p><strong>Connection scope is per MCP server, not per tool.</strong> A server exposes the
+explicit allowed tools listed on its card. One Copilot SDK diagnostic session
+can attach one or several selected servers; it does not create a separate
+connection option for each tool name.</p>
+<p>The app has three explicit probe actions:</p>
+<ul>
+<li><strong>Test only this source</strong> on a card tests that server alone.</li>
+<li><strong>Include in selected test</strong> marks a transient selection; <strong>Test selected</strong>
+tests exactly those marked servers.</li>
+<li><strong>Test all enabled</strong> tests every currently enabled source, including
+Azure/npx if Azure is enabled.</li>
+</ul>
+<p>Probe selection is <strong>not consent</strong>. The master and every requested source
+must already be enabled, with readable required credentials and no pending
+re-consent notice. The whole selection is checked before a runtime or seat
+auth source is accessed. Unknown IDs, individual tool names used as IDs,
+duplicates, an empty explicit selection, disabled/unconsented sources or
+missing credentials reject the whole probe; valid sources in that rejected
+selection are not started as a fallback. Testing never flips saved switches.</p>
+<p>Selecting only Learn, only GitHub, or Learn plus GitHub does <strong>not</strong> bootstrap
+Azure/npx, even when Azure is also saved enabled. This is useful when IT has
+blocked npm; it does not remove that restriction or authorize a workaround.
+The saved source checkboxes remain the selection for <strong>subsequent AI requests</strong>.
+Probing Learn alone does not silently narrow or broaden that AI selection:
+explicitly disable other sources if future AI requests must use Learn only.
+An already-running AI request is a separate session, not this probe's runtime.</p>
+<p>Results distinguish <strong>saved configuration</strong>, <strong>completed probe evidence</strong> and
+<strong>live AI-session connectivity</strong>. A probe initializes/lists only, performs
+bounded cleanup, and reports historical transport/tool/schema results as
+&quot;Probe passed/failed (closed)&quot;. Its runtime is no longer counted as connected.
+If cleanup cannot be confirmed, that failure remains explicit and the probe
+does not succeed. Cancellation during cleanup is also reported as cancellation,
+even if tool metadata had already been discovered successfully. The settings
+dialog retains only the latest in-memory
+probe until settings change/reload; CLI <code>show</code>/<code>status</code> in another invocation
+do not invent or persist that history. Neither surface claims to observe a
+live AI-session connection from a completed probe.</p>
+<h2 id="cli-setup-and-use" tabindex="-1">CLI setup and use</h2>
+<p>Use the executable name appropriate to your source build/CLI package.</p>
+<pre tabindex="0" aria-label="powershell code example"><code>ThreatModelReviewer.Cli mcp list
+ThreatModelReviewer.Cli mcp show github-review-context
+
+# Hidden interactive input; the PAT is not part of the command line/history.
+ThreatModelReviewer.Cli mcp credential github-review-context
+
+ThreatModelReviewer.Cli mcp enable github-review-context --consent
+ThreatModelReviewer.Cli mcp on --consent
+ThreatModelReviewer.Cli mcp status
+
+# One consented server; does not initialize Azure or Learn.
+ThreatModelReviewer.Cli mcp test github-review-context
+
+# Explicit selection, only if each source has separately been enabled.
+ThreatModelReviewer.Cli mcp test microsoft-learn github-review-context
+
+# Backward-compatible: all currently enabled servers, including Azure if enabled.
+ThreatModelReviewer.Cli mcp test
+
+# Advisory AI only; the deterministic verdict/score is still computed locally.
+ThreatModelReviewer.Cli samples/customer-portal.tm7 --explain --mcp
+ThreatModelReviewer.Cli fix samples/customer-portal.tm7 --ai --mcp --out draft.tm7
+
+ThreatModelReviewer.Cli mcp disable github-review-context
+ThreatModelReviewer.Cli mcp forget-credential github-review-context
+ThreatModelReviewer.Cli mcp off
+</code></pre>
+<p><code>fix --ai --mcp</code> drafts <strong>threat-model notes</strong>, not application code, issue
+writes, pull-request changes, or deployed mitigations. Review drafts before use.
+The existing advisory fallback remains available if Copilot cannot answer.</p>
+<p>For automation, arrange for your secret manager to inject a <strong>dedicated</strong>
+environment variable into the process, then pass <strong>its name</strong>, not its value:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>ThreatModelReviewer.Cli mcp credential github-review-context --env TMR_REVIEW_PAT
+# Remove the variable from your shell when provisioning is complete.
+Remove-Item Env:TMR_REVIEW_PAT -ErrorAction SilentlyContinue
+</code></pre>
+<p>There is no <code>--token</code> option, positional token value, redirected-stdin token
+mode, or ambient token discovery. Common <code>GH_TOKEN</code>, <code>GITHUB_TOKEN</code>,
+<code>COPILOT_GITHUB_TOKEN</code> and related seat-token variable names are refused.
+Do not put a PAT into shell history, URLs, descriptors, scripts, screenshots,
+logs or command-line arguments. Environment variables are not encrypted;
+restrict who can inspect the provisioning process.</p>
+<p><code>mcp list</code> / <code>status</code> report <strong>configured settings and local readiness</strong>, not a
+fabricated live connection. They never initialize a service, even if settings
+enable it. <code>mcp help</code> describes every action:</p>
+<ul>
+<li><code>show &lt;id&gt;</code>: disclose destination/scope/tools.</li>
+<li><code>on --consent</code> / <code>off</code>: master gate.</li>
+<li><code>enable &lt;id&gt; --consent</code> / <code>disable &lt;id&gt;</code>: per-profile gate; enable requires
+local credential readiness.</li>
+<li><code>credential github-review-context [--env NAME]</code> / <code>forget-credential ...</code>.</li>
+<li><code>reset &lt;id&gt;</code> / <code>remove &lt;id&gt;</code>: reset a built-in disabled, or remove a custom
+profile. This does not silently delete a PAT; use forget for that.</li>
+<li><code>import &lt;descriptor.json&gt; --consent</code>: validate and save a custom definition
+<strong>disabled</strong>, regardless of its JSON <code>Enabled</code> value. Custom profiles must
+currently be <strong>credential-free</strong>. <code>HeaderSecretRefs</code> and
+<code>EnvironmentSecretRefs</code> are rejected with a precise message until a complete
+generic app/CLI setup-and-forget lifecycle exists. Do not inline a token as a
+workaround. The dedicated GitHub credential remains bound to its endpoint.</li>
+<li><code>test &lt;server-id&gt;</code>: initialize/list only that already-enabled source, then close.</li>
+<li><code>test &lt;server-id&gt; &lt;server-id&gt; ...</code>: initialize/list exactly the selected
+already-enabled sources, then close.</li>
+<li><code>test</code>: unchanged all-enabled scope, then close. No wildcard or tool-name
+selection expands the approved per-server tool allowlists.</li>
+</ul>
+<p>MCP command exit codes are <strong>0</strong> for success and <strong>1</strong> for bad usage,
+configuration/readiness/input failure, or an unsuccessful connection test.
+<code>list</code>/<code>status</code> return 1 when configuration load/migration warnings need
+attention. A default disabled GitHub profile needing its first credential is
+normal, not a failing command. <code>test</code> with no effective sources returns 1
+without starting anything. <strong>2</strong> remains the deterministic review's gating
+exit code; MCP never changes it.</p>
+<h2 id="storage-upgrades-and-long-running-application-instances" tabindex="-1">Storage, upgrades and long-running application instances</h2>
+<p>Settings live in <code>%LOCALAPPDATA%\ThreatModelReviewer\mcp-servers.json</code>.
+Named secret values are encrypted with <strong>Windows DPAPI, CurrentUser</strong>, through
+the existing secret-storage mechanism. MCP refuses plaintext, arbitrary
+base64, and the historical non-Windows <code>plain:</code> fallback. Credential storage is
+Windows-only; there is no false claim of encrypted cross-platform storage.
+Ordinary file permissions still matter.</p>
+<p>For isolated tests or an intentionally separate local profile, the optional
+<code>THREATMODELREVIEWER_MCP_ROOT</code> environment variable overrides the settings
+directory. Explicit constructor roots take precedence. Never point it at an
+untrusted shared directory. Automated tests use disposable roots and synthetic
+credentials, not the real user's configuration.</p>
+<p>Configuration schema <strong>2</strong> applies these conservative rules:</p>
+<ul>
+<li>Saved legacy or modified built-ins—including a user-customized narrower
+variant—are reset to the current vetted definition <strong>while disabled</strong>.
+The old customization is not treated as consent to the replacement.
+Persistent <code>ReviewRequired</code> notices explain the reset until explicit
+review/enable or replacement. Reading settings alone never rewrites the file.</li>
+<li>Reserved built-in IDs are checked again at the SDK-map boundary regardless
+of a hand-edited <code>IsBuiltIn</code> flag. Only their <code>Enabled</code> setting is mutable.
+The SDK's implicit <code>github-mcp-server</code> name cannot be used for a custom
+profile; use a credential-free custom ID or the supported GitHub profile.</li>
+<li>Custom credential-free profiles with valid explicit allowlists keep their configuration.
+Legacy custom profiles without an allowlist, empty/wildcard lists, invalid
+transport fields or inline credential settings are rejected, with a notice;
+they are not silently assigned a guessed subset. Re-import a reviewed
+definition under a custom ID. Custom tools may read sensitive data or write;
+the app/CLI do not certify them as read-only.</li>
+<li>Custom profiles containing secret references are rejected on import, load
+and SDK-map validation, even if a referenced encrypted value happens to
+exist. Previously stored unsupported credentials are not forwarded to any
+server. This conservative restriction replaces the earlier incomplete
+custom-credential setup story.</li>
+<li>Unknown schema versions and corrupt files fail closed. Missing/unreadable
+credentials disable dependent saved profiles. Invalid ciphertext is not
+treated as a usable credential.</li>
+</ul>
+<p>An unrelated settings save preserves re-consent notices. Saving uses atomic
+file replacement, avoiding a partially written configuration at session
+creation. Do not hand-edit a file while another process is saving settings.</p>
+<p>The app already supplies its manager's <code>BuildSessionServerMap</code> callback to the
+Copilot provider. <strong>Every new AI request reads the current file again</strong>, not a
+cached map, so CLI changes, file deletion, changed endpoints or credential
+removal affect subsequent work in an already-running app. The provider reuses
+its Copilot <strong>client</strong>, but creates and disposes an SDK <strong>session per request</strong>;
+it never resumes a session with stale MCP permissions. Connection-test runtimes
+are stopped on manager changes, reload and disposal.</p>
+<p>Connection tests read a <strong>current Copilot seat callback</strong> supplied by the app,
+snapshot it once per attempt, and invalidate the discovery cache when it
+changes. The same snapshot reaches the real SDK client options. A null
+snapshot retains intentional logged-in CLI auth. This callback never reads the
+GitHub MCP PAT, and no token is copied into a process-wide environment variable.
+The app integration below must supply the token used by its successful provider
+probe; the AI/MCP assembly never harvests device-flow or <code>gh</code> credentials.</p>
+<p>That separation is <strong>not environment isolation</strong>. SDK-hosted stdio children
+normally inherit their host's environment. The stdio configuration overlay
+therefore clears these known credential keys, without reading their values:
+<code>COPILOT_GITHUB_TOKEN</code>, <code>GITHUB_COPILOT_TOKEN</code>, <code>COPILOT_TOKEN</code>, <code>GH_TOKEN</code>,
+<code>GITHUB_TOKEN</code>, <code>GH_ENTERPRISE_TOKEN</code>, <code>GITHUB_ENTERPRISE_TOKEN</code>,
+<code>OPENAI_API_KEY</code>, <code>AZURE_OPENAI_API_KEY</code>, and <code>ANTHROPIC_API_KEY</code>.
+It does not clear the intentionally used Azure identity chain or arbitrary
+unrecognized variables, and cannot prevent a same-user process from reading
+local files/identity stores. <strong>Local MCP servers are not sandboxed.</strong> Review
+their trust boundary and remove unrelated sensitive environment values before
+launching the app/CLI; do not infer universal secret isolation from the masks.
+Synthetic child-process tests verify inheritance and the transmitted overlay,
+not every third-party/native runtime's environment-merging implementation.</p>
+<p>The obsolete standalone account/quota probe has been retired: no shipping
+app or CLI path invoked it. Its test-only wiring assertions were removed,
+not replaced by a fake call or orphan-guard exemption. Existing sign-in,
+model selection, authenticated MCP connection testing and bounded shutdown
+continue through the provider/manager/runtime path. This does not promise a
+new account/quota dashboard. The unused public <code>CopilotAccountProbe.ProbeAsync</code>
+API is removed; callers outside the shipping app/CLI must not depend on it.</p>
+<p>Connection readiness comes from the SDK server <strong>Status</strong>, not the absence of
+an error string. Pending/unreported servers are polled up to the bounded
+connection deadline (90 seconds by default). <code>ListToolsAsync</code> is called only
+after <strong>Connected</strong>. Needs-auth, stopped, disabled, failed and unsupported
+statuses are terminal for that attempt. Timeout, cancellation, missing tools
+and authentication-required classifications survive into app/CLI status with
+locally authored messages; remote error text is never shown.</p>
+<p>Each failure identifies the <strong>source ID and last observed stage</strong>: local
+configuration/credential readiness, shared Copilot runtime startup, shared
+session creation, local stdio/bootstrap or hosted HTTP initialization,
+source authentication, tool/schema discovery, or owned shutdown. If a runtime
+does not report a stage, the UI says so rather than guessing. Azure bootstrap
+guidance points to Node.js/npx and organisation package approval; GitHub
+authentication guidance points only to its separate scoped PAT. Raw server
+text, even text resembling a security notification, is not trusted as policy
+evidence or copied into diagnostics.</p>
+<p>The manager and production runtime now share the <strong>same work-deadline token</strong>.
+At the unchanged 90-second default, further discovery work is cancelled.
+The deadline-aware runtime gets at most the existing graceful interval
+(2 seconds by default) to return already-completed per-source results;
+this is cancellation reporting, <strong>not extra tool-execution time</strong>.
+Previously, a racing outer timeout could discard ready Learn/GitHub results
+while Azure was still pending/unreported. Such results now remain distinct,
+and late tool-list completion cannot be promoted to ready after cancellation.
+An uncooperative custom runtime does not receive that reporting privilege.
+Failure to return a bounded report triggers the existing bounded teardown.
+Caller cancellation and final shutdown still revoke the whole attempt.</p>
+<p>This isolation depends on the SDK having created a session and reported
+individual source states. A shared startup/session failure cannot establish
+per-source readiness, and the app does not claim otherwise. Use a single or
+explicitly selected hosted-source probe to omit Azure bootstrap without
+changing saved consent. Disable Azure explicitly if future AI requests must
+also omit it. Do not automatically enable GitHub, acquire a PAT, or change
+any other source's consent to compensate for a failing source.</p>
+<p><strong>Configured, connected and tool-ready are separate states.</strong> <code>mcp show &lt;id&gt;</code>
+and the app card show the configured tool names and curated capabilities
+without connecting. After a single/selected/all-enabled probe, each allowed
+name is reported as missing, discovered-but-unavailable, missing/invalid
+schema, or available in the SDK's effective metadata with a valid object
+input schema. The SDK metadata uses <code>input_schema</code>; a transport connection
+or a server's <code>tools/list</code> response alone is not readiness evidence.
+Cross-profile, duplicate, blank, deferred or unrecognized runtime names do
+not establish availability. Partial failures remain explicit and CLI testing
+returns 1. No resource tool is invoked by connection testing.
+The metadata belongs to the completed probe, not to an indefinitely connected
+server. The existing lower-level <code>RefreshAsync</code> diagnostic-runtime API retains
+its compatibility behavior; App/CLI test actions use the scoped, auto-closing
+<code>TestConnectionsAsync</code> path and do not reuse its live discovery cache.</p>
+<p>The app and CLI share the same tool presentation and restricted maps.
+<code>OpenAI-compatible</code> and <code>Offline</code> providers <strong>do not attach MCP profiles</strong>,
+even if the settings are enabled. CLI MCP-enabled AI remains limited to
+review <code>--explain --mcp</code> and <code>fix --ai --mcp</code>; deterministic <code>ask</code> does not
+become another MCP/AI engine. Connection testing itself uses the Copilot SDK.</p>
+<p>Graceful SDK teardown has a <strong>2-second</strong> default deadline, followed by a
+separate <strong>2-second</strong> force-stop deadline on failure <strong>or a hang</strong>. The manager
+also bounds misbehaving <code>IMcpRuntime</code> implementations with an outer watchdog
+(the runtime's two phases plus 100 ms, then its own force-stop deadline).
+Only the owned client's process tree is targeted by the SDK force-stop API.
+If even force-stop fails or hangs, termination is reported <strong>unconfirmed</strong> and
+that manager blocks further MCP connections. CLI <code>mcp test</code> returns 1 for this
+condition instead of claiming clean success.</p>
+<p>Deadline-critical shutdown dispatch and supervision do not use the shared
+ThreadPool. Each phase invokes the SDK on an independent background thread;
+an independent supervisor enforces the existing deadlines even if the SDK
+blocks synchronously before returning a task. Window-owned provider shutdown
+also bypasses the default pool. Otherwise pool contention can leave both the
+graceful and force-stop callbacks queued, with neither one invoked. A callback
+that has not started when its deadline expires is not subsequently admitted
+as stale graceful work. SDK-internal asynchronous work can still time out;
+that remains <strong>unconfirmed</strong>, never a success-shaped fallback.
+Phase success is measured using a monotonic timestamp at callback completion,
+not the time an overloaded scheduler next runs the supervisor. A late observer
+must not falsely report a timely, completed force-stop as unconfirmed.</p>
+<p>Shutdown cancels admission and in-flight waits, joins an already-running
+settings teardown, and clears connected/tool status without rewriting saved
+consent. Late SDK start/session results are never published and have cleanup
+continuations attached. Managed semaphore/CTS objects are deliberately not
+disposed while cancelled waiters can still release/register against them; no
+WaitHandle is used. Registered AI providers (including not-yet-published
+sign-in probes) share the window manager's <strong>final</strong> lifetime. An ordinary
+provider reconnect disposes only its provider, not the manager.</p>
+<p>This is not retroactive erasure. In-flight work may already have used a tool,
+and returned context may already exist in the conversation/provider. Cancel
+active work and revoke the PAT if immediate credential invalidation is needed.
+The application cannot recall data already sent to a provider.</p>
+<p>The scheduling safeguards remove shared-pool
+dependencies from deadline-critical cleanup and uses callback-completion
+timestamps rather than delayed observer timing. Production's finite shutdown
+deadlines and exact SDK opt-outs are unchanged. Its wire-test fixture uses
+separate finite setup/create budgets and context-independent I/O; those are
+test-harness changes, not new end-user AI request timeouts.</p>
+<h2 id="troubleshooting-and-validation-limits" tabindex="-1">Troubleshooting and validation limits</h2>
+<p>Earlier synthetic stress runs encountered intermittent cold-start permission
+timeouts. The final candidate passed the full local and hosted suites with the
+original transaction deadlines; the historical observations are not erased or
+claimed to have one conclusively identified cause. Check system load and provider
+availability before retrying. A timeout is a failure, not connection evidence.</p>
+<ul>
+<li><strong>GitHub credential missing/unreadable:</strong> set a new separately scoped fine-grained
+PAT, review consent and enable again. DPAPI blobs are not portable to another
+Windows user. This is not an Azure bootstrap remedy.</li>
+<li><strong>Azure initialization failed:</strong> check Node.js/npx, access to the pinned npm
+package and organisation policy. An unreported server or timeout alone does
+<strong>not</strong> prove a policy block. If Windows Security or IT explicitly reports
+one, stop and obtain approval; do not retry through another download source
+or alter managed security controls. Azure Identity sign-in is a separate
+authentication stage. Do not &quot;fix&quot; either stage by selecting <code>@latest</code>,
+removing tool filters, or disabling authentication/elicitation.</li>
+<li><strong>GitHub tools list but a repository cannot be read:</strong> review the PAT's
+selected repositories, read permissions, expiry and approval. Tool listing
+does not test a resource operation.</li>
+<li><strong>Configuration changed during a running app:</strong> reopening settings reloads
+local status; the next Copilot request independently reloads its authority.</li>
+<li>Remote exception bodies, HTTP errors and tool descriptions are withheld from
+status/diagnostics because they can echo Authorization or private content.
+Status retains only configured allowed tool names. AI failures are sanitized
+without an original inner exception; transient retry classification remains.</li>
+<li>Runtime logging, session telemetry, cross-session store and infinite-session
+features are explicitly off. This does not erase information already sent
+to a provider, change that provider's terms, or certify the native runtime's
+filesystem behavior without a native-runtime test.</li>
+<li>The password UI/CLI buffer is cleared, but managed strings required for DPAPI
+and the SDK cannot be guaranteed zeroed in process memory. Nothing promises
+protection against an attacker already controlling the same Windows user.</li>
+</ul>
+<p><strong>An IT-approved preinstalled server is administrator-provided configuration,
+not an automatic workaround.</strong> An administrator may supply a reviewed,
+credential-free stdio descriptor under a <strong>custom ID</strong>, using an approved
+already-installed entrypoint and verified artifact. Existing <code>mcp import &lt;descriptor.json&gt; --consent</code> accepts that kind of descriptor but saves it
+disabled. Inspect the actual ID with <code>mcp list</code> / <code>mcp show</code>, confirm its
+explicit metadata-only tools and version-appropriate read-only arguments,
+and obtain separate enable consent. The app neither invents an executable
+path nor downloads/copies an alternative package, and the reserved <code>azure</code>
+profile remains unchanged. Custom profiles are not certified read-only by
+the app; IT must approve both the artifact and its execution under local
+policy. A credential-bearing custom descriptor is still rejected. Managed
+npm approval remains an IT blocker, not something these code changes lift.</p>
+<p>The focused tests use synthetic runtime states and the <strong>real SDK 1.0.11
+assembly</strong>, including its post-default application methods and a loopback
+JSON-RPC sink capturing actual serialized session creation/options updates.
+That sink does not run a Copilot executable, model or resource tool. Coverage
+includes every provider path, file/credential removal while a session exists,
+CLI parsing/exit codes, offline review, auth-source rotation, pending-to-connected
+polling, ignored cancellation, hanging session/client/manager disposal,
+force-stop hangs, late results and final shutdown after connection testing.
+Scheduling regressions deliberately withhold the fixture creator's
+synchronization context and, in an exclusive test collection, temporarily
+make only the test process's ThreadPool unavailable. Before the scheduling
+fix, SDK startup depended on dispatching that creator context, and direct
+provider/window-owner shutdown invoked neither graceful nor force-stop
+callbacks during the bounded pool hold. The same regressions now require
+progress without releasing those scheduling constraints, including
+synchronous callback hangs. Deadline-order lifecycle fixtures share that
+exclusive collection with the process-global scheduling fixtures: their
+40 ms/100 ms synthetic budgets must not race unrelated corpus/serializer
+tests. The assertions and timeout values are unchanged. Configuration,
+policy, CLI and SDK-wire tests remain parallel with exact wire/plugin
+assertions. Restoration of the original process ThreadPool limits is also
+checked when a contention observation throws. The loopback transport's I/O continuations explicitly
+avoid capturing test/UI synchronization contexts.
+SDK fixture arrangement/startup and the session-create/post-default-options
+transaction each retain their own finite <strong>10-second</strong> I/O deadline. They do
+not share a nearly exhausted cancellation token: under group contention that
+cancelled the exact-options test during session creation. The original
+opt-out/plugin assertions and the existing provider hang test are unchanged.</p>
+<p>A separate integrated-suite failure exposed an invalid fixture-state
+assumption: the whole-connection deadline can expire during SDK startup,
+before any session exists. The readiness test must not dereference a
+null-forgiven <code>LastSession</code> after merely observing a timeout. Pending and
+unreported polling coverage now establishes a synthetic session and observes
+its first poll before arming the unchanged real <strong>80 ms</strong> readiness deadline.
+A separate real <strong>80 ms</strong> whole-connection regression deliberately stalls
+startup and requires <code>TimedOut</code>, no session, no tools and no session creation
+after the late startup completes. Production connection/shutdown bounds are
+unchanged; this is state-based fixture separation, not timeout inflation or
+removal of the no-tool assertions.
+That startup test uses production cleanup bounds independently of its
+unchanged 80 ms work deadline; an unrelated 40 ms cold-thread teardown budget
+must not mask the startup result. Explicit hang/force tests retain their
+short deadline assertions and unconfirmed-failure behavior.</p>
+<p>Additional source-isolation regressions force the manager's deadline to
+win while two hosted sources have already listed their tools. They require
+both hosted results to remain ready, Azure to remain explicitly failed,
+and shutdown to clear all live state. An actual-SDK loopback fixture also
+reports Azure pending/unreported before a terminal bootstrap failure,
+checks all six hosted tool names/schemas independently, and verifies App/CLI
+source/stage guidance without interpreting a synthetic remote &quot;NPM URL Block&quot;
+string as policy evidence. Eight distinct synthetic tool operations are
+permission-checked through the SDK protocol; unknown/write/cross-profile
+requests never reach the synthetic tool handler. None of those fixtures
+authenticates to GitHub/Azure or invokes production resource operations.
+Scoped-probe regressions additionally cover one/several/all enabled servers,
+whole-selection refusal before startup, immutable queued selections, unchanged
+saved AI consent, and closed-probe versus live-status separation. Actual SDK
+session maps and off-screen WPF control actions verify that a hosted-only
+selection never includes Azure. No user window, npm bootstrap, real credentials
+or inference is used by these checks.
+The owned off-screen fixture windows carry an <strong>ISOLATED OFFLINE VERIFICATION</strong>
+title and use <code>ShowActivated=false</code> / <code>ShowInTaskbar=false</code>; they are never
+shown and close only their own synthetic test instances. Production window
+titles and the user's normal app/profile are not changed. These are WPF
+component/routed-click and programmatic checkbox checks, <strong>not</strong> native UIA,
+physical keyboard, mouse, foreground focus or screen-reader acceptance.
+They do not establish whether a normal signed-in app can list Copilot models.</p>
+<p>A later eight-tool regression reproduced a first-permission response stall
+in the headless SDK fixture, not a resource operation: the notification was
+written and the policy callback was observed, but no matching permission RPC
+response reached the fixture before the unchanged 20-second transaction
+deadline. That observation alone does not establish a production SDK defect
+or prove that scheduler contention was the sole cause.</p>
+<p>The investigation did prove a separate fixture transaction-boundary error:
+it reported completion on receipt of the SDK's permission decision, before
+writing the RPC acknowledgement. Completion now follows acknowledgement
+flush and writer release, so the next transaction cannot inherit that
+unfinished fixture write. A condition-based regression checks this ordering.
+The discovery timer is disposed at the end of discovery; every tool still
+has its original finite 20-second budget, all eight tool/schema assertions
+and all six denied-request assertions remain, and fourteen actual policy
+callbacks are required. If another deadline fails, test diagnostics retain
+only phase timings, callback/RPC counts, reader state and SDK exception
+<strong>types</strong>/numeric event IDs, never log payloads, formatted state, exception
+messages, credentials or content. Peer reader termination closes its owned
+socket rather than stranding SDK cleanup. These are test-fixture changes,
+not increased production connection/teardown limits or authenticated-service
+compatibility claims; the original stall still needs correlated combined-run
+diagnostics if it recurs.</p>
+<p>The final parent TRX confirms that its only MCP failure was this permission
+case; it does not include callback/transport phase data. Additional headless
+coverage runs four independent real-SDK clients concurrently and retains
+the original eight-tool case. Three consecutive 28-test SDK/policy batches
+passed without deadline changes. This is bounded reproduction evidence,
+not proof that the earlier intermittent stall is eliminated. Test-only
+diagnostics now also report the pinned SDK's write-slot/pending-request
+counts and stream type names; they never inspect stream contents or pending
+request payloads. SDK notification-dispatch exceptions logged at Debug are
+captured as type/numeric-ID only, with a regression forbidding formatting
+their state or messages. No production logging or model inventory is changed.</p>
+<p>The reported combined-suite failures had no exception detail in the original
+quiet output; the supplied two-test TRX recorded only a passing rerun.
+Controlled before/after failures establish the scheduling defects above.
+A later MCP-group run also reproduced the original wire test as a
+<code>TaskCanceledException</code> in SDK session creation, exposing the shared-budget
+problem. This is not a recovered stack trace for the parent's original
+quiet run. Coordinator combined-suite validation is still required after
+integrating this fix.</p>
+<p>They do not query private repositories or Azure. No live credentialed access
+or permission validation is claimed. The SDK's pinned Copilot CLI is <strong>1.0.79</strong>;
+current validation registers the coordinator's verified executable through
+the supported <strong><code>CopilotCliBinaryPath</code></strong> MSBuild property. Skipping the runtime
+download or using stale output is not packaged-runtime compatibility evidence.
+The integration review initially identified a missing Debug runtime and a
+stale Release copy of CLI <strong>1.0.64</strong>; neither was used as compatibility
+evidence. The coordinator subsequently supplied the verified executable,
+registered through <code>CopilotCliBinaryPath</code> with TLS validation retained.</p>
+<p>A bounded native probe using SDK <strong>1.0.11</strong> and a fresh, credential-free
+profile verified local stdio startup, ping, runtime status, session creation,
+metadata readback, explicit options-update acceptance, synthetic local MCP
+initialization/tool listing, and graceful owned shutdown. Runtime status
+reported <strong>1.0.79 / protocol 3</strong>, matching package/FileVersion/ProductVersion.
+The separately observed <code>--version</code> banner was <strong>1.0.84-5</strong>; it is not equated
+with those other version surfaces.</p>
+<p>The native fixture received only <code>initialize</code>, <code>notifications/initialized</code>
+and <code>tools/list</code>; no resource tools, auth APIs or model-send APIs were invoked.
+The no-inference handler and deny proxy observed zero requests (not an OS
+packet-capture claim). Readback confirmed an isolated working directory,
+<code>selectedModel=null</code> and <code>isRemote=false</code>. Options acceptance is not a full
+effective-options or model-context proof.</p>
+<p>Two cold-profile starts exceeded 12-/25-second deadlines with incomplete
+self-extraction directories. Copying only the completed public package cache
+from an isolated protocol run into another fresh profile allowed all guarded
+local-only stages to pass. That historical auth-free probe used the already
+verified Copilot package; it is <strong>not</strong> a recipe for evading a managed npm
+restriction or permission to copy an unapproved Azure server package.
+Successful-run SDK teardown completed gracefully,
+the owned Job Object was empty, all observed probe PIDs were confirmed absent,
+and disposable profiles/extraction caches were removed. Evidence is retained
+in the session's test artifacts. No shared app source was changed by the probe.
+This verifies the <strong>Empty-mode, auth-free local boundary</strong>, not authenticated
+production-mode behavior, GitHub/Azure access, inference, or final packaging.</p>
+<h2 id="coordinator-app-integration-reference-already-applied" tabindex="-1">Coordinator app integration reference (already applied)</h2>
+<p>The coordinator has applied this wiring to the generation worker's shared files.
+Do not reapply these hunks to an already integrated branch.
+Do <strong>not</strong> replace its other changes, or the coordinator's accessibility
+Label/Name additions in <code>McpCredentialDialog.xaml</code> (the follow-up does not edit
+that XAML file). Preserve the existing <code>BuildSessionServerMap()</code> callback.</p>
+<h3 id="a-current-seat-injection-and-window-owned-provider-registration" tabindex="-1">A. Current seat injection and window-owned provider registration</h3>
+<pre tabindex="0" aria-label="diff code example"><code>--- a/ThreatModelReviewer.App/ViewModels/MainViewModel.cs
++++ b/ThreatModelReviewer.App/ViewModels/MainViewModel.cs
+@@
+-    public Ai.Mcp.McpConnectionManager Mcp { get; } = new();
++    private string? _copilotSeatTokenForMcp; // Copilot seat only, never the GitHub MCP PAT.
++    public Ai.Mcp.McpConnectionManager Mcp { get; }
+@@
+     public MainViewModel()
+     {
++        Mcp = new(copilotSeatToken: () =&gt; System.Threading.Volatile.Read(ref _copilotSeatTokenForMcp));
+         SelectedTabIndex = OverviewTabIndex; // Overview is the home/empty state
+@@
+         var provider = new ResilientAiProvider(
+-            new CopilotProvider(githubToken, mcpServers: () =&gt; Mcp.BuildSessionServerMap()));
++            new CopilotProvider(githubToken, mcpServers: () =&gt; Mcp.BuildSessionServerMap(), lifetimeOwner: Mcp));
+@@
+             _ = await provider.ListModelsAsync(cts.Token);
++            if (Mcp.IsDisposed) { await provider.DisposeAsync(); return false; }
++            System.Threading.Volatile.Write(ref _copilotSeatTokenForMcp, githubToken);
+             _sharedAi = provider;
+@@
+     public async Task ShutdownAiAsync()
+     {
++        System.Threading.Volatile.Write(ref _copilotSeatTokenForMcp, null);
+         if (_sharedAi is not null)
+</code></pre>
+<p><code>lifetimeOwner: Mcp</code> is essential: registering <strong>before</strong>
+<code>ListModelsAsync</code> means final shutdown also owns a pending sign-in provider
+that has not yet been assigned to <code>_sharedAi</code>. Registration after final
+disposal is inert and cannot start another client.</p>
+<h3 id="b-final-shutdown-distinct-from-provider-reconnect" tabindex="-1">B. Final shutdown, distinct from provider reconnect</h3>
+<p>Add this method after <code>ShutdownAiAsync</code>; retain <code>ShutdownAiAsync</code> for existing
+reconnect/provider-switch callers. Only final window closing calls the new
+method:</p>
+<pre tabindex="0" aria-label="csharp code example"><code>/// &lt;summary&gt;Final window shutdown; do not use for provider reconnect.&lt;/summary&gt;
+public async Task ShutdownAsync()
+{
+    try { await Mcp.DisposeAsync(); }
+    finally { await ShutdownAiAsync(); }
+}
+</code></pre>
+<pre tabindex="0" aria-label="diff code example"><code>--- a/ThreatModelReviewer.App/MainWindow.xaml.cs
++++ b/ThreatModelReviewer.App/MainWindow.xaml.cs
+@@
+-                if (DataContext is MainViewModel vm) await vm.ShutdownAiAsync();
++                if (DataContext is MainViewModel vm) await vm.ShutdownAsync();
+</code></pre>
+<p>The existing close-cancel/await/re-close behavior should remain. If cleanup is
+unconfirmed, <code>Mcp.ShutdownWarning</code> is a sanitized message suitable for local
+status; do not assert that the native process was terminated.</p>
+<p>The coordinator reports passing integrated MCP/UI-wiring tests covering
+seat injection and final ownership. Retain that coverage when merging later
+changes; final packaged and authenticated runtime validation remains separate.</p>
+<h2 id="researched-follow-up-azure-devops" tabindex="-1">Researched follow-up: Azure DevOps</h2>
+<p>Do <strong>not</strong> add an unusable Azure DevOps checkbox. The remote endpoint pattern
+<code>https://mcp.dev.azure.com/{organization}</code> requires <strong>Microsoft Entra OAuth</strong>.
+The supported custom-app flow/client registration is a follow-up; it cannot be
+replaced by copying a Copilot PAT. No Azure DevOps profile or OAuth promise is
+shipped here.</p>
+<h2 id="primary-sources-verified-2026-09-13" tabindex="-1">Primary sources (verified 2026-09-13)</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/training/support/mcp-developer-reference" rel="noopener noreferrer">Microsoft Learn MCP developer reference</a>:
+HTTP endpoint and the three documentation tools.</li>
+<li><a href="https://learn.microsoft.com/azure/developer/azure-mcp-server/concepts" rel="noopener noreferrer">Azure MCP concepts</a>
+and <a href="https://learn.microsoft.com/azure/developer/azure-mcp-server/tools/" rel="noopener noreferrer">tool documentation</a>:
+authentication, filtering and read-only limitations.</li>
+<li><a href="https://github.com/microsoft/mcp/releases/tag/Azure.Mcp.Server-2.0.5" rel="noopener noreferrer">Azure MCP Server 2.0.5 release</a>.</li>
+<li><a href="https://raw.githubusercontent.com/microsoft/mcp/Azure.Mcp.Server-2.0.5/core/Azure.Mcp.Core/tests/Azure.Mcp.Core.Tests/Areas/Server/ServerStartCommandTests.cs" rel="noopener noreferrer">Pinned 2.0.5 server-start tests</a>
+and <a href="https://raw.githubusercontent.com/microsoft/mcp/Azure.Mcp.Server-2.0.5/core/Microsoft.Mcp.Core/src/Areas/Server/Options/ServiceStartOptions.cs" rel="noopener noreferrer">service-start options</a>:
+exact unprefixed tools and read-only/tool switches.</li>
+<li><a href="https://github.com/github/github-mcp-server/blob/main/README.md" rel="noopener noreferrer">GitHub MCP README</a>
+and <a href="https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md" rel="noopener noreferrer">remote-server documentation</a>:
+<code>/readonly</code>, <code>X-MCP-Readonly</code>, <code>X-MCP-Tools</code>, and PAT authentication.</li>
+<li><a href="https://learn.microsoft.com/azure/devops/mcp-server/remote-mcp-server?view=azure-devops" rel="noopener noreferrer">Azure DevOps remote MCP</a>:
+remote transport and Entra OAuth follow-up.</li>
+<li>Local resolved NuGet package <code>GitHub.Copilot.SDK</code> <strong>1.0.11</strong>, its XML API
+documentation and <code>build/GitHub.Copilot.SDK.targets</code>: actual
+<code>GitHub.Copilot.McpHttpServerConfig</code>, <code>McpStdioServerConfig</code>,
+<code>SessionConfig.McpServers</code>, and the download-skip build property were checked
+against the installed dependency and compiled, not guessed from older Learn
+namespace examples.</li>
+<li>Additional public-only verification against the SDK <strong>v1.0.11</strong> tag:
+<a href="https://github.com/github/copilot-sdk/blob/v1.0.11/dotnet/src/ToolSet.cs" rel="noopener noreferrer">ToolSet source</a>,
+<a href="https://github.com/github/copilot-sdk/blob/v1.0.11/dotnet/test/Unit/ToolSetTests.cs" rel="noopener noreferrer">ToolSet tests</a>,
+<a href="https://github.com/github/copilot-sdk/blob/v1.0.11/dotnet/src/Client.cs" rel="noopener noreferrer">client/session serialization</a>,
+and the <a href="https://github.com/github/copilot-sdk/blob/v1.0.11/nodejs/test/e2e/disabled_mcp_servers.e2e.test.ts" rel="noopener noreferrer">disabled MCP server end-to-end tests</a>
+verify source qualification and the exact implicit <code>github-mcp-server</code> name.
+The latter tests verify that disabling that server prevents initialization
+requests even when GitHub MCP features would otherwise be enabled.</li>
+<li>The same tagged SDK <code>Client.cs</code> supplies <code>ApplyConfigDefaultsForMode</code>,
+<code>GetSystemMessageConfigForMode</code> and the post-create options patch. The
+<a href="https://github.com/github/copilot-sdk/blob/v1.0.11/dotnet/test/Unit/ClientSessionLifetimeTests.cs" rel="noopener noreferrer">SDK client lifetime unit tests</a>
+document the synthetic JSON-RPC handshake and hanging-session teardown seam
+used for assembly/wire validation without a native executable.</li>
+</ul>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

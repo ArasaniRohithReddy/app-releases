@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/FAQ.md (normalized SHA-256 a0c59735bcf2989ee413efab4a77890f0e31803ada5c480825e75de9c83e99db). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/FAQ.md (normalized SHA-256 356bd89cb0abb14118ffeabd93746da922e63954c86efc516202e598692fe622). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="./" aria-current="page">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="./" aria-current="page">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -77,6 +77,12 @@ and follow <a href="../user-guide/#try-the-sample-model">Try the sample model</a
 result is NOT READY, 65/100, with 27 gating findings. No AI call is needed.</p>
 <h3 id="what-file-types-can-it-review" tabindex="-1">What file types can it review?</h3>
 <p>Microsoft Threat Modeling Tool <strong><code>.tm7</code></strong> files, and OWASP <strong>Threat Dragon <code>.json</code></strong>.</p>
+<h3 id="is-this-a-replacement-for-every-microsoft-threat-modeling-tool-feature" tabindex="-1">Is this a replacement for every Microsoft Threat Modeling Tool feature?</h3>
+<p>No. It complements Microsoft TMT with deterministic review, model remediation,
+supported drafting and evidence workflows. It does not claim full template-editor,
+OneDrive-sharing or native-dashboard parity. Diagram artwork can come from a local
+TMT installation or from a built-in fallback; matching an icon does not
+verify the deployed service. See <a href="../microsoft-tmt/">Microsoft TMT compatibility</a>.</p>
 <h3 id="do-i-need-net-installed" tabindex="-1">Do I need .NET installed?</h3>
 <p>No. Every download is <strong>self-contained</strong> — the .NET runtime is bundled.</p>
 <h3 id="do-i-need-github-copilot" tabindex="-1">Do I need GitHub Copilot?</h3>
@@ -112,7 +118,7 @@ Azure discovery and enabled MCP sources have their own network paths. See
 run. Verify the download source, signature and hash before deciding whether to run it,
 and follow your organization's policy. A CA-issued/EV certificate or Azure Trusted
 Signing can establish publisher trust, but does not guarantee that all warnings disappear.
-See <a href="../../../help/security/#code-signing">SECURITY.md</a>.</p>
+See <a href="../security/#code-signing">SECURITY.md</a>.</p>
 <h3 id="the-msix-wont-install--ai-features-dont-work-in-the-msix" tabindex="-1">The MSIX won't install / AI features don't work in the MSIX.</h3>
 <ul>
 <li>Install the included <strong><code>ThreatModelReviewer-publisher.cer</code></strong> into <strong>Trusted People</strong>
@@ -124,6 +130,13 @@ support.</li>
 <h3 id="copilot-cli-runtime-not-found--ai-buttons-fail-in-the-portable-build" tabindex="-1">&quot;Copilot CLI runtime not found&quot; / AI buttons fail in the portable build.</h3>
 <p>Keep the extracted folder intact — <code>ThreatModelReviewer.exe</code> needs the files beside it,
 including <code>runtimes\win-x64\native\copilot.exe</code>. Don't copy the <code>.exe</code> out on its own.</p>
+<h3 id="why-does-an-update-check-say-it-could-not-confirm-the-latest-version" tabindex="-1">Why does an update check say it could not confirm the latest version?</h3>
+<p>The release hub hosts multiple applications. The updater
+checks all pages within a finite limit, filters for this product's stable releases,
+and can use its public release snapshot to find a newer version. An API failure,
+an incomplete list or a snapshot with no newer product release is not proof that
+you are current. Retry or use the <a href="../../releases/">Threat Model Reviewer releases page</a>.
+Another product's repository-wide &quot;latest&quot; release is not a TMR update.</p>
 <h3 id="why-is-the-verdict-not-ready-even-though-the-score-is-high" tabindex="-1">Why is the verdict NOT READY even though the score is high?</h3>
 <p>Because they measure different things, and this is intended. The score measures <strong>maturity</strong> —
 how complete and thorough the model is. Readiness is a separate <strong>gate</strong>: a single must-fix

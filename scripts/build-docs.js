@@ -62,7 +62,7 @@ function validateManifest(catalog) {
   const sources = new Set(), routes = new Set();
   const shared = new Set(['SECURITY.md', 'SUPPORT.md', 'LICENSE', 'CODE_OF_CONDUCT.md']);
   for (const entry of catalog.documents) {
-    if (!(shared.has(entry.source) || /^products\/threat-model-reviewer\/[A-Z-]+\.md$/.test(entry.source)))
+    if (!(shared.has(entry.source) || /^products\/threat-model-reviewer\/(?:[A-Z-]+\.md|LICENSE)$/.test(entry.source)))
       throw new Error(`Source outside the approved public roots: ${entry.source}`);
     if (!/^\/(?:threat-model-reviewer\/docs|help)\/(?:[a-z0-9-]+\/)*$/.test(entry.route))
       throw new Error(`Invalid documentation route: ${entry.route}`);

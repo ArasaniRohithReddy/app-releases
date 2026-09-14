@@ -1,6 +1,7 @@
 # Data Handling & Privacy
 
-*Describes the current 2.5.x feature set. Companion to [SECURITY.md](../../SECURITY.md).*
+*Describes published v2.6.0.
+Companion to [SECURITY.md](SECURITY.md). Source changes do not update an installed release.*
 
 Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
@@ -14,20 +15,20 @@ privacy reviewer can approve it on evidence rather than assurances.
 | Question | Answer |
 | --- | --- |
 | Is the review performed locally? | **Yes.** Parsing, all 72 rubric checks, scoring, the verdict and deterministic reports are computed in-process on your machine. |
-| Is the threat model file ever uploaded? | **No.** The raw `.tm7` / `.json` is never transmitted. |
+| Does opening or reviewing a file upload it? | **No.** Deterministic review reads it locally. Optional AI can send selected context or images; enabled repository tools can retrieve file contents. These are separate actions, not a guarantee that all model-related data stays local. |
 | Does the app collect product analytics? | **No.** The app does not send usage analytics. Optional providers, external CLI runtimes and MCP servers have their own terms, authentication and telemetry settings. |
 | Is there an activity history? | **Yes, and it is yours.** An optional local history of what *you* did (models reviewed, scores, exports, AI actions) is kept on your own disk. It is never transmitted, contains no threat-model content and no AI prompt or response, and can be disabled, exported or erased at any time — see [§5.1](#51-local-activity-history). |
 | Does it require network access? | Deterministic review does not. Sign-in, updates, remote AI, Azure discovery and enabled MCP sources do. |
 | What can leave the machine? | Update and authentication requests; context supplied to AI; and queries to Azure or enabled MCP sources. Image extraction sends the selected image. See the feature-specific descriptions below. |
 | Where is data stored at rest? | Locally, under `%APPDATA%\ThreatModelReviewer\`. Credentials are encrypted with Windows DPAPI. |
-| Who is the data processor for AI features? | **Your own** GitHub Copilot subscription — the same tenant, terms and data-protection commitments your organization already has with GitHub. |
+| Who processes optional remote data? | Your selected AI provider and any enabled MCP/service endpoints, under their applicable terms. Copilot uses your own seat; a configured OpenAI-compatible endpoint is a different provider. |
 
 ## 2. Data classification
 
 | Data | Where it lives | Leaves the machine? |
 | --- | --- | --- |
-| The threat model file (`.tm7`, `.json`) | Only where you opened it from / saved it to | **Never** |
-| Findings, verdict, score, coverage matrices | In memory; written to reports you explicitly export | **Never** (unless you send a report you exported) |
+| The threat model file (`.tm7`, `.json`) | Where you opened it from / saved it to | Not uploaded by deterministic review. Remote AI and repository-context actions must be considered separately. |
+| Findings, verdict, score, coverage matrices | In memory; written to reports you explicitly export | Local for deterministic actions; selected findings and summaries can be included in AI prompts. |
 | Exported reports (HTML, PDF, MD, CSV, JSON, SARIF, work items) | The path you choose | Only if you distribute them |
 | Finding text + redacted DFD summary | In memory | **Only when you invoke an AI feature** → your Copilot seat |
 | GitHub OAuth token (if you sign in inside the app) | `%APPDATA%\ThreatModelReviewer\`, **DPAPI-encrypted** (current user) | Sent only to GitHub to authenticate your own seat |
@@ -36,6 +37,8 @@ privacy reviewer can approve it on evidence rather than assurances.
 | Activity history (`history-*.jsonl`, `settings.json`, `salt.txt`) | `%LOCALAPPDATA%\ThreatModelReviewer\history\` | **Never** |
 | Downloaded update package | `%LOCALAPPDATA%\…\ThreatModelReviewer` cache | Never |
 | Azure inventory read by **Build from Azure…** | In memory, plus the evidence file you choose to write | Discovery does not send it to an AI provider. If you later submit the derived draft to AI refinement, that draft becomes AI input. |
+| GitHub MCP credential and results | Credential DPAPI-protected under the user's application configuration; results in the enabled assistant session | A separate token authenticates the GitHub MCP connection; requested repository/issue/PR contents can enter provider context. It is not the Copilot seat credential. |
+| Compare/SDL provenance and generation evidence | The output path you choose | Exports can include absolute paths, filenames, model metadata, Azure facts and content hashes. Inspect before sharing; hashes are not anonymization. |
 
 ## 3. Exactly what leaves the machine
 
@@ -45,13 +48,21 @@ enabled MCP servers can use additional endpoints.
 
 ### 3.1 Update check — automatic, disableable
 
+Version 2.6.0 replaces the finite Atom fallback used by older releases with the
+product-filtered public snapshot below.
+
 | Property | Detail |
 | --- | --- |
-| **Destination** | `https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases` (falls back to the public `releases.atom` feed on `github.com` if the API is rate-limited) |
-| **When** | Once at application start, and when you click **Check for updates** |
+| **Destination** | `https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases`; fallback: `https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/releases.json` |
+| **When** | At application start and when you click **Check for updates**; a check can read up to ten API pages of 100 releases each, then one fallback snapshot |
 | **Sent** | An unauthenticated HTTPS `GET` with a static `User-Agent`. **No account identifier, no machine identifier, no model data, no usage data.** |
 | **Purpose** | Compare the latest published version against the running version |
 | **To disable** | Turn off the update check in the app, or deploy `%APPDATA%\ThreatModelReviewer\update.json` containing `{ "Enabled": false }` — see [Enterprise deployment](ENTERPRISE-DEPLOYMENT.md#controlling-updates) |
+
+Only this product's stable tags are considered. Incomplete or failed discovery
+does not mean "up to date". A snapshot can identify a newer published version and
+its recorded assets, but cannot prove that no newer version exists; the snapshot
+may lag publication. Installer URLs are not invented from an Atom tag.
 
 ### 3.2 GitHub Copilot — only when you invoke an AI feature
 
@@ -94,8 +105,18 @@ verb. Azure OpenAI and the optional Azure MCP server are separate paths.
 | **Never written** | Nothing is created, changed or deleted. Discovery requires only the **Reader** role. |
 | **To disable** | Do not open Build from Azure or run `azure`. Also leave Azure MCP disabled and do not configure an Azure-hosted AI provider if Azure egress must be avoided. |
 
-Every Azure build can write an evidence file listing the exact commands run and every fact used, so
-what was read is auditable rather than asserted.
+Azure builds can write evidence describing the discovery command vocabulary,
+observations, inferred flows and gaps. Treat the evidence as sensitive inventory,
+not as a timestamped audit log of every process invocation.
+
+The selected native Azure CLI Python interpreter runs
+fixed argument shapes without a Windows command shell. The desktop captures a
+validated subscription ID before listing groups and retains it for discovery.
+The child disables dynamic extensions, automatic CLI upgrades and CLI telemetry;
+this is not a promise about every external runtime. Read failures and unconfirmed
+process cleanup are errors, not empty inventories. See [the I/O contract](AZURE-DISCOVERY.md).
+The evidence describes the command vocabulary, observations, inferences and gaps;
+it is not a timestamped audit log of every process invocation.
 
 ### 3.5 Assistant data sources (MCP) — separately enabled
 
@@ -106,13 +127,45 @@ connection or local process before a model-specific question is asked.
 | Source | Network and data implications |
 | --- | --- |
 | Microsoft Learn Docs | HTTPS queries to `https://learn.microsoft.com/api/mcp`. Queries can contain technology names and wording derived from a finding. |
-| Azure MCP Server | Starts `npx -y @azure/mcp@latest server start`; this can download a package from the npm registry. The server uses its Azure credential chain and contacts services allowed by that identity. Assistant tool arguments and results can become provider context. |
+| Azure MCP Server in **v2.5.1** | The older profile starts `npx -y @azure/mcp@latest server start`; this can download a package from the npm registry. It does not have the restricted, pinned profile described below. Its credential chain and permissions govern reachable services. |
 
 The direct Azure discovery wrapper's fixed command list does **not** restrict the
 separate MCP process. Review the server's capabilities, permissions and settings
 before enabling it. Use least-privilege identities and leave MCP off for an
 offline-only workflow. Third-party server telemetry is governed by that server,
 not by the app's no-product-analytics statement.
+
+#### Restricted profiles
+
+The new source implementation uses an explicit per-profile tool list, disabled
+master/per-profile defaults, and consent before enablement. Older unrestricted
+profiles require review and renewed consent; a saved configuration is not silently
+upgraded into broader access.
+
+| Source | Explicit boundary |
+| --- | --- |
+| Microsoft Learn | `https://learn.microsoft.com/api/mcp`; documentation search, page fetch and code-sample search only |
+| Azure metadata | `npx -y @azure/mcp@2.0.5 server start --read-only --tool group_list --tool subscription_list`; subscription/group metadata only, not resource configuration or storage contents |
+| GitHub review context | `https://api.githubcopilot.com/mcp/readonly`; `get_file_contents`, `issue_read`, `pull_request_read`, read-only/tool headers and a separate fine-grained PAT scoped to selected repositories |
+
+The GitHub PAT is never borrowed from Copilot sign-in, `gh`, or ambient seat-token
+variables. App entry is masked; the CLI uses interactive entry or a deliberately
+named environment variable, never a token literal in command arguments. DPAPI
+protects local storage for the current Windows user, not against processes running
+as that user. Removing the stored credential does not revoke it at GitHub.
+
+The SDK session policy explicitly disables implicit GitHub MCP, host Git operations,
+ambient memory/retrieval/environment context, and plugin/skill/hook/config discovery.
+This restricts the channels controlled by this application; it is not an OS sandbox
+or a guarantee about a server's own behavior. Allowed tool results and arguments
+can still be sensitive and can reach the AI provider.
+
+CLI `mcp list`, `show`, `status` and configuration operations are local. `mcp test`
+can start runtimes, authenticate and connect; AI invocations additionally require
+`--mcp`. The app has its own visible connection controls. Shutdown has bounded
+graceful cleanup, force-stop escalation and an explicit warning if termination
+cannot be confirmed. Do not infer authenticated-service acceptance from an
+offline test. See [MCP setup and limits](MCP.md).
 
 ### 3.6 Authentication and installation
 
@@ -224,16 +277,17 @@ Two further operations put you in control of the data:
 ## 6. Compliance notes
 
 - **Data residency.** Because analysis is local, threat models never cross a regional boundary
-  through this product. If you use Copilot features, residency is governed by your existing
-  Copilot agreement; if that is unacceptable, use the OpenAI-compatible provider pointed at an
-  in-region endpoint, or don't enable AI at all.
+  during a deterministic review. Optional AI, image extraction and MCP can send context
+  to remote services; residency then depends on those providers and your configuration.
+  An endpoint's location alone does not establish its full processing/retention terms.
 - **Personal data.** The product is not designed to process personal data. Any personal data is
   incidental (for example an author's name inside a model) and remains local; email addresses are
   redacted before any prompt. The local activity history can incidentally hold a file name you chose
   (e.g. `jane-smith-review.tm7`); turn off `StoreModelNames` for a hash-only history, or turn history
   off entirely.
-- **Air-gapped use.** Fully supported. Deploy the portable ZIP or MSI, disable the update check,
-  and do not sign in to Copilot — every deterministic capability continues to work.
+- **Air-gapped review.** Deploy the portable ZIP or MSI, disable updates and remote AI,
+  and leave Azure discovery and MCP unused. Deterministic review and local authoring
+  still work; deterministic Azure discovery nevertheless requires network access.
 - **Auditability.** The verdict, score and findings are reproducible: the same input file always
   yields the same output, which is what makes the results defensible in an audit.
 
@@ -260,4 +314,4 @@ You do not have to take this document on trust:
 
 **Questions or an issue with anything stated here?** Please
 [open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose), or report
-security concerns privately as described in [SECURITY.md](../../SECURITY.md).
+security concerns privately as described in [SECURITY.md](SECURITY.md).

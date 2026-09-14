@@ -2,13 +2,15 @@
 
 Threat Model Reviewer is a **Windows desktop application** with a command line and a GitHub Copilot
 CLI skill alongside it. Every download is attached to each release on the
-**[releases page](https://github.com/ArasaniRohithReddy/app-releases/releases)** — pick one.
+**[Threat Model Reviewer releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)** — pick the matching product package.
 
 ## System requirements
 
 - **Windows 10 (1809 / build 17763) or Windows 11**, 64-bit (x64).
-- ~400 MB free disk space.
-- **No .NET install needed** — every download is self-contained (the .NET runtime is bundled).
+- Allow disk space for both the download and the extracted/installed bundle; release
+  assets list compressed download sizes, not the complete installation footprint.
+- **No .NET install needed** for desktop and CLI bundles; the runtime is included.
+  The skill bundle contains instructions and a resolver, and requires the separate CLI.
 - **Optional:** an **active GitHub Copilot subscription** (Individual, Business, or Enterprise),
   only if you want the AI features. The app uses your signed-in seat (see
   [Signing in to GitHub Copilot](#signing-in-to-github-copilot)); the deterministic review
@@ -22,14 +24,14 @@ CLI skill alongside it. Every download is attached to each release on the
 2. Run it. The wizard lets you choose **"Install for all users"** (per-machine, into
    Program Files — needs admin once) or **"Install just for me"** (per-user, into your
    profile — no admin). It adds a Start-Menu shortcut and an entry in *Apps & features*.
-3. If **SmartScreen** warns (see [About the SmartScreen warning](#about-the-smartscreen-warning)),
-   click **More info → Run anyway**.
+3. If **SmartScreen** warns, verify the source, signature and hash before proceeding.
+   Follow [the trust guidance](#about-the-smartscreen-warning) and your organization's policy.
 
 ## Option 2 — Portable (zip)
 
 1. Download `ThreatModelReviewer-vX.Y.Z-win-x64-portable.zip`.
-2. Right-click → **Properties** → tick **Unblock**, then **Extract All** to a folder you
-   control (e.g. `C:\Apps\ThreatModelReviewer`).
+2. Verify the download, then **Extract All** to a folder you control
+   (e.g. `C:\Apps\ThreatModelReviewer`). Do not bypass an administrator-enforced block.
 3. Run **`ThreatModelReviewer.exe`**.
 
 > Keep the files together — `ThreatModelReviewer.exe` needs the folder beside it
@@ -42,12 +44,13 @@ MSI if you prefer a single per-user `.exe`.
 
 ## Option 4 — MSIX package — *experimental*
 
-The MSIX is signed with a **self-signed** certificate, so you must trust it first:
+The MSIX uses a **self-signed** certificate. Confirm the expected publisher and
+obtain approval before adding trust; importing a certificate is not just extraction:
 
-1. Download `…-x64.msix` **and** `ThreatModelReviewer-publisher.cer`.
+1. Download `…-x64.msix` **and** `ThreatModelReviewer-publisher.cer` from the same release.
 2. Right-click `…-publisher.cer` → **Install Certificate** → **Local Machine** →
    **Place all certificates in the following store** → **Trusted People** → Finish.
-   *(needs admin)*
+   *(needs admin and approval under the device's trust policy)*
 3. Double-click the `.msix` and **Install**.
 
 > **Heads-up:** under MSIX the app runs in a packaged container. The Copilot SDK spawns a
@@ -63,7 +66,7 @@ Executables and installers are **Authenticode-signed** with the project's curren
 **self-signed** certificate; ZIP containers are not. SmartScreen or organization
 policy can still warn or block execution. Do not treat a warning as proof of safety
 or dismiss it automatically. Verify the download source, signature and hash, then
-follow your organization's software policy. See [SECURITY.md](../../SECURITY.md#code-signing).
+follow your organization's software policy. See [SECURITY.md](SECURITY.md#code-signing).
 
 CA-issued, EV or Azure Trusted Signing certificates can establish publisher trust,
 but signing alone does not guarantee that SmartScreen or policy warnings disappear.

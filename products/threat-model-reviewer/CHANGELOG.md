@@ -6,6 +6,181 @@ project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+No additional changes are queued here.
+
+## [2.6.0] — 2026-09-14
+
+### Release qualification and packaging
+- Separate source/package versions from published metadata during release
+  qualification; promote the public version only after publication.
+- Require current save/discard/cancel decisions before model replacement or window
+  exit. Failed saves keep unsaved edits; late confirmations and original-file saves
+  cannot overwrite newer in-memory work. Add a separate New window action.
+- Make update discovery product-specific and bounded across API pages. An unavailable
+  or incomplete listing is not "up to date"; the public product snapshot can identify
+  a newer stable release with actual assets, without guessing URLs from Atom tags.
+- Stage fresh desktop and CLI payloads with the same verified SDK-pinned runtime,
+  stamp both executable versions, preserve signing/upgrade identities, and require
+  the complete artifact set. Emit provenance and SHA-256 metadata.
+- Keep publication draft-only until promotion, without changing another product's
+  global-latest status. Scope document exports to TMR, retain shared hub policies,
+  and use product download routes in app, CLI and skill guidance.
+- Add counted packaging reports, explicit self-signed trust guidance and bounded
+  Microsoft TMT compatibility documentation. Full native dashboard and disposable
+  installer acceptance are distinct from parser/serializer or package preflight.
+
+### Diagram workspace
+- Wrap Diagram actions and separate manual selection/tools, Copilot proposal review
+  and advisory chat. Keep proposal actions reachable while instructions, attachments,
+  errors and review details scroll; preserve existing edit, save, reset and connect commands.
+- Add named zoom controls, keyboard element/flow-label movement, keyboard flow
+  renaming, visible document focus and UIA selection state. Expose full labels and
+  stencil details without resizing or rerouting the model for appearance.
+- Keep the document light in both themes, including unknown shapes and inline name
+  editing; retain installed stencil matching and vector fallback for shared previews.
+- Clarify image-pixel privacy and human review: model edits are not code or deployment
+  remediation. Model-revision protection is covered separately below; native TMT UI
+  isolation and universal accessibility conformance are not claimed.
+
+### Overview, Findings and Fix review interface
+- Separate readiness-gate explanations from maturity scoring without assuming that every
+  model is thorough or approved. Keep overview coverage statuses readable without colour alone.
+- Add labelled finding search, severity/gating filters and visible/total counts. Keep sorting
+  and row virtualization, compact long titles/targets, and full selected-finding details.
+  Filters do not change the engine findings, exports or bulk operations.
+- Compact Fix actions, name inclusion checkboxes, show source/selection summaries, and provide
+  a selectable read-only exact-content preview. Refresh that preview when replacing an active
+  draft, clear detached row selection when rebuilding a plan, and keep built-in placeholder
+  warnings when switching back from an AI draft.
+- Identify producing providers and offline placeholders in review guidance and fix drafts;
+  expose bounded progress/error text and tab-local keyboard focus and semantic-colour styles.
+  Preserve the shared shell, Create/Assistant layout, rubric and model-write semantics.
+
+### Desktop shell accessibility
+- Separate loaded-model context from wrapping header commands so Help, Provider and the
+  AI model picker remain available at the minimum window width. Give Ask real footer
+  space and keep its panel within the workspace height.
+- Gate tab accelerators on the same availability as mouse navigation; retain Ctrl+1…7,
+  add Ctrl+8/9 for Create/Assistant, and support Ctrl+Tab and F6 shell navigation.
+  Manage Ask focus consistently for mouse and keyboard, with Escape dismissal and
+  return focus, while preserving the shared conversation.
+- Add native labels for shell inputs, icon actions and provider choices; distinguish
+  selected, disabled and keyboard-focused shared controls. Use contrast-safe brand
+  fills for white labels in dark-theme active states and avoid doubled field padding.
+  Keep the semantic hover/pressed fill aliases contrast-safe for tab-local templates too.
+- Make rendered Markdown code highlights and quoted caveats follow live theme
+  resources, including already displayed answers, without rebuilding their text.
+- Preserve the existing Segoe UI, themes, authoring-only styles, independent authoring
+  draft, source labels and comparison provenance. These are bounded desktop checks,
+  not a blanket accessibility-conformance claim.
+
+### Diagram model-revision safety
+- Separately bind Diagram proposals to captured model/editor identities, surface and
+  the existing edit/reparse sequence. Reject stale preview/apply even when an A response
+  arrives after B was loaded, or an already-previewed plan outlives its document.
+- Cancel and explicitly discard obsolete Diagram work on model/request transitions.
+  Late success, failure and progress cannot overwrite a newer operation's busy/error
+  state or consume its input. Discard model-bound Diagram chat answers/citations on
+  replacement and structural changes.
+- Apply reviewed changes on a detached editor, then validate ownership before publishing.
+  Guard delayed Diagram save/reset/reparse publication with the existing sequence.
+  Preserve normal apply/save behavior; do not alter provider/MCP internals or the rubric.
+- Invalidate prepared state and busy/history ownership before invoking cancellation
+  callbacks. A throwing callback cannot abort load, close or shutdown; report a generic
+  callback-failure/discard notice without exposing provider exception text.
+
+### Review advisory revision safety
+- Tie finding explanations, deep analysis, critique, framework-gap and interaction guidance,
+  and fix drafts to their captured model/review and the existing structural-refresh sequence.
+  Cancel local waits and reject obsolete completions, progress and errors without a second
+  document-version counter or changes to provider/MCP sessions.
+- Preserve row-selection independence and balanced busy accounting; old request cleanup cannot
+  clear a newer request's flags. Invalidate completed advisory content and fix plans on re-review,
+  and prevent old drafts from matching regenerated plan rows through reused action IDs.
+- Keep reset, plan replacement and final shutdown progressing even if a provider's cancellation
+  callback throws; report only the callback-error count, not request or response content.
+- Guard bulk/upload review and AI-export orchestration as well as individual requests. Abort
+  obsolete export choices, and do not export an in-flight analysis placeholder as completed
+  content. Keep deterministic review output and the current tab layout unchanged.
+- Guard overlapping file loads with the existing refresh sequence and return the exact
+  adopted review identity. Recheck it before navigation, optional AI or post-save status.
+  Fix writes retain their original model/plan, reject stale re-entry before resetting/loading,
+  and cannot clear a newer load's busy state. An already-started original-file write is not
+  rolled back; the unchanged valid path still uses the existing parser, rubric and .tm7 writer.
+
+### Compare, Ask and History
+- Keep Compare inputs and immutable saved-byte results in one scroll area; expose
+  selectable path/hash/options provenance, matching limitations and cancellation.
+  Preserve snapshot invalidation, literal exports and unchanged deterministic scoring.
+- Keep the Ask tab and floating panel on their existing shared conversation/provider
+  path. Add consistent Automatic (local-first), Local only and explicit selected-AI
+  advisory modes, readable source labels, cancellation, clear-chat and explicit retry.
+  Disconnected or failed local summaries are never presented as Copilot answers.
+- Bind Ask turns and verified references to their originating model/review. Reload,
+  replacement, review changes, close and shutdown discard obsolete work, even when
+  providers ignore cancellation. Hiding or opening the panel in the tab preserves
+  its conversation and draft. Keep prompts/responses out of production history/logs.
+- Make History's privacy/export controls reachable, show actual retention settings
+  and improve wrapped activity rows. Check stored as well as located file paths
+  against recorded content hashes; never infer revision identity from filenames.
+- Verify with counted/delayed/failing fake providers and synthetic models. Live
+  Copilot sign-in/inference and MCP service acceptance are not claimed.
+- Label verification hosts explicitly Offline/fake, isolate their profile and
+  history, and guard non-activating HWND-specific checks and unchanged-state
+  cleanup. These checks do not replace physical-keyboard or foreground-focus
+  acceptance and never use a user's normal app as the verification target.
+
+### Create and Assistant authoring
+- Reorganize Create around source choice, labelled editable rows, inspectable validation and
+  metadata, and a generation/evidence command bar that stays visible. Collapse optional
+  refinement, diagram preview and baseline detail instead of putting them ahead of editing.
+- Separate Assistant description, document and image selection from explicit extraction and
+  the Create review/generation handoff. Stage images locally, disclose image privacy and
+  document truncation, and reuse global model/MCP settings without enabling connections.
+- Add cancellation, useful empty/disabled/retry states, selectable wrapping errors and
+  keyboard focus for authoring controls. Supply the missing editable ComboBox text part
+  using an authoring-only style; keep the existing Segoe UI, Fluent tokens and themes.
+- Reject obsolete extraction responses after input/draft changes, preserve drafts on empty
+  provider output, and protect refinements during provider acquisition as well as completion.
+  Keep follow-up instructions typed while waiting. Inspect all import notes and effective
+  metadata without changing generation, evidence ownership or deterministic scoring contracts.
+
+### Generation integrity
+- Generate the desktop model, status and evidence from the same pipeline result,
+  including the baseline-carried path, instead of writing a separate model.
+- Preserve imported metadata and stable identities through draft edits; invalidate
+  interaction-specific assertions when endpoints change.
+- Separate Azure observations from the edited draft in evidence, reject stale
+  refinement responses, and recover from ordinary artifact-publication failures.
+- Bind desktop sidecar replacement to `model.tm7.generation.json` ownership and
+  exact model/sidecar hashes; preserve edited, legacy and unowned evidence on conflict.
+- Retain declared HTTP signals and native-compatible connector properties through
+  both writers. Preserve references during temporary blank/duplicate renames and
+  reject ambiguous identity reuse during refinement.
+- Verify synthetic rich, Azure-derived and neutral-HTTP fixtures against the installed
+  Microsoft TMT 7.3.51110.1 serializer through read/save/reload. Full native dashboard/UI
+  acceptance remains a separate, uncompleted isolated-environment requirement.
+
+### Optional MCP developer context
+- Add default-off, explicit-tool Learn, pinned Azure metadata and read-only GitHub
+  profiles. GitHub context uses its own repository-scoped, DPAPI-protected credential.
+- Add app and CLI consent/configuration/credential controls, explicit connection
+  testing and per-AI-request `--mcp` opt-in; normal review and factual `ask` stay offline.
+- Disable SDK ambient context sources explicitly, wait for actual connection state,
+  and bound shutdown with force-stop escalation and explicit cleanup errors.
+- Keep Azure DevOps MCP deferred until its authentication is supported.
+
+### Azure discovery, comparison and handoff
+- Run the direct Azure reader without a command shell, using fixed native Python/CLI
+  arguments and Windows process containment. Carry the captured subscription from
+  the picker through discovery; malformed output and failed cleanup are not successes.
+- Capture immutable desktop comparison revisions/options, invalidate stale operations
+  and export dialogs, disclose ambiguous threat matching and bounded heuristic passes,
+  and keep model-provided Markdown/CSV values literal.
+- Capture CLI SDL source bytes once for parsing and provenance. Validate identifiers
+  before output; disclose unknown states and AI blocks; publish the manifest last.
+  Bundle replacement is not transactional or power-loss atomic.
+
 ### Documentation and website
 - Clarify that model fixes do not patch application code, and a readiness result is
   not Microsoft approval or proof that mitigations are implemented.
@@ -17,6 +192,21 @@ project aims to follow [Semantic Versioning](https://semver.org/).
 - Replace the manually maintained source test-count badge with the CI status badge.
 - Keep CI test-report artifacts for failed runs only, with seven-day retention;
   successful build/test results remain in the run logs.
+- Align the shared app/CLI/privacy/enterprise and skill guides with development-only
+  behavior. Add a publication-channel guard so local previews cannot silently
+  replace stable guides. Preserve the published release history and downloads.
+- Correct managed uninstall examples to use the deployed MSI/ProductCode, not
+  UpgradeCode, and distinguish signed binaries from ZIP and skill containers.
+
+### Release safeguards
+- Await every owned request during Azure cancellation-test teardown, even when
+  another cancellation assertion fails; directory removal must not hide the
+  original failure by abandoning a still-cleaning-up request.
+- Default the build version from the app project and reject mismatched versions,
+  unsupported runtime targets and mismatched supplied Copilot runtime metadata.
+- Use unique staging directories and verify copied app/CLI runtime hashes against
+  the explicitly supplied bytes. A side-effect-free `-PreflightOnly` check reports
+  `PackagingVerified: false`; it does not certify installer or runtime acceptance.
 
 ### Fixed in source, not yet included in a new binary release
 - Widen the Findings check column and use an ellipsis plus tooltip for long targets.
@@ -826,6 +1016,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.6.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.6.0
 [2.5.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1
 [2.5.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.0
 [2.4.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.4.0

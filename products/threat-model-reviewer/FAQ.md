@@ -18,6 +18,13 @@ result is NOT READY, 65/100, with 27 gating findings. No AI call is needed.
 ### What file types can it review?
 Microsoft Threat Modeling Tool **`.tm7`** files, and OWASP **Threat Dragon `.json`**.
 
+### Is this a replacement for every Microsoft Threat Modeling Tool feature?
+No. It complements Microsoft TMT with deterministic review, model remediation,
+supported drafting and evidence workflows. It does not claim full template-editor,
+OneDrive-sharing or native-dashboard parity. Diagram artwork can come from a local
+TMT installation or from a built-in fallback; matching an icon does not
+verify the deployed service. See [Microsoft TMT compatibility](MICROSOFT-TMT.md).
+
 ### Do I need .NET installed?
 No. Every download is **self-contained** — the .NET runtime is bundled.
 
@@ -57,7 +64,7 @@ The portable `.exe` and the installers **are** Authenticode-signed — but for n
 run. Verify the download source, signature and hash before deciding whether to run it,
 and follow your organization's policy. A CA-issued/EV certificate or Azure Trusted
 Signing can establish publisher trust, but does not guarantee that all warnings disappear.
-See [SECURITY.md](../../SECURITY.md#code-signing).
+See [SECURITY.md](SECURITY.md#code-signing).
 
 ### The MSIX won't install / AI features don't work in the MSIX.
 - Install the included **`ThreatModelReviewer-publisher.cer`** into **Trusted People**
@@ -69,6 +76,14 @@ See [SECURITY.md](../../SECURITY.md#code-signing).
 ### "Copilot CLI runtime not found" / AI buttons fail in the portable build.
 Keep the extracted folder intact — `ThreatModelReviewer.exe` needs the files beside it,
 including `runtimes\win-x64\native\copilot.exe`. Don't copy the `.exe` out on its own.
+
+### Why does an update check say it could not confirm the latest version?
+The release hub hosts multiple applications. The updater
+checks all pages within a finite limit, filters for this product's stable releases,
+and can use its public release snapshot to find a newer version. An API failure,
+an incomplete list or a snapshot with no newer product release is not proof that
+you are current. Retry or use the [Threat Model Reviewer releases page](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/).
+Another product's repository-wide "latest" release is not a TMR update.
 
 ### Why is the verdict NOT READY even though the score is high?
 Because they measure different things, and this is intended. The score measures **maturity** —

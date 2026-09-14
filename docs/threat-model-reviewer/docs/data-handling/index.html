@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/DATA-HANDLING.md (normalized SHA-256 21c9f8f4cf980a3f15b2702a7a34b029aeaec7c246ccf6b67b31430a40de45f0). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/DATA-HANDLING.md (normalized SHA-256 8208f614e5be819a11991bbe4e24dca8ef59fb37a030c7882ae8251b524b145c). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Data Handling &amp; Privacy — Threat Model Reviewer documentation</title>
-  <meta name="description" content="Describes the current 2.5.x feature set. Companion to SECURITY.md." />
+  <meta name="description" content="Describes published v2.6.0. Companion to SECURITY.md. Source changes do not update an installed release." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Data Handling &amp; Privacy — App Releases" />
-  <meta property="og:description" content="Describes the current 2.5.x feature set. Companion to SECURITY.md." />
+  <meta property="og:description" content="Describes published v2.6.0. Companion to SECURITY.md. Source changes do not update an installed release." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Data Handling & Privacy","description":"Describes the current 2.5.x feature set. Companion to SECURITY.md.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Data Handling & Privacy","description":"Describes published v2.6.0. Companion to SECURITY.md. Source changes do not update an installed release.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../faq/">FAQ</a></li><li><a href="./" aria-current="page">Data handling &amp; privacy</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="./" aria-current="page">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -63,7 +63,8 @@
 
         </header>
         <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-summary-for-reviewers">1. Summary for reviewers</a></li><li><a href="#2-data-classification">2. Data classification</a></li><li><a href="#3-exactly-what-leaves-the-machine">3. Exactly what leaves the machine</a></li><li><a href="#4-secret-redaction-before-any-prompt">4. Secret redaction before any prompt</a></li><li><a href="#5-storage-retention-and-removal">5. Storage, retention and removal</a></li><li><a href="#6-compliance-notes">6. Compliance notes</a></li><li><a href="#7-verifying-these-claims-yourself">7. Verifying these claims yourself</a></li></ul></nav></details>
-        <div class="doc-content"><p><em>Describes the current 2.5.x feature set. Companion to <a href="../../../help/security/">SECURITY.md</a>.</em></p>
+        <div class="doc-content"><p><em>Describes published v2.6.0.
+Companion to <a href="../security/">SECURITY.md</a>. Source changes do not update an installed release.</em></p>
 <p>Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
 application does with that data, what leaves your machine, and what does not — so a security or
@@ -83,8 +84,8 @@ privacy reviewer can approve it on evidence rather than assurances.</p>
 <td><strong>Yes.</strong> Parsing, all 72 rubric checks, scoring, the verdict and deterministic reports are computed in-process on your machine.</td>
 </tr>
 <tr>
-<td>Is the threat model file ever uploaded?</td>
-<td><strong>No.</strong> The raw <code>.tm7</code> / <code>.json</code> is never transmitted.</td>
+<td>Does opening or reviewing a file upload it?</td>
+<td><strong>No.</strong> Deterministic review reads it locally. Optional AI can send selected context or images; enabled repository tools can retrieve file contents. These are separate actions, not a guarantee that all model-related data stays local.</td>
 </tr>
 <tr>
 <td>Does the app collect product analytics?</td>
@@ -107,8 +108,8 @@ privacy reviewer can approve it on evidence rather than assurances.</p>
 <td>Locally, under <code>%APPDATA%\ThreatModelReviewer\</code>. Credentials are encrypted with Windows DPAPI.</td>
 </tr>
 <tr>
-<td>Who is the data processor for AI features?</td>
-<td><strong>Your own</strong> GitHub Copilot subscription — the same tenant, terms and data-protection commitments your organization already has with GitHub.</td>
+<td>Who processes optional remote data?</td>
+<td>Your selected AI provider and any enabled MCP/service endpoints, under their applicable terms. Copilot uses your own seat; a configured OpenAI-compatible endpoint is a different provider.</td>
 </tr>
 </tbody>
 </table></div>
@@ -124,13 +125,13 @@ privacy reviewer can approve it on evidence rather than assurances.</p>
 <tbody>
 <tr>
 <td>The threat model file (<code>.tm7</code>, <code>.json</code>)</td>
-<td>Only where you opened it from / saved it to</td>
-<td><strong>Never</strong></td>
+<td>Where you opened it from / saved it to</td>
+<td>Not uploaded by deterministic review. Remote AI and repository-context actions must be considered separately.</td>
 </tr>
 <tr>
 <td>Findings, verdict, score, coverage matrices</td>
 <td>In memory; written to reports you explicitly export</td>
-<td><strong>Never</strong> (unless you send a report you exported)</td>
+<td>Local for deterministic actions; selected findings and summaries can be included in AI prompts.</td>
 </tr>
 <tr>
 <td>Exported reports (HTML, PDF, MD, CSV, JSON, SARIF, work items)</td>
@@ -172,6 +173,16 @@ privacy reviewer can approve it on evidence rather than assurances.</p>
 <td>In memory, plus the evidence file you choose to write</td>
 <td>Discovery does not send it to an AI provider. If you later submit the derived draft to AI refinement, that draft becomes AI input.</td>
 </tr>
+<tr>
+<td>GitHub MCP credential and results</td>
+<td>Credential DPAPI-protected under the user's application configuration; results in the enabled assistant session</td>
+<td>A separate token authenticates the GitHub MCP connection; requested repository/issue/PR contents can enter provider context. It is not the Copilot seat credential.</td>
+</tr>
+<tr>
+<td>Compare/SDL provenance and generation evidence</td>
+<td>The output path you choose</td>
+<td>Exports can include absolute paths, filenames, model metadata, Azure facts and content hashes. Inspect before sharing; hashes are not anonymization.</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="3-exactly-what-leaves-the-machine" tabindex="-1">3. Exactly what leaves the machine</h2>
@@ -179,6 +190,8 @@ privacy reviewer can approve it on evidence rather than assurances.</p>
 domain allow-list for third-party runtimes: authentication, package downloads and
 enabled MCP servers can use additional endpoints.</p>
 <h3 id="31-update-check--automatic-disableable" tabindex="-1">3.1 Update check — automatic, disableable</h3>
+<p>Version 2.6.0 replaces the finite Atom fallback used by older releases with the
+product-filtered public snapshot below.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 3"><table>
 <thead>
 <tr>
@@ -189,11 +202,11 @@ enabled MCP servers can use additional endpoints.</p>
 <tbody>
 <tr>
 <td><strong>Destination</strong></td>
-<td><code>https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases</code> (falls back to the public <code>releases.atom</code> feed on <code>github.com</code> if the API is rate-limited)</td>
+<td><code>https://api.github.com/repos/ArasaniRohithReddy/app-releases/releases</code>; fallback: <code>https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/releases.json</code></td>
 </tr>
 <tr>
 <td><strong>When</strong></td>
-<td>Once at application start, and when you click <strong>Check for updates</strong></td>
+<td>At application start and when you click <strong>Check for updates</strong>; a check can read up to ten API pages of 100 releases each, then one fallback snapshot</td>
 </tr>
 <tr>
 <td><strong>Sent</strong></td>
@@ -209,6 +222,10 @@ enabled MCP servers can use additional endpoints.</p>
 </tr>
 </tbody>
 </table></div>
+<p>Only this product's stable tags are considered. Incomplete or failed discovery
+does not mean &quot;up to date&quot;. A snapshot can identify a newer published version and
+its recorded assets, but cannot prove that no newer version exists; the snapshot
+may lag publication. Installer URLs are not invented from an Atom tag.</p>
 <h3 id="32-github-copilot--only-when-you-invoke-an-ai-feature" tabindex="-1">3.2 GitHub Copilot — only when you invoke an AI feature</h3>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 4"><table>
 <thead>
@@ -313,8 +330,17 @@ verb. Azure OpenAI and the optional Azure MCP server are separate paths.</p>
 </tr>
 </tbody>
 </table></div>
-<p>Every Azure build can write an evidence file listing the exact commands run and every fact used, so
-what was read is auditable rather than asserted.</p>
+<p>Azure builds can write evidence describing the discovery command vocabulary,
+observations, inferred flows and gaps. Treat the evidence as sensitive inventory,
+not as a timestamped audit log of every process invocation.</p>
+<p>The selected native Azure CLI Python interpreter runs
+fixed argument shapes without a Windows command shell. The desktop captures a
+validated subscription ID before listing groups and retains it for discovery.
+The child disables dynamic extensions, automatic CLI upgrades and CLI telemetry;
+this is not a promise about every external runtime. Read failures and unconfirmed
+process cleanup are errors, not empty inventories. See <a href="../azure-discovery/">the I/O contract</a>.
+The evidence describes the command vocabulary, observations, inferences and gaps;
+it is not a timestamped audit log of every process invocation.</p>
 <h3 id="35-assistant-data-sources-mcp--separately-enabled" tabindex="-1">3.5 Assistant data sources (MCP) — separately enabled</h3>
 <p><strong>Help &gt; Assistant data sources (MCP)</strong> has a master switch and per-server opt-in.
 Built-in sources are disabled initially. Enabling or testing them can start a
@@ -332,8 +358,8 @@ connection or local process before a model-specific question is asked.</p>
 <td>HTTPS queries to <code>https://learn.microsoft.com/api/mcp</code>. Queries can contain technology names and wording derived from a finding.</td>
 </tr>
 <tr>
-<td>Azure MCP Server</td>
-<td>Starts <code>npx -y @azure/mcp@latest server start</code>; this can download a package from the npm registry. The server uses its Azure credential chain and contacts services allowed by that identity. Assistant tool arguments and results can become provider context.</td>
+<td>Azure MCP Server in <strong>v2.5.1</strong></td>
+<td>The older profile starts <code>npx -y @azure/mcp@latest server start</code>; this can download a package from the npm registry. It does not have the restricted, pinned profile described below. Its credential chain and permissions govern reachable services.</td>
 </tr>
 </tbody>
 </table></div>
@@ -342,6 +368,49 @@ separate MCP process. Review the server's capabilities, permissions and settings
 before enabling it. Use least-privilege identities and leave MCP off for an
 offline-only workflow. Third-party server telemetry is governed by that server,
 not by the app's no-product-analytics statement.</p>
+<h4 id="restricted-profiles" tabindex="-1">Restricted profiles</h4>
+<p>The new source implementation uses an explicit per-profile tool list, disabled
+master/per-profile defaults, and consent before enablement. Older unrestricted
+profiles require review and renewed consent; a saved configuration is not silently
+upgraded into broader access.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 8"><table>
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">Explicit boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft Learn</td>
+<td><code>https://learn.microsoft.com/api/mcp</code>; documentation search, page fetch and code-sample search only</td>
+</tr>
+<tr>
+<td>Azure metadata</td>
+<td><code>npx -y @azure/mcp@2.0.5 server start --read-only --tool group_list --tool subscription_list</code>; subscription/group metadata only, not resource configuration or storage contents</td>
+</tr>
+<tr>
+<td>GitHub review context</td>
+<td><code>https://api.githubcopilot.com/mcp/readonly</code>; <code>get_file_contents</code>, <code>issue_read</code>, <code>pull_request_read</code>, read-only/tool headers and a separate fine-grained PAT scoped to selected repositories</td>
+</tr>
+</tbody>
+</table></div>
+<p>The GitHub PAT is never borrowed from Copilot sign-in, <code>gh</code>, or ambient seat-token
+variables. App entry is masked; the CLI uses interactive entry or a deliberately
+named environment variable, never a token literal in command arguments. DPAPI
+protects local storage for the current Windows user, not against processes running
+as that user. Removing the stored credential does not revoke it at GitHub.</p>
+<p>The SDK session policy explicitly disables implicit GitHub MCP, host Git operations,
+ambient memory/retrieval/environment context, and plugin/skill/hook/config discovery.
+This restricts the channels controlled by this application; it is not an OS sandbox
+or a guarantee about a server's own behavior. Allowed tool results and arguments
+can still be sensitive and can reach the AI provider.</p>
+<p>CLI <code>mcp list</code>, <code>show</code>, <code>status</code> and configuration operations are local. <code>mcp test</code>
+can start runtimes, authenticate and connect; AI invocations additionally require
+<code>--mcp</code>. The app has its own visible connection controls. Shutdown has bounded
+graceful cleanup, force-stop escalation and an explicit warning if termination
+cannot be confirmed. Do not infer authenticated-service acceptance from an
+offline test. See <a href="../mcp/">MCP setup and limits</a>.</p>
 <h3 id="36-authentication-and-installation" tabindex="-1">3.6 Authentication and installation</h3>
 <p>Interactive GitHub device-flow sign-in, the bundled Copilot runtime and Azure
 CLI/server credential acquisition use their respective identity endpoints.
@@ -351,7 +420,7 @@ registries. These requests are distinct from sending a threat-model prompt.</p>
 <p>Threat models frequently contain accidental secrets (a connection string pasted into a mitigation
 note, a token in a description). Before <strong>any</strong> text is sent to a model, the deterministic
 <code>PromptSafety</code> pass replaces high-confidence secret material with typed placeholders:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 8"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 9"><table>
 <thead>
 <tr>
 <th scope="col">Detected</th>
@@ -382,7 +451,7 @@ This is a defense-in-depth check, not proof that all injection attempts or
 sensitive data will be detected. Review AI suggestions and tool use accordingly.</p>
 <p>Redaction is deterministic, offline and applied regardless of which provider is configured.</p>
 <h2 id="5-storage-retention-and-removal" tabindex="-1">5. Storage, retention and removal</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 9"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 10"><table>
 <thead>
 <tr>
 <th scope="col">Path</th>
@@ -422,7 +491,7 @@ To remove all data: uninstall, then delete <code>%APPDATA%\ThreatModelReviewer\<
 is written to your disk, read only by the app on your machine, and <strong>never transmitted anywhere</strong>.
 There is no endpoint that receives it and no code path that sends it.</p>
 <p><strong>Where it lives.</strong> <code>%LOCALAPPDATA%\ThreatModelReviewer\history\</code>:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 10"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 11"><table>
 <thead>
 <tr>
 <th scope="col">File</th>
@@ -448,7 +517,7 @@ There is no endpoint that receives it and no code path that sends it.</p>
 yourself. A total cap (32 MB by default) and the retention window keep the folder bounded.</p>
 <p><strong>What a record contains.</strong> Every record carries a schema version, a UTC ISO-8601 timestamp, a
 session id, and one typed payload:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 11"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 12"><table>
 <thead>
 <tr>
 <th scope="col">Record</th>
@@ -500,7 +569,7 @@ action, model id, duration, success, error kind.</li>
 stripped so a value can never break the one-record-per-line format.</p>
 <p><strong>Your controls.</strong> All four live in the app's <strong>History → Privacy</strong> tab and in
 <code>%LOCALAPPDATA%\ThreatModelReviewer\history\settings.json</code>:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 12"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Data Handling &amp; Privacy table 13"><table>
 <thead>
 <tr>
 <th scope="col">Setting</th>
@@ -546,16 +615,17 @@ clear cannot be correlated with anything recorded after it.</li>
 <h2 id="6-compliance-notes" tabindex="-1">6. Compliance notes</h2>
 <ul>
 <li><strong>Data residency.</strong> Because analysis is local, threat models never cross a regional boundary
-through this product. If you use Copilot features, residency is governed by your existing
-Copilot agreement; if that is unacceptable, use the OpenAI-compatible provider pointed at an
-in-region endpoint, or don't enable AI at all.</li>
+during a deterministic review. Optional AI, image extraction and MCP can send context
+to remote services; residency then depends on those providers and your configuration.
+An endpoint's location alone does not establish its full processing/retention terms.</li>
 <li><strong>Personal data.</strong> The product is not designed to process personal data. Any personal data is
 incidental (for example an author's name inside a model) and remains local; email addresses are
 redacted before any prompt. The local activity history can incidentally hold a file name you chose
 (e.g. <code>jane-smith-review.tm7</code>); turn off <code>StoreModelNames</code> for a hash-only history, or turn history
 off entirely.</li>
-<li><strong>Air-gapped use.</strong> Fully supported. Deploy the portable ZIP or MSI, disable the update check,
-and do not sign in to Copilot — every deterministic capability continues to work.</li>
+<li><strong>Air-gapped review.</strong> Deploy the portable ZIP or MSI, disable updates and remote AI,
+and leave Azure discovery and MCP unused. Deterministic review and local authoring
+still work; deterministic Azure discovery nevertheless requires network access.</li>
 <li><strong>Auditability.</strong> The verdict, score and findings are reproducible: the same input file always
 yields the same output, which is what makes the results defensible in an audit.</li>
 </ul>
@@ -580,7 +650,7 @@ never appears in any outbound request.</li>
 <hr>
 <p><strong>Questions or an issue with anything stated here?</strong> Please
 <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">open an issue</a>, or report
-security concerns privately as described in <a href="../../../help/security/">SECURITY.md</a>.</p>
+security concerns privately as described in <a href="../security/">SECURITY.md</a>.</p>
 </div>
       </article>
       <nav class="doc-bottom" aria-label="Document navigation">

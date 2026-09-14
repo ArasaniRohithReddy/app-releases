@@ -1,6 +1,7 @@
 # Enterprise Deployment
 
-*Applies to Threat Model Reviewer v2.5.1.*
+*Applies to Threat Model Reviewer v2.6.0. Qualify installation, upgrade and
+certificate trust against your own managed baseline before rollout.*
 
 This guide covers packaged, unattended rollout of Threat Model Reviewer to managed Windows
 estates — Microsoft Intune, Configuration Manager (SCCM), Group Policy, or a scripted
@@ -21,8 +22,9 @@ distribution. For a single interactive install, see [INSTALL.md](INSTALL.md).
 
 The desktop app and CLI are **self-contained**: no .NET runtime prerequisite.
 The skill bundle requires the CLI; it contains instructions, not a standalone review engine.
-Application executables and installers are **Authenticode-signed**; ZIP containers and skill
-files are not — see [Signing and SmartScreen](#6-signing-smartscreen-and-trust).
+Application executables and installers are Authenticode-signed; ZIP containers and skill files are not.
+The public certificate is not a signed application binary.
+See [Signing and SmartScreen](#6-signing-smartscreen-and-trust).
 
 ### Package identifiers
 
@@ -32,20 +34,16 @@ Useful for detection rules, upgrade logic and uninstall automation:
 | --- | --- |
 | Product name | `Threat Model Reviewer` |
 | Executable | `ThreatModelReviewer.exe` |
-| MSI `UpgradeCode` | `{7E2D9A14-3C5B-4F8E-A1D6-9B0C2E4F6A38}` — stable upgrade-family ID |
+| MSI `UpgradeCode` | `{7E2D9A14-3C5B-4F8E-A1D6-9B0C2E4F6A38}` |
 | MSI `ProductCode` | Version-specific; obtain from the deployed release's original MSI |
 | Inno Setup `AppId` | `{8F3A2C71-6B4E-4D2A-9E1F-7C5A0B9D3E64}` |
 | Publisher (current) | `ArasaniRohithReddy` (self-signed certificate) |
 
-> `UpgradeCode` identifies the upgrade family, not a particular installed release.
-> Use the version-specific `ProductCode` for MSI product-code detection and GUID-based
-> uninstall; read it from the deployed MSI's Property table. Never pass `UpgradeCode` to
-> `msiexec /x`. A version-aware file detection rule is another option, as shown below.
-
-See Microsoft's [ProductCode](https://learn.microsoft.com/en-us/windows/win32/msi/productcode),
-[UpgradeCode](https://learn.microsoft.com/en-us/windows/win32/msi/upgradecode) and
-[msiexec](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec)
-references for the identifier and command semantics.
+> The MSI `UpgradeCode` identifies the upgrade family and stays stable across
+> versions. It is **not** the version-specific `ProductCode` accepted by
+> `msiexec /x`. Never pass UpgradeCode to msiexec /x.
+> Use the deployed MSI or its actual ProductCode for uninstall.
+> Intune's MSI detection rule also uses ProductCode, not UpgradeCode.
 
 ## 2. Silent installation
 
@@ -53,39 +51,39 @@ references for the identifier and command semantics.
 
 ```powershell
 # Per-machine (all users) — requires elevation
-msiexec /i "ThreatModelReviewer-v2.5.1-x64.msi" ALLUSERS=1 /qn /norestart /l*v install.log
+msiexec /i "ThreatModelReviewer-v2.6.0-x64.msi" ALLUSERS=1 /qn /norestart /l*v install.log
 
 # Per-user (no elevation)
-msiexec /i "ThreatModelReviewer-v2.5.1-x64.msi" ALLUSERS="" /qn /norestart
+msiexec /i "ThreatModelReviewer-v2.6.0-x64.msi" ALLUSERS=2 MSIINSTALLPERUSER=1 /qn /norestart
 
 # Upgrade in place — install the newer MSI; its upgrade rules identify related versions
 
-# Uninstall using the original MSI for the deployed release (v2.5.1 in this example)
-msiexec /x "ThreatModelReviewer-v2.5.1-x64.msi" /qn /norestart
+# Uninstall using the original MSI for the deployed version, or its ProductCode
+msiexec /x "ThreatModelReviewer-v2.6.0-x64.msi" /qn /norestart
 ```
 
-Keep the deployed release's original MSI accessible to the uninstall command and use its
-actual path. If you deployed another version, use that version's MSI instead. Alternatively,
-obtain its actual `ProductCode` from the MSI's Property table and pass that GUID to `/x`.
+Keep the deployed release's original MSI accessible to the uninstall command and use its actual
+path. Alternatively, read its ProductCode from the MSI Property table and pass that GUID to `/x`.
 
 | Switch | Purpose |
 | --- | --- |
 | `/qn` | Fully silent, no UI |
 | `/norestart` | Never reboot (the product does not require one) |
 | `/l*v <file>` | Verbose log — always capture this in a deployment pipeline |
-| `ALLUSERS=1` | Per-machine install (omit or set empty for per-user) |
-| `APPLICATIONFOLDER="<path>"` | Override the MSI install directory |
+| `ALLUSERS=1` | Per-machine install |
+| `ALLUSERS=2 MSIINSTALLPERUSER=1` | Explicit per-user selection for the dual-scope package |
+| `APPLICATIONFOLDER="<path>"` | Override the install directory |
 
 ### Setup.exe (Inno Setup)
 
 ```powershell
-ThreatModelReviewer-v2.5.1-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG="install.log"
+ThreatModelReviewer-v2.6.0-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG="install.log"
 ```
 
 ### Portable ZIP
 
 ```powershell
-Expand-Archive .\ThreatModelReviewer-v2.5.1-win-x64-portable.zip -DestinationPath 'C:\Program Files\ThreatModelReviewer'
+Expand-Archive .\ThreatModelReviewer-v2.6.0-win-x64-portable.zip -DestinationPath 'C:\Program Files\ThreatModelReviewer'
 # Launch: C:\Program Files\ThreatModelReviewer\ThreatModelReviewer.exe
 ```
 
@@ -97,19 +95,18 @@ No registry writes, no uninstall entry — remove the folder to uninstall.
    (`IntuneWinAppUtil.exe -c <folder> -s <msi> -o <out>`).
 2. **Install command**
    ```
-   msiexec /i "ThreatModelReviewer-v2.5.1-x64.msi" ALLUSERS=1 /qn /norestart
+   msiexec /i "ThreatModelReviewer-v2.6.0-x64.msi" ALLUSERS=1 /qn /norestart
    ```
 3. **Uninstall command**
    ```
-   msiexec /x "ThreatModelReviewer-v2.5.1-x64.msi" /qn /norestart
+   msiexec /x "ThreatModelReviewer-v2.6.0-x64.msi" /qn /norestart
    ```
-   The original MSI must be accessible in the uninstall context. Otherwise, use the
-   `ProductCode` from that deployed MSI, not the `UpgradeCode`.
+   Keep that MSI available in the uninstall context, or substitute the actual
+   ProductCode read from the deployed package. Do not substitute UpgradeCode.
 4. **Install behaviour:** *System* (for per-machine) — or *User* if deploying per-user.
-5. **Detection rule:** MSI product-code rule using the `ProductCode` from the MSI being
-   deployed (not `UpgradeCode`), or a file rule on
-   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.5.1.0**.
-   Adjust the file path for per-user installs or a custom `APPLICATIONFOLDER`.
+5. **Detection rule:** MSI product-code rule using the ProductCode from the MSI being
+   deployed (not UpgradeCode), or a file rule on
+   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.6.0.0**.
 6. **Requirements:** Windows 10 1809+ / Windows 11, x64.
 7. **Return codes:** `0` success, `3010` soft reboot (not expected), `1602` user cancelled,
    `1603` fatal error — inspect the MSI log.
@@ -133,7 +130,10 @@ are plain JSON, safe to seed, and never contain threat-model content.
 
 ### Controlling updates
 
-The in-app update check contacts GitHub once at start-up. To disable it fleet-wide, deploy this
+The in-app update check runs at start-up. It uses bounded GitHub API
+pagination and a product-specific GitHub Pages snapshot fallback; see the
+[network disclosure](DATA-HANDLING.md#31-update-check--automatic-disableable).
+To disable it fleet-wide, deploy this
 file to each user profile (logon script, Intune configuration script, or a default-profile seed):
 
 **`%APPDATA%\ThreatModelReviewer\update.json`**
@@ -141,8 +141,9 @@ file to each user profile (logon script, Intune configuration script, or a defau
 { "Enabled": false }
 ```
 
-With updates disabled the application makes **no unsolicited outbound request at all** — version
-lifecycle is then owned entirely by your deployment tooling. Users can also toggle this in the app.
+Disabling updates removes this update-check path; it does not disable account
+discovery, AI, Azure or MCP connections. Version lifecycle is then owned by your
+deployment tooling. Users can also toggle updates in the app.
 
 ### Controlling AI features
 
@@ -159,13 +160,37 @@ Azure OpenAI or self-hosted endpoint; the key is stored DPAPI-encrypted per user
 
 | Purpose | Destination | Required? |
 | --- | --- | --- |
-| Update check | `api.github.com`, `github.com` | Optional — omit if updates are disabled |
+| Update check/downloads | `api.github.com`, `github.com`; snapshot fallback: `arasanirohithreddy.github.io` | Optional — omit if updates are disabled |
 | Copilot AI features | GitHub Copilot endpoints (per your Copilot deployment) | Optional — only if AI is used |
 | Configured AI provider | The endpoint selected by the organization | Optional |
 | Direct Azure discovery | Azure management and identity endpoints used by the installed Azure CLI | Optional |
 | Microsoft Learn MCP | `learn.microsoft.com/api/mcp` | Optional; disabled initially |
 | Azure MCP | npm package registry, Azure identity and service endpoints used by the server | Optional; disabled initially |
 | Deterministic review, scoring, reports and built-in remediation | — | **No network access required** |
+
+### MCP and Azure controls
+
+Use the matching v2.6.0 or later release when deploying these settings. The
+source integration restricts built-ins to Learn documentation, Azure
+subscription/group metadata, and GitHub file/issue/pull-request reads. MCP is
+default-off; review master/per-profile consent and the allowed tools before rollout.
+The Azure server is pinned to `@azure/mcp@2.0.5`, not a floating `latest`.
+
+GitHub review context uses `https://api.githubcopilot.com/mcp/readonly` and a
+separate fine-grained PAT for selected repositories/read permissions. Provision
+it per user through the app or CLI; do not seed another user's DPAPI ciphertext,
+pass a token literal as a process argument, or reuse Copilot/`gh` credentials.
+`mcp off` disables future use; forgetting a local credential is not remote revocation.
+
+The direct discovery runner requires a trusted native Azure CLI Python environment,
+not a batch command string. `TMR_AZURE_CLI_PYTHON` supports an explicit interpreter
+path for managed layouts. Captured subscription identity and process containment
+do not expand that identity's permissions. See [MCP](MCP.md),
+[Azure discovery](AZURE-DISCOVERY.md) and [data handling](DATA-HANDLING.md).
+
+Qualify app, CLI and skill bundles together. A local compile, offline connection
+fixture or serializer round trip does not establish authenticated-service,
+installer-upgrade or full Microsoft TMT dashboard acceptance.
 
 ## 6. Signing, SmartScreen and trust
 
@@ -176,26 +201,25 @@ Microsoft Defender SmartScreen may warn on first run because the certificate is 
 
 Options for managed estates:
 
-- **Deploy via MSI/Intune** — use approved management tooling for unattended installation.
-  A managed channel is not a bypass: SmartScreen or organization policy can still warn or
-  block execution. Validate the rollout under your organization's software policy.
-- **Experimental self-signed MSIX** — follow [INSTALL.md](INSTALL.md): verify the publisher
-  certificate and, only if policy allows, import it into **Local Machine → Trusted People**
-  with administrator approval. **Trusted Publishers alone does not establish certificate-chain trust.**
-- **Future CA/EV signing** — migration to CA-issued, EV or Azure Trusted Signing certificates
-  is planned, not shipped. Such certificates can establish publisher trust but do not
-  guarantee that SmartScreen or policy warnings disappear. Plan any required certificate
-  or policy updates as part of deployment.
+- **Deploy via MSI/Intune** — stage and approve the package through your management
+  channel. Windows trust and application-control policies still apply.
+- **Trust the certificate according to policy** — experimental self-signed MSIX
+  follows [INSTALL.md](INSTALL.md), including Local Machine → Trusted People when approved.
+  Trusted Publishers alone does not establish certificate-chain trust.
+- **Wait for CA/EV signing** — migration to a CA-issued or Azure Trusted Signing certificate is
+  planned. These choices do not guarantee that SmartScreen or policy warnings disappear;
+  follow your organization's software policy.
 
 Validate any download before mass deployment:
 
 ```powershell
-Get-AuthenticodeSignature .\ThreatModelReviewer-v2.5.1-x64.msi | Format-List Status, SignerCertificate
-Get-FileHash .\ThreatModelReviewer-v2.5.1-x64.msi -Algorithm SHA256
+Get-AuthenticodeSignature .\ThreatModelReviewer-v2.6.0-x64.msi | Format-List Status, SignerCertificate
+Get-FileHash .\ThreatModelReviewer-v2.6.0-x64.msi -Algorithm SHA256
 ```
 
-Record the hash from your first download and compare it across distribution points. *(Publishing
-per-release checksums is on the roadmap.)*
+Compare against the SHA-256 checksum file attached to the same release, then retain that
+verified hash across distribution points. Provenance records the accepted source and runtime;
+it does not establish installation or certificate trust in your estate.
 
 ## 7. Automation and CI/CD
 
@@ -222,7 +246,7 @@ Because the verdict is deterministic, the gate is stable across runs and agents.
 ## 9. Removal
 
 ```powershell
-msiexec /x "ThreatModelReviewer-v2.5.1-x64.msi" /qn /norestart       # original deployed MSI
+msiexec /x "ThreatModelReviewer-v2.6.0-x64.msi" /qn /norestart       # deployed MSI, not UpgradeCode
 Remove-Item "$env:APPDATA\ThreatModelReviewer" -Recurse -Force        # per-user configuration
 ```
 

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/SECURITY.md (normalized SHA-256 6b97dec2c2b52651625eac8be8ea366663d9647cfccdbe1e82f2879b087b10dc). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Security Policy — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Threat Model Reviewer is a defensive security tool that handles highly sensitive input: your threat models. This policy covers how to report a vulnerability, how the product handle" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/security/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Security Policy — App Releases" />
+  <meta property="og:description" content="Threat Model Reviewer is a defensive security tool that handles highly sensitive input: your threat models. This policy covers how to report a vulnerability, how the product handle" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/security/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Security Policy","description":"Threat Model Reviewer is a defensive security tool that handles highly sensitive input: your threat models. This policy covers how to report a vulnerability, how the product handle","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/security/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="../microsoft-tmt/">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="./" aria-current="page">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Product security</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="security-policy" tabindex="-1">Security Policy</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/SECURITY.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#reporting-a-vulnerability">Reporting a vulnerability</a></li><li><a href="#how-the-application-handles-your-data">How the application handles your data</a></li><li><a href="#security-of-the-product-itself">Security of the product itself</a></li><li><a href="#supported-versions">Supported versions</a></li><li><a href="#code-signing">Code signing</a></li></ul></nav></details>
+        <div class="doc-content"><p>Threat Model Reviewer is a <strong>defensive</strong> security tool that handles highly sensitive input: your
+threat models. This policy covers how to report a vulnerability, how the product handles data, how
+it is built and signed, and which versions receive fixes.</p>
+<ul>
+<li><strong>Data handling in full detail:</strong> <a href="../data-handling/">Data handling &amp; privacy</a></li>
+<li><strong>Managed/offline deployment:</strong> <a href="../enterprise-deployment/">Enterprise deployment</a></li>
+</ul>
+<h2 id="reporting-a-vulnerability" tabindex="-1">Reporting a vulnerability</h2>
+<p><strong>Please do not open a public issue for security vulnerabilities.</strong></p>
+<p>Report security issues privately via GitHub's <strong>&quot;Report a vulnerability&quot;</strong> button under
+the <strong>Security</strong> tab of the public repository
+(<a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new" rel="noopener noreferrer">ArasaniRohithReddy/app-releases</a>),
+or by emailing the maintainer. Include:</p>
+<ul>
+<li>the affected version and install method (portable / installer / MSIX),</li>
+<li>a description of the issue and its impact,</li>
+<li>reproduction steps or a proof of concept.</li>
+</ul>
+<p>You can expect an acknowledgement within a few days. Please give a reasonable
+disclosure window before any public discussion.</p>
+<h3 id="what-to-expect" tabindex="-1">What to expect</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Security Policy table 1"><table>
+<thead>
+<tr>
+<th scope="col">Stage</th>
+<th scope="col">Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acknowledgement of your report</td>
+<td>Within 3 business days</td>
+</tr>
+<tr>
+<td>Initial assessment and severity</td>
+<td>Within 5 business days</td>
+</tr>
+<tr>
+<td>Fix or documented mitigation for a critical issue</td>
+<td>Prioritized ahead of all feature work</td>
+</tr>
+<tr>
+<td>Public advisory and credit</td>
+<td>On release of the fix, coordinated with you</td>
+</tr>
+</tbody>
+</table></div>
+<p>Researchers who report in good faith will be credited in the advisory unless they prefer to remain
+anonymous. We will not pursue action against good-faith research that respects user privacy and
+avoids service disruption.</p>
+<h2 id="how-the-application-handles-your-data" tabindex="-1">How the application handles your data</h2>
+<p>Threat models are sensitive, so the application is designed to keep them local:</p>
+<ul>
+<li><strong>The deterministic review runs entirely on your machine.</strong> The verdict, score, and
+findings never depend on a network call.</li>
+<li><strong>AI features are optional and additive.</strong> Finding tools send contextual text;
+extraction and refinement can also send supplied documents, drafts or images.
+Text redaction is a safeguard, not a guarantee that an input is free of secrets.</li>
+<li>Prompts go to <strong>your own GitHub Copilot seat</strong> and are metered against your quota.</li>
+<li>An OpenAI-compatible provider (Azure OpenAI / OpenAI / local) can be used instead of
+Copilot; the API key is stored locally and DPAPI-protected.</li>
+<li><strong>No product analytics</strong> are sent by the app. Updates, account checks, Azure discovery
+and enabled MCP sources have separate network paths. External runtimes and servers
+have their own terms and settings; disable integrations for an offline-only workflow.</li>
+</ul>
+<p>Every network destination, storage path and redaction rule is enumerated in
+<strong><a href="../data-handling/">Data handling &amp; privacy</a></strong>.</p>
+<h2 id="security-of-the-product-itself" tabindex="-1">Security of the product itself</h2>
+<p>Because this tool parses untrusted files and passes their content to a language model, it is built
+defensively:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Security Policy table 2"><table>
+<thead>
+<tr>
+<th scope="col">Risk</th>
+<th scope="col">Control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Malicious/malformed <code>.tm7</code> or <code>.json</code></strong></td>
+<td>Parsing is defensive: malformed input surfaces as an error rather than a crash. XML is read through <code>System.Xml.Linq</code> using .NET 10's default reader settings, under which <strong>DTD processing and external entity resolution are disabled by default</strong> (no XXE by construction on this runtime).</td>
+</tr>
+<tr>
+<td><strong>Secrets inside a threat model reaching an LLM</strong></td>
+<td>Text redaction targets recognizable keys, tokens, connection-string secrets and emails. It is defense in depth, not proof that every sensitive value or image has been sanitized.</td>
+</tr>
+<tr>
+<td><strong>Prompt injection embedded in model content</strong></td>
+<td>Known injection patterns are scanned and flagged. This does not guarantee detection; review tool use and treat model content as untrusted.</td>
+</tr>
+<tr>
+<td><strong>Secrets accidentally committed to a model</strong></td>
+<td>Surfaced as findings so they can be removed at the source.</td>
+</tr>
+<tr>
+<td><strong>Credential theft at rest</strong></td>
+<td>GitHub tokens and provider API keys are encrypted with Windows DPAPI, scoped to the current user.</td>
+</tr>
+<tr>
+<td><strong>Token leakage to child processes</strong></td>
+<td>Since v2.0.1 the device-flow token is passed directly to the Copilot SDK rather than being set as a process-wide environment variable.</td>
+</tr>
+<tr>
+<td><strong>Untrusted update payloads</strong></td>
+<td>Update packages download over HTTPS from the official release hub, are Authenticode-signed, and install paths are validated against traversal.</td>
+</tr>
+<tr>
+<td><strong>Report/export injection</strong></td>
+<td>CSV and issue exports are neutralized against formula-injection (<code>=</code>, <code>+</code>, <code>-</code>, <code>@</code> prefixes).</td>
+</tr>
+<tr>
+<td><strong>Supply chain</strong></td>
+<td>A small, pinned dependency set (see <a href="../third-party-notices/">Third-party notices</a>) with automated update PRs via Dependabot.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The deterministic core has <strong>no AI dependency</strong>, so no model output can alter a verdict, a score,
+or the contents written back to a <code>.tm7</code> without explicit user approval of each change.</p>
+<h3 id="integration-safeguards" tabindex="-1">Integration safeguards</h3>
+<p>Version <strong>2.6.0</strong> includes restricted/default-off
+MCP profiles, separate DPAPI-protected GitHub-context credentials, explicit SDK
+ambient-context opt-outs, bounded connection/process cleanup, and a shell-free
+direct Azure reader with a captured subscription. These are separate controls:
+the direct Azure allowlist does not constrain an MCP server.</p>
+<p>Generation ownership checks preserve unowned or edited sidecars. Compare and SDL
+bind provenance to captured source bytes; ambiguous comparison matches are disclosed,
+and SDL invalidates an older success manifest before replacement. Neither file
+hashes nor model dispositions verify deployed controls. Exported provenance may
+contain absolute paths and sensitive metadata; inspect it before sharing.</p>
+<p>See <a href="../mcp/">MCP</a>, <a href="../azure-discovery/">Azure discovery</a>,
+<a href="../comparison/">Compare</a>, and <a href="../data-handling/">data handling</a>.
+These safeguards do not sandbox a process or establish full authenticated-service,
+native UI or installation acceptance. Older installed binaries do not acquire them
+until updated to a matching release.</p>
+<h2 id="supported-versions" tabindex="-1">Supported versions</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Security Policy table 3"><table>
+<thead>
+<tr>
+<th scope="col">Version</th>
+<th scope="col">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2.6.0</strong> (latest)</td>
+<td>✅ Supported — receives security and functional fixes</td>
+</tr>
+<tr>
+<td>2.5.x (earlier)</td>
+<td>⚠️ Best effort — update to receive the current runtime and workflow safeguards</td>
+</tr>
+<tr>
+<td>2.4.x (earlier)</td>
+<td>⚠️ Best effort — please update; in-app update makes this a two-click operation</td>
+</tr>
+<tr>
+<td>2.2.x (earlier)</td>
+<td>⚠️ Best effort — please update; in-app update makes this a two-click operation</td>
+</tr>
+<tr>
+<td>2.0.x (earlier)</td>
+<td>⚠️ Best effort — please update; in-app update makes this a two-click operation</td>
+</tr>
+<tr>
+<td>1.x</td>
+<td>❌ End of life — upgrade to 2.x</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fixes are delivered in the next release rather than as patches to older versions. Because in-app
+updating has shipped since v1.0.4, staying current is normally automatic.</p>
+<h2 id="code-signing" tabindex="-1">Code signing</h2>
+<p>Application executables and installers (MSI, setup <code>.exe</code>, and MSIX) are <strong>Authenticode-signed</strong>.
+ZIP containers, Markdown skill files and the public certificate are not
+Authenticode-signed application binaries.
+For now they're signed with a <strong>self-signed</strong> certificate (<code>CN=ArasaniRohithReddy</code>), which means:</p>
+<ul>
+<li>the signature binds the file to the signing key, but does not establish public
+publisher trust. Verify the expected publisher and integrity metadata;</li>
+<li>MSIX certificate trust requires approval under your organization's policy, as
+described in the <a href="../install/">install guide</a>;</li>
+<li>Microsoft Defender SmartScreen or application-control policy may still warn or
+block execution. Do not dismiss warnings automatically or bypass an administrator
+block; obtain IT approval when required.</li>
+</ul>
+<p>CA-issued, EV or Azure Trusted Signing certificates can establish publisher trust,
+but do not guarantee the absence of SmartScreen or organizational policy warnings.
+The release pipeline supports supplying a certificate with <code>-CertPfx</code> or
+<code>-CertThumbprint</code> to sign application binaries and installers. This migration is planned.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

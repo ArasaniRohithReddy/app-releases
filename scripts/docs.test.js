@@ -15,11 +15,11 @@ const render = text => {
 test('only the current public guide allowlist is generated, with deterministic output', () => {
   assert.equal(docs.manifest.channel, 'stable-public');
   const productSources = fs.readdirSync(path.join(root, 'products/threat-model-reviewer'))
-    .filter(name => name.endsWith('.md')).map(name => 'products/threat-model-reviewer/' + name).sort();
-  assert.deepEqual(docs.manifest.documents.filter(doc => doc.source.startsWith('products/')).map(doc => doc.source).sort(), productSources);
-  assert.equal(built.documents.length, 16);
+    .filter(name => name.endsWith('.md') || name === 'LICENSE').map(name => 'products/threat-model-reviewer/' + name).sort();
+  assert.deepEqual(docs.manifest.documents.filter(doc => doc.source.startsWith('products/threat-model-reviewer/')).map(doc => doc.source).sort(), productSources);
+  assert.equal(built.documents.length, 22);
   assert.deepEqual([...built.outputs], [...docs.buildSite().outputs]);
-  assert.deepEqual(docs.checkOrWrite(root, true), { pages: 16, changed: 0 });
+  assert.deepEqual(docs.checkOrWrite(root, true), { pages: 22, changed: 0 });
 });
 
 test('development sources, traversing paths and duplicate routes are rejected', () => {
@@ -97,6 +97,8 @@ test('relative and GitHub guide links stay local while genuine external actions 
   assert.equal(docs.resolveLink('CLI.md', guide, built.documents), '../cli/');
   assert.equal(docs.resolveLink('https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/INSTALL.md', guide, built.documents), '../install/');
   assert.equal(docs.resolveLink('../../SECURITY.md#code-signing', guide, built.documents), '../../../help/security/#code-signing');
+  assert.equal(docs.resolveLink('SECURITY.md#code-signing', guide, built.documents), '../security/#code-signing');
+  assert.equal(docs.resolveLink('LICENSE', guide, built.documents), '../license/');
   const issue = 'https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose';
   assert.equal(docs.resolveLink(issue, guide, built.documents), issue);
   assert.throws(() => docs.resolveLink('MCP-DEVELOPMENT.md', guide, built.documents), /unmapped/);
@@ -158,7 +160,7 @@ test('drift checks are read-only, fail on edited output, and recover by determin
     assert.throws(() => docs.checkOrWrite(temporary, true), /drift/);
     assert.equal(fs.readFileSync(target, 'utf8'), changed, 'Check must never rewrite output');
     docs.checkOrWrite(temporary, false);
-    assert.deepEqual(docs.checkOrWrite(temporary, true), { pages: 16, changed: 0 });
+    assert.deepEqual(docs.checkOrWrite(temporary, true), { pages: 22, changed: 0 });
     const unapproved = path.join(temporary, 'docs/threat-model-reviewer/docs/development-preview.md');
     fs.writeFileSync(unapproved, '# Unreleased preview fixture');
     assert.throws(() => docs.checkOrWrite(temporary, true), /Unmapped generated pages/);

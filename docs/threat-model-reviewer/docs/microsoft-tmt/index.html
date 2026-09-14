@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!-- Generated from products/threat-model-reviewer/MICROSOFT-TMT.md (normalized SHA-256 8027977b5de64b5a60a1644b6aa1dbc2b998ecca1cecb0e181dab1f3513c9ce3). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Microsoft Threat Modeling Tool compatibility — Threat Model Reviewer documentation</title>
+  <meta name="description" content="Threat Model Reviewer complements Microsoft Threat Modeling Tool (TMT). It helps prepare a model for human review; it is not a replacement for every TMT feature, a Microsoft approv" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/microsoft-tmt/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Microsoft Threat Modeling Tool compatibility — App Releases" />
+  <meta property="og:description" content="Threat Model Reviewer complements Microsoft Threat Modeling Tool (TMT). It helps prepare a model for human review; it is not a replacement for every TMT feature, a Microsoft approv" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/microsoft-tmt/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Microsoft Threat Modeling Tool compatibility","description":"Threat Model Reviewer complements Microsoft Threat Modeling Tool (TMT). It helps prepare a model for human review; it is not a replacement for every TMT feature, a Microsoft approv","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/microsoft-tmt/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../threat-model-reviewer/" aria-label="Threat Model Reviewer — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Threat Model Reviewer</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../threat-model-reviewer/docs/">Guides</a>
+        <a href="../../../threat-model-reviewer/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../cli/">Command line</a></li><li><a href="../skill/">Copilot CLI skill</a></li><li><a href="../mcp/">MCP developer context</a></li><li><a href="../azure-discovery/">Azure discovery</a></li><li><a href="../comparison/">Compare revisions</a></li><li><a href="./" aria-current="page">Microsoft TMT compatibility</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../license/">Product license</a></li><li><a href="../enterprise-deployment/">Enterprise deployment</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../threat-model-reviewer/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../threat-model-reviewer/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Microsoft TMT compatibility</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="microsoft-threat-modeling-tool-compatibility" tabindex="-1">Microsoft Threat Modeling Tool compatibility</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/MICROSOFT-TMT.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#supported-workflows-and-boundaries">Supported workflows and boundaries</a></li><li><a href="#compatibility-evidence">Compatibility evidence</a></li><li><a href="#diagram-artwork-and-matching">Diagram artwork and matching</a></li><li><a href="#before-handing-a-model-to-a-reviewer">Before handing a model to a reviewer</a></li></ul></nav></details>
+        <div class="doc-content"><p>Threat Model Reviewer complements Microsoft Threat Modeling Tool (TMT). It helps
+prepare a model for human review; it is not a replacement for every TMT feature,
+a Microsoft approval service, or a tool that patches application code.</p>
+<h2 id="supported-workflows-and-boundaries" tabindex="-1">Supported workflows and boundaries</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Microsoft Threat Modeling Tool compatibility table 1"><table>
+<thead>
+<tr>
+<th scope="col">Workflow</th>
+<th scope="col">What this application provides</th>
+<th scope="col">Boundary to retain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review an existing <code>.tm7</code></td>
+<td>Reads model structure and threats, then applies the deterministic rubric</td>
+<td>The score measures the model, not deployed security or Microsoft acceptance</td>
+</tr>
+<tr>
+<td>Correct a model</td>
+<td>Previews selected changes and writes a corrected <code>.tm7</code></td>
+<td>Inspect changes and retain the original; a proposed mitigation is not implementation evidence</td>
+</tr>
+<tr>
+<td>Draft a model</td>
+<td>Create/Assistant and CLI authoring produce components, flows and deterministic STRIDE threats</td>
+<td>New threats require human triage; this is not a reproduction of every native template's threat catalog</td>
+</tr>
+<tr>
+<td>Generate for native TMT</td>
+<td>The supported baseline/template workflow carries the model's knowledge base and profile</td>
+<td>A file that parses in this reviewer is not, by itself, proof that an arbitrary TMT template can open it</td>
+</tr>
+<tr>
+<td>Work with a diagram</td>
+<td>Selection, element/flow editing, layout, zoom and reviewed Copilot proposals</td>
+<td>Layout and artwork are not claimed to be pixel-identical to native TMT</td>
+</tr>
+<tr>
+<td>Compare and hand off work</td>
+<td>Saved-revision comparison, reports, work items and evidence bundles</td>
+<td>A comparison describes model changes; it does not prove that controls were deployed</td>
+</tr>
+<tr>
+<td>Customize organization policy</td>
+<td>CLI policy validation, overrides and disclosed waivers over the existing rubric</td>
+<td>This does not load arbitrary checks into the desktop app or replace TMT's template editor</td>
+</tr>
+</tbody>
+</table></div>
+<p>Microsoft's <a href="https://learn.microsoft.com/azure/security/develop/threat-modeling-tool-feature-overview" rel="noopener noreferrer">feature overview</a>
+also describes native template editing, diagram management, analysis views and
+OneDrive sharing. Those capabilities must not be inferred from this application's
+ability to read or write <code>.tm7</code> files. Use the native tool for workflows that are
+not exposed here.</p>
+<h2 id="compatibility-evidence" tabindex="-1">Compatibility evidence</h2>
+<p>Native serializer evidence is scoped to <strong>Microsoft TMT 7.3.51110.1</strong> and the
+<strong>Azure Cloud Services</strong> template used by the compatibility fixtures. Microsoft
+lists that TMT version in its <a href="https://learn.microsoft.com/azure/security/develop/threat-modeling-tool-releases" rel="noopener noreferrer">release history</a>.
+These references were checked on <strong>2026-09-14</strong>; they do not establish compatibility
+with every past, future or organization-customized template.</p>
+<p>The installed Microsoft serializer checks read, save and reload generated models,
+including retained knowledge base/profile, canonical states and GUIDs, unique
+native threat keys, element/flow identities, security properties and evidence
+counts. Rich metadata, Azure-derived structure and a neutral HTTP-flow example
+are covered. This is stronger than checking output only with this application's
+parser, but narrower than a complete native-dashboard UI acceptance exercise.</p>
+<p>Full native TMT UI automation is not claimed. TMT can update itself and its
+templates, and its native profile is separate from this application's settings.
+Use an isolated Windows environment for native UI acceptance rather than letting
+an automated check modify a developer's normal TMT profile.</p>
+<h2 id="diagram-artwork-and-matching" tabindex="-1">Diagram artwork and matching</h2>
+<p>Microsoft's stencil images are <strong>not redistributed</strong> in the application bundles.
+When a local TMT installation is available, the application reads its knowledge
+bases and caches the extracted artwork under
+<code>%LOCALAPPDATA%\ThreatModelReviewer\Stencils</code>.</p>
+<p>Stencil resolution tries an exact type ID, normalized type name, curated aliases,
+friendly names and a generic family. These are progressively weaker matches, not
+equivalent assertions of identity. A renamed or unfamiliar service can fall back
+to a generic representation. Small legacy glyphs, generic artwork, unavailable
+images and unmatched stencils use the application's built-in vector icons.</p>
+<p>The diagram deliberately remains a light document in both application themes.
+Inspect the element's type and properties as well as its label; an icon match does
+not establish which Azure service is deployed or how it is configured.</p>
+<h2 id="before-handing-a-model-to-a-reviewer" tabindex="-1">Before handing a model to a reviewer</h2>
+<ol>
+<li>Keep the original file and review the selected changes before saving.</li>
+<li>For generated files intended for TMT, use the supported baseline/template
+workflow described in the <a href="../user-guide/">user guide</a>, rather than assuming
+that generic XML generation is sufficient.</li>
+<li>Open the resulting file in your team's target TMT version/template, inspect
+the diagram and threat records, and retain the accompanying evidence files.</li>
+<li>Supply assumptions, unresolved threats and verification evidence for controls
+implemented by the owning team. <strong>READY WITH NOTES is not Microsoft approval.</strong></li>
+</ol>
+<p>See <a href="../azure-discovery/">Azure discovery</a> for the distinction between permission
+and observed traffic, <a href="../comparison/">Compare</a> for matching limitations, and
+<a href="../data-handling/">data handling</a> before sending private inputs to an AI provider.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../threat-model-reviewer/docs/">All guides</a>
+        <a href="../../../threat-model-reviewer/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

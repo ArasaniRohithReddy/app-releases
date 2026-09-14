@@ -201,6 +201,9 @@ async function preservationChecks(browser, base) {
           check(await page.locator('#hero-download').getAttribute('href') === msi.browser_download_url, `${fault.name}: snapshot MSI missing`);
           const links = await page.locator('[data-dl]').evaluateAll(nodes => nodes.map(n => [n.dataset.dl, n.href]));
           check(links.every(([kind, href]) => latest.assets.some(a => releaseData.kindOf(a.name) === kind && a.browser_download_url === href)), `${fault.name}: package kinds drifted`);
+          const metadata = JSON.parse(await page.locator('#software-metadata').textContent());
+          check(metadata.softwareVersion === latest.tag_name.slice(releaseData.PREFIX.length), `${fault.name}: product metadata version drift`);
+          check(metadata.downloadUrl === msi.browser_download_url, `${fault.name}: product metadata download drift`);
         }
         if (name === 'releases') await historyMatches(page, snapshot, `${fault.name}: snapshot history`);
       }
