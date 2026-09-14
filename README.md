@@ -63,8 +63,9 @@ SHA-256 checksums.
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/shot2code/) |
 | **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) — every mirrored version, its notes and the files it actually carries |
-| **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [FAQ](products/shot2code/FAQ.md) · [Changelog](products/shot2code/CHANGELOG.md) |
-| **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) |
+| **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [FAQ](products/shot2code/FAQ.md) · [Troubleshooting](products/shot2code/TROUBLESHOOTING.md) · [Changelog](products/shot2code/CHANGELOG.md) |
+| **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) · [Third-party notices](products/shot2code/THIRD-PARTY-NOTICES.md) |
+| **Contributing** | [Where issues, docs fixes and code changes go](products/shot2code/CONTRIBUTING.md) |
 | **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) — the canonical `vX.Y.Z` history and the updater feed |
 | **Platform** | Windows 10/11 x64 · self-contained (backend and headless Chromium bundled) |
 

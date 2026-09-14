@@ -1,5 +1,10 @@
 # shot2code FAQ &amp; troubleshooting
 
+Common questions, in the order people ask them. If something is failing rather
+than merely unclear, [TROUBLESHOOTING.md](TROUBLESHOOTING.md) is the symptom-first
+runbook — startup, providers, Chromium, import, export, updates, and where the
+logs live.
+
 ## General
 
 **Is it free?**
@@ -196,7 +201,13 @@ preference on this device, not an account setting. `REPLICATE_API_KEY` lives in
 
 ## Getting help
 
+- Something is broken: work through
+  [TROUBLESHOOTING.md](TROUBLESHOOTING.md) — it covers startup, providers,
+  Chromium, import, export and updates, and names the logs to read.
 - Bugs and ideas: [open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose)
-  in this hub and pick **shot2code**.
+  in this hub and pick **shot2code**. Include the details listed under
+  [Reporting a problem](TROUBLESHOOTING.md#reporting-a-problem).
 - Security problems: report them privately — see [SECURITY.md](SECURITY.md).
+- Where a fix belongs — this hub or the source repository — is explained in
+  [CONTRIBUTING.md](CONTRIBUTING.md).
 - Never paste API keys, tokens or unredacted log lines into a public issue.

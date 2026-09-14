@@ -35,9 +35,27 @@ const products = [
     kinds: ['setup', 'msi', 'portable', 'checksums'],
     recommendedKind: 'setup',
     fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&expanded=true',
-    requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'ARCHITECTURE.md',
-      'DATA-HANDLING.md', 'RELEASING.md', 'CHANGELOG.md', 'SECURITY.md']
+    requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md',
+      'DATA-HANDLING.md', 'RELEASING.md', 'CHANGELOG.md', 'SECURITY.md', 'CONTRIBUTING.md', 'THIRD-PARTY-NOTICES.md']
   }
+];
+
+// The in-app Help centre opens these published targets by URL, so each one has to exist, be
+// reachable from the product page or its guide index, and keep the heading the link points at.
+// A guide is "indexed" when README.md's documentation table names it; it is "on the page" when
+// docs/shot2code/index.html links it directly.
+const shot2codeHelp = [
+  { guide: 'INSTALL.md', onPage: true },
+  { guide: 'USER-GUIDE.md', onPage: true },
+  { guide: 'FAQ.md', onPage: true },
+  { guide: 'TROUBLESHOOTING.md', onPage: true },
+  { guide: 'ARCHITECTURE.md', onPage: true },
+  { guide: 'DATA-HANDLING.md', onPage: true },
+  { guide: 'SECURITY.md', onPage: true },
+  { guide: 'CONTRIBUTING.md', onPage: true },
+  { guide: 'THIRD-PARTY-NOTICES.md', onPage: true },
+  { guide: 'RELEASING.md', onPage: true },
+  { guide: 'CHANGELOG.md', onPage: true }
 ];
 
 const pages = ['docs/index.html', ...products.flatMap(p => [p.productPage, p.releasesPage])];
@@ -61,6 +79,26 @@ const compareVersions = (a, b) => {
   const left = a.split('.').map(Number), right = b.split('.').map(Number);
   for (let i = 0; i < 3; i++) if (left[i] !== right[i]) return left[i] - right[i];
   return 0;
+};
+// GitHub's heading-fragment rule, which is also what the generated documentation uses. Code spans
+// and emphasis are stripped first so `#the-code-tab` still matches "## The Code tab".
+const anchorOf = heading => heading.trim().toLowerCase()
+  .replace(/[`*_]/g, '')
+  .replace(/&amp;/g, '')
+  .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+  .trim()
+  .replace(/\s/g, '-');
+const anchorsOf = markdown => {
+  const body = markdown.replace(/^```[\s\S]*?^```$/gm, '');
+  const seen = new Map();
+  const ids = [];
+  for (const [, heading] of body.matchAll(/^#{1,6}\s+(.+?)\s*$/gm)) {
+    const base = anchorOf(heading);
+    const count = seen.get(base) || 0;
+    seen.set(base, count + 1);
+    ids.push(count ? `${base}-${count}` : base);
+  }
+  return new Set(ids);
 };
 
 test('hero result describes the published synthetic sample', () => {
@@ -252,6 +290,141 @@ test('every product ships the guides its pages link to', () => {
       assert.ok(exists(`${entry.guides}/${guide}`), `${entry.guides}/${guide} is missing`);
 });
 
+test('every shot2code help target exists, is indexed, and is reachable from the product page', () => {
+  const blob = 'https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/';
+  const index = read('products/shot2code/README.md');
+  for (const { guide, onPage } of shot2codeHelp) {
+    assert.ok(exists(`products/shot2code/${guide}`), `products/shot2code/${guide} is missing`);
+    // README.md is the guide index the Help centre and the repository both read from.
+    assert.match(index, new RegExp(`\\]\\(${guide.replace('.', '\\.')}\\)`), `README.md does not index ${guide}`);
+    if (onPage) assert.ok(shot2code.includes(`href="${blob}${guide}"`), `the product page does not link ${guide}`);
+  }
+  // The index is the complete set: a guide added to the folder has to be published, not stranded.
+  const authored = fs.readdirSync(path.join(root, 'products/shot2code')).filter(name => name.endsWith('.md'));
+  assert.deepEqual(authored.sort(), ['README.md', ...shot2codeHelp.map(entry => entry.guide)].sort(),
+    'products/shot2code holds a guide that is not a published help target');
+  // The Help centre entries also have to find each other: the newest guides are reachable from the
+  // two documents a reader is most likely to open first.
+  for (const from of ['FAQ.md', 'USER-GUIDE.md'])
+    assert.match(read(`products/shot2code/${from}`), /\]\(TROUBLESHOOTING\.md/, `${from} does not link the runbook`);
+  assert.match(read('products/shot2code/FAQ.md'), /\]\(CONTRIBUTING\.md\)/);
+  assert.match(read('products/shot2code/TROUBLESHOOTING.md'), /\]\(FAQ\.md\)[\s\S]*\]\(USER-GUIDE\.md\)/);
+});
+
+test('every shot2code guide cross-link and heading fragment resolves', () => {
+  const folder = path.join(root, 'products/shot2code');
+  for (const name of fs.readdirSync(folder).filter(file => file.endsWith('.md'))) {
+    const source = `products/shot2code/${name}`;
+    const body = read(source).replace(/^```[\s\S]*?^```$/gm, '');
+    for (const [, href] of body.matchAll(/\]\(([^)\s]+)\)/g)) {
+      // Absolute hub links are checked against the file they name; everything else external is
+      // left alone, because this suite does not reach the network.
+      const hub = 'https://github.com/ArasaniRohithReddy/app-releases/blob/main/';
+      let target = null, fragment = '';
+      if (href.startsWith('#')) { target = source; fragment = href.slice(1); }
+      else if (href.startsWith(hub)) [target, fragment = ''] = href.slice(hub.length).split('#');
+      else if (!/^[a-z]+:/i.test(href)) {
+        const [relative, hash = ''] = href.split('#');
+        target = path.posix.normalize(path.posix.join('products/shot2code', relative));
+        fragment = hash;
+      }
+      if (!target) continue;
+      assert.ok(fs.existsSync(path.join(root, target)), `${source}: ${href} does not resolve`);
+      if (fragment && target.endsWith('.md'))
+        assert.ok(anchorsOf(read(target)).has(decodeURIComponent(fragment)), `${source}: ${href} names a missing heading`);
+    }
+  }
+});
+
+test('the shot2code troubleshooting runbook covers the diagnostics the app actually writes', () => {
+  const runbook = read('products/shot2code/TROUBLESHOOTING.md');
+  // Where the evidence is. Both log paths are what a report is triaged from.
+  assert.match(runbook, /%APPDATA%\\shot2code-desktop\\shot2code-backend\.log/);
+  assert.match(runbook, /%TEMP%\\shot2code-installer-preinstall\.log/);
+  assert.match(runbook, /%LOCALAPPDATA%\\shot2code\\history\.sqlite3/);
+  for (const section of ['The app will not start', 'Providers and the model catalogue',
+    'Generation fails or is wrong', 'Screenshot preview, Chromium and screen recording',
+    'Importing a project', 'Preview, export and CodePen', 'History and recent projects',
+    'Installing and updating', 'Reporting a problem'])
+    assert.match(runbook, new RegExp(`^## ${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'),
+      `TROUBLESHOOTING.md is missing the "${section}" section`);
+  // Provider and catalogue behaviour, stated the way the build behaves.
+  assert.match(runbook, /COPILOT_GITHUB_TOKEN.*GH_TOKEN.*GITHUB_TOKEN/);
+  assert.match(runbook, /can no longer run/);
+  assert.match(runbook, /Deprecated models are hidden|deprecated models are hidden/i);
+  assert.match(runbook, /up to 4 options for a first generation, up to 2/i);
+  // Chromium ships with the app and degrades to a skipped tool, rather than a failed run.
+  assert.match(runbook, /chromium-headless-shell|headless shell/i);
+  assert.match(runbook, /skips that tool|skip that tool/i);
+  // Import parses, never executes.
+  assert.match(runbook, /never\*{0,2} executes/i);
+  // The issue-report contract, and the secrets that must never reach a public issue.
+  assert.match(runbook, /Never paste secrets into a public issue/i);
+  for (const secret of [/API keys/, /GitHub tokens/, /backend\\?\/\.env/, /history\.sqlite3/])
+    assert.match(runbook, secret, 'TROUBLESHOOTING.md does not warn about a secret it should');
+  assert.match(runbook, /revoke it with the provider immediately/i);
+  // Support policy is linked, not restated per product.
+  assert.match(runbook, /\]\(\.\.\/\.\.\/SUPPORT\.md\)/);
+});
+
+test('the shot2code contributor path separates hub issues from source-repository code', () => {
+  const contributing = read('products/shot2code/CONTRIBUTING.md');
+  // Prose wraps at the guide's column width, so read it the way a reader does.
+  const plain = contributing.replace(/[*`]/g, '').replace(/\s+/g, ' ');
+  // Code goes to the public source repository; this hub publishes builds and documentation.
+  assert.match(contributing, /https:\/\/github\.com\/ArasaniRohithReddy\/shot2code\/blob\/main\/CONTRIBUTING\.md/);
+  assert.match(plain, /does not contain the application source/i);
+  assert.match(plain, /Code contributions go to the source repository, which is public/i);
+  // shot2code's source is public, so the hub must not repeat the closed-source contribution rule.
+  assert.doesNotMatch(plain, /source is maintained privately|code contributions aren't accepted|external code contributions are not accepted/i);
+  // The public routes that stay here.
+  assert.match(contributing, /issues\/new\/choose/);
+  assert.match(contributing, /products\/shot2code/);
+  assert.match(contributing, /\]\(\.\.\/\.\.\/CODE_OF_CONDUCT\.md\)/);
+  assert.match(contributing, /\]\(\.\.\/\.\.\/SUPPORT\.md\)/);
+  assert.match(contributing, /\]\(SECURITY\.md\)/);
+  assert.match(contributing, /npm test/);
+  assert.match(contributing, /No secrets, ever/);
+});
+
+test('the shot2code third-party notice is high level, sourced and not an exhaustive claim', () => {
+  const notices = read('products/shot2code/THIRD-PARTY-NOTICES.md');
+  // The bundled runtimes are the real licensing surface and none of them is single-licensed.
+  for (const runtime of [/\*\*Electron\*\*/, /\*\*CPython\*\*/, /\*\*PyInstaller\*\*/, /chromium-headless-shell/i])
+    assert.match(notices, runtime, 'THIRD-PARTY-NOTICES.md does not name a bundled runtime');
+  assert.match(notices, /Chromium\*{0,2} is BSD-3-Clause \*{0,2}plus many other licenses/i);
+  assert.match(notices, /Python Software Foundation License/);
+  assert.match(notices, /bootloader exception/i);
+  // Honest about its own scope: a summary that points at the manifests, not an SBOM.
+  assert.match(notices, /\*\*not\*\* a complete list and not a transitive SBOM/i);
+  assert.match(notices, /pointer, not a legal determination/i);
+  assert.doesNotMatch(notices, /complete list of (?:all )?(?:the )?licen[cs]es|exhaustive licen[cs]e|full SBOM/i);
+  // Every manifest it defers to has to be a real path in the public source repository.
+  for (const manifest of ['backend/pyproject.toml', 'backend/uv.lock', 'frontend/package.json',
+    'frontend/pnpm-lock.yaml', 'desktop/package.json', 'desktop/package-lock.json'])
+    assert.ok(notices.includes(`https://github.com/ArasaniRohithReddy/shot2code/blob/main/${manifest}`),
+      `THIRD-PARTY-NOTICES.md does not link ${manifest}`);
+  // Stack libraries are referenced by generated projects; claiming to redistribute them is wrong.
+  assert.match(notices, /referenced by generated projects\*{0,2}, not redistributed/i);
+  // Same correction route as the other product's notice.
+  assert.match(notices, /issues\/new\/choose/);
+});
+
+test('no Threat Model Reviewer copy leaks into the shot2code guides or page', () => {
+  // The two products share a hub, a house style and a test suite — not their subject matter.
+  const foreign = [/threat model/i, /\.tm7\b/, /Threat Dragon/i, /\bSTRIDE\b/, /ThreatModelReviewer/,
+    /deterministic (?:verdict|review|rubric|checks)/i, /readiness (?:verdict|score)/i,
+    /Copilot CLI skill/i, /MITRE ATT&CK|ATLAS™/, /Microsoft approval/i, /\.msix\b/i];
+  const files = fs.readdirSync(path.join(root, 'products/shot2code'))
+    .filter(name => name.endsWith('.md')).map(name => `products/shot2code/${name}`);
+  for (const name of [...files, 'docs/shot2code/index.html'])
+    for (const pattern of foreign)
+      assert.doesNotMatch(read(name), pattern, `${name}: Threat Model Reviewer copy leaked in`);
+  // The reverse leak matters too: shot2code's help targets are not linked from the other product.
+  for (const name of ['products/threat-model-reviewer/README.md', 'docs/threat-model-reviewer/index.html'])
+    assert.doesNotMatch(read(name), /products\/shot2code|shot2code\/docs/, `${name}: links a shot2code guide`);
+});
+
 test('the shot2code guides describe the shipped build', () => {
   const guide = read('products/shot2code/USER-GUIDE.md');
   assert.match(guide, /## Choosing a model provider/);
@@ -281,7 +454,8 @@ test('the shot2code guides describe the shipped build', () => {
   assert.match(changelog, /could start a second installer/);
 
   // The hub documents the product; it does not re-host the source.
-  for (const name of ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'ARCHITECTURE.md', 'DATA-HANDLING.md', 'RELEASING.md', 'SECURITY.md'])
+  for (const name of ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md',
+    'DATA-HANDLING.md', 'RELEASING.md', 'SECURITY.md', 'CONTRIBUTING.md', 'THIRD-PARTY-NOTICES.md'])
     assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
 });
 

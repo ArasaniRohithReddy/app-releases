@@ -13,6 +13,7 @@ and your API keys are not sent anywhere else.
 **[Product site](https://arasanirohithreddy.github.io/app-releases/shot2code/)**
 **[Downloads](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)**
 **[Install](INSTALL.md)** **[User guide](USER-GUIDE.md)** **[FAQ](FAQ.md)**
+**[Troubleshooting](TROUBLESHOOTING.md)**
 
 Source code, issues about the code itself, and the upstream release notes live in
 the project repository: **<https://github.com/ArasaniRohithReddy/shot2code>**.
@@ -86,16 +87,27 @@ they belong to. See [DATA-HANDLING.md](DATA-HANDLING.md).
 | --- | --- |
 | [INSTALL.md](INSTALL.md) | Downloads, checksum verification, SmartScreen, updates, uninstall |
 | [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, model selection, generating, editing, History, import, export, shortcuts |
-| [FAQ.md](FAQ.md) | Common questions and troubleshooting |
+| [FAQ.md](FAQ.md) | Common questions, in the order people ask them |
+| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Symptom-first runbook: startup, providers, Chromium, import, export, updates, where the logs live |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the app, backend, agent loop and packaging fit together |
 | [DATA-HANDLING.md](DATA-HANDLING.md) | Every network destination and on-disk path |
 | [SECURITY.md](SECURITY.md) | Reporting a vulnerability, unsigned builds, update integrity |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Where issues, documentation fixes and code changes each go |
+| [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) | Bundled runtimes and principal dependencies, with links to the source manifests |
 | [RELEASING.md](RELEASING.md) | How a build becomes a release in this hub |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each published version |
+
+Bugs and ideas belong in this hub —
+[open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose)
+and pick **shot2code**. Vulnerabilities are [reported privately](SECURITY.md).
+The hub's [support policy](../../SUPPORT.md) covers triage for every product
+published here.
 
 ## License
 
 The application is MIT-licensed in its
 [source repository](https://github.com/ArasaniRohithReddy/shot2code/blob/main/LICENSE).
 The documentation and release assets in this hub are provided under the
-[MIT License](../../LICENSE).
+[MIT License](../../LICENSE). Components that ship inside the app — Electron and
+Chromium, the frozen Python runtime, the headless browser — are listed in
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

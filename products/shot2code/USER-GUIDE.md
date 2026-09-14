@@ -2,7 +2,9 @@
 
 Everything below describes the published Windows build. If something here does
 not match what you see, check the version in **Settings** against
-[CHANGELOG.md](CHANGELOG.md). The application itself is developed at
+[CHANGELOG.md](CHANGELOG.md). If something is failing rather than merely
+unfamiliar, [TROUBLESHOOTING.md](TROUBLESHOOTING.md) is the symptom-first
+runbook. The application itself is developed at
 [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code).
 
 - [First run](#first-run)
@@ -19,6 +21,7 @@ not match what you see, check the version in **Settings** against
 - [Exporting a project](#exporting-a-project)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [Settings](#settings)
+- [When something goes wrong](#when-something-goes-wrong)
 
 ## First run
 
@@ -331,3 +334,19 @@ not shut down safely, that is the guard working: quit the app completely and try
 again. From 0.3.2 the installer runs the same check itself, so an update that
 starts from an older build is protected as well — see
 [INSTALL.md](INSTALL.md#updates).
+
+## When something goes wrong
+
+[TROUBLESHOOTING.md](TROUBLESHOOTING.md) is organised by symptom and names the
+file to read for each one — the backend log at
+`%APPDATA%\shot2code-desktop\shot2code-backend.log` for a blank window or a
+failed start, and `%TEMP%\shot2code-installer-preinstall.log` for an install or
+update that stopped. The [FAQ](FAQ.md) answers the *why* behind the behaviour;
+the runbook gets you unstuck.
+
+When a problem needs an issue, [open one in this hub](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose)
+and pick **shot2code**, including the details under
+[Reporting a problem](TROUBLESHOOTING.md#reporting-a-problem) — and never paste
+keys, tokens or unredacted log lines into a public issue. Vulnerabilities go
+[privately](SECURITY.md) instead. [CONTRIBUTING.md](CONTRIBUTING.md) explains
+which repository a fix belongs in.
