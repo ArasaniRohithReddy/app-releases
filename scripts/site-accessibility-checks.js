@@ -108,6 +108,13 @@ module.exports = async function accessibilityChecks({ browser, base, snapshot, c
           check(prose.count > 0 && prose.missing.length === 0,
             `${name}/${system}/${mode}: prose links depend on colour alone: ${prose.missing.join('; ')}`);
 
+          if (name === 'portal') {
+            for (const element of await page.locator('.app-title, .app-card .desc, .app-tags span, .status, .app-release, .ver, .fact h3, .fact p, .catalog-note').all()) {
+              const colors = await element.evaluate(surfaceContrast);
+              check(colors.text >= 4.5, `portal/${system}/${mode}: card/shared guidance text below 4.5:1 (${colors.text.toFixed(2)})`);
+            }
+          }
+
           if (name === 'releases') {
             const input = page.getByRole('searchbox', { name: 'Filter releases by version' });
             const normal = await input.evaluate(surfaceContrast);
@@ -136,7 +143,8 @@ module.exports = async function accessibilityChecks({ browser, base, snapshot, c
 
         for (const width of [320, 375, 390, 620, 621, 640, 700, 701, 820, 821, 980, 1280, 1460, 1461, 1600, 1920]) {
           await page.setViewportSize({ width, height: 900 });
-          const header = await page.locator('header.site').evaluate(element => {
+          const guideLabel = name === 'portal' ? 'Apps & guides' : 'Guides';
+          const header = await page.locator('header.site').evaluate((element, guideLabel) => {
             const singleRow = container => {
               const centers = [...container.children].filter(child => !child.classList.contains('spacer'))
                 .map(child => child.getBoundingClientRect()).filter(box => box.width > 0 && box.height > 0)
@@ -150,12 +158,12 @@ module.exports = async function accessibilityChecks({ browser, base, snapshot, c
                 kind: child.className, width: Math.round(child.getBoundingClientRect().width)
               })),
               guideLinks: [...element.querySelectorAll('a')].filter(link =>
-                link.textContent.trim() === 'Guides' && link.getBoundingClientRect().width > 0).length
+                link.textContent.trim() === guideLabel && link.getBoundingClientRect().width > 0).length
             };
-          });
+          }, guideLabel);
           check(header.height <= 70 && header.aligned,
             `${name}/${system}@${width}: normal-size header wraps or loses alignment (${header.height.toFixed(1)}px; ${JSON.stringify(header.groups)})`);
-          check(header.guideLinks === 1, `${name}/${system}@${width}: expected one visible Guides entry, got ${header.guideLinks}`);
+          check(header.guideLinks === 1, `${name}/${system}@${width}: expected one visible ${guideLabel} entry, got ${header.guideLinks}`);
         }
 
         // Real forward/backward Tab navigation, including the narrow wrapping-header layout.

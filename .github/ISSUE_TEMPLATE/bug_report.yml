@@ -7,8 +7,9 @@ body:
     attributes:
       value: |
         Thanks for the report! Please **don't include secrets or sensitive source material** —
-        no API keys or tokens, no raw `.tm7` threat model, and no proprietary code. A sanitized
-        snippet or screenshot is enough.
+        no API keys or tokens, private files, unredacted screenshots/logs, personal/customer
+        information or confidential business data. Use synthetic examples, such as a sample
+        threat-model file or mockup, and inspect every attachment before sharing.
   - type: dropdown
     id: product
     attributes:
@@ -44,8 +45,8 @@ body:
   - type: input
     id: os
     attributes:
-      label: Windows version
-      placeholder: "Windows 11 23H2 (x64)"
+      label: Operating system and architecture
+      placeholder: "OS edition, build number and CPU architecture"
     validations:
       required: true
   - type: textarea
@@ -69,7 +70,7 @@ body:
     id: logs
     attributes:
       label: Error text / screenshots
-      description: Paste any error message or attach a screenshot (drag & drop).
+      description: Share only sanitized error text or screenshots from synthetic inputs. Remove credentials and private personal, customer or business data.
       render: text
     validations:
       required: false
@@ -78,5 +79,5 @@ body:
     attributes:
       label: Confirmation
       options:
-        - label: This report contains no secrets and no sensitive source material (no API keys or tokens, no raw threat-model file, no proprietary code).
+        - label: I inspected this report and its attachments; they contain no credentials, private files, sensitive screenshots/logs, customer data or confidential business information.
           required: true

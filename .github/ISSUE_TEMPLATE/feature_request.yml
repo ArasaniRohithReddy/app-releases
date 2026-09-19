@@ -3,6 +3,11 @@ description: Suggest an idea or improvement for one of the apps.
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Use synthetic examples. Do not include credentials, private files or screenshots,
+        personal/customer information, or confidential business data.
   - type: dropdown
     id: product
     attributes:
@@ -25,7 +30,7 @@ body:
     id: proposal
     attributes:
       label: Proposed solution
-      description: What would you like to see? Mockups/screenshots welcome.
+      description: What would you like to see? Synthetic or safely redacted mockups/screenshots are welcome.
     validations:
       required: false
   - type: textarea

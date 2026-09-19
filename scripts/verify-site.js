@@ -347,6 +347,86 @@ async function preservationChecks(browser, base) {
   } finally { await blockedStorage.close(); }
 }
 
+async function portalLayoutChecks(browser, base) {
+  console.log('Checking multi-app portal card layout, shared guidance and long-content reflow');
+  for (const theme of ['light', 'dark']) {
+    const context = await browser.newContext({ colorScheme: theme, reducedMotion: 'reduce' });
+    context.setDefaultTimeout(15000);
+    try {
+      await mockReleases(context);
+      const page = await context.newPage();
+      await visit(page, base + '/');
+      check(await page.locator('.apps > .app-card').count() === products.length, `portal/${theme}: non-product card in the app directory`);
+      check(await page.locator('.app-card.soon').count() === 0, `portal/${theme}: future placeholder competes with real products`);
+      check(await page.locator('header.site a').filter({ hasText: 'Apps & guides' }).getAttribute('href') === '#apps',
+        `portal/${theme}: shared guide entry assumes a product`);
+      for (const width of [320, 390, 640, 768, 980, 1180, 1440]) {
+        await page.setViewportSize({ width, height: 900 });
+        const layout = await page.locator('.app-card.live').evaluateAll(cards => cards.map(card => {
+          const bounds = selector => {
+            const element = card.querySelector(selector);
+            const rect = element.getBoundingClientRect();
+            return { x: rect.x, y: rect.y, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height };
+          };
+          const rect = card.getBoundingClientRect();
+          return { name: card.dataset.product, top: rect.top, bottom: rect.bottom, left: rect.left, right: rect.right,
+            icon: bounds('.app-icon'), heading: bounds('.app-heading'), title: bounds('.app-title'),
+            description: bounds('.desc'), footer: bounds('.app-foot'),
+            overflow: [...card.querySelectorAll('.app-top, .app-heading, .app-title, .desc, .app-foot, .app-release')]
+              .some(element => element.scrollWidth > element.clientWidth + 1) };
+        }));
+        for (const card of layout) {
+          check(Math.abs(card.icon.y - card.heading.y) < 1 && card.heading.x > card.icon.right,
+            `portal/${theme}@${width}/${card.name}: icon/title block changed rows`);
+          check(card.title.right <= card.right && !card.overflow, `portal/${theme}@${width}/${card.name}: card content overflows`);
+        }
+        if (layout.length === 2 && Math.abs(layout[0].top - layout[1].top) < 1) {
+          check(Math.abs(layout[0].bottom - layout[1].bottom) < 1, `portal/${theme}@${width}: unequal peer-card heights`);
+          check(Math.abs(layout[0].description.y - layout[1].description.y) < 1, `portal/${theme}@${width}: summaries are not aligned`);
+          check(Math.abs(layout[0].footer.y - layout[1].footer.y) < 1, `portal/${theme}@${width}: actions/version labels are not aligned`);
+        }
+        check(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth),
+          `portal/${theme}@${width}: horizontal overflow`);
+        if (process.env.SITE_SCREENSHOTS && [390, 768, 1180].includes(width)) {
+          fs.mkdirSync(process.env.SITE_SCREENSHOTS, { recursive: true });
+          await page.locator('#apps').screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `portal-cards-${theme}-${width}.png`) });
+          await page.locator('.band').screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `portal-guidance-${theme}-${width}.png`) });
+        }
+      }
+      await page.setViewportSize({ width: 1180, height: 900 });
+      const first = page.getByRole('link', { name: 'Open app — Threat Model Reviewer', exact: true });
+      await first.scrollIntoViewIfNeeded();
+      await first.focus();
+      check(await first.evaluate(link => {
+        const outline = getComputedStyle(link, '::after');
+        return outline.outlineStyle !== 'none' && parseFloat(outline.outlineWidth) >= 2;
+      }), `portal/${theme}: whole-card keyboard focus is missing`);
+      await page.keyboard.press('Tab');
+      check(await page.getByRole('link', { name: 'Open app — shot2code', exact: true }).evaluate(link => link === document.activeElement),
+        `portal/${theme}: product card keyboard order changed`);
+
+      await page.evaluate(() => {
+        document.querySelector('.app-title').textContent = 'Synthetic application with a deliberately long product title for layout verification';
+        document.querySelectorAll('.desc')[1].textContent += ' Additional synthetic description content for reflow verification.'.repeat(5);
+        document.documentElement.style.fontSize = '200%';
+      });
+      for (const width of [320, 640, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        const problems = await page.locator('.app-card, .app-top, .app-heading, .app-title, .desc, .app-foot, .app-release, .fact, .catalog-note')
+          .evaluateAll(elements => elements.filter(element => element.scrollWidth > element.clientWidth + 1)
+            .map(element => element.className));
+        check(problems.length === 0, `portal/${theme}@${width}/long content/200%: ${problems.join(', ')} overflow`);
+        check(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth),
+          `portal/${theme}@${width}/long content/200%: page overflow`);
+        if (process.env.SITE_SCREENSHOTS && width === 320)
+          await page.locator('#apps').screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `portal-long-content-${theme}-320.png`) });
+      }
+      if (process.env.SITE_SCREENSHOTS)
+        await page.locator('#apps').screenshot({ path: path.join(process.env.SITE_SCREENSHOTS, `portal-long-content-${theme}.png`) });
+    } finally { await context.close(); }
+  }
+}
+
 async function main() {
   await new Promise((resolve, reject) => {
     server.once('error', reject);
@@ -659,6 +739,7 @@ async function main() {
       await noJs.close();
     }
 
+    await portalLayoutChecks(browser, base);
     await preservationChecks(browser, base);
     await accessibilityChecks({ browser, base, snapshot, check, mockReleases, visit });
 
@@ -717,6 +798,11 @@ async function main() {
     await new Promise(resolve => server.close(resolve));
   }
   console.log(`${passed} browser checks passed; ${failures.length} failed.`);
+  if (process.env.SITE_REPORT_DIR) {
+    fs.mkdirSync(process.env.SITE_REPORT_DIR, { recursive: true });
+    fs.writeFileSync(path.join(process.env.SITE_REPORT_DIR, 'site-checks.json'),
+      JSON.stringify({ passed, failed: failures.length, failures, root, browser: process.env.SITE_BROWSER_CHANNEL || 'chromium' }, null, 2) + '\n');
+  }
   failures.forEach(message => console.error(message));
   if (failures.length) process.exitCode = 1;
 }

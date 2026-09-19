@@ -83,6 +83,14 @@ async function main() {
           check(await page.locator('.view-source').count() === 1, `${entry.label}: missing secondary source link`);
           check((await page.locator('.view-source').getAttribute('href')) === `https://github.com/${manifest.repository}/blob/main/${entry.source}`, `${entry.label}: wrong canonical source`);
           check(await page.locator('.doc-sidebar [aria-current="page"]').count() === 1, `${entry.label}: incorrect active navigation`);
+          if (!entry.source.startsWith('products/')) {
+            check(await page.locator('header.site .brand').innerText().then(text => text.trim() === 'App Releases'),
+              `${entry.label}/${theme}: shared help still carries a product brand`);
+            check(await page.locator('.doc-sidebar a[href*="threat-model-reviewer"]').count() === 0,
+              `${entry.label}/${theme}: shared help assumes TMR guides`);
+            check(await page.locator('.doc-sidebar a[href$="#apps"]').count() === 1,
+              `${entry.label}/${theme}: shared help has no app directory entry`);
+          }
           const ids = await page.locator('[id]').evaluateAll(elements => elements.map(el => el.id));
           check(new Set(ids).size === ids.length, `${entry.label}: duplicate IDs`);
           const links = await page.locator('a[href], link[href], script[src], img[src]').evaluateAll(elements => elements.map(el => el.href || el.src));
@@ -221,7 +229,7 @@ async function main() {
       await page.setViewportSize({ width: 1280, height: 900 });
       const guideMenu = page.locator('#guide-navigation');
       await page.waitForFunction(() => document.getElementById('guide-navigation').open);
-      await guideMenu.getByRole('link', { name: 'Install', exact: true }).focus();
+      await guideMenu.getByRole('link', { name: 'Security policy', exact: true }).focus();
       await page.setViewportSize({ width: 640, height: 900 });
       await page.waitForFunction(() => {
         const menu = document.getElementById('guide-navigation');
@@ -229,6 +237,11 @@ async function main() {
       });
       check(await guideMenu.locator('summary').evaluate(element => element === document.activeElement && getComputedStyle(element).outlineStyle !== 'none'),
         'docs: collapsing the sidebar hid keyboard focus');
+      await page.keyboard.press('Enter');
+      await guideMenu.getByRole('link', { name: 'Choose an app and its guides', exact: true }).focus();
+      await page.keyboard.press('Enter');
+      await page.waitForURL(base + '/#apps');
+      check(await page.locator('#apps-h').isVisible(), 'shared help: app-directory keyboard link did not return to the product choices');
     } finally { await keyboard.close(); }
 
     console.log('  No-JavaScript reading with enlarged text');
@@ -272,6 +285,11 @@ async function main() {
     await new Promise(resolve => server.close(resolve));
   }
   console.log(`${passed} native documentation browser checks passed; ${failures.length} failed.`);
+  if (process.env.SITE_REPORT_DIR) {
+    fs.mkdirSync(process.env.SITE_REPORT_DIR, { recursive: true });
+    fs.writeFileSync(path.join(process.env.SITE_REPORT_DIR, 'docs-checks.json'),
+      JSON.stringify({ passed, failed: failures.length, failures, root, journeysOnly, browser: process.env.SITE_BROWSER_CHANNEL || 'chromium' }, null, 2) + '\n');
+  }
   failures.forEach(message => console.error(message));
   if (failures.length) process.exitCode = 1;
 }

@@ -763,6 +763,56 @@ test('the hub portal and README present every product', () => {
   assert.deepEqual(jsonLd.hasPart.map(part => part.name), ['Threat Model Reviewer', 'shot2code']);
 });
 
+test('portal cards are real products with the same header structure and concise summaries', () => {
+  const portal = read('docs/index.html');
+  assert.equal([...portal.matchAll(/<article class="app-card live"/g)].length, products.length);
+  assert.doesNotMatch(portal, /app-card soon|More apps on the way/);
+  assert.match(portal, /class="catalog-note"[\s\S]*releases\.atom/);
+  for (const entry of products) {
+    const card = portal.match(new RegExp(`<article[^>]*data-product="${entry.name}"[^>]*>([\\s\\S]*?)<\\/article>`))?.[1];
+    assert.ok(card, entry.name);
+    assert.match(card, /class="app-top"[\s\S]*class="app-icon"[\s\S]*class="app-heading"[\s\S]*class="app-title"/);
+    assert.match(card, /class="app-heading"[\s\S]*class="status available"/);
+    assert.match(card, /class="app-foot"[\s\S]*class="app-release"/);
+    const description = visibleText(card.match(/<p class="desc">([\s\S]*?)<\/p>/)[1]);
+    assert.ok(description.split(/\s+/).length <= 40, `${entry.name}: card summary became a feature inventory`);
+  }
+});
+
+test('shared portal guidance makes product-specific requirements and policy boundaries explicit', () => {
+  const portal = read('docs/index.html');
+  const band = visibleText(portal.match(/<section class="band"[\s\S]*?<\/section>/)[0]);
+  assert.match(band, /Requirements and policies vary by app and release/);
+  assert.doesNotMatch(band, /Threat Model Reviewer|shot2code|Windows 10|Windows 11|self-contained|No runtime to install|no product analytics/i);
+  for (const subject of ['Signing', 'Platform', 'Install', 'Privacy', 'Support', 'License'])
+    assert.ok(band.includes(subject), subject);
+  assert.match(band, /files, screenshots and logs/);
+  assert.match(band, /credentials or private business data/);
+  assert.doesNotMatch(visibleText(portal), /release assets are MIT-licensed|every release here looks like/i);
+  assert.match(portal, /href="#apps">Apps &amp; guides/);
+  assert.doesNotMatch(read('README.md'), /releases\/latest|documentation and release assets.*provided under/i);
+  assert.match(read('README.md'), /MSI \(recommended\)/);
+  assert.match(read('README.md'), /skill.*needs that CLI bundle/);
+});
+
+test('shared support is multi-app, privacy-safe and does not promise a universal updater or private source', () => {
+  const support = read('SUPPORT.md');
+  assert.match(support, /shared support policy/);
+  assert.match(support, /## Choose your app/);
+  for (const name of ['Threat Model Reviewer', 'shot2code']) assert.ok(support.includes(name));
+  assert.match(support, /Operating system, build and architecture/);
+  assert.match(support, /files, screenshots|Files, screenshots/);
+  assert.match(support, /customer or business data/);
+  assert.doesNotMatch(support, /Thank you for using \*\*Threat Model Reviewer|two-click operation|application source is maintained privately|no external code contributions/i);
+  assert.match(support, /source and contribution policy vary by app/);
+  assert.match(read('.github/ISSUE_TEMPLATE/bug_report.yml'), /label: Operating system and architecture/);
+  for (const name of ['bug_report.yml', 'feature_request.yml']) {
+    const form = read(`.github/ISSUE_TEMPLATE/${name}`);
+    assert.match(form, /synthetic/i);
+    assert.match(form, /business data|business information/i);
+  }
+});
+
 test('issue templates cover every product', () => {
   for (const template of ['bug_report.yml', 'feature_request.yml']) {
     const text = read(`.github/ISSUE_TEMPLATE/${template}`);

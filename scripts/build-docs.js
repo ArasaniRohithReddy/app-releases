@@ -216,8 +216,11 @@ function renderContent(document, documents, root = ROOT, catalog = manifest) {
 }
 
 function navigation(document, documents) {
-  const groups = [...new Set(documents.map(doc => doc.group))];
-  return groups.map(group => `<div><p class="nav-group">${escape(group)}</p><ul>${documents.filter(doc => doc.group === group).map(doc =>
+  const hubPage = !document.source.startsWith('products/');
+  const visible = hubPage ? documents.filter(doc => !doc.source.startsWith('products/')) : documents;
+  const groups = [...new Set(visible.map(doc => doc.group))];
+  const apps = hubPage ? `<div><p class="nav-group">Apps</p><ul><li><a href="${relativeRoute(document.route, '/')}#apps">Choose an app and its guides</a></li></ul></div>\n` : '';
+  return apps + groups.map(group => `<div><p class="nav-group">${escape(group)}</p><ul>${visible.filter(doc => doc.group === group).map(doc =>
     `<li><a href="${relativeRoute(document.route, doc.route)}"${doc.route === document.route ? ' aria-current="page"' : ''}>${escape(doc.label)}</a></li>`
   ).join('')}</ul></div>`).join('\n');
 }
@@ -260,16 +263,36 @@ function buildSite(root = ROOT, catalog = manifest) {
   for (const document of documents) {
     const toc = document.headings.filter(heading => heading.level === 2);
     const canonical = new URL(document.route.slice(1), catalog.site).href;
+    const hubPage = !document.source.startsWith('products/');
+    const home = relativeRoute(document.route, '/');
+    const productHome = home + 'threat-model-reviewer/';
+    const overview = hubPage ? home : productHome;
+    const guides = hubPage ? home + 'help/' : productHome + 'docs/';
+    const brandGlyph = hubPage
+      ? '<g fill="var(--on-accent)"><rect x="8" y="8" width="6.5" height="6.5" rx="1.6"/><rect x="17.5" y="8" width="6.5" height="6.5" rx="1.6"/><rect x="8" y="17.5" width="6.5" height="6.5" rx="1.6"/><rect x="17.5" y="17.5" width="6.5" height="6.5" rx="1.6"/></g>'
+      : '<path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
     const values = {
       SOURCE: escape(document.source), SOURCE_HASH: document.sourceHash,
       TITLE: escape(document.title), TITLE_ID: escape(document.titleId),
       DESCRIPTION: escape(document.description), LABEL: escape(document.label),
       CANONICAL: escape(canonical), ROOT: relativeRoute(document.route, '/'),
+      TITLE_CONTEXT: hubPage ? 'App Releases help' : 'Threat Model Reviewer documentation',
+      BRAND_NAME: hubPage ? 'App Releases' : 'Threat Model Reviewer',
+      BRAND_LABEL: hubPage ? 'App Releases — home' : 'Threat Model Reviewer — product overview',
+      BRAND_GLYPH: brandGlyph,
+      OVERVIEW: overview, OVERVIEW_LABEL: hubPage ? 'All apps' : 'Product overview',
+      GUIDES: guides, GUIDES_LABEL: hubPage ? 'Help' : 'Guides',
+      DOCUMENTATION_LABEL: hubPage ? 'Help' : 'Documentation',
+      RELEASES: hubPage ? escape(`https://github.com/${catalog.repository}/releases`) : productHome + 'releases/',
+      BACK_GUIDES: hubPage ? 'All help' : 'All guides',
+      BACK_OVERVIEW: hubPage ? 'All apps' : 'Back to product',
       SOURCE_URL: escape(`https://github.com/${catalog.repository}/blob/main/${document.source}`),
       STRUCTURED_DATA: JSON.stringify({ '@context': 'https://schema.org', '@type': 'TechArticle',
         headline: document.title, description: document.description, url: canonical,
         isPartOf: { '@type': 'WebSite', name: 'App Releases', url: catalog.site } }).replace(/</g, '\\u003c'),
-      HISTORY_NOTE: document.history ? '<p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>' : '',
+      PAGE_NOTE: document.history ? '<p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>'
+        : document.source === 'LICENSE'
+          ? `<p class="source-note">This is the hub content license. Application binaries and bundled components have their own license and notice documentation. <a href="${home}#apps">Choose an app to check its terms</a>.</p>` : '',
       NAVIGATION: navigation(document, documents),
       TOC: toc.length ? `<details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul>${toc.map(heading =>
         `<li><a href="#${encodeURIComponent(heading.id)}">${escape(heading.text)}</a></li>`).join('')}</ul></nav></details>` : '',

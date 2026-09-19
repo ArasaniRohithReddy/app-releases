@@ -2,15 +2,14 @@
 
 # App Releases
 
-**The official distribution hub for Windows desktop applications by [@ArasaniRohithReddy](https://github.com/ArasaniRohithReddy).**
+**The official distribution hub for applications by [@ArasaniRohithReddy](https://github.com/ArasaniRohithReddy).**
 
 Releases · Documentation · Issue tracking
 
 **[🌐 arasanirohithreddy.github.io/app-releases](https://arasanirohithreddy.github.io/app-releases/)**
 
-[![Latest release](https://img.shields.io/github/v/release/ArasaniRohithReddy/app-releases?label=latest&color=4F46E5)](https://github.com/ArasaniRohithReddy/app-releases/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/ArasaniRohithReddy/app-releases/total?color=157347)](https://github.com/ArasaniRohithReddy/app-releases/releases)
-[![License](https://img.shields.io/badge/docs%20%26%20assets-MIT-555)](LICENSE)
+[![Hub license](https://img.shields.io/badge/hub%20content-MIT-555)](LICENSE)
 
 </div>
 
@@ -18,8 +17,11 @@ Releases · Documentation · Issue tracking
 
 Some applications are developed in private repositories and some in public ones — shot2code's
 source is public at [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code).
-Either way, this public repository is the single place to **download** builds, read
-**documentation**, and file **issues**.
+This hub brings together published builds, **documentation** and **issue reporting**.
+Each product's page identifies its source repository and update feed where applicable.
+
+Choose an app first. Supported platforms, runtime requirements, package formats, signing,
+updates, data handling and license terms belong to that product and release—not to the hub as a whole.
 
 ## Applications
 
@@ -43,11 +45,8 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 | **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/) — every version, notes and files · or [TMR releases on GitHub](https://github.com/ArasaniRohithReddy/app-releases/releases?q=threat-model-reviewer&expanded=true) |
 | **Documentation** | [Read guides on the site](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/) — overview, installation, user guide, CLI, skill, FAQ and changelog |
 | **In this repository** | [Overview](products/threat-model-reviewer/) · [Install](products/threat-model-reviewer/INSTALL.md) · [User guide](products/threat-model-reviewer/USER-GUIDE.md) · [FAQ](products/threat-model-reviewer/FAQ.md) · [Changelog](products/threat-model-reviewer/CHANGELOG.md) |
-| **For enterprises** | [Data handling & privacy](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/) · [Enterprise deployment](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/) · [Third-party notices](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/third-party-notices/) |
+| **For enterprises** | [Data handling & privacy](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/) · [Enterprise deployment](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/enterprise-deployment/) · [Product license](products/threat-model-reviewer/LICENSE) · [Third-party notices](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/third-party-notices/) |
 | **Platform** | Windows 10/11 x64 · self-contained (no .NET install) |
-
-> Additional applications will be published here over time, each under `products/<app>/` with its
-> own documentation and product-prefixed release tags.
 
 ### 🖼️ shot2code
 
@@ -67,10 +66,13 @@ SHA-256 checksums.
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/shot2code/) |
 | **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) — every mirrored version, its notes and the files it actually carries |
 | **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [FAQ](products/shot2code/FAQ.md) · [Troubleshooting](products/shot2code/TROUBLESHOOTING.md) · [Changelog](products/shot2code/CHANGELOG.md) |
-| **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) · [Third-party notices](products/shot2code/THIRD-PARTY-NOTICES.md) |
+| **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) · [Product license](https://github.com/ArasaniRohithReddy/shot2code/blob/main/LICENSE) · [Third-party notices](products/shot2code/THIRD-PARTY-NOTICES.md) |
 | **Contributing** | [Where issues, docs fixes and code changes go](products/shot2code/CONTRIBUTING.md) |
 | **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) — the canonical `vX.Y.Z` history and the updater feed |
 | **Platform** | Windows 10/11 x64 · self-contained (backend and headless Chromium bundled) |
+
+Follow the [release feed](https://github.com/ArasaniRohithReddy/app-releases/releases.atom) for published
+updates. Additional apps will appear in the directory when available, with their own guides and releases.
 
 Threat Model Reviewer's guides, along with [support](https://arasanirohithreddy.github.io/app-releases/help/),
 [security](https://arasanirohithreddy.github.io/app-releases/help/security/) and
@@ -120,9 +122,10 @@ Get-AuthenticodeSignature .\ThreatModelReviewer-vX.Y.Z-x64.msi | Format-List Sta
 Get-FileHash .\ThreatModelReviewer-vX.Y.Z-x64.msi -Algorithm SHA256
 ```
 
-Artifacts are currently signed with a self-signed certificate, so Microsoft Defender SmartScreen
-may warn on first run — **More info → Run anyway**. Migration to a CA/EV certificate is planned.
-See [SECURITY.md](SECURITY.md#code-signing).
+The current signing certificate is self-signed, not publicly trusted. SmartScreen may warn.
+Follow the [product installation](products/threat-model-reviewer/INSTALL.md) and
+[security](products/threat-model-reviewer/SECURITY.md#code-signing) guidance; do not disable
+organizational controls or bypass an administrator-enforced block.
 
 **shot2code** — the builds are **not code-signed**, so there is no signature to check. Compare the
 hash against `SHA256SUMS.txt` attached to the same release:
@@ -148,8 +151,8 @@ installs self-update from the public releases feed. See
 
 Security and privacy reviewers should start with each product's data-handling guide —
 **[Threat Model Reviewer](products/threat-model-reviewer/DATA-HANDLING.md)** and
-**[shot2code](products/shot2code/DATA-HANDLING.md)** — which enumerate every network destination and
-on-disk storage path, and confirm that no telemetry is collected.
+**[shot2code](products/shot2code/DATA-HANDLING.md)** — for documented storage, network behavior,
+optional providers and diagnostics. Do not infer one app's privacy behavior from another's.
 
 ## Support
 
@@ -160,12 +163,15 @@ on-disk storage path, and confirm that no telemetry is collected.
 | **Security vulnerability** | [Report privately](https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new) — **never** in a public issue. See [SECURITY.md](SECURITY.md) |
 | **Community expectations** | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) |
 
-> ⚠️ **Never attach sensitive material to a public issue.** A threat model describes your attack
-> surface, and logs, screenshots and generated projects can carry API keys, tokens or proprietary
-> code. Sanitize or redact first, or describe the structure instead.
+> ⚠️ **Never attach sensitive material to a public issue.** Files, screenshots, logs and generated
+> output can contain credentials, personal/customer data, proprietary code or private business
+> information. Prefer synthetic examples; inspect and redact attachments before sharing.
 
 ## License
 
-Documentation and release assets in this repository are provided under the
-[MIT License](LICENSE). Third-party components bundled in the applications are listed in each
-product's third-party notices.
+Hub content is provided under the [MIT License](LICENSE). This is not a blanket license statement
+for every application binary or bundled dependency. Check the selected app's own license and
+third-party notices: [Threat Model Reviewer license](products/threat-model-reviewer/LICENSE) /
+[notices](products/threat-model-reviewer/THIRD-PARTY-NOTICES.md), and
+[shot2code license](https://github.com/ArasaniRohithReddy/shot2code/blob/main/LICENSE) /
+[notices](products/shot2code/THIRD-PARTY-NOTICES.md).
