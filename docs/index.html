@@ -175,7 +175,8 @@
     .nav-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; flex: 0 1 auto; min-width: 0; }
     .nav-actions .btn-ghost.btn { font-size: var(--step--1); }
     @media (max-width: 560px) { .nav-actions .ghost-label { display: none; } }
-    @media (max-width: 600px) { .nav-actions .rel-btn { display: none; } }
+    /* Leave room for fallback-font widths after Apps & guides; Releases remains in main/footer. */
+    @media (max-width: 700px) { .nav-actions .rel-btn { display: none; } }
     @media (max-width: 480px) { .nav .brand-text { display: none; } }
 
     /* Hero */
