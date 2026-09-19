@@ -119,11 +119,31 @@ test('every generated guide has a static article, native navigation and one seco
   }
 });
 
+test('shared help uses hub navigation without imposing a product brand or guide set', () => {
+  for (const document of built.documents.filter(doc => !doc.source.startsWith('products/'))) {
+    const html = built.outputs.get('docs' + document.route + 'index.html');
+    const header = html.match(/<header class="site">([\s\S]*?)<\/header>/)[1];
+    const sidebar = html.match(/<aside class="doc-sidebar">([\s\S]*?)<\/aside>/)[1];
+    assert.match(html, /<title>[^<]+ — App Releases help<\/title>/, document.source);
+    assert.match(header, /aria-label="App Releases — home"/, document.source);
+    assert.doesNotMatch(header + sidebar, /Threat Model Reviewer|threat-model-reviewer|shot2code/, document.source);
+    assert.match(sidebar, /#apps">Choose an app and its guides/, document.source);
+    assert.doesNotMatch(html, />Back to product</, document.source);
+  }
+  const license = built.outputs.get('docs/help/license/index.html');
+  assert.match(license, /This is the hub content license/);
+  assert.match(license, /Application binaries and bundled components have their own license/);
+  const productGuide = built.outputs.get('docs/threat-model-reviewer/docs/index.html');
+  assert.match(productGuide, /aria-label="Threat Model Reviewer — product overview"/);
+  assert.match(productGuide, />Back to product</);
+});
+
 test('the three authored routes link to native guides and workflows check generated drift', () => {
   for (const file of ['docs/index.html', 'docs/threat-model-reviewer/index.html', 'docs/threat-model-reviewer/releases/index.html']) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
     assert.doesNotMatch(html, /<a\b[^>]*href="https:\/\/github\.com\/ArasaniRohithReddy\/app-releases\/(?:blob|tree)\/main\//, file);
-    assert.match(html, /href="[^"]*docs\/">Guides<\/a>/, file);
+    if (file === 'docs/index.html') assert.match(html, /href="#apps">Apps &amp; guides<\/a>/, file);
+    else assert.match(html, /href="[^"]*docs\/">Guides<\/a>/, file);
   }
   for (const file of ['.github/workflows/site-checks.yml', '.github/workflows/update-releases-snapshot.yml'])
     assert.match(fs.readFileSync(path.join(root, file), 'utf8'), /run: npm run check:docs/, file);

@@ -7,12 +7,12 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>App Releases — desktop apps by ArasaniRohithReddy</title>
-  <meta name="description" content="The public release hub for the Windows desktop apps I build — each app has its own page, its own documentation and its own self-contained releases. Currently Threat Model Reviewer and shot2code." />
+  <meta name="description" content="Find apps, product-specific downloads, documentation and release notes from ArasaniRohithReddy. Check each app's requirements, privacy, signing and license guidance before installing." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="App Releases" />
-  <meta property="og:description" content="The public release hub for my Windows desktop apps — each app has its own page, its own docs and its own releases." />
+  <meta property="og:description" content="Apps, downloads and documentation in one public hub. Choose an app for its releases, requirements and policies." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
     <meta property="og:image:width" content="1200" />
@@ -79,6 +79,7 @@
 
       --radius:    14px;
       --radius-sm: 10px;
+      --app-icon-size: 2.875rem;
       --shadow:    0 1px 2px rgba(20,22,28,.05);
       --shadow-lift: 0 12px 30px -12px rgba(20,22,28,.22);
       --maxw:      1080px;
@@ -174,7 +175,8 @@
     .nav-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; flex: 0 1 auto; min-width: 0; }
     .nav-actions .btn-ghost.btn { font-size: var(--step--1); }
     @media (max-width: 560px) { .nav-actions .ghost-label { display: none; } }
-    @media (max-width: 600px) { .nav-actions .rel-btn { display: none; } }
+    /* Leave room for fallback-font widths after Apps & guides; Releases remains in main/footer. */
+    @media (max-width: 700px) { .nav-actions .rel-btn { display: none; } }
     @media (max-width: 480px) { .nav .brand-text { display: none; } }
 
     /* Hero */
@@ -191,40 +193,41 @@
     .sec-head h2 { font-size: var(--step-2); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 .4rem; }
     .sec-head p { font-size: var(--step-0); color: var(--muted); margin: 0; max-width: 60ch; }
 
-    /* Keep the original 300px track at default text size, but never exceed its container. */
-    .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.75rem), 1fr)); gap: 1.2rem; }
-    .app-card { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.6rem; box-shadow: var(--shadow); transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s ease, border-color .18s ease; }
-    .app-card.live:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
-    @media (prefers-reduced-motion: reduce) { .app-card.live:hover { transform: none; } }
-    .app-top { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; margin-bottom: 1rem; }
-    .app-icon { width: 46px; height: 46px; border-radius: 12px; flex: none; display: grid; place-items: center; }
-    .app-icon svg { width: 46px; height: 46px; }
-    .app-title { margin: 0; font-size: var(--step-1); letter-spacing: -.01em; }
-    .status { display: inline-flex; align-items: center; gap: .4rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: .22rem .6rem; border-radius: 999px; margin-top: .25rem; }
+    .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1.2rem; }
+    .app-card { min-width: 0; position: relative; display: grid; grid-template-rows: auto 1fr auto auto; gap: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.1rem, 3vw, 1.6rem); box-shadow: var(--shadow); transition: border-color .16s ease, box-shadow .16s ease; }
+    /* Align peer headers, descriptions and actions without imposing a fixed text height. */
+    @supports (grid-template-rows: subgrid) { .app-card { grid-row: span 4; grid-template-rows: subgrid; } }
+    .app-card.live:hover { box-shadow: var(--shadow-lift); border-color: var(--accent); }
+    /* Contain only the header: containment on the card itself disables its shared row sizing. */
+    .app-header { min-width: 0; container-type: inline-size; }
+    .app-top { display: grid; grid-template-columns: var(--app-icon-size) minmax(0, 1fr); align-items: start; gap: .9rem; }
+    .app-heading { min-width: 0; }
+    .app-icon { width: var(--app-icon-size); height: var(--app-icon-size); border-radius: 12px; display: grid; place-items: center; }
+    .app-icon svg { width: 100%; height: 100%; }
+    .app-title { margin: 0; font-size: var(--step-1); line-height: 1.3; letter-spacing: -.01em; }
+    .status { display: inline-flex; flex-wrap: wrap; max-width: 100%; align-items: center; gap: .4rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: .22rem .6rem; border-radius: 999px; margin-top: .25rem; }
     .status.available { background: var(--ok-tint); color: var(--ok); }
     .status .dot { width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; }
-    .app-card p.desc { margin: 0 0 1.2rem; color: var(--ink-2); font-size: var(--step-0); flex: 1; text-wrap: pretty; }
-    .app-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.2rem; }
+    /* At enlarged text sizes, stack both headers deliberately instead of stranding one title. */
+    @container (max-width: 12rem) { .app-top { grid-template-columns: minmax(0, 1fr); gap: .6rem; } }
+    .app-card p.desc { margin: 0; color: var(--ink-2); font-size: var(--step-0); text-wrap: pretty; }
+    .app-tags { display: flex; flex-wrap: wrap; align-content: start; gap: .4rem; }
     .app-tags span { font-family: var(--mono); font-size: .74rem; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-2); padding: .18rem .5rem; border-radius: 6px; }
     .app-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
-    .app-open { display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; color: var(--accent); }
-    .app-card.live:hover .app-open { gap: .6rem; }
+    .app-open { display: inline-flex; align-items: center; min-height: 40px; gap: .4rem; font-weight: 600; color: var(--accent); }
     .app-open svg { width: 1em; height: 1em; transition: transform .16s ease; }
     .ver { font-family: var(--mono); font-size: var(--step--1); color: var(--muted); }
+    .app-release { display: grid; gap: .1rem; min-width: 0; font-size: var(--step--1); color: var(--muted); }
     /* Whole-card link overlay */
     .stretch::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
-
-    /* Placeholder (future apps) */
-    .app-card.soon { background: transparent; border-style: dashed; box-shadow: none; align-items: flex-start; justify-content: center; text-align: left; }
-    .app-card.soon .plus { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); margin-bottom: 1rem; }
-    .app-card.soon .plus svg { width: 22px; height: 22px; }
-    .app-card.soon h3 { margin: 0 0 .4rem; font-size: var(--step-1); letter-spacing: -.01em; color: var(--ink-2); }
-    .app-card.soon p { margin: 0; color: var(--muted); font-size: var(--step-0); }
+    .app-open:focus-visible::after { outline: 2.5px solid var(--accent); outline-offset: 3px; }
+    .catalog-note { margin: 1.2rem 0 0; color: var(--muted); font-size: var(--step--1); }
 
     /* Release band */
     .band { background: var(--surface-2); border-block: 1px solid var(--line); }
-    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.5rem; }
     .fact { display: flex; gap: .8rem; align-items: flex-start; }
+    .fact > div { min-width: 0; }
     .fact .ic { width: 34px; height: 34px; border-radius: 9px; flex: none; display: grid; place-items: center; background: var(--accent-tint); color: var(--accent); }
     .fact .ic svg { width: 19px; height: 19px; }
     .fact h3 { margin: .1rem 0 .3rem; font-size: var(--step-0); font-weight: 700; }
@@ -249,7 +252,7 @@
       </a>
       <div class="spacer"></div>
       <div class="nav-actions">
-        <a class="btn btn-secondary" href="./threat-model-reviewer/docs/">Guides</a>
+        <a class="btn btn-secondary" href="#apps">Apps &amp; guides</a>
         <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme" disabled>
           <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
@@ -270,7 +273,7 @@
       <div class="wrap">
         <span class="eyebrow"><span class="dot"></span> Public release hub</span>
         <h1 class="title">Desktop apps, released here.</h1>
-        <p class="lede">This is the home for the Windows apps I build and ship. Every app has its own page, its own documentation and its own self-contained releases — all in one public hub, so there's a single place to download, read the changelog, and file issues.</p>
+        <p class="lede">Find an app, choose its release, and read its guides before you install. Each product's page explains its requirements, downloads and policies.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#apps">Browse apps</a>
           <a class="btn btn-secondary" href="https://github.com/ArasaniRohithReddy/app-releases/releases">All releases</a>
@@ -286,79 +289,82 @@
         </div>
         <div class="apps">
           <!-- Threat Model Reviewer -->
-          <article class="app-card live">
+          <article class="app-card live" data-product="threat-model-reviewer" aria-labelledby="tmr-title">
+            <div class="app-header">
             <div class="app-top">
               <span class="app-icon" aria-hidden="true">
                 <svg viewBox="0 0 46 46"><rect width="46" height="46" rx="12" fill="var(--accent-tint)"/><g transform="translate(11,10)"><path d="M12 1l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V4l9-3z" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/><path d="M7.5 12.2l3.1 3.1 6-6.4" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
               </span>
-              <div>
-                <h3 class="app-title">Threat Model Reviewer</h3>
+              <div class="app-heading">
+                <h3 class="app-title" id="tmr-title">Threat Model Reviewer</h3>
                 <span class="status available"><span class="dot"></span> Available</span>
               </div>
             </div>
-            <p class="desc">Review Microsoft <code>.tm7</code> models with local deterministic checks, previewable fixes and shared Ask conversations. Use optional, consented Copilot/MCP context in the app, CLI and skill. Try a synthetic sample before opening your own model.</p>
-            <div class="app-tags"><span>Windows 10/11</span><span>Desktop app</span><span>CLI</span><span>.tm7</span><span>GitHub Copilot</span></div>
+            </div>
+            <p class="desc">Review <code>.tm7</code> and Threat Dragon models with local, deterministic checks and previewable model fixes. Optional AI guidance is advisory; model edits do not implement security controls.</p>
+            <div class="app-tags"><span>Windows 10/11 x64</span><span>Desktop + CLI</span><span>Model review</span></div>
             <div class="app-foot">
               <a class="app-open stretch" href="./threat-model-reviewer/" aria-label="Open app — Threat Model Reviewer">Open app <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.5 3.5a.75.75 0 000 1.5h3.44L3.22 11.72a.75.75 0 101.06 1.06L11 6.06V9.5a.75.75 0 001.5 0v-5a.75.75 0 00-.75-.75h-5z"/></svg></a>
-              <span class="ver" id="tmr-version">latest</span>
+              <div class="app-release"><span>Latest stable</span><span class="ver" id="tmr-version">latest</span></div>
             </div>
           </article>
 
           <!-- shot2code -->
-          <article class="app-card live">
+          <article class="app-card live" data-product="shot2code" aria-labelledby="shot2code-title">
+            <div class="app-header">
             <div class="app-top">
               <span class="app-icon" aria-hidden="true">
                 <svg viewBox="0 0 46 46"><rect width="46" height="46" rx="12" fill="var(--accent-tint)"/><g transform="translate(9,11)"><rect x="0" y="0" width="28" height="20" rx="3.5" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M10.5 6.5L7.5 10l3 3.5M17.5 6.5L20.5 10l-3 3.5" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
               </span>
-              <div>
-                <h3 class="app-title">shot2code</h3>
+              <div class="app-heading">
+                <h3 class="app-title" id="shot2code-title">shot2code</h3>
                 <span class="status available"><span class="dot"></span> Available</span>
               </div>
             </div>
-            <p class="desc">Turn screenshots, mockups, URLs, descriptions or screen recordings into editable web code, on your own machine. Twelve output stacks, a multi-file editor, local SQLite project history and a sandboxed preview. Bring a GitHub Copilot sign-in or your own API key.</p>
-            <div class="app-tags"><span>Windows 10/11</span><span>Desktop app</span><span>12 stacks</span><span>Local-first</span><span>GitHub Copilot</span></div>
+            </div>
+            <p class="desc">Turn screenshots, mockups, URLs, descriptions or recordings into editable web code. Bring a supported AI provider, preview the result, and review generated code before using it.</p>
+            <div class="app-tags"><span>Windows 10/11 x64</span><span>12 output stacks</span><span>AI provider required</span></div>
             <div class="app-foot">
               <a class="app-open stretch" href="./shot2code/" aria-label="Open app — shot2code">Open app <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.5 3.5a.75.75 0 000 1.5h3.44L3.22 11.72a.75.75 0 101.06 1.06L11 6.06V9.5a.75.75 0 001.5 0v-5a.75.75 0 00-.75-.75h-5z"/></svg></a>
-              <span class="ver" id="shot2code-version">latest</span>
+              <div class="app-release"><span>Latest stable</span><span class="ver" id="shot2code-version">latest</span></div>
             </div>
           </article>
 
-          <!-- Future apps placeholder (honest — no fake products) -->
-          <article class="app-card soon" aria-label="More apps coming">
-            <span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
-            <h3>More apps on the way</h3>
-            <p>This hub is built to hold more than one app. New tools will show up here as their own routes — watch the <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">releases feed</a> or star the repo.</p>
-          </article>
         </div>
+        <p class="catalog-note">Follow the <a href="https://github.com/ArasaniRohithReddy/app-releases/releases.atom">releases feed</a> for published updates. New apps will appear here when available.</p>
       </div>
     </section>
 
     <section class="band" aria-labelledby="band-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="band-h">What every release here looks like</h2>
-          <p>The same bar applies to each app in the hub.</p>
+          <h2 id="band-h">Before you download</h2>
+          <p>Requirements and policies vary by app and release. Start with the product's own guides and package details.</p>
         </div>
         <div class="facts">
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6l8-4z"/></svg></span>
-            <div><h3>Signing, stated plainly</h3><p>Each app's page says exactly how its binaries are signed — today a self-signed certificate for Threat Model Reviewer, unsigned builds for shot2code — and how to verify a download.</p></div>
+            <div><h3>Signing &amp; integrity</h3><p>Check the app's installation and security guides for signing status, expected publisher and available checksums. Do not assume every package is signed.</p></div>
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg></span>
-            <div><h3>Self-contained</h3><p>No runtime to install — each build carries what it needs and just runs on Windows 10/11 x64.</p></div>
+            <div><h3>Platform &amp; runtime</h3><p>Use the app's install guide to confirm supported operating systems, architecture and runtime requirements for the release you choose.</p></div>
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span>
-            <div><h3>Docs &amp; changelog</h3><p>Install guide, user guide, FAQ and a full changelog ship in the hub next to the downloads.</p></div>
+            <div><h3>Install &amp; update</h3><p>Package formats, administrator requirements and update behavior are app-specific. <a href="./help/#choose-your-app">Find the right product guide</a> before deploying.</p></div>
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
-            <div><h3>Issues welcome</h3><p>Use public issues for bugs and ideas. <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report vulnerabilities privately</a>; never attach a real threat model to a public issue.</p></div>
+            <div><h3>Support &amp; security</h3><p>Use synthetic or redacted files, screenshots and logs in <a href="./help/">support reports</a>—never credentials or private business data. <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report vulnerabilities privately</a>.</p></div>
           </div>
           <div class="fact">
             <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
-            <div><h3>Deployable</h3><p>An MSI for per-machine deployment alongside the per-user installer, documented data handling, and no product analytics in any app here.</p></div>
+            <div><h3>Privacy &amp; data</h3><p>Read the app's data-handling guide for local storage, network features and optional providers before using private inputs. Local processing does not mean every feature is offline.</p></div>
+          </div>
+          <div class="fact">
+            <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></span>
+            <div><h3>License &amp; notices</h3><p>The <a href="./help/license/">hub's MIT license</a> is not a summary of every download. Check the app's own license and bundled-component notices.</p></div>
           </div>
         </div>
       </div>
@@ -372,7 +378,7 @@
           <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><g fill="#fff"><rect x="8" y="8" width="6.5" height="6.5" rx="1.6"/><rect x="17.5" y="8" width="6.5" height="6.5" rx="1.6"/><rect x="8" y="17.5" width="6.5" height="6.5" rx="1.6"/><rect x="17.5" y="17.5" width="6.5" height="6.5" rx="1.6"/></g></svg>
           App Releases
         </a>
-        <div style="margin-top:.5rem">Docs &amp; release assets are MIT-licensed.</div>
+        <div style="margin-top:.5rem">Hub content: MIT. Application and third-party terms are documented per product.</div>
       </div>
       <nav class="foot-links" aria-label="Footer">
         <a href="https://github.com/ArasaniRohithReddy/app-releases/releases">Releases</a>
@@ -380,7 +386,7 @@
         <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report a vulnerability</a>
         <a href="./help/">Support</a>
         <a href="./help/security/">Security policy</a>
-        <a href="./help/license/">License</a>
+        <a href="./help/license/">Hub license</a>
       </nav>
     </div>
   </footer>

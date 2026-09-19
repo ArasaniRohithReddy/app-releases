@@ -30,6 +30,19 @@ npm test
 This changes the browser executable, not which assertions run. Leave the variable
 unset for the default bundled Chromium used by CI.
 
+To retain counted browser reports and local screenshots from the existing harnesses:
+
+```powershell
+$env:SITE_REPORT_DIR = "$PWD\test-results\portal-polish"
+$env:SITE_SCREENSHOTS = "$PWD\test-results\portal-polish\captures"
+npm test
+```
+
+`site-checks.json` and `docs-checks.json` record executed pass/fail counts and failures.
+The portal checks include equal peer-card structure, icon/title alignment, bottom actions,
+long synthetic copy, light/dark themes and 200% text reflow. Captures use only the local site
+and mocked release responses; no real installer is downloaded or run.
+
 ## Native documentation
 
 The repository Markdown is canonical. Do not edit generated guide HTML by hand.
@@ -50,7 +63,9 @@ npm test
 Commit the source and generated outputs together. `check:docs` is read-only and fails on
 missing/stale HTML, route metadata or unexpected pages in the generated directories.
 Both site and snapshot workflows run that check; the test command includes it as well.
-The shared shell is `scripts/docs/layout.html`; the shared reader styles/controls are
+The shared shell is `scripts/docs/layout.html`; root help/policy pages use App Releases
+branding and an app-directory entry, while product guides retain their own product context.
+The shared reader styles/controls are
 `docs/docs.css`, `docs/docs.js` and the existing `docs/theme.js`.
 
 Markdown-it is a pinned development dependency, not a browser dependency. Raw HTML is

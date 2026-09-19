@@ -10,8 +10,9 @@ signing and update behavior. Do not apply one product's guarantees to another.
 
 Use GitHub's [Report a vulnerability](https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new)
 action. Include the **product name**, version, installation format, impact and
-reproduction steps. Redact credentials, private models, screenshots and other
-sensitive content before sharing evidence.
+reproduction steps. Prefer synthetic evidence. Redact credentials and private
+personal, customer or business data from files, screenshots, logs and generated
+output before sharing; do not assume an app has removed every sensitive detail.
 
 ### What to expect
 
@@ -26,7 +27,7 @@ These are response targets, not guaranteed resolution dates. Allow a reasonable
 disclosure window. Good-faith reports that respect user privacy and avoid service
 disruption are welcome; reporters are credited unless they prefer anonymity.
 
-## How the application handles your data
+## Product security and data handling
 
 Choose the policy for the application you are using:
 
@@ -40,10 +41,9 @@ product's provider, sharing and update settings before using private inputs.
 
 ## Security of the product itself
 
-Controls and limitations are documented in each product policy. A threat-model
-readiness score is not Microsoft approval or proof that deployed controls work.
-Likewise, successfully generating code or downloading an installer is not a
-security assessment of that output.
+Controls and limitations are documented in each product policy. A successful
+workflow, generated artifact or downloaded installer is not a security assessment
+or third-party approval. Review the applicable product's claims and limitations.
 
 ## Supported versions
 
