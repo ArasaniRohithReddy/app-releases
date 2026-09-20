@@ -77,7 +77,7 @@ or the contents written back to a `.tm7` without explicit user approval of each 
 
 ### Integration safeguards
 
-Version **2.6.0** includes restricted/default-off
+Version **2.7.0** includes restricted/default-off
 MCP profiles, separate DPAPI-protected GitHub-context credentials, explicit SDK
 ambient-context opt-outs, bounded connection/process cleanup, and a shell-free
 direct Azure reader with a captured subscription. These are separate controls:
@@ -99,7 +99,8 @@ until updated to a matching release.
 
 | Version | Status |
 | --- | --- |
-| **2.6.0** (latest) | ✅ Supported — receives security and functional fixes |
+| **2.7.0** (latest) | ✅ Supported — receives security and functional fixes |
+| 2.6.x (earlier) | ⚠️ Best effort — update for MCP readiness and cleanup-authority corrections |
 | 2.5.x (earlier) | ⚠️ Best effort — update to receive the current runtime and workflow safeguards |
 | 2.4.x (earlier) | ⚠️ Best effort — please update; in-app update makes this a two-click operation |
 | 2.2.x (earlier) | ⚠️ Best effort — please update; in-app update makes this a two-click operation |

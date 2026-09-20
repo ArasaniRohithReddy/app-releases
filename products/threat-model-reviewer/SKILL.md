@@ -9,9 +9,20 @@ With the skill, it runs one command.
 Download **`ThreatModelReviewer-vX.Y.Z-skill.zip`** from the
 [Threat Model Reviewer releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/).
 
-The **v2.6.0** skill and CLI include restricted MCP context and captured-revision/
+The **v2.7.0** skill and CLI include restricted MCP context and captured-revision/
 evidence safeguards. Keep the bundles matched; do not run unsupported commands
 against an older CLI or silently replace the engine with AI reasoning.
+
+**Requires version 2.7.0 or later:** `mcp setup <id>` provides local guidance, and
+`mcp credential github-review-context --github-cli --consent` deliberately imports
+an existing stored GitHub CLI sign-in. These are not in v2.6.0. The agent must
+explain account/scope differences and obtain consent, invoke the supported command,
+and never extract or display tokens itself. The import does not enable a source.
+
+The version 2.7.0 desktop's History location and Open/Locate improvements are desktop
+actions, not new skill verbs or CLI flags. Path recording remains default-off.
+Do not infer unrecorded paths or enable retention to satisfy an agent request;
+use the model path the user supplies. Enabling recording cannot restore old paths.
 
 For optional developer context, **MCP is the tool protocol**, the GitHub Copilot
 SDK hosts the sessions, and each tool is a named operation with an input schema

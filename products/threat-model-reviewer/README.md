@@ -7,6 +7,15 @@
 Use the app, CLI and skill from the same product release. Updating a guide does
 not add new commands to an older installed binary.
 
+**New in v2.7.0:** corrected MCP tool-catalogue initialization, guided setup and
+an explicit GitHub CLI sign-in import alongside the scoped PAT option.
+The release improves compact layouts across all nine workspaces and
+separates MCP setup, consent and test history in a more focused settings dialog.
+History also exposes remembered file locations, separate Open/Locate actions, and
+explicit Copy path/Open folder actions. Location recording remains local,
+default-off and opt-in; enabling it cannot recover unrecorded past paths. Reopening
+still checks the recorded revision and respects unsaved changes.
+
 Review Microsoft Threat Modeling Tool `.tm7` and OWASP Threat Dragon `.json`
 models, work through specific findings, and save a corrected model for human
 review. The Windows app, CLI and Copilot CLI skill use the same deterministic

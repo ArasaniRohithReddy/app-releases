@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/CLI.md (normalized SHA-256 9e16fbb7518a2657670260a46b5b7e1ec9ab3ffe1165edf147b03dca75cfd686). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/CLI.md (normalized SHA-256 6cc45170688f4725aa1cde31589533195960b45ba388345e279e6f543e86e552). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -67,6 +67,11 @@
 UI and no .NET installation required. It is intended for CI, batch review, and scripting.</p>
 <p>Use the CLI from the matching product release. Older binaries do not acquire new
 commands because this guide changes.</p>
+<p>The version 2.7.0 desktop History location, Open/Locate, Copy path and Open folder
+actions do not introduce CLI commands or switches. Path recording remains opt-in;
+unrecorded historical locations cannot be recovered by enabling it later. For
+automation, use the model path supplied by the user rather than guessing a path
+from a history identifier.</p>
 <p>Download <strong><code>ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip</code></strong> from the
 <a href="../../releases/">Threat Model Reviewer releases</a>, extract it
 anywhere, and run the executable. Nothing else to install.</p>
@@ -235,6 +240,12 @@ verbs that ask Copilot for commentary need a signed-in seat.</p>
 <p>Classic <code>ghp_</code> tokens are not supported. See <a href="../data-handling/">DATA-HANDLING.md</a> for exactly what is
 sent and when.</p>
 <h2 id="optional-mcp-context" tabindex="-1">Optional MCP context</h2>
+<p><strong>Requires version 2.7.0 or later (not in v2.6.0):</strong> <code>mcp setup &lt;id&gt;</code> provides local
+source-specific instructions. <code>mcp credential github-review-context --github-cli --consent</code> explicitly copies the installed GitHub CLI's stored github.com identity
+instead of asking for a new PAT. Its account/access can differ from Copilot and may
+be broader than a selected-repository PAT. No login, scope grant or source enablement
+is automatic. The copied credential does not follow later CLI sign-ins/sign-outs.
+Version 2.7.0 also corrects lazy SDK tool initialization during connection tests.</p>
 <p>MCP adds optional context to Copilot, not another source of verdicts. It requires
 both master and per-profile consent, and an AI invocation must also request
 <code>--mcp</code>. The installed v2.5.1 CLI does not have these commands.
@@ -270,8 +281,9 @@ ThreatModelReviewer.Cli.exe mcp off
 ThreatModelReviewer.Cli.exe mcp forget-credential github-review-context
 </code></pre>
 <p>Built-ins are Microsoft Learn, Azure <strong>subscription/group metadata only</strong>, and
-GitHub file/issue/pull-request reads. GitHub context needs its own PAT for selected
-repositories; do not reuse a Copilot seat token or broad automation credential.
+GitHub file/issue/pull-request reads. A selected-repository PAT remains the narrowest
+GitHub option. Do not reuse a Copilot seat token or copy a broad automation credential
+into hidden input. The new explicit GitHub CLI import is a separate consented action.
 Read-only data can still be sensitive and enter provider context. Normal review
 and factual <code>ask</code> require none of this. For exact tools, custom-import restrictions,
 credential lifecycle and troubleshooting, see <a href="../mcp/">MCP</a>.</p>

@@ -6,7 +6,44 @@ project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-No additional changes are queued here.
+## [2.7.0] — 2026-09-20
+
+### Added
+- Add explicit local `mcp setup <id>` guidance and Azure CLI installation inspection.
+  Azure CLI inventory and Azure MCP remain distinct read-only workflows.
+- Add an explicitly consented GitHub CLI credential-import alternative to a
+  selected-repository fine-grained PAT. It does not automatically reuse the Copilot
+  device-flow token, enable a source, expand token scopes, or follow later CLI
+  sign-ins/sign-outs. Imported account access may be broader than a scoped PAT.
+- Show remembered History locations with separate **Open** and **Locate** actions,
+  selectable path details, **Copy path** and **Open folder**. Distinguish missing
+  files, unavailable locations and paths that were never recorded. Preserve
+  default-off path recording, original-hash verification, fresh review and
+  Save/Discard/Cancel guards; enabling path recording cannot recover old paths.
+
+### Changed
+- Reclaim useful content space across all nine workspaces at compact sizes.
+  Keep primary authoring/fix actions reachable, add resizable review details,
+  improve path/input labels, and retain existing commands and model behavior.
+- Separate MCP setup, saved consent, test selection and historical results.
+  Credential actions remain reachable while GitHub is off; expanded details keep
+  technical/privacy information available without dominating the dialog.
+- Make GitHub CLI credential import an explicit, cancellable consent step and
+  route **Build from Azure (CLI)** to the existing read-only picker after the MCP
+  dialog closes. A source omitted from a test is labelled untested, not failed.
+- Bound History file checks off the UI thread. Unavailable drives produce visible
+  errors, late results cannot open files or folders, and an outstanding blocked
+  filesystem call prevents additional probes from accumulating.
+
+### Fixed
+- Initialize the native SDK's lazy tool catalogue before validating discovered
+  tool metadata. A connected Microsoft Learn server no longer fails merely because
+  the catalogue has not been initialized; the allowed tools and schemas still have
+  to pass validation. Connection tests do not send an AI prompt.
+- Preserve incomplete-shutdown warnings and block new MCP session maps when a
+  runtime returns that failure directly, not only when an outer watchdog expires.
+  Previously reported ready sources cannot remain usable after unconfirmed cleanup.
+- Preserve shared button styles and keep History headers readable at compact sizes.
 
 ## [2.6.0] — 2026-09-14
 
@@ -1016,6 +1053,7 @@ First public release.
 - **Packaging**: portable self-contained `.exe` (zip), Inno Setup installer, and a signed
   MSIX package.
 
+[2.7.0]: https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/
 [2.6.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.6.0
 [2.5.1]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.1
 [2.5.0]: https://github.com/ArasaniRohithReddy/app-releases/releases/tag/threat-model-reviewer-v2.5.0

@@ -5,7 +5,7 @@ The guiding rule: **the deterministic core never depends on AI**, so the verdict
 reproducible. Deterministic review works offline; direct Azure discovery is a
 separate network-backed Core feature and AI/MCP integrations are optional.
 
-The integration boundaries below are included in **v2.6.0**. Release provenance
+The integration boundaries below are included in **v2.7.0**. Release provenance
 records its accepted source and runtime; a source version alone is not release evidence.
 
 ```

@@ -1,6 +1,6 @@
 # Deterministic Azure discovery: I/O contract
 
-This guide describes the read-only runner included in **v2.6.0**.
+This guide describes the read-only runner included in **v2.7.0**.
 This reader is independent of the AI/MCP connectors. It does not change the review
 rubric or give an AI permission to choose commands.
 

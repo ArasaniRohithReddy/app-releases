@@ -1,8 +1,97 @@
 # Optional MCP review context
 
 The restricted profiles, `mcp` CLI controls, separate credentials and SDK
-context/tool restrictions described here are included in **v2.6.0**.
+context/tool restrictions described here are included in **v2.7.0**.
 Use matching app, CLI and skill releases.
+
+## Readiness and setup corrections in v2.7.0
+
+**v2.7.0 corrects** a false
+readiness failure: the native SDK can report a connected server and advertised
+tools before its lazy effective-tool catalogue exists. The adapter now calls
+`session.tools.initializeAndValidate` before inspecting that catalogue. The exact
+three-tool Learn allowlist, schema checks, permission gates and timeouts remain.
+No AI prompt or resource operation is needed to initialize it.
+
+Maintainers can repeat the native public-Learn check with the opt-in
+`NativeLearnMcpTests` fixture. Set `TMR_VALIDATE_PUBLIC_LEARN_MCP=1`,
+`TMR_PUBLIC_LEARN_RUNTIME` to the approved runtime executable and
+`TMR_PUBLIC_LEARN_RUNTIME_SHA256` to its independently approved digest, then run
+the fixture with a nonzero TRX report. It uses the production adapter and restricted
+profile, reaches only the public Learn endpoint and verifies all three schemas
+without sending a model prompt or invoking a resource tool. Normal test runs skip
+this network-dependent check. Synthetic fixtures also model the initially empty
+catalogue so this ordering defect cannot pass unnoticed again.
+
+Starting with version 2.7.0, `mcp setup microsoft-learn`, `mcp setup azure` and
+`mcp setup github-review-context` explain prerequisites without starting servers,
+installing packages, signing in or querying Azure. Learn needs no PAT or local npm
+server. Azure MCP needs Node/npx and the approved pinned package; Azure CLI alone
+does not install it. **Build from Azure (CLI)** remains the separate installed-CLI
+inventory workflow with explicit subscription/group selection.
+
+### GitHub sign-in versus repository authorization
+
+Copilot sign-in supplies model entitlement. A custom GitHub MCP connection also
+needs authorization to read repositories; the SDK does not infer or enlarge it.
+The [official GitHub MCP installation guide](https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-copilot-cli.md)
+distinguishes the standalone CLI's built-in server from separately configured
+servers. The [SDK MCP guide](https://github.com/github/copilot-sdk/blob/v1.0.11/docs/features/mcp.md)
+provides server configuration, not an automatic account-authorization promise.
+
+The v2.6.0 profile uses a selected-repository fine-grained PAT. Version 2.7.0
+additionally offers **Use GitHub CLI sign-in**, or:
+
+```powershell
+ThreatModelReviewer.Cli.exe mcp credential github-review-context --github-cli --consent
+```
+
+This explicit action reads `gh.exe auth token --hostname github.com` from the
+installed GitHub CLI, with ambient Copilot/GitHub/provider token variables removed
+from that child. It never runs `gh auth login`, prompts for extra scopes or obtains
+a token automatically when opening settings. Run the normal GitHub CLI sign-in
+yourself first if needed. Its account may differ from Copilot, and its repository
+access can be broader than a fine-grained PAT; review that before consenting.
+
+The credential is copied to the app's current-user DPAPI store and the source
+remains disabled until separately enabled. It is not a live link to `gh`: signing
+out or changing accounts there does not delete the stored copy. Use
+`mcp forget-credential github-review-context` to remove that copy, and use GitHub
+to revoke a credential when required. Revocation can also affect the CLI identity
+that originally supplied it. Only the same three read tools are exposed.
+
+Credential-isolation tests must inject synthetic readers or use a genuinely
+separate OS identity. An empty `GH_CONFIG_DIR` alone is not proof that `gh`
+cannot access an existing credential source such as the OS credential store.
+Never run a production credential import as an assumed no-account test against
+a normal user profile.
+
+OAuth is another supported GitHub MCP authentication model when the host owns a
+registered OAuth/GitHub App and its lifecycle. This product does not claim that its
+Copilot device-flow token is a repository credential or silently forward it to MCP.
+No new OAuth app registration or token-scope grant is created by setup.
+
+### Approved proxies and managed package access
+
+An organization-approved proxy can carry package-manager traffic; it does not
+override approval of the package, endpoint or executable. Ask IT to approve the
+pinned Azure MCP artifact and its download/runtime dependencies before testing.
+The app does not configure a proxy, install a server, disable TLS checks or retry
+an administrator-blocked package through a mirror, another registry or another
+package manager.
+
+Microsoft documents several [Azure MCP installation formats](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started),
+and npm documents [proxy configuration](https://docs.npmjs.com/cli/v11/using-npm/config#https-proxy).
+Those are technical capabilities, not authorization to bypass a device policy.
+An IT-approved, preinstalled distribution can instead use a reviewed custom
+descriptor as described below; the built-in `azure` profile remains pinned to
+`@azure/mcp@2.0.5` with its two restricted read operations.
+
+Proxy reachability, Azure sign-in, tool/schema readiness and authorization to a
+particular Azure scope are separate checks. On the release-verification host,
+actual Azure MCP startup remains unverified because package approval is pending.
+Learn's hosted endpoint and the separate Azure CLI inventory workflow do not
+establish Azure MCP readiness.
 
 Upstream settings were verified on **2026-09-13** using the primary sources below.
 
@@ -376,7 +465,9 @@ changes. The same snapshot reaches the real SDK client options. A null
 snapshot retains intentional logged-in CLI auth. This callback never reads the
 GitHub MCP PAT, and no token is copied into a process-wide environment variable.
 The app integration below must supply the token used by its successful provider
-probe; the AI/MCP assembly never harvests device-flow or `gh` credentials.
+probe; the AI/MCP assembly never automatically harvests device-flow or `gh`
+credentials. The separately consented GitHub CLI import in version 2.7.0 described
+above is a local credential-copy action, not part of probing or AI startup.
 
 That separation is **not environment isolation**. SDK-hosted stdio children
 normally inherit their host's environment. The stdio configuration overlay
@@ -403,7 +494,9 @@ API is removed; callers outside the shipping app/CLI must not depend on it.
 Connection readiness comes from the SDK server **Status**, not the absence of
 an error string. Pending/unreported servers are polled up to the bounded
 connection deadline (90 seconds by default). `ListToolsAsync` is called only
-after **Connected**. Needs-auth, stopped, disabled, failed and unsupported
+after **Connected**. The version 2.7.0 adapter then initializes the SDK tool catalogue
+before checking effective metadata; an advertised name alone is not a successful
+schema check. Needs-auth, stopped, disabled, failed and unsupported
 statuses are terminal for that attempt. Timeout, cancellation, missing tools
 and authentication-required classifications survive into app/CLI status with
 locally authored messages; remote error text is never shown.
@@ -504,15 +597,24 @@ test-harness changes, not new end-user AI request timeouts.
 
 ## Troubleshooting and validation limits
 
-Earlier synthetic stress runs encountered intermittent cold-start permission
-timeouts. The final candidate passed the full local and hosted suites with the
-original transaction deadlines; the historical observations are not erased or
-claimed to have one conclusively identified cause. Check system load and provider
-availability before retrying. A timeout is a failure, not connection evidence.
+During v2.6.0 qualification, synthetic stress runs encountered intermittent
+cold-start permission timeouts. That release candidate subsequently passed the
+full local and hosted suites with the original transaction deadlines. This is
+historical release evidence, not acceptance of later development changes; the
+earlier observations are not erased or claimed to have one conclusively identified
+cause. Check system load and provider availability before retrying. A timeout is
+a failure, not connection evidence.
+
+Version 2.7.0 preserves an incomplete-shutdown warning whether cleanup is rejected
+by the manager's watchdog or reported directly by the runtime. It blocks new MCP
+session maps and reconnect attempts after either outcome, including sources that
+otherwise reported ready. A completed task does not establish that its child
+processes have stopped; no connection or cleanup deadline is extended.
 
 - **GitHub credential missing/unreadable:** set a new separately scoped fine-grained
-  PAT, review consent and enable again. DPAPI blobs are not portable to another
-  Windows user. This is not an Azure bootstrap remedy.
+  PAT, review consent and enable again. Version 2.7.0 and later also support the
+  explicit GitHub CLI sign-in import described above. DPAPI blobs are not portable
+  to another Windows user. Neither option is an Azure bootstrap remedy.
 - **Azure initialization failed:** check Node.js/npx, access to the pinned npm
   package and organisation policy. An unreported server or timeout alone does
   **not** prove a policy block. If Windows Security or IT explicitly reports
@@ -520,9 +622,11 @@ availability before retrying. A timeout is a failure, not connection evidence.
   or alter managed security controls. Azure Identity sign-in is a separate
   authentication stage. Do not "fix" either stage by selecting `@latest`,
   removing tool filters, or disabling authentication/elicitation.
-- **GitHub tools list but a repository cannot be read:** review the PAT's
-  selected repositories, read permissions, expiry and approval. Tool listing
-  does not test a resource operation.
+- **GitHub tools list but a repository cannot be read:** review the credential's
+  repository grants, read permissions, expiry and approval. For a PAT, check its
+  selected repositories; for an explicitly imported CLI credential, check the
+  imported account's existing access. Copilot sign-in does not enlarge either.
+  Tool listing does not test a resource operation.
 - **Configuration changed during a running app:** reopening settings reloads
   local status; the next Copilot request independently reloads its authority.
 - Remote exception bodies, HTTP errors and tool descriptions are withheld from
@@ -569,8 +673,10 @@ progress without releasing those scheduling constraints, including
 synchronous callback hangs. Deadline-order lifecycle fixtures share that
 exclusive collection with the process-global scheduling fixtures: their
 40 ms/100 ms synthetic budgets must not race unrelated corpus/serializer
-tests. The assertions and timeout values are unchanged. Configuration,
-policy, CLI and SDK-wire tests remain parallel with exact wire/plugin
+tests. Dedicated hang/force tests retain those short deadline assertions.
+The reconnect ownership fixture instead uses production cleanup bounds and
+asserts exactly which provider is disposed; it does not test sub-100ms thread
+admission. Configuration, policy, CLI and SDK-wire tests remain parallel with exact wire/plugin
 assertions. Restoration of the original process ThreadPool limits is also
 checked when a contention observation throws. The loopback transport's I/O continuations explicitly
 avoid capturing test/UI synchronization contexts.
@@ -593,8 +699,10 @@ unchanged; this is state-based fixture separation, not timeout inflation or
 removal of the no-tool assertions.
 That startup test uses production cleanup bounds independently of its
 unchanged 80 ms work deadline; an unrelated 40 ms cold-thread teardown budget
-must not mask the startup result. Explicit hang/force tests retain their
-short deadline assertions and unconfirmed-failure behavior.
+must not mask the startup result. Its observer covers the work deadline plus
+both configured cleanup phases and a scheduling margin; it does not extend
+the runtime's deadlines. Explicit hang/force tests retain their short deadline
+assertions and unconfirmed-failure behavior.
 
 Additional source-isolation regressions force the manager's deadline to
 win while two hosted sources have already listed their tools. They require

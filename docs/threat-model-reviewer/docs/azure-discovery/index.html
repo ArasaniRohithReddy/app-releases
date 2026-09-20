@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/AZURE-DISCOVERY.md (normalized SHA-256 c01db4c176fde1ae82293f9ea275d7fd86724bbc915dd914374a4a7b77f1e063). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/AZURE-DISCOVERY.md (normalized SHA-256 65376ff34691e87bd1455afe5d4bd84e40195c8ef116eb26ea6b2a997ec2c788). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Deterministic Azure discovery: I/O contract — Threat Model Reviewer documentation</title>
-  <meta name="description" content="This guide describes the read-only runner included in v2.6.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to " />
+  <meta name="description" content="This guide describes the read-only runner included in v2.7.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to " />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Deterministic Azure discovery: I/O contract — App Releases" />
-  <meta property="og:description" content="This guide describes the read-only runner included in v2.6.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to " />
+  <meta property="og:description" content="This guide describes the read-only runner included in v2.7.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to " />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Deterministic Azure discovery: I/O contract","description":"This guide describes the read-only runner included in v2.6.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to ","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Deterministic Azure discovery: I/O contract","description":"This guide describes the read-only runner included in v2.7.0. This reader is independent of the AI/MCP connectors. It does not change the review rubric or give an AI permission to ","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/azure-discovery/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -63,7 +63,7 @@
 
         </header>
         <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#requirements-and-supported-execution">Requirements and supported execution</a></li><li><a href="#exact-reads-and-argument-boundaries">Exact reads and argument boundaries</a></li><li><a href="#results-and-errors">Results and errors</a></li><li><a href="#process-lifetime-and-safety-boundaries">Process lifetime and safety boundaries</a></li><li><a href="#focused-account-independent-verification">Focused, account-independent verification</a></li><li><a href="#public-references">Public references</a></li></ul></nav></details>
-        <div class="doc-content"><p>This guide describes the read-only runner included in <strong>v2.6.0</strong>.
+        <div class="doc-content"><p>This guide describes the read-only runner included in <strong>v2.7.0</strong>.
 This reader is independent of the AI/MCP connectors. It does not change the review
 rubric or give an AI permission to choose commands.</p>
 <h2 id="requirements-and-supported-execution" tabindex="-1">Requirements and supported execution</h2>

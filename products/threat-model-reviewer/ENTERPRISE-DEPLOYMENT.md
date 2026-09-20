@@ -1,6 +1,6 @@
 # Enterprise Deployment
 
-*Applies to Threat Model Reviewer v2.6.0. Qualify installation, upgrade and
+*Applies to Threat Model Reviewer v2.7.0. Qualify installation, upgrade and
 certificate trust against your own managed baseline before rollout.*
 
 This guide covers packaged, unattended rollout of Threat Model Reviewer to managed Windows
@@ -51,15 +51,15 @@ Useful for detection rules, upgrade logic and uninstall automation:
 
 ```powershell
 # Per-machine (all users) — requires elevation
-msiexec /i "ThreatModelReviewer-v2.6.0-x64.msi" ALLUSERS=1 /qn /norestart /l*v install.log
+msiexec /i "ThreatModelReviewer-v2.7.0-x64.msi" ALLUSERS=1 /qn /norestart /l*v install.log
 
 # Per-user (no elevation)
-msiexec /i "ThreatModelReviewer-v2.6.0-x64.msi" ALLUSERS=2 MSIINSTALLPERUSER=1 /qn /norestart
+msiexec /i "ThreatModelReviewer-v2.7.0-x64.msi" ALLUSERS=2 MSIINSTALLPERUSER=1 /qn /norestart
 
 # Upgrade in place — install the newer MSI; its upgrade rules identify related versions
 
 # Uninstall using the original MSI for the deployed version, or its ProductCode
-msiexec /x "ThreatModelReviewer-v2.6.0-x64.msi" /qn /norestart
+msiexec /x "ThreatModelReviewer-v2.7.0-x64.msi" /qn /norestart
 ```
 
 Keep the deployed release's original MSI accessible to the uninstall command and use its actual
@@ -77,13 +77,13 @@ path. Alternatively, read its ProductCode from the MSI Property table and pass t
 ### Setup.exe (Inno Setup)
 
 ```powershell
-ThreatModelReviewer-v2.6.0-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG="install.log"
+ThreatModelReviewer-v2.7.0-setup.exe /VERYSILENT /NORESTART /SUPPRESSMSGBOXES /LOG="install.log"
 ```
 
 ### Portable ZIP
 
 ```powershell
-Expand-Archive .\ThreatModelReviewer-v2.6.0-win-x64-portable.zip -DestinationPath 'C:\Program Files\ThreatModelReviewer'
+Expand-Archive .\ThreatModelReviewer-v2.7.0-win-x64-portable.zip -DestinationPath 'C:\Program Files\ThreatModelReviewer'
 # Launch: C:\Program Files\ThreatModelReviewer\ThreatModelReviewer.exe
 ```
 
@@ -95,18 +95,18 @@ No registry writes, no uninstall entry — remove the folder to uninstall.
    (`IntuneWinAppUtil.exe -c <folder> -s <msi> -o <out>`).
 2. **Install command**
    ```
-   msiexec /i "ThreatModelReviewer-v2.6.0-x64.msi" ALLUSERS=1 /qn /norestart
+   msiexec /i "ThreatModelReviewer-v2.7.0-x64.msi" ALLUSERS=1 /qn /norestart
    ```
 3. **Uninstall command**
    ```
-   msiexec /x "ThreatModelReviewer-v2.6.0-x64.msi" /qn /norestart
+   msiexec /x "ThreatModelReviewer-v2.7.0-x64.msi" /qn /norestart
    ```
    Keep that MSI available in the uninstall context, or substitute the actual
    ProductCode read from the deployed package. Do not substitute UpgradeCode.
 4. **Install behaviour:** *System* (for per-machine) — or *User* if deploying per-user.
 5. **Detection rule:** MSI product-code rule using the ProductCode from the MSI being
    deployed (not UpgradeCode), or a file rule on
-   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.6.0.0**.
+   `%ProgramFiles%\Threat Model Reviewer\ThreatModelReviewer.exe` with **version ≥ 2.7.0.0**.
 6. **Requirements:** Windows 10 1809+ / Windows 11, x64.
 7. **Return codes:** `0` success, `3010` soft reboot (not expected), `1602` user cancelled,
    `1603` fatal error — inspect the MSI log.
@@ -170,17 +170,30 @@ Azure OpenAI or self-hosted endpoint; the key is stored DPAPI-encrypted per user
 
 ### MCP and Azure controls
 
-Use the matching v2.6.0 or later release when deploying these settings. The
-source integration restricts built-ins to Learn documentation, Azure
+**Optional setup in version 2.7.0 or later:** the app supports an explicit import of the
+stored GitHub CLI github.com identity. It is not automatic single sign-on from
+Copilot. Evaluate the CLI account's existing repository grants before permitting
+the import; selected-repository PATs remain the narrower option. The app stores
+its own DPAPI-protected copy, which must be forgotten separately from CLI sign-out.
+No credential is installed across users, and no integration is enabled by setup.
+
+The restricted profiles require v2.6.0 or later; guided setup and GitHub CLI import
+require matching v2.7.0 or later app/CLI/skill bundles. The integration restricts built-ins to Learn documentation, Azure
 subscription/group metadata, and GitHub file/issue/pull-request reads. MCP is
 default-off; review master/per-profile consent and the allowed tools before rollout.
 The Azure server is pinned to `@azure/mcp@2.0.5`, not a floating `latest`.
 
 GitHub review context uses `https://api.githubcopilot.com/mcp/readonly` and a
-separate fine-grained PAT for selected repositories/read permissions. Provision
+selected-repository fine-grained PAT or an explicitly imported GitHub CLI credential. Provision
 it per user through the app or CLI; do not seed another user's DPAPI ciphertext,
-pass a token literal as a process argument, or reuse Copilot/`gh` credentials.
+pass a token literal as a process argument, or silently forward Copilot/`gh` credentials.
 `mcp off` disables future use; forgetting a local credential is not remote revocation.
+
+Package access through a corporate proxy must be approved by IT for the pinned
+artifact and dependencies. Neither proxy configuration nor a different supported
+package format is permission to evade an administrator block. Keep TLS
+verification and managed endpoint controls enabled. See
+[approved proxy guidance](MCP.md#approved-proxies-and-managed-package-access).
 
 The direct discovery runner requires a trusted native Azure CLI Python environment,
 not a batch command string. `TMR_AZURE_CLI_PYTHON` supports an explicit interpreter
@@ -213,8 +226,8 @@ Options for managed estates:
 Validate any download before mass deployment:
 
 ```powershell
-Get-AuthenticodeSignature .\ThreatModelReviewer-v2.6.0-x64.msi | Format-List Status, SignerCertificate
-Get-FileHash .\ThreatModelReviewer-v2.6.0-x64.msi -Algorithm SHA256
+Get-AuthenticodeSignature .\ThreatModelReviewer-v2.7.0-x64.msi | Format-List Status, SignerCertificate
+Get-FileHash .\ThreatModelReviewer-v2.7.0-x64.msi -Algorithm SHA256
 ```
 
 Compare against the SHA-256 checksum file attached to the same release, then retain that
@@ -246,7 +259,7 @@ Because the verdict is deterministic, the gate is stable across runs and agents.
 ## 9. Removal
 
 ```powershell
-msiexec /x "ThreatModelReviewer-v2.6.0-x64.msi" /qn /norestart       # deployed MSI, not UpgradeCode
+msiexec /x "ThreatModelReviewer-v2.7.0-x64.msi" /qn /norestart       # deployed MSI, not UpgradeCode
 Remove-Item "$env:APPDATA\ThreatModelReviewer" -Recurse -Force        # per-user configuration
 ```
 

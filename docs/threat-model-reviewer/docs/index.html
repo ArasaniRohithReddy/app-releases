@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/README.md (normalized SHA-256 785dbc4c0b92fb97fe5adeb856094622e0ccf712c31733a574cc6f46f0a8fa7f). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/README.md (normalized SHA-256 1d3800c77609363ddd78af6820b235e32fa9b4f2c6f53e327eb226677da90a96). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -67,6 +67,14 @@
 <p><a href="../releases/"><span class="image-alt">Downloads</span></a></p>
 <p>Use the app, CLI and skill from the same product release. Updating a guide does
 not add new commands to an older installed binary.</p>
+<p><strong>New in v2.7.0:</strong> corrected MCP tool-catalogue initialization, guided setup and
+an explicit GitHub CLI sign-in import alongside the scoped PAT option.
+The release improves compact layouts across all nine workspaces and
+separates MCP setup, consent and test history in a more focused settings dialog.
+History also exposes remembered file locations, separate Open/Locate actions, and
+explicit Copy path/Open folder actions. Location recording remains local,
+default-off and opt-in; enabling it cannot recover unrecorded past paths. Reopening
+still checks the recorded revision and respects unsaved changes.</p>
 <p>Review Microsoft Threat Modeling Tool <code>.tm7</code> and OWASP Threat Dragon <code>.json</code>
 models, work through specific findings, and save a corrected model for human
 review. The Windows app, CLI and Copilot CLI skill use the same deterministic

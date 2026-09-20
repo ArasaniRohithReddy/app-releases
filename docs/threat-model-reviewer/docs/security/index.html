@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/SECURITY.md (normalized SHA-256 6b97dec2c2b52651625eac8be8ea366663d9647cfccdbe1e82f2879b087b10dc). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/SECURITY.md (normalized SHA-256 ec3005179a05960eec4d02f2be00fff488a45d872d08089fc976b9cc84750173). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -182,7 +182,7 @@ defensively:</p>
 <p>The deterministic core has <strong>no AI dependency</strong>, so no model output can alter a verdict, a score,
 or the contents written back to a <code>.tm7</code> without explicit user approval of each change.</p>
 <h3 id="integration-safeguards" tabindex="-1">Integration safeguards</h3>
-<p>Version <strong>2.6.0</strong> includes restricted/default-off
+<p>Version <strong>2.7.0</strong> includes restricted/default-off
 MCP profiles, separate DPAPI-protected GitHub-context credentials, explicit SDK
 ambient-context opt-outs, bounded connection/process cleanup, and a shell-free
 direct Azure reader with a captured subscription. These are separate controls:
@@ -207,8 +207,12 @@ until updated to a matching release.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>2.6.0</strong> (latest)</td>
+<td><strong>2.7.0</strong> (latest)</td>
 <td>✅ Supported — receives security and functional fixes</td>
+</tr>
+<tr>
+<td>2.6.x (earlier)</td>
+<td>⚠️ Best effort — update for MCP readiness and cleanup-authority corrections</td>
 </tr>
 <tr>
 <td>2.5.x (earlier)</td>

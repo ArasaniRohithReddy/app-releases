@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/MCP.md (normalized SHA-256 d76618c680833991fa2940bfa62ccf620bb2e0f9d88e3f43747cbfea2c22d9bd). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/MCP.md (normalized SHA-256 5a67414342de884e3f3d45e8ab92b4239a4fbed33308aaf13f0eb63cf8bc0894). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Optional MCP review context — Threat Model Reviewer documentation</title>
-  <meta name="description" content="The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.6.0. Use matching app, CLI and skill releases." />
+  <meta name="description" content="The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.7.0. Use matching app, CLI and skill releases." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Optional MCP review context — App Releases" />
-  <meta property="og:description" content="The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.6.0. Use matching app, CLI and skill releases." />
+  <meta property="og:description" content="The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.7.0. Use matching app, CLI and skill releases." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Optional MCP review context","description":"The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.6.0. Use matching app, CLI and skill releases.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Optional MCP review context","description":"The restricted profiles, mcp CLI controls, separate credentials and SDK context/tool restrictions described here are included in v2.7.0. Use matching app, CLI and skill releases.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/mcp/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -62,10 +62,82 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/threat-model-reviewer/MCP.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#defaults-and-network-boundaries">Defaults and network boundaries</a></li><li><a href="#restricted-profiles">Restricted profiles</a></li><li><a href="#github-credential-setup-in-the-app">GitHub credential setup in the app</a></li><li><a href="#one-server-or-multiple-servers">One server or multiple servers</a></li><li><a href="#cli-setup-and-use">CLI setup and use</a></li><li><a href="#storage-upgrades-and-long-running-application-instances">Storage, upgrades and long-running application instances</a></li><li><a href="#troubleshooting-and-validation-limits">Troubleshooting and validation limits</a></li><li><a href="#coordinator-app-integration-reference-already-applied">Coordinator app integration reference (already applied)</a></li><li><a href="#researched-follow-up-azure-devops">Researched follow-up: Azure DevOps</a></li><li><a href="#primary-sources-verified-2026-09-13">Primary sources (verified 2026-09-13)</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#readiness-and-setup-corrections-in-v270">Readiness and setup corrections in v2.7.0</a></li><li><a href="#defaults-and-network-boundaries">Defaults and network boundaries</a></li><li><a href="#restricted-profiles">Restricted profiles</a></li><li><a href="#github-credential-setup-in-the-app">GitHub credential setup in the app</a></li><li><a href="#one-server-or-multiple-servers">One server or multiple servers</a></li><li><a href="#cli-setup-and-use">CLI setup and use</a></li><li><a href="#storage-upgrades-and-long-running-application-instances">Storage, upgrades and long-running application instances</a></li><li><a href="#troubleshooting-and-validation-limits">Troubleshooting and validation limits</a></li><li><a href="#coordinator-app-integration-reference-already-applied">Coordinator app integration reference (already applied)</a></li><li><a href="#researched-follow-up-azure-devops">Researched follow-up: Azure DevOps</a></li><li><a href="#primary-sources-verified-2026-09-13">Primary sources (verified 2026-09-13)</a></li></ul></nav></details>
         <div class="doc-content"><p>The restricted profiles, <code>mcp</code> CLI controls, separate credentials and SDK
-context/tool restrictions described here are included in <strong>v2.6.0</strong>.
+context/tool restrictions described here are included in <strong>v2.7.0</strong>.
 Use matching app, CLI and skill releases.</p>
+<h2 id="readiness-and-setup-corrections-in-v270" tabindex="-1">Readiness and setup corrections in v2.7.0</h2>
+<p><strong>v2.7.0 corrects</strong> a false
+readiness failure: the native SDK can report a connected server and advertised
+tools before its lazy effective-tool catalogue exists. The adapter now calls
+<code>session.tools.initializeAndValidate</code> before inspecting that catalogue. The exact
+three-tool Learn allowlist, schema checks, permission gates and timeouts remain.
+No AI prompt or resource operation is needed to initialize it.</p>
+<p>Maintainers can repeat the native public-Learn check with the opt-in
+<code>NativeLearnMcpTests</code> fixture. Set <code>TMR_VALIDATE_PUBLIC_LEARN_MCP=1</code>,
+<code>TMR_PUBLIC_LEARN_RUNTIME</code> to the approved runtime executable and
+<code>TMR_PUBLIC_LEARN_RUNTIME_SHA256</code> to its independently approved digest, then run
+the fixture with a nonzero TRX report. It uses the production adapter and restricted
+profile, reaches only the public Learn endpoint and verifies all three schemas
+without sending a model prompt or invoking a resource tool. Normal test runs skip
+this network-dependent check. Synthetic fixtures also model the initially empty
+catalogue so this ordering defect cannot pass unnoticed again.</p>
+<p>Starting with version 2.7.0, <code>mcp setup microsoft-learn</code>, <code>mcp setup azure</code> and
+<code>mcp setup github-review-context</code> explain prerequisites without starting servers,
+installing packages, signing in or querying Azure. Learn needs no PAT or local npm
+server. Azure MCP needs Node/npx and the approved pinned package; Azure CLI alone
+does not install it. <strong>Build from Azure (CLI)</strong> remains the separate installed-CLI
+inventory workflow with explicit subscription/group selection.</p>
+<h3 id="github-sign-in-versus-repository-authorization" tabindex="-1">GitHub sign-in versus repository authorization</h3>
+<p>Copilot sign-in supplies model entitlement. A custom GitHub MCP connection also
+needs authorization to read repositories; the SDK does not infer or enlarge it.
+The <a href="https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-copilot-cli.md" rel="noopener noreferrer">official GitHub MCP installation guide</a>
+distinguishes the standalone CLI's built-in server from separately configured
+servers. The <a href="https://github.com/github/copilot-sdk/blob/v1.0.11/docs/features/mcp.md" rel="noopener noreferrer">SDK MCP guide</a>
+provides server configuration, not an automatic account-authorization promise.</p>
+<p>The v2.6.0 profile uses a selected-repository fine-grained PAT. Version 2.7.0
+additionally offers <strong>Use GitHub CLI sign-in</strong>, or:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>ThreatModelReviewer.Cli.exe mcp credential github-review-context --github-cli --consent
+</code></pre>
+<p>This explicit action reads <code>gh.exe auth token --hostname github.com</code> from the
+installed GitHub CLI, with ambient Copilot/GitHub/provider token variables removed
+from that child. It never runs <code>gh auth login</code>, prompts for extra scopes or obtains
+a token automatically when opening settings. Run the normal GitHub CLI sign-in
+yourself first if needed. Its account may differ from Copilot, and its repository
+access can be broader than a fine-grained PAT; review that before consenting.</p>
+<p>The credential is copied to the app's current-user DPAPI store and the source
+remains disabled until separately enabled. It is not a live link to <code>gh</code>: signing
+out or changing accounts there does not delete the stored copy. Use
+<code>mcp forget-credential github-review-context</code> to remove that copy, and use GitHub
+to revoke a credential when required. Revocation can also affect the CLI identity
+that originally supplied it. Only the same three read tools are exposed.</p>
+<p>Credential-isolation tests must inject synthetic readers or use a genuinely
+separate OS identity. An empty <code>GH_CONFIG_DIR</code> alone is not proof that <code>gh</code>
+cannot access an existing credential source such as the OS credential store.
+Never run a production credential import as an assumed no-account test against
+a normal user profile.</p>
+<p>OAuth is another supported GitHub MCP authentication model when the host owns a
+registered OAuth/GitHub App and its lifecycle. This product does not claim that its
+Copilot device-flow token is a repository credential or silently forward it to MCP.
+No new OAuth app registration or token-scope grant is created by setup.</p>
+<h3 id="approved-proxies-and-managed-package-access" tabindex="-1">Approved proxies and managed package access</h3>
+<p>An organization-approved proxy can carry package-manager traffic; it does not
+override approval of the package, endpoint or executable. Ask IT to approve the
+pinned Azure MCP artifact and its download/runtime dependencies before testing.
+The app does not configure a proxy, install a server, disable TLS checks or retry
+an administrator-blocked package through a mirror, another registry or another
+package manager.</p>
+<p>Microsoft documents several <a href="https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started" rel="noopener noreferrer">Azure MCP installation formats</a>,
+and npm documents <a href="https://docs.npmjs.com/cli/v11/using-npm/config#https-proxy" rel="noopener noreferrer">proxy configuration</a>.
+Those are technical capabilities, not authorization to bypass a device policy.
+An IT-approved, preinstalled distribution can instead use a reviewed custom
+descriptor as described below; the built-in <code>azure</code> profile remains pinned to
+<code>@azure/mcp@2.0.5</code> with its two restricted read operations.</p>
+<p>Proxy reachability, Azure sign-in, tool/schema readiness and authorization to a
+particular Azure scope are separate checks. On the release-verification host,
+actual Azure MCP startup remains unverified because package approval is pending.
+Learn's hosted endpoint and the separate Azure CLI inventory workflow do not
+establish Azure MCP readiness.</p>
 <p>Upstream settings were verified on <strong>2026-09-13</strong> using the primary sources below.</p>
 <p>The release checks include synthetic SDK protocol/permission coverage, package
 runtime hashes and live model-catalogue discovery without inference. These do not
@@ -413,7 +485,9 @@ changes. The same snapshot reaches the real SDK client options. A null
 snapshot retains intentional logged-in CLI auth. This callback never reads the
 GitHub MCP PAT, and no token is copied into a process-wide environment variable.
 The app integration below must supply the token used by its successful provider
-probe; the AI/MCP assembly never harvests device-flow or <code>gh</code> credentials.</p>
+probe; the AI/MCP assembly never automatically harvests device-flow or <code>gh</code>
+credentials. The separately consented GitHub CLI import in version 2.7.0 described
+above is a local credential-copy action, not part of probing or AI startup.</p>
 <p>That separation is <strong>not environment isolation</strong>. SDK-hosted stdio children
 normally inherit their host's environment. The stdio configuration overlay
 therefore clears these known credential keys, without reading their values:
@@ -437,7 +511,9 @@ API is removed; callers outside the shipping app/CLI must not depend on it.</p>
 <p>Connection readiness comes from the SDK server <strong>Status</strong>, not the absence of
 an error string. Pending/unreported servers are polled up to the bounded
 connection deadline (90 seconds by default). <code>ListToolsAsync</code> is called only
-after <strong>Connected</strong>. Needs-auth, stopped, disabled, failed and unsupported
+after <strong>Connected</strong>. The version 2.7.0 adapter then initializes the SDK tool catalogue
+before checking effective metadata; an advertised name alone is not a successful
+schema check. Needs-auth, stopped, disabled, failed and unsupported
 statuses are terminal for that attempt. Timeout, cancellation, missing tools
 and authentication-required classifications survive into app/CLI status with
 locally authored messages; remote error text is never shown.</p>
@@ -526,15 +602,23 @@ deadlines and exact SDK opt-outs are unchanged. Its wire-test fixture uses
 separate finite setup/create budgets and context-independent I/O; those are
 test-harness changes, not new end-user AI request timeouts.</p>
 <h2 id="troubleshooting-and-validation-limits" tabindex="-1">Troubleshooting and validation limits</h2>
-<p>Earlier synthetic stress runs encountered intermittent cold-start permission
-timeouts. The final candidate passed the full local and hosted suites with the
-original transaction deadlines; the historical observations are not erased or
-claimed to have one conclusively identified cause. Check system load and provider
-availability before retrying. A timeout is a failure, not connection evidence.</p>
+<p>During v2.6.0 qualification, synthetic stress runs encountered intermittent
+cold-start permission timeouts. That release candidate subsequently passed the
+full local and hosted suites with the original transaction deadlines. This is
+historical release evidence, not acceptance of later development changes; the
+earlier observations are not erased or claimed to have one conclusively identified
+cause. Check system load and provider availability before retrying. A timeout is
+a failure, not connection evidence.</p>
+<p>Version 2.7.0 preserves an incomplete-shutdown warning whether cleanup is rejected
+by the manager's watchdog or reported directly by the runtime. It blocks new MCP
+session maps and reconnect attempts after either outcome, including sources that
+otherwise reported ready. A completed task does not establish that its child
+processes have stopped; no connection or cleanup deadline is extended.</p>
 <ul>
 <li><strong>GitHub credential missing/unreadable:</strong> set a new separately scoped fine-grained
-PAT, review consent and enable again. DPAPI blobs are not portable to another
-Windows user. This is not an Azure bootstrap remedy.</li>
+PAT, review consent and enable again. Version 2.7.0 and later also support the
+explicit GitHub CLI sign-in import described above. DPAPI blobs are not portable
+to another Windows user. Neither option is an Azure bootstrap remedy.</li>
 <li><strong>Azure initialization failed:</strong> check Node.js/npx, access to the pinned npm
 package and organisation policy. An unreported server or timeout alone does
 <strong>not</strong> prove a policy block. If Windows Security or IT explicitly reports
@@ -542,9 +626,11 @@ one, stop and obtain approval; do not retry through another download source
 or alter managed security controls. Azure Identity sign-in is a separate
 authentication stage. Do not &quot;fix&quot; either stage by selecting <code>@latest</code>,
 removing tool filters, or disabling authentication/elicitation.</li>
-<li><strong>GitHub tools list but a repository cannot be read:</strong> review the PAT's
-selected repositories, read permissions, expiry and approval. Tool listing
-does not test a resource operation.</li>
+<li><strong>GitHub tools list but a repository cannot be read:</strong> review the credential's
+repository grants, read permissions, expiry and approval. For a PAT, check its
+selected repositories; for an explicitly imported CLI credential, check the
+imported account's existing access. Copilot sign-in does not enlarge either.
+Tool listing does not test a resource operation.</li>
 <li><strong>Configuration changed during a running app:</strong> reopening settings reloads
 local status; the next Copilot request independently reloads its authority.</li>
 <li>Remote exception bodies, HTTP errors and tool descriptions are withheld from
@@ -589,8 +675,10 @@ progress without releasing those scheduling constraints, including
 synchronous callback hangs. Deadline-order lifecycle fixtures share that
 exclusive collection with the process-global scheduling fixtures: their
 40 ms/100 ms synthetic budgets must not race unrelated corpus/serializer
-tests. The assertions and timeout values are unchanged. Configuration,
-policy, CLI and SDK-wire tests remain parallel with exact wire/plugin
+tests. Dedicated hang/force tests retain those short deadline assertions.
+The reconnect ownership fixture instead uses production cleanup bounds and
+asserts exactly which provider is disposed; it does not test sub-100ms thread
+admission. Configuration, policy, CLI and SDK-wire tests remain parallel with exact wire/plugin
 assertions. Restoration of the original process ThreadPool limits is also
 checked when a contention observation throws. The loopback transport's I/O continuations explicitly
 avoid capturing test/UI synchronization contexts.
@@ -612,8 +700,10 @@ unchanged; this is state-based fixture separation, not timeout inflation or
 removal of the no-tool assertions.
 That startup test uses production cleanup bounds independently of its
 unchanged 80 ms work deadline; an unrelated 40 ms cold-thread teardown budget
-must not mask the startup result. Explicit hang/force tests retain their
-short deadline assertions and unconfirmed-failure behavior.</p>
+must not mask the startup result. Its observer covers the work deadline plus
+both configured cleanup phases and a scheduling margin; it does not extend
+the runtime's deadlines. Explicit hang/force tests retain their short deadline
+assertions and unconfirmed-failure behavior.</p>
 <p>Additional source-isolation regressions force the manager's deadline to
 win while two hosted sources have already listed their tools. They require
 both hosted results to remain ready, Azure to remain explicitly failed,
