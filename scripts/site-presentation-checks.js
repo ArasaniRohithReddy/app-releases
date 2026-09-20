@@ -148,7 +148,7 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
           };
         }));
       const expectedClasses = [
-        'shot-frame--16x9', 'shot-frame--16x9',
+        'shot-frame--og', 'shot-frame--og',
         'shot-frame--detail', 'shot-frame--detail', 'shot-frame--portrait'
       ];
       check(intrinsic.length === expectedClasses.length,
@@ -223,7 +223,8 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
           check(layout.ratios.every(frame => frame.uncropped), `${label}: a source image would be cropped or distorted`);
           for (const frame of layout.ratios) {
             const expected = frame.classes.includes('shot-frame--portrait') ? 3 / 4 :
-              frame.classes.includes('shot-frame--detail') ? 16 / 10 : 16 / 9;
+              frame.classes.includes('shot-frame--detail') ? 16 / 10 :
+                frame.classes.includes('shot-frame--og') ? 40 / 21 : 16 / 9;
             check(Math.abs(frame.ratio - expected) <= .015,
               `${label}: ${frame.classes} rendered at ${frame.ratio.toFixed(3)}, expected ${expected.toFixed(3)}`);
           }

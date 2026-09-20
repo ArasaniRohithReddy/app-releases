@@ -1155,19 +1155,21 @@ test('shot2code screenshot markup matches the files and the alternative text des
   }
   const gallery = tags.slice(1).map(([, src]) => src);
   assert.deepEqual(new Set(gallery).size, 4, 'each gallery figure shows a different screenshot');
-  // Between them the screenshots have to show History, the model options and the centred preview.
+  // Between them the screenshots have to show Review, model options, provider
+  // configuration and the native desktop command surface.
   const alts = tags.map(([tag]) => tag.match(/alt="([^"]+)"/)[1]).join(' ');
-  for (const subject of [/History/, /model options|model options|generated model options/, /centered|centred/])
+  for (const subject of [/Review/, /generated options/, /OpenAI-compatible endpoint/, /native View menu/])
     assert.match(alts, subject, `the screenshots do not describe ${subject}`);
 
   const frames = [...shot2code.matchAll(/<a class="shot-frame ([^"]+)"[^>]*>\s*<img/g)]
     .map(match => match[1]);
   assert.deepEqual(frames, [
-    'shot-frame--16x9', 'shot-frame--16x9',
+    'shot-frame--og', 'shot-frame--og',
     'shot-frame--detail', 'shot-frame--detail', 'shot-frame--portrait'
   ], 'the hero and gallery do not use their intended aspect wrappers');
   assert.match(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*contain;/s);
   assert.doesNotMatch(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*cover;/s);
+  assert.match(shot2code, /\.shot-frame--og\s*\{\s*aspect-ratio:\s*40\s*\/\s*21;/);
   assert.match(shot2code, /\.shot-frame--16x9\s*\{\s*aspect-ratio:\s*16\s*\/\s*9;/);
   assert.match(shot2code, /\.shot-frame--detail\s*\{\s*aspect-ratio:\s*16\s*\/\s*10;/);
   assert.match(shot2code, /\.shot-frame--portrait\s*\{\s*aspect-ratio:\s*3\s*\/\s*4;/);

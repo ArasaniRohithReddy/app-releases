@@ -17,13 +17,13 @@
   <meta property="og:title" content="shot2code" />
   <meta property="og:description" content="Screenshots, mockups, URLs, descriptions and screen recordings become editable web code — generated locally on your Windows machine, with your own model provider or your own endpoint." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
-  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
   <meta property="og:image:width" content="1920" />
-  <meta property="og:image:height" content="1080" />
-  <meta property="og:image:alt" content="The shot2code workspace: an icon rail, a chat panel with two generated model options, and a desktop preview centred in a neutral frame." />
+  <meta property="og:image:height" content="1008" />
+  <meta property="og:image:alt" content="The shot2code responsive Review workspace showing a Northwind Analytics preview, local source-audit findings and generated options." />
   <meta property="og:site_name" content="App Releases" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
+  <meta name="twitter:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
 
   <!-- Structured data. Deliberately narrow: only claims that are true of the published build and
        verifiable from this page. The version is filled in from the resolved release rather than
@@ -279,6 +279,7 @@
       border: 1px solid var(--media-line); border-radius: var(--radius);
       background: var(--media-stage);
     }
+    .shot-frame--og { aspect-ratio: 40 / 21; }
     .shot-frame--16x9 { aspect-ratio: 16 / 9; }
     .shot-frame--detail { aspect-ratio: 16 / 10; }
     .shot-frame--portrait { aspect-ratio: 3 / 4; }
@@ -449,13 +450,13 @@
         </div>
 
         <figure class="hero-proof">
-          <a class="shot-frame shot-frame--16x9" href="#screens" aria-label="See the workspace screenshots at a larger size">
-            <img src="img/workspace-full-hd.png" width="1920" height="1080" fetchpriority="high" decoding="async"
-                 alt="The shot2code workspace at 1920 by 1080: an icon rail with Chat, History, New, Shortcuts and Settings, two generated model options in the conversation panel, and a 1366-pixel desktop preview centered on a neutral backdrop with Fit, 100 percent and History controls." />
+          <a class="shot-frame shot-frame--og" href="#screens" aria-label="See the responsive Review screenshots at a larger size">
+            <img src="img/review-workspace-og-light.png" width="1920" height="1008" fetchpriority="high" decoding="async"
+                 alt="The shot2code responsive Review workspace at 1920 by 1008: Chat and two generated options sit beside a real-width Northwind Analytics frame and the local automated source audit with selected findings." />
           </a>
           <figcaption>
-            The generated page stays centered and readable while Chat, History and the complete
-            editable project remain one action away.
+            Compare real responsive widths, inspect overflow and turn selected
+            local audit findings into an editable Chat instruction.
           </figcaption>
         </figure>
       </div>
@@ -507,41 +508,41 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="screens-h">What it looks like</h2>
-          <p>A lead Preview view, two Code details in light and dark themes, and Chat at tablet width. Select any screenshot to open its original pixels.</p>
+          <p>The responsive Review workspace, MCP permissions with the native menu, masked BYOK settings, and Review at tablet width. Select any screenshot to open its original pixels.</p>
         </div>
 
         <figure class="shot shot-lead">
-          <a class="shot-frame shot-frame--16x9" href="img/workspace-full-hd.png" aria-label="Open the Preview workspace screenshot at 1920 by 1080">
-            <img src="img/workspace-full-hd.png" width="1920" height="1080" loading="lazy" decoding="async"
-                 alt="shot2code at 1920 by 1080: the rail labels Chat, History, New, Shortcuts and Settings; the conversation panel shows two generated model options and activity; the main workspace centers a 1366-pixel desktop preview with Desktop, Mobile and Code tabs, Fit and 100 percent controls, History 2 of 2, Select and edit, download and refresh actions." />
+          <a class="shot-frame shot-frame--og" href="img/review-workspace-og-light.png" aria-label="Open the responsive Review workspace screenshot at 1920 by 1008">
+            <img src="img/review-workspace-og-light.png" width="1920" height="1008" loading="lazy" decoding="async"
+                 alt="shot2code Review at 1920 by 1008: Chat and two generated options sit beside a real-width Northwind Analytics desktop frame and the local automated source audit with warning counts and selected findings." />
           </a>
-          <figcaption><strong>Lead Preview workspace · 1920×1080.</strong> The fixed-width desktop preview is centred beside Chat, with model options and the current History position visible.</figcaption>
+          <figcaption><strong>Responsive Review · 1920×1008.</strong> The generated page renders at a real labeled width while the local source audit stays bound to the current version, option, code and viewport set.</figcaption>
         </figure>
 
         <div class="shot-grid">
           <figure class="shot">
-            <a class="shot-frame shot-frame--detail" href="img/code-workspace.png" aria-label="Open the light-theme Code workspace screenshot at 1920 by 1080">
-              <img src="img/code-workspace.png" width="1920" height="1080" loading="lazy" decoding="async"
-                   alt="The shot2code Code workspace at 1920 by 1080 in the light theme: two generated model options appear in Chat, while index.html is formatted across 88 lines with Entry and Preview badges, Format, Copy, Download and CodePen actions, and a language and line-count status bar." />
+            <a class="shot-frame shot-frame--detail" href="img/mcp-menu-light.png" aria-label="Open the light-theme MCP and native View menu screenshot at 1440 by 900">
+              <img src="img/mcp-menu-light.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code Settings at 1440 by 900 in the light theme: the Demo component library MCP server is active and read-only with Enabled and Trusted on, while the native View menu shows workspace and zoom commands." />
             </a>
-            <figcaption><strong>Light Code workspace · 1920×1080.</strong> The editor, file badges and file actions stay visible beside the same conversation and generated model options.</figcaption>
+            <figcaption><strong>MCP permissions and native menu · 1440×900.</strong> Servers need Enabled and Trusted, remain read-only until write tools are allowed, and the native menu uses the same guarded commands as the keyboard.</figcaption>
           </figure>
 
           <figure class="shot">
-            <a class="shot-frame shot-frame--detail" href="img/code-workspace-dark.png" aria-label="Open the dark-theme Code workspace screenshot at 1440 by 900">
-              <img src="img/code-workspace-dark.png" width="1440" height="900" loading="lazy" decoding="async"
-                   alt="The shot2code Code workspace at 1440 by 900 in the dark theme: the rail, Chat, toolbar, file header and syntax-highlighted editor use coordinated dark surfaces while keeping the same History, model-option and file actions." />
+            <a class="shot-frame shot-frame--detail" href="img/byok-settings-dark.png" aria-label="Open the dark-theme Copilot SDK BYOK settings screenshot at 1440 by 900">
+              <img src="img/byok-settings-dark.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code Settings at 1440 by 900 in the dark theme: GitHub Copilot SDK BYOK is enabled for a generic OpenAI-compatible endpoint with a synthetic base URL, a fully masked dedicated key and a custom endpoint model." />
             </a>
-            <figcaption><strong>Dark Code workspace · 1440×900.</strong> The active line, gutter, syntax colours and surrounding controls use coordinated dark surfaces.</figcaption>
+            <figcaption><strong>Copilot SDK BYOK · 1440×900.</strong> A dedicated endpoint credential stays separate from native provider keys, with model discovery or manual model entry and an Automatic wire API.</figcaption>
           </figure>
         </div>
 
         <figure class="shot shot-portrait">
-          <a class="shot-frame shot-frame--portrait" href="img/chat-tablet.png" aria-label="Open the tablet-width Chat workspace screenshot at 768 by 1024">
-            <img src="img/chat-tablet.png" width="768" height="1024" loading="lazy" decoding="async"
-                 alt="The shot2code Chat workspace at 768 by 1024: the rail becomes a top bar, Preview and Chat are paired beside a separate History button, two generated model options are visible, and agent activity plus the update composer remain usable in one column." />
+          <a class="shot-frame shot-frame--portrait" href="img/review-workspace-tablet.png" aria-label="Open the tablet-width Review workspace screenshot at 768 by 1024">
+            <img src="img/review-workspace-tablet.png" width="768" height="1024" loading="lazy" decoding="async"
+                 alt="shot2code Review at 768 by 1024: Preview, Chat and History remain separate top destinations while the Review controls, real-width Northwind Analytics frame and automated source-audit panel reflow into one column." />
           </a>
-          <figcaption><strong>Tablet-width Chat workspace · 768×1024.</strong> Preview, Chat and History remain separate destinations while model options, activity and the update composer reflow into one column.</figcaption>
+          <figcaption><strong>Tablet-width Review · 768×1024.</strong> Review, Preview, Code and History remain identifiable while the viewport comparison and audit stack without page-level horizontal overflow.</figcaption>
         </figure>
       </div>
     </section>
