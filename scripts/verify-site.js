@@ -4,6 +4,7 @@ const path = require('node:path');
 const releaseData = require('../docs/release-data.js');
 const { createSiteServer, mount } = require('./site-server.js');
 const accessibilityChecks = require('./site-accessibility-checks.js');
+const releaseHubChecks = require('./site-release-hub-checks.js');
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..', 'docs'));
 
@@ -443,6 +444,7 @@ async function main() {
     // Every published page of every product, not just the first application on the hub.
     const sitePages = [
       ['portal', '/'],
+      ['release-hub', '/releases/'],
       ...products.flatMap(product => [
         [`${product.name} product`, product.url],
         [`${product.name} releases`, `${product.url}releases/`]
@@ -548,7 +550,7 @@ async function main() {
             return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
           }
           const problems = [];
-          for (const el of document.querySelectorAll('.btn, .lede, .boundary-note, .pillar p, .workflow p, .coverage-list dd, .stack-grid li, .callout p')) {
+          for (const el of document.querySelectorAll('.btn, .lede, .boundary-note, .pillar p, .workflow p, .coverage-list dd, .stack-grid li, .callout p, .hub-intro, .hub-status, .group-source, .release-channel, .release-version, .release-date, .hub-note, .release-detail')) {
             if (el.getBoundingClientRect().width === 0) continue;
             const ancestors = [];
             for (let current = el; current; current = current.parentElement) ancestors.unshift(current);
@@ -740,6 +742,7 @@ async function main() {
     }
 
     await portalLayoutChecks(browser, base);
+    await releaseHubChecks({ browser, base, root, products, allReleases, check, mockReleases, visit });
     await preservationChecks(browser, base);
     await accessibilityChecks({ browser, base, snapshot, check, mockReleases, visit });
 

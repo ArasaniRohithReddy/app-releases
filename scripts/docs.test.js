@@ -128,6 +128,7 @@ test('shared help uses hub navigation without imposing a product brand or guide 
     assert.match(header, /aria-label="App Releases — home"/, document.source);
     assert.doesNotMatch(header + sidebar, /Threat Model Reviewer|threat-model-reviewer|shot2code/, document.source);
     assert.match(sidebar, /#apps">Choose an app and its guides/, document.source);
+    assert.match(header, /href="(?:\.\.\/)+releases\/">Releases<\/a>/, document.source);
     assert.doesNotMatch(html, />Back to product</, document.source);
   }
   const license = built.outputs.get('docs/help/license/index.html');
@@ -136,6 +137,7 @@ test('shared help uses hub navigation without imposing a product brand or guide 
   const productGuide = built.outputs.get('docs/threat-model-reviewer/docs/index.html');
   assert.match(productGuide, /aria-label="Threat Model Reviewer — product overview"/);
   assert.match(productGuide, />Back to product</);
+  assert.match(productGuide, /href="\.\.\/\.\.\/threat-model-reviewer\/releases\/">Releases<\/a>/);
 });
 
 test('the three authored routes link to native guides and workflows check generated drift', () => {

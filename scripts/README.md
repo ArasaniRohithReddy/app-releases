@@ -106,6 +106,11 @@ local generation or tests are not proof of a remote deployment.
 
 ## verify-site.js
 
+The native `/releases/` index uses `ReleaseData.PRODUCTS` and the existing product-scoped
+loader/snapshots. It does not parse release notes or choose packages; native product histories
+own those details. `release-links.js` handles tag anchors after those existing pages render.
+Shared Releases navigation stays native; GitHub remains an explicit secondary source and asset host.
+
 ```bash
 node scripts/verify-site.js docs
 ```

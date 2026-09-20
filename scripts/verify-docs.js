@@ -90,6 +90,8 @@ async function main() {
               `${entry.label}/${theme}: shared help assumes TMR guides`);
             check(await page.locator('.doc-sidebar a[href$="#apps"]').count() === 1,
               `${entry.label}/${theme}: shared help has no app directory entry`);
+            check(new URL(await page.locator('header.site').getByRole('link', { name: 'Releases', exact: true }).getAttribute('href'), page.url()).href === base + '/releases/',
+              `${entry.label}/${theme}: shared release navigation leaves the site`);
           }
           const ids = await page.locator('[id]').evaluateAll(elements => elements.map(el => el.id));
           check(new Set(ids).size === ids.length, `${entry.label}: duplicate IDs`);

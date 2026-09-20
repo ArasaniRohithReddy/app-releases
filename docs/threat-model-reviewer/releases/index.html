@@ -320,6 +320,7 @@
         <div style="margin-top:.5rem">Docs &amp; release assets are MIT-licensed.</div>
       </div>
       <nav class="foot-links" aria-label="Footer">
+        <a href="../../releases/">All apps' releases</a>
         <a href="../">Overview</a>
         <a href="../docs/install/">Install</a>
         <a href="../docs/changelog/">Changelog</a>
@@ -405,7 +406,7 @@
           '<div class="notes-body">' + notes + '</div></details>'
         : '<p class="rel-sub">No release notes were published for this version.</p>';
 
-      return '<article class="rel' + (isLatest ? " latest" : "") + '" data-ver="' + esc(ver.toLowerCase()) + '">' +
+      return '<article class="rel' + (isLatest ? " latest" : "") + '" id="' + esc(rel.tag_name) + '" tabindex="-1" data-ver="' + esc(ver.toLowerCase()) + '">' +
           '<div class="rel-head">' +
             '<h3 class="rel-ver">v' + esc(ver) + '</h3>' +
             (isLatest ? '<span class="badge latest">Latest</span>' : '') +
@@ -475,7 +476,7 @@
           if (details) details.open = state.open;
         });
         if (focused && version === focused.version) {
-          var target = Array.from(card.querySelectorAll("a, summary")).find(function (el) {
+          var target = focused.tag === "ARTICLE" ? card : Array.from(card.querySelectorAll("a, summary")).find(function (el) {
             var group = el.closest("details");
             return el.tagName === focused.tag && el.getAttribute("href") === focused.href &&
               (group ? group.className : "") === focused.group;
@@ -530,5 +531,6 @@
   </script>
 
   <script src="../../theme.js"></script>
+  <script src="../../release-links.js"></script>
 </body>
 </html>
