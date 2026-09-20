@@ -1,7 +1,17 @@
 # Data Handling & Privacy
 
-*Describes published v2.6.0.
+*Describes published v2.7.0.
 Companion to [SECURITY.md](SECURITY.md). Source changes do not update an installed release.*
+
+**Credential setup in version 2.7.0 or later:** the optional **Use GitHub CLI sign-in**
+action explicitly reads a stored github.com credential from installed `gh.exe`,
+after removing known ambient provider/seat token variables from that child. It
+does not read the app's Copilot device-flow store, start login, or request scopes.
+The GitHub CLI account can differ from Copilot and expose more repositories than
+a selected-repository PAT. Its credential is copied into current-user DPAPI storage;
+later GitHub CLI sign-out does not remove that copy. Forget it separately in MCP
+settings. Setup does not enable or test the server, and token/stdout/stderr content
+is not logged. Same-user processes remain outside DPAPI's protection boundary.
 
 Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
@@ -137,7 +147,7 @@ not by the app's no-product-analytics statement.
 
 #### Restricted profiles
 
-The new source implementation uses an explicit per-profile tool list, disabled
+The implementation uses an explicit per-profile tool list, disabled
 master/per-profile defaults, and consent before enablement. Older unrestricted
 profiles require review and renewed consent; a saved configuration is not silently
 upgraded into broader access.
@@ -146,10 +156,11 @@ upgraded into broader access.
 | --- | --- |
 | Microsoft Learn | `https://learn.microsoft.com/api/mcp`; documentation search, page fetch and code-sample search only |
 | Azure metadata | `npx -y @azure/mcp@2.0.5 server start --read-only --tool group_list --tool subscription_list`; subscription/group metadata only, not resource configuration or storage contents |
-| GitHub review context | `https://api.githubcopilot.com/mcp/readonly`; `get_file_contents`, `issue_read`, `pull_request_read`, read-only/tool headers and a separate fine-grained PAT scoped to selected repositories |
+| GitHub review context | `https://api.githubcopilot.com/mcp/readonly`; `get_file_contents`, `issue_read`, `pull_request_read`, read-only/tool headers and a selected-repository PAT or explicitly imported GitHub CLI credential |
 
-The GitHub PAT is never borrowed from Copilot sign-in, `gh`, or ambient seat-token
-variables. App entry is masked; the CLI uses interactive entry or a deliberately
+The manual GitHub PAT is never borrowed from Copilot sign-in, `gh`, or ambient
+seat-token variables. The separate, explicit GitHub CLI import is described above.
+App entry is masked; the CLI uses interactive entry or a deliberately
 named environment variable, never a token literal in command arguments. DPAPI
 protects local storage for the current Windows user, not against processes running
 as that user. Removing the stored credential does not revoke it at GitHub.
@@ -263,6 +274,22 @@ stripped so a value can never break the one-record-per-line format.
 These settings are enforced by the store itself, not by each call site: every record passes through
 a redaction pass on its way to disk, so a caller that supplies a full path still cannot get that
 path written when you have said no.
+
+**Remembered file locations in History (development source).** The list and selected-item details
+show only locations actually retained in history; they do not recover missing directories from the
+open model, filenames, hashes or another source. To opt in for future activity, use **History →
+Privacy & export… → Privacy → Store full file paths → Save privacy settings**. Opening that dialog,
+using Locate or selecting a row does not enable recording. Enabling this setting **cannot restore
+unrecorded past paths**. Disabling it stops future path recording but does not erase paths already
+retained; use Clear history to remove retained records.
+
+Saved paths can contain sensitive user, project or share names. **Copy path** is an explicit transfer
+to the system clipboard: other applications, clipboard history and Windows clipboard sync may retain
+or transmit it outside this app. **Open folder** explicitly asks Windows to open the recorded
+containing folder if it exists; it neither creates a folder nor opens a threat model. No path is
+silently rewritten when Locate chooses a moved file. An accepted reopen is recorded only according
+to the existing recording and path preferences. These actions do not record prompts, responses or
+model contents and do not change the deterministic score or verdict.
 
 Two further operations put you in control of the data:
 

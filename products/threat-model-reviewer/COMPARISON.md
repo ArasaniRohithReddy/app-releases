@@ -1,6 +1,6 @@
 # Comparing saved model revisions
 
-This guide describes saved-revision comparison in **v2.6.0**. Use the release
+This guide describes saved-revision comparison in **v2.7.0**. Use the release
 notes and matching guide for an older installed version.
 
 ## Workflow

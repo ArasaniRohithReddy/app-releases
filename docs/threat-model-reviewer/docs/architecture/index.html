@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/ARCHITECTURE.md (normalized SHA-256 fd95fdd704e2677012a95168a089301f2c107c3aa44a348873a33d11125c4742). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/ARCHITECTURE.md (normalized SHA-256 ad19f1b5457ac6172a1206540015e0ddfb9e6d3bc20860d2a877d379eb36cca3). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -67,7 +67,7 @@
 The guiding rule: <strong>the deterministic core never depends on AI</strong>, so the verdict is
 reproducible. Deterministic review works offline; direct Azure discovery is a
 separate network-backed Core feature and AI/MCP integrations are optional.</p>
-<p>The integration boundaries below are included in <strong>v2.6.0</strong>. Release provenance
+<p>The integration boundaries below are included in <strong>v2.7.0</strong>. Release provenance
 records its accepted source and runtime; a source version alone is not release evidence.</p>
 <pre tabindex="0" aria-label="Text code example"><code>ThreatModelReviewer.Core   ──► no AI dependency (the deterministic engine)
         ▲

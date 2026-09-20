@@ -75,6 +75,34 @@ gating.
 
 ## The tabs
 
+**Workspace layout increment — development source, not a new published build.**
+The nine tabs and their shortcuts are unchanged. The compact layout uses normal-weight body text,
+wrapping labels and the existing light/dark palette:
+
+- **Create / Assistant:** the introduction scrolls with the form; Generate/Extract remain outside
+  the editor, alongside extraction cancellation when running. Create's action columns share a
+  content-sized width, and Assistant's text editor can grow before scrolling.
+- **Overview:** section titles and optional AI actions occupy separate columns; STRIDE bars fit
+  their column without covering counts. Verdict, score and provenance are unchanged.
+- **Diagram:** **More ▾** groups **Full screen**, **Open in TMT** and **Reset to saved**. Save,
+  editing, connection and zoom controls stay directly available.
+- **Findings / Fix:** drag the divider between list and details, or Tab to it and use Left/Right.
+  Rows can grow with text. **Totals and risk** and **Fix plan summary** disclose supporting detail
+  without consuming a permanent row. Once a fix plan exists, Apply & Save is the primary action;
+  generating another plan remains available and still replaces the current plan and selections.
+- **Compare:** labelled, wrapping path fields expose long saved-file paths; browsing, dropping,
+  swapping and snapshot export retain their existing behavior.
+- **Ask:** the mode and composer stay outside the conversation scroll area; review/provider context
+  and the mode explanation scroll with the conversation. The explanation is also available on the
+  mode picker. Empty conversations start at the top. Both Ask surfaces still share one draft and
+  Ctrl+Enter command.
+- **History:** **What is kept and where** groups the privacy explanation, totals and storage path.
+  An empty list explains the next steps without turning recording on.
+
+At narrow logical widths, the duplicate in-client app title is omitted to make room for commands;
+Sign in (when needed), Provider and Help remain available. Long lists and details still scroll.
+These changes do not alter review rules, provider connections, edit confirmations or history consent.
+
 ### Overview
 The review layout keeps readiness, score, evidence and optional guidance separate.
 
@@ -442,22 +470,56 @@ behind it. **Open Ask tab** keeps the same conversation and focuses the full-siz
 
 ### History
 Optional retained activity on this machine, with a per-model score trend and **what you did** to
-each model — opens, exports, fixes applied and Copilot actions. The tab names the folder the data
-lives in and can open it, so you can verify that nothing leaves your machine rather than taking it
-on trust. **Clear history…** asks for confirmation before deletion. Clearing records does not turn
-recording off.
+each model — opens, exports, fixes applied and Copilot actions. **History folder** opens the local
+activity-records folder; it is distinct from a selected model's **Open folder** action.
+**Clear history…** asks for confirmation before deletion. Clearing records does not turn recording off.
 
 **Privacy & export…** opens the history controls for recording,
 model names, file paths, retention, export and deletion. **What is kept and where** shows the actual
 preferences and selectable storage location. Prompts and responses are never history records.
 
-**Reopening a model.** Double-click a row, press Enter on the selected row, or use its **Open** /
-**Locate…** button. File paths are *not* recorded by default, so you may be asked to locate the file.
-Both a stored path and a newly located path are checked against the recorded content hash before
-opening. The status distinguishes matched bytes, changed bytes and unavailable hashes. Matching a
+**Saved locations — development source, not a new published build.** Every row keeps **Open**
+and **Locate…** in the same positions:
+
+| Location state | What to do |
+|---|---|
+| **Available** | **Open** requests the recorded saved file. **Locate…** remains available to choose a moved or replacement file, even while the original exists. |
+| **Not found** | The recorded file is missing or inaccessible. **Locate…** chooses another location; **Refresh** rechecks availability. |
+| **No location remembered** | This entry contains no saved directory. Use **Locate…**; the app does not infer one from the current model or another source. |
+| **Could not check / Full path unavailable** | Inspect the details and use **Refresh** or **Locate…**, rather than assuming a path or revision match. |
+
+Select a row to read its **full, selectable recorded path**, last activity, recorded score, trend and
+activity. The list shows the containing folder's name instead of a repeated drive/user prefix,
+with the full recorded file path in its tooltip. Drag the list/details divider, or
+Tab to it and use Left/Right. **Copy path** works for a remembered path even when its file is missing.
+It puts the path on the system clipboard, where other apps, clipboard history or sync may retain it.
+**Open folder** requests that file's existing containing folder; it does not create a missing
+folder or open the model. Operation errors remain selectable in the History status area.
+
+**Remembering future locations.** Paths remain **off by default**. Choose **Privacy & export… →
+Privacy → Store full file paths → Save privacy settings** to opt in. **Path recording settings…**
+in selected-item details opens the same dialog and does not change a setting itself. Opting in
+cannot restore unrecorded past paths. Turning it off stops future path recording; it does not erase
+paths already retained. Locate does not rewrite the original entry; an accepted reopen can produce
+new history under the current privacy settings.
+
+**Reopening safeguards.** Both Open and Locate compare the chosen bytes against the **original
+entry's recorded content hash**, including when Locate chooses a different file. Matching a
 filename is not proof of the original revision. This is a pre-open content check, not an atomic
-snapshot of the subsequent load: reopening always runs a fresh review and never reuses the recorded
-score. The date column is **Last activity**, not a claim that the last event was a review.
+snapshot of the subsequent load. The existing main-workspace **Save / Discard / Cancel** guard
+still applies; an accepted file receives a fresh review, never the recorded score. History says
+**Open requested**, not “opened successfully”: the existing load callback does not return an
+adoption result. Check the current model and workspace status if a save, cancellation or parse
+failure prevents opening. Double-click/Enter retain the shortcut of using the recorded file when
+available, otherwise Locate. Availability is a refresh-time check, not a file watcher. **Last
+activity** is not a claim that the last event was a review.
+
+Unavailable drives do not run availability checks on the UI thread. Refresh has a five-second
+budget for its recorded-path checks; explicit existence, hash and containing-folder checks each
+also stop waiting after five seconds. A timeout is visible, never an assumed match or a later open.
+The operating system may still be completing one background filesystem call. History does not queue
+more checks while that call is pending; other app controls remain usable. Retry History after the
+drive responds. This does not change the main workspace's load or Save/Discard/Cancel behavior.
 
 ## Appearance
 
@@ -580,17 +642,30 @@ inventory over your edits.
 
 ## Assistant data sources (MCP)
 
+**Setup interface in version 2.7.0 or later:** the app presents a short state and next action
+for each server, with setup guidance, tool results and detailed disclosures
+expandable. **Needs setup**, **Ready to test**, **Testing** and the last completed
+result are different states. A source not included in the latest selection is
+not reported as failed; a completed test is not a live AI connection.
+
+GitHub credential actions remain reachable while that source is off. **Use GitHub
+CLI sign-in** requires confirmation before copying its stored github.com credential;
+it can be a different account with broader repository access than Copilot. PAT
+entry remains separate. **Build from Azure (CLI)** closes the settings dialog and
+opens the existing read-only Azure picker; it does not enable MCP or let AI run
+arbitrary `az` commands. These additions are not in the v2.6.0 bundle.
+
 **Help → Assistant data sources (MCP)** adds optional external context to the
 assistant. It does not independently verify a system's security controls.
 
-Version **2.6.0** includes the following restricted profiles and matching CLI controls.
+Version **2.6.0 and later** includes the following restricted profiles and matching CLI controls.
 An older installed release does not acquire them until updated:
 
 | Source | What it adds |
 | --- | --- |
 | **Microsoft Learn Docs** | Official documentation search, fetch and code-sample search |
 | **Azure metadata** | Subscription/group listing only, using pinned `@azure/mcp@2.0.5` with read-only and explicit-tool flags; requires Node.js and a usable Azure identity |
-| **GitHub review context** | Read selected repository files, issues and pull requests using a separate fine-grained PAT; does not reuse the Copilot seat token |
+| **GitHub review context** | Read repository files, issues and pull requests using a selected-repository PAT or, from v2.7.0, an explicitly imported GitHub CLI credential; does not reuse the Copilot seat token |
 
 New profiles are **off initially**, behind a master switch and per-source consent.
 Configuration changes are local; an explicit connection test or enabled assistant

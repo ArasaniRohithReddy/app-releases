@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/SKILL.md (normalized SHA-256 845a6b99ffbb21ec29bf66fd9716940be2b288bd196091f184072e4d3b058379). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/SKILL.md (normalized SHA-256 04b051e03df943bdad21473fa4621d07b2bbff7927037f85a8f50dc87fc1caab). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -70,9 +70,18 @@ nobody outside the team can clone. It got the right answer after nine minutes an
 With the skill, it runs one command.</p>
 <p>Download <strong><code>ThreatModelReviewer-vX.Y.Z-skill.zip</code></strong> from the
 <a href="../../releases/">Threat Model Reviewer releases</a>.</p>
-<p>The <strong>v2.6.0</strong> skill and CLI include restricted MCP context and captured-revision/
+<p>The <strong>v2.7.0</strong> skill and CLI include restricted MCP context and captured-revision/
 evidence safeguards. Keep the bundles matched; do not run unsupported commands
 against an older CLI or silently replace the engine with AI reasoning.</p>
+<p><strong>Requires version 2.7.0 or later:</strong> <code>mcp setup &lt;id&gt;</code> provides local guidance, and
+<code>mcp credential github-review-context --github-cli --consent</code> deliberately imports
+an existing stored GitHub CLI sign-in. These are not in v2.6.0. The agent must
+explain account/scope differences and obtain consent, invoke the supported command,
+and never extract or display tokens itself. The import does not enable a source.</p>
+<p>The version 2.7.0 desktop's History location and Open/Locate improvements are desktop
+actions, not new skill verbs or CLI flags. Path recording remains default-off.
+Do not infer unrecorded paths or enable retention to satisfy an agent request;
+use the model path the user supplies. Enabling recording cannot restore old paths.</p>
 <p>For optional developer context, <strong>MCP is the tool protocol</strong>, the GitHub Copilot
 SDK hosts the sessions, and each tool is a named operation with an input schema
 backed by a service API. The OpenAI-compatible and Offline providers do not

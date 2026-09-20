@@ -51,6 +51,41 @@ the app. To sign in, do any one of:
 
 When you're connected, the header shows a green dot and *"GitHub Copilot ready — N models"*.
 
+### Why does GitHub MCP ask for a credential after Copilot sign-in?
+Signing in identifies an account, but model access and repository access are
+different authorizations. The v2.6.0 restricted GitHub MCP profile uses
+a selected-repository fine-grained PAT; it does not copy the app's Copilot token.
+
+**Version 2.7.0 or later** also offers an explicit **Use GitHub
+CLI sign-in** action. If `gh` already has a stored github.com sign-in, you can
+consent to copying that credential into this app's protected store instead of
+creating a new PAT. Its account may differ from Copilot and have broader repository
+access. The source stays disabled until separately enabled; later `gh` sign-out
+does not remove the app's copy. See [MCP setup](MCP.md) before choosing.
+
+### Learn connects, but its tools say "not available to SDK". Do I need a PAT?
+No. Microsoft Learn's endpoint is public and needs no GitHub repository credential.
+In v2.6.0, connection probes can inspect the native SDK's tool catalogue before it
+has been initialized and incorrectly report this failure. Version 2.7.0
+initializes the catalogue before checking the same allowed tools and schemas,
+without an AI request. A failed Learn probe is not explained by a disabled GitHub
+profile or by an Azure source that was not selected for that probe.
+
+### Is Azure CLI the same thing as Azure MCP?
+No. **Build from Azure** already uses the installed Azure CLI through a fixed,
+read-only native-Python interface; it asks you to select a subscription and group.
+Azure MCP is a separate optional server exposing the configured tools to Copilot,
+with its own Node/npx/package and Azure Identity prerequisites. Installing Azure CLI
+does not install the MCP server. An administrator-enforced package block needs IT
+approval, not an alternative download route or disabled security control.
+
+### Can I use a proxy to install Azure MCP?
+Only through an organization-approved route for the approved package and its
+dependencies. A proxy does not override a Windows Security or IT block, and the
+app does not select alternate registries, disable TLS verification or install
+unapproved packages. Ask IT for approved access or a reviewed preinstalled server;
+see [MCP managed package access](MCP.md#approved-proxies-and-managed-package-access).
+
 ### Is my threat model sent anywhere?
 The deterministic review is **local**. AI features send context to your selected
 provider; extraction can include supplied document text or the image you select.

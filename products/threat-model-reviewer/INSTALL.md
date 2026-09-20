@@ -6,6 +6,16 @@ CLI skill alongside it. Every download is attached to each release on the
 
 ## System requirements
 
+**Optional setup in version 2.7.0 or later:** the app can import an existing GitHub CLI
+repository sign-in after explicit consent. This requires an approved `gh.exe` on
+PATH and an existing `gh auth login --hostname github.com` sign-in; it is not
+required for deterministic review, Copilot model access, or the PAT option.
+Azure CLI is used by **Build from Azure**; Azure MCP separately needs Node/npx
+and the approved pinned server package. No setup button installs packages or
+bypasses an administrator-enforced restriction.
+An approved corporate proxy is an IT-managed prerequisite, not an app workaround;
+see [managed package access](MCP.md#approved-proxies-and-managed-package-access).
+
 - **Windows 10 (1809 / build 17763) or Windows 11**, 64-bit (x64).
 - Allow disk space for both the download and the extracted/installed bundle; release
   assets list compressed download sizes, not the complete installation footprint.

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/RELEASING.md (normalized SHA-256 86c961752756461202ade2a93a4d77bd6c7622b71b2ef602ed351d7fd895ca4e). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/RELEASING.md (normalized SHA-256 042634177bea2c74c0cc39649854af2699e19a651de5b3cbff67eeeddf596b54). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -373,9 +373,10 @@ gh api repos/ArasaniRohithReddy/app-releases/releases/tags/threat-model-reviewer
 gh api repos/ArasaniRohithReddy/app-releases/pages --jq &#39;{build_type,source,status}&#39;
 </code></pre>
 <p>Use exact tag/download links in versioned docs, and a product-filtered listing for
-moving discovery links. The in-app checker filters the prefix rather than using
-global latest, but its API window is currently only 50 releases and Atom is finite;
-pagination/exhaustion and prerelease fallback remain updater-owner follow-ups.</p>
+moving discovery links. Since v2.6.0, the in-app checker uses bounded API
+pagination and a product-specific release snapshot rather than a finite Atom
+fallback. An incomplete discovery result is not &quot;up to date&quot;; verify that both
+the API and snapshot identify the actual new product assets after publication.</p>
 <p><code>--target main</code> above identifies the <strong>hub's</strong> existing documentation commit when
 GitHub creates the new hub tag; it does not push/merge source <code>main</code>. The build's
 private-source SHA is recorded in the release report. Do not use <code>--clobber</code>,
@@ -462,8 +463,8 @@ pwsh scripts\sync-public-docs.ps1 -HubPath C:\work\app-releases -Check
 </code></pre>
 <p>Those commands require a stable documentation channel. During development,
 <code>docs\publication.json</code> is marked <code>development</code>; use <code>-AllowDevelopment</code> only
-with a separate preview worktree. Do not overwrite the stable v2.5.1 guides with
-new MCP command instructions before publishing matching app, CLI and skill
+with a separate preview worktree. Do not overwrite stable-release guides with
+candidate command instructions before publishing matching app, CLI and skill
 bundles. <code>docs\DOCUMENTATION.md</code> describes the stable-source
 and preview workflows.</p>
 <p>Review the hub portal README and all Pages surfaces separately: hero claims,

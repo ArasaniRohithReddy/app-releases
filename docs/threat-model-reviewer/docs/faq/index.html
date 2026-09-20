@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/FAQ.md (normalized SHA-256 356bd89cb0abb14118ffeabd93746da922e63954c86efc516202e598692fe622). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/FAQ.md (normalized SHA-256 59ec0ea287aafbb31791b8cec14b59adffe95bea0527d8d512a20c173cb2fc8e). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -106,6 +106,36 @@ The app uses that automatically — nothing to do.</li>
 supported)</em>.</li>
 </ul>
 <p>When you're connected, the header shows a green dot and <em>&quot;GitHub Copilot ready — N models&quot;</em>.</p>
+<h3 id="why-does-github-mcp-ask-for-a-credential-after-copilot-sign-in" tabindex="-1">Why does GitHub MCP ask for a credential after Copilot sign-in?</h3>
+<p>Signing in identifies an account, but model access and repository access are
+different authorizations. The v2.6.0 restricted GitHub MCP profile uses
+a selected-repository fine-grained PAT; it does not copy the app's Copilot token.</p>
+<p><strong>Version 2.7.0 or later</strong> also offers an explicit <strong>Use GitHub
+CLI sign-in</strong> action. If <code>gh</code> already has a stored github.com sign-in, you can
+consent to copying that credential into this app's protected store instead of
+creating a new PAT. Its account may differ from Copilot and have broader repository
+access. The source stays disabled until separately enabled; later <code>gh</code> sign-out
+does not remove the app's copy. See <a href="../mcp/">MCP setup</a> before choosing.</p>
+<h3 id="learn-connects-but-its-tools-say-not-available-to-sdk-do-i-need-a-pat" tabindex="-1">Learn connects, but its tools say &quot;not available to SDK&quot;. Do I need a PAT?</h3>
+<p>No. Microsoft Learn's endpoint is public and needs no GitHub repository credential.
+In v2.6.0, connection probes can inspect the native SDK's tool catalogue before it
+has been initialized and incorrectly report this failure. Version 2.7.0
+initializes the catalogue before checking the same allowed tools and schemas,
+without an AI request. A failed Learn probe is not explained by a disabled GitHub
+profile or by an Azure source that was not selected for that probe.</p>
+<h3 id="is-azure-cli-the-same-thing-as-azure-mcp" tabindex="-1">Is Azure CLI the same thing as Azure MCP?</h3>
+<p>No. <strong>Build from Azure</strong> already uses the installed Azure CLI through a fixed,
+read-only native-Python interface; it asks you to select a subscription and group.
+Azure MCP is a separate optional server exposing the configured tools to Copilot,
+with its own Node/npx/package and Azure Identity prerequisites. Installing Azure CLI
+does not install the MCP server. An administrator-enforced package block needs IT
+approval, not an alternative download route or disabled security control.</p>
+<h3 id="can-i-use-a-proxy-to-install-azure-mcp" tabindex="-1">Can I use a proxy to install Azure MCP?</h3>
+<p>Only through an organization-approved route for the approved package and its
+dependencies. A proxy does not override a Windows Security or IT block, and the
+app does not select alternate registries, disable TLS verification or install
+unapproved packages. Ask IT for approved access or a reviewed preinstalled server;
+see <a href="../mcp/#approved-proxies-and-managed-package-access">MCP managed package access</a>.</p>
 <h3 id="is-my-threat-model-sent-anywhere" tabindex="-1">Is my threat model sent anywhere?</h3>
 <p>The deterministic review is <strong>local</strong>. AI features send context to your selected
 provider; extraction can include supplied document text or the image you select.

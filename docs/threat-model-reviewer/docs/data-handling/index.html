@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/DATA-HANDLING.md (normalized SHA-256 8208f614e5be819a11991bbe4e24dca8ef59fb37a030c7882ae8251b524b145c). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/DATA-HANDLING.md (normalized SHA-256 4bee881d5c7f56a0e06a5b5751d27f7c52ce43e318379acfd866945bdab3e79e). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Data Handling &amp; Privacy — Threat Model Reviewer documentation</title>
-  <meta name="description" content="Describes published v2.6.0. Companion to SECURITY.md. Source changes do not update an installed release." />
+  <meta name="description" content="Describes published v2.7.0. Companion to SECURITY.md. Source changes do not update an installed release." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Data Handling &amp; Privacy — App Releases" />
-  <meta property="og:description" content="Describes published v2.6.0. Companion to SECURITY.md. Source changes do not update an installed release." />
+  <meta property="og:description" content="Describes published v2.7.0. Companion to SECURITY.md. Source changes do not update an installed release." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Data Handling & Privacy","description":"Describes published v2.6.0. Companion to SECURITY.md. Source changes do not update an installed release.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Data Handling & Privacy","description":"Describes published v2.7.0. Companion to SECURITY.md. Source changes do not update an installed release.","url":"https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/docs/data-handling/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -63,8 +63,17 @@
 
         </header>
         <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-summary-for-reviewers">1. Summary for reviewers</a></li><li><a href="#2-data-classification">2. Data classification</a></li><li><a href="#3-exactly-what-leaves-the-machine">3. Exactly what leaves the machine</a></li><li><a href="#4-secret-redaction-before-any-prompt">4. Secret redaction before any prompt</a></li><li><a href="#5-storage-retention-and-removal">5. Storage, retention and removal</a></li><li><a href="#6-compliance-notes">6. Compliance notes</a></li><li><a href="#7-verifying-these-claims-yourself">7. Verifying these claims yourself</a></li></ul></nav></details>
-        <div class="doc-content"><p><em>Describes published v2.6.0.
+        <div class="doc-content"><p><em>Describes published v2.7.0.
 Companion to <a href="../security/">SECURITY.md</a>. Source changes do not update an installed release.</em></p>
+<p><strong>Credential setup in version 2.7.0 or later:</strong> the optional <strong>Use GitHub CLI sign-in</strong>
+action explicitly reads a stored github.com credential from installed <code>gh.exe</code>,
+after removing known ambient provider/seat token variables from that child. It
+does not read the app's Copilot device-flow store, start login, or request scopes.
+The GitHub CLI account can differ from Copilot and expose more repositories than
+a selected-repository PAT. Its credential is copied into current-user DPAPI storage;
+later GitHub CLI sign-out does not remove that copy. Forget it separately in MCP
+settings. Setup does not enable or test the server, and token/stdout/stderr content
+is not logged. Same-user processes remain outside DPAPI's protection boundary.</p>
 <p>Threat models are among the most sensitive documents an organization produces: they enumerate a
 system's assets, trust boundaries and known weaknesses. This document states precisely what the
 application does with that data, what leaves your machine, and what does not — so a security or
@@ -369,7 +378,7 @@ before enabling it. Use least-privilege identities and leave MCP off for an
 offline-only workflow. Third-party server telemetry is governed by that server,
 not by the app's no-product-analytics statement.</p>
 <h4 id="restricted-profiles" tabindex="-1">Restricted profiles</h4>
-<p>The new source implementation uses an explicit per-profile tool list, disabled
+<p>The implementation uses an explicit per-profile tool list, disabled
 master/per-profile defaults, and consent before enablement. Older unrestricted
 profiles require review and renewed consent; a saved configuration is not silently
 upgraded into broader access.</p>
@@ -391,12 +400,13 @@ upgraded into broader access.</p>
 </tr>
 <tr>
 <td>GitHub review context</td>
-<td><code>https://api.githubcopilot.com/mcp/readonly</code>; <code>get_file_contents</code>, <code>issue_read</code>, <code>pull_request_read</code>, read-only/tool headers and a separate fine-grained PAT scoped to selected repositories</td>
+<td><code>https://api.githubcopilot.com/mcp/readonly</code>; <code>get_file_contents</code>, <code>issue_read</code>, <code>pull_request_read</code>, read-only/tool headers and a selected-repository PAT or explicitly imported GitHub CLI credential</td>
 </tr>
 </tbody>
 </table></div>
-<p>The GitHub PAT is never borrowed from Copilot sign-in, <code>gh</code>, or ambient seat-token
-variables. App entry is masked; the CLI uses interactive entry or a deliberately
+<p>The manual GitHub PAT is never borrowed from Copilot sign-in, <code>gh</code>, or ambient
+seat-token variables. The separate, explicit GitHub CLI import is described above.
+App entry is masked; the CLI uses interactive entry or a deliberately
 named environment variable, never a token literal in command arguments. DPAPI
 protects local storage for the current Windows user, not against processes running
 as that user. Removing the stored credential does not revoke it at GitHub.</p>
@@ -603,6 +613,20 @@ stripped so a value can never break the one-record-per-line format.</p>
 <p>These settings are enforced by the store itself, not by each call site: every record passes through
 a redaction pass on its way to disk, so a caller that supplies a full path still cannot get that
 path written when you have said no.</p>
+<p><strong>Remembered file locations in History (development source).</strong> The list and selected-item details
+show only locations actually retained in history; they do not recover missing directories from the
+open model, filenames, hashes or another source. To opt in for future activity, use <strong>History →
+Privacy &amp; export… → Privacy → Store full file paths → Save privacy settings</strong>. Opening that dialog,
+using Locate or selecting a row does not enable recording. Enabling this setting <strong>cannot restore
+unrecorded past paths</strong>. Disabling it stops future path recording but does not erase paths already
+retained; use Clear history to remove retained records.</p>
+<p>Saved paths can contain sensitive user, project or share names. <strong>Copy path</strong> is an explicit transfer
+to the system clipboard: other applications, clipboard history and Windows clipboard sync may retain
+or transmit it outside this app. <strong>Open folder</strong> explicitly asks Windows to open the recorded
+containing folder if it exists; it neither creates a folder nor opens a threat model. No path is
+silently rewritten when Locate chooses a moved file. An accepted reopen is recorded only according
+to the existing recording and path preferences. These actions do not record prompts, responses or
+model contents and do not change the deterministic score or verdict.</p>
 <p>Two further operations put you in control of the data:</p>
 <ul>
 <li><strong>Export my history</strong> writes everything retained, plus the settings that produced it, as indented

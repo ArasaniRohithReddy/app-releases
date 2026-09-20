@@ -312,9 +312,10 @@ gh api repos/ArasaniRohithReddy/app-releases/pages --jq '{build_type,source,stat
 ```
 
 Use exact tag/download links in versioned docs, and a product-filtered listing for
-moving discovery links. The in-app checker filters the prefix rather than using
-global latest, but its API window is currently only 50 releases and Atom is finite;
-pagination/exhaustion and prerelease fallback remain updater-owner follow-ups.
+moving discovery links. Since v2.6.0, the in-app checker uses bounded API
+pagination and a product-specific release snapshot rather than a finite Atom
+fallback. An incomplete discovery result is not "up to date"; verify that both
+the API and snapshot identify the actual new product assets after publication.
 
 `--target main` above identifies the **hub's** existing documentation commit when
 GitHub creates the new hub tag; it does not push/merge source `main`. The build's
@@ -379,8 +380,8 @@ pwsh scripts\sync-public-docs.ps1 -HubPath C:\work\app-releases -Check
 
 Those commands require a stable documentation channel. During development,
 `docs\publication.json` is marked `development`; use `-AllowDevelopment` only
-with a separate preview worktree. Do not overwrite the stable v2.5.1 guides with
-new MCP command instructions before publishing matching app, CLI and skill
+with a separate preview worktree. Do not overwrite stable-release guides with
+candidate command instructions before publishing matching app, CLI and skill
 bundles. `docs\DOCUMENTATION.md` describes the stable-source
 and preview workflows.
 

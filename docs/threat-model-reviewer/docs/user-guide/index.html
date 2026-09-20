@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/threat-model-reviewer/USER-GUIDE.md (normalized SHA-256 8497b06d0d33007fb987fe64f76350c6a0c801b67e186c6181cf222d4ec573ae). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/threat-model-reviewer/USER-GUIDE.md (normalized SHA-256 a73381c817c49d6cdaed93483a10b3a9481f10c8af74247f5f80d6ea1b85f95d). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -126,6 +126,33 @@ The <strong>band</strong> (PASS / CONDITIONAL / FAIL) appears in exports and CI 
 machine-readable name for NOT READY. Toggle <strong>Strict SDL bar</strong> to make borderline SDL items
 gating.</p>
 <h2 id="the-tabs" tabindex="-1">The tabs</h2>
+<p><strong>Workspace layout increment — development source, not a new published build.</strong>
+The nine tabs and their shortcuts are unchanged. The compact layout uses normal-weight body text,
+wrapping labels and the existing light/dark palette:</p>
+<ul>
+<li><strong>Create / Assistant:</strong> the introduction scrolls with the form; Generate/Extract remain outside
+the editor, alongside extraction cancellation when running. Create's action columns share a
+content-sized width, and Assistant's text editor can grow before scrolling.</li>
+<li><strong>Overview:</strong> section titles and optional AI actions occupy separate columns; STRIDE bars fit
+their column without covering counts. Verdict, score and provenance are unchanged.</li>
+<li><strong>Diagram:</strong> <strong>More ▾</strong> groups <strong>Full screen</strong>, <strong>Open in TMT</strong> and <strong>Reset to saved</strong>. Save,
+editing, connection and zoom controls stay directly available.</li>
+<li><strong>Findings / Fix:</strong> drag the divider between list and details, or Tab to it and use Left/Right.
+Rows can grow with text. <strong>Totals and risk</strong> and <strong>Fix plan summary</strong> disclose supporting detail
+without consuming a permanent row. Once a fix plan exists, Apply &amp; Save is the primary action;
+generating another plan remains available and still replaces the current plan and selections.</li>
+<li><strong>Compare:</strong> labelled, wrapping path fields expose long saved-file paths; browsing, dropping,
+swapping and snapshot export retain their existing behavior.</li>
+<li><strong>Ask:</strong> the mode and composer stay outside the conversation scroll area; review/provider context
+and the mode explanation scroll with the conversation. The explanation is also available on the
+mode picker. Empty conversations start at the top. Both Ask surfaces still share one draft and
+Ctrl+Enter command.</li>
+<li><strong>History:</strong> <strong>What is kept and where</strong> groups the privacy explanation, totals and storage path.
+An empty list explains the next steps without turning recording on.</li>
+</ul>
+<p>At narrow logical widths, the duplicate in-client app title is omitted to make room for commands;
+Sign in (when needed), Provider and Help remain available. Long lists and details still scroll.
+These changes do not alter review rules, provider connections, edit confirmations or history consent.</p>
 <h3 id="overview" tabindex="-1">Overview</h3>
 <p>The review layout keeps readiness, score, evidence and optional guidance separate.</p>
 <ul>
@@ -479,20 +506,69 @@ control. Moving to another shell region or tab dismisses the panel, so focus can
 behind it. <strong>Open Ask tab</strong> keeps the same conversation and focuses the full-size question box.</p>
 <h3 id="history" tabindex="-1">History</h3>
 <p>Optional retained activity on this machine, with a per-model score trend and <strong>what you did</strong> to
-each model — opens, exports, fixes applied and Copilot actions. The tab names the folder the data
-lives in and can open it, so you can verify that nothing leaves your machine rather than taking it
-on trust. <strong>Clear history…</strong> asks for confirmation before deletion. Clearing records does not turn
-recording off.</p>
+each model — opens, exports, fixes applied and Copilot actions. <strong>History folder</strong> opens the local
+activity-records folder; it is distinct from a selected model's <strong>Open folder</strong> action.
+<strong>Clear history…</strong> asks for confirmation before deletion. Clearing records does not turn recording off.</p>
 <p><strong>Privacy &amp; export…</strong> opens the history controls for recording,
 model names, file paths, retention, export and deletion. <strong>What is kept and where</strong> shows the actual
 preferences and selectable storage location. Prompts and responses are never history records.</p>
-<p><strong>Reopening a model.</strong> Double-click a row, press Enter on the selected row, or use its <strong>Open</strong> /
-<strong>Locate…</strong> button. File paths are <em>not</em> recorded by default, so you may be asked to locate the file.
-Both a stored path and a newly located path are checked against the recorded content hash before
-opening. The status distinguishes matched bytes, changed bytes and unavailable hashes. Matching a
+<p><strong>Saved locations — development source, not a new published build.</strong> Every row keeps <strong>Open</strong>
+and <strong>Locate…</strong> in the same positions:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 3"><table>
+<thead>
+<tr>
+<th scope="col">Location state</th>
+<th scope="col">What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Available</strong></td>
+<td><strong>Open</strong> requests the recorded saved file. <strong>Locate…</strong> remains available to choose a moved or replacement file, even while the original exists.</td>
+</tr>
+<tr>
+<td><strong>Not found</strong></td>
+<td>The recorded file is missing or inaccessible. <strong>Locate…</strong> chooses another location; <strong>Refresh</strong> rechecks availability.</td>
+</tr>
+<tr>
+<td><strong>No location remembered</strong></td>
+<td>This entry contains no saved directory. Use <strong>Locate…</strong>; the app does not infer one from the current model or another source.</td>
+</tr>
+<tr>
+<td><strong>Could not check / Full path unavailable</strong></td>
+<td>Inspect the details and use <strong>Refresh</strong> or <strong>Locate…</strong>, rather than assuming a path or revision match.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Select a row to read its <strong>full, selectable recorded path</strong>, last activity, recorded score, trend and
+activity. The list shows the containing folder's name instead of a repeated drive/user prefix,
+with the full recorded file path in its tooltip. Drag the list/details divider, or
+Tab to it and use Left/Right. <strong>Copy path</strong> works for a remembered path even when its file is missing.
+It puts the path on the system clipboard, where other apps, clipboard history or sync may retain it.
+<strong>Open folder</strong> requests that file's existing containing folder; it does not create a missing
+folder or open the model. Operation errors remain selectable in the History status area.</p>
+<p><strong>Remembering future locations.</strong> Paths remain <strong>off by default</strong>. Choose <strong>Privacy &amp; export… →
+Privacy → Store full file paths → Save privacy settings</strong> to opt in. <strong>Path recording settings…</strong>
+in selected-item details opens the same dialog and does not change a setting itself. Opting in
+cannot restore unrecorded past paths. Turning it off stops future path recording; it does not erase
+paths already retained. Locate does not rewrite the original entry; an accepted reopen can produce
+new history under the current privacy settings.</p>
+<p><strong>Reopening safeguards.</strong> Both Open and Locate compare the chosen bytes against the <strong>original
+entry's recorded content hash</strong>, including when Locate chooses a different file. Matching a
 filename is not proof of the original revision. This is a pre-open content check, not an atomic
-snapshot of the subsequent load: reopening always runs a fresh review and never reuses the recorded
-score. The date column is <strong>Last activity</strong>, not a claim that the last event was a review.</p>
+snapshot of the subsequent load. The existing main-workspace <strong>Save / Discard / Cancel</strong> guard
+still applies; an accepted file receives a fresh review, never the recorded score. History says
+<strong>Open requested</strong>, not “opened successfully”: the existing load callback does not return an
+adoption result. Check the current model and workspace status if a save, cancellation or parse
+failure prevents opening. Double-click/Enter retain the shortcut of using the recorded file when
+available, otherwise Locate. Availability is a refresh-time check, not a file watcher. <strong>Last
+activity</strong> is not a claim that the last event was a review.</p>
+<p>Unavailable drives do not run availability checks on the UI thread. Refresh has a five-second
+budget for its recorded-path checks; explicit existence, hash and containing-folder checks each
+also stop waiting after five seconds. A timeout is visible, never an assumed match or a later open.
+The operating system may still be completing one background filesystem call. History does not queue
+more checks while that call is pending; other app controls remain usable. Retry History after the
+drive responds. This does not change the main workspace's load or Save/Discard/Cancel behavior.</p>
 <h2 id="appearance" tabindex="-1">Appearance</h2>
 <p><strong>Help → Appearance</strong> switches between <strong>Light</strong>, <strong>Dark</strong>, and <strong>Match Windows</strong>. The choice is
 remembered and applies immediately — no restart.</p>
@@ -501,7 +577,7 @@ compared against the Microsoft Threat Modeling Tool and exported for review, so 
 fixed; only the frame around it follows the theme.</p>
 <h2 id="keyboard-shortcuts" tabindex="-1">Keyboard shortcuts</h2>
 <p><strong>Help → Keyboard shortcuts</strong>, or <strong>F1</strong>, lists every accelerator. The most useful:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 3"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 4"><table>
 <thead>
 <tr>
 <th scope="col">Keys</th>
@@ -545,7 +621,7 @@ fixed; only the frame around it follows the theme.</p>
 </table></div>
 <h3 id="shell-navigation" tabindex="-1">Shell navigation</h3>
 <p>The app also provides:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 4"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 5"><table>
 <thead>
 <tr>
 <th scope="col">Keys</th>
@@ -655,11 +731,22 @@ resource or role may still appear as an observation after you remove it from the
 claimed to remain in the generated model. Generate does not re-read Azure or reapply the original
 inventory over your edits.</p>
 <h2 id="assistant-data-sources-mcp" tabindex="-1">Assistant data sources (MCP)</h2>
+<p><strong>Setup interface in version 2.7.0 or later:</strong> the app presents a short state and next action
+for each server, with setup guidance, tool results and detailed disclosures
+expandable. <strong>Needs setup</strong>, <strong>Ready to test</strong>, <strong>Testing</strong> and the last completed
+result are different states. A source not included in the latest selection is
+not reported as failed; a completed test is not a live AI connection.</p>
+<p>GitHub credential actions remain reachable while that source is off. <strong>Use GitHub
+CLI sign-in</strong> requires confirmation before copying its stored github.com credential;
+it can be a different account with broader repository access than Copilot. PAT
+entry remains separate. <strong>Build from Azure (CLI)</strong> closes the settings dialog and
+opens the existing read-only Azure picker; it does not enable MCP or let AI run
+arbitrary <code>az</code> commands. These additions are not in the v2.6.0 bundle.</p>
 <p><strong>Help → Assistant data sources (MCP)</strong> adds optional external context to the
 assistant. It does not independently verify a system's security controls.</p>
-<p>Version <strong>2.6.0</strong> includes the following restricted profiles and matching CLI controls.
+<p>Version <strong>2.6.0 and later</strong> includes the following restricted profiles and matching CLI controls.
 An older installed release does not acquire them until updated:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 5"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 6"><table>
 <thead>
 <tr>
 <th scope="col">Source</th>
@@ -677,7 +764,7 @@ An older installed release does not acquire them until updated:</p>
 </tr>
 <tr>
 <td><strong>GitHub review context</strong></td>
-<td>Read selected repository files, issues and pull requests using a separate fine-grained PAT; does not reuse the Copilot seat token</td>
+<td>Read repository files, issues and pull requests using a selected-repository PAT or, from v2.7.0, an explicitly imported GitHub CLI credential; does not reuse the Copilot seat token</td>
 </tr>
 </tbody>
 </table></div>
@@ -704,7 +791,7 @@ also become provider context; deterministic review needs none of these paths.</l
 <h2 id="exit-codes-cli" tabindex="-1">Exit codes (CLI)</h2>
 <p>Interpret exit codes in the context of the selected command; generation success is not
 a readiness verdict:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 6"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="User Guide table 7"><table>
 <thead>
 <tr>
 <th scope="col">Code</th>

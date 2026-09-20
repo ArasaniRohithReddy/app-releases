@@ -6,6 +6,12 @@ UI and no .NET installation required. It is intended for CI, batch review, and s
 Use the CLI from the matching product release. Older binaries do not acquire new
 commands because this guide changes.
 
+The version 2.7.0 desktop History location, Open/Locate, Copy path and Open folder
+actions do not introduce CLI commands or switches. Path recording remains opt-in;
+unrecorded historical locations cannot be recovered by enabling it later. For
+automation, use the model path supplied by the user rather than guessing a path
+from a history identifier.
+
 Download **`ThreatModelReviewer-vX.Y.Z-cli-win-x64.zip`** from the
 [Threat Model Reviewer releases](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/), extract it
 anywhere, and run the executable. Nothing else to install.
@@ -198,6 +204,14 @@ sent and when.
 
 ## Optional MCP context
 
+**Requires version 2.7.0 or later (not in v2.6.0):** `mcp setup <id>` provides local
+source-specific instructions. `mcp credential github-review-context --github-cli
+--consent` explicitly copies the installed GitHub CLI's stored github.com identity
+instead of asking for a new PAT. Its account/access can differ from Copilot and may
+be broader than a selected-repository PAT. No login, scope grant or source enablement
+is automatic. The copied credential does not follow later CLI sign-ins/sign-outs.
+Version 2.7.0 also corrects lazy SDK tool initialization during connection tests.
+
 MCP adds optional context to Copilot, not another source of verdicts. It requires
 both master and per-profile consent, and an AI invocation must also request
 `--mcp`. The installed v2.5.1 CLI does not have these commands.
@@ -236,8 +250,9 @@ ThreatModelReviewer.Cli.exe mcp forget-credential github-review-context
 ```
 
 Built-ins are Microsoft Learn, Azure **subscription/group metadata only**, and
-GitHub file/issue/pull-request reads. GitHub context needs its own PAT for selected
-repositories; do not reuse a Copilot seat token or broad automation credential.
+GitHub file/issue/pull-request reads. A selected-repository PAT remains the narrowest
+GitHub option. Do not reuse a Copilot seat token or copy a broad automation credential
+into hidden input. The new explicit GitHub CLI import is a separate consented action.
 Read-only data can still be sensitive and enter provider context. Normal review
 and factual `ask` require none of this. For exact tools, custom-import restrictions,
 credential lifecycle and troubleshooting, see [MCP](MCP.md).
