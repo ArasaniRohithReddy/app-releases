@@ -332,6 +332,7 @@
         <div style="margin-top:.5rem">Docs &amp; release assets are MIT-licensed.</div>
       </div>
       <nav class="foot-links" aria-label="Footer">
+        <a href="../../releases/">All apps' releases</a>
         <a href="../">Overview</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/INSTALL.md">Install</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">Changelog</a>
@@ -420,7 +421,7 @@
           '<div class="notes-body">' + notes + '</div></details>'
         : '<p class="rel-sub">No release notes were published for this version.</p>';
 
-      return '<article class="rel' + (isLatest ? " latest" : "") + '" data-ver="' + esc(ver.toLowerCase()) + '">' +
+      return '<article class="rel' + (isLatest ? " latest" : "") + '" id="' + esc(rel.tag_name) + '" tabindex="-1" data-ver="' + esc(ver.toLowerCase()) + '">' +
           '<div class="rel-head">' +
             '<h3 class="rel-ver">v' + esc(ver) + '</h3>' +
             (isLatest ? '<span class="badge latest">Latest</span>' : '') +
@@ -437,6 +438,11 @@
 
     function render(rels) {
       if (!rels.length) { showError("No releases found for this application yet."); return; }
+      var active = document.activeElement;
+      var linkedCard = list.contains(active) && active.classList.contains("rel") ? active.id : "";
+      var openNotes = Array.from(list.querySelectorAll(".rel details.notes[open]")).map(function (notes) {
+        return notes.closest(".rel").id;
+      });
       list.innerHTML = rels.map(function (r, i) { return renderRelease(r, i === 0); }).join("");
       var ver = versionOf(rels[0].tag_name);
       document.getElementById("hm-latest").textContent = "v" + ver;
@@ -461,6 +467,14 @@
             old.parentNode.replaceChild(el, old);
           });
         });
+        openNotes.forEach(function (id) {
+          var card = document.getElementById(id), notes = card && card.querySelector("details.notes");
+          if (notes) notes.open = true;
+        });
+        if (linkedCard) {
+          var target = document.getElementById(linkedCard);
+          if (target && list.contains(target)) target.focus({ preventScroll: true });
+        }
       });
     }
 
@@ -541,5 +555,6 @@
   </script>
 
   <script src="../../theme.js"></script>
+  <script src="../../release-links.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ Releases · Documentation · Issue tracking
 
 **[🌐 arasanirohithreddy.github.io/app-releases](https://arasanirohithreddy.github.io/app-releases/)**
 
-[![Downloads](https://img.shields.io/github/downloads/ArasaniRohithReddy/app-releases/total?color=157347)](https://github.com/ArasaniRohithReddy/app-releases/releases)
+[![Downloads](https://img.shields.io/github/downloads/ArasaniRohithReddy/app-releases/total?color=157347)](https://arasanirohithreddy.github.io/app-releases/releases/)
 [![Hub license](https://img.shields.io/badge/hub%20content-MIT-555)](LICENSE)
 
 </div>
@@ -71,8 +71,9 @@ SHA-256 checksums.
 | **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) — the canonical `vX.Y.Z` history and the updater feed |
 | **Platform** | Windows 10/11 x64 · self-contained (backend and headless Chromium bundled) |
 
-Follow the [release feed](https://github.com/ArasaniRohithReddy/app-releases/releases.atom) for published
-updates. Additional apps will appear in the directory when available, with their own guides and releases.
+Browse [all app releases on the website](https://arasanirohithreddy.github.io/app-releases/releases/)
+or subscribe to the [release feed](https://github.com/ArasaniRohithReddy/app-releases/releases.atom).
+Additional apps will appear in the directory when available, with their own guides and releases.
 
 Threat Model Reviewer's guides, along with [support](https://arasanirohithreddy.github.io/app-releases/help/),
 [security](https://arasanirohithreddy.github.io/app-releases/help/security/) and
@@ -103,12 +104,19 @@ Browse every version — with its release notes, file sizes and direct downloads
 releases page:
 **[Threat Model Reviewer](https://arasanirohithreddy.github.io/app-releases/threat-model-reviewer/releases/)** ·
 **[shot2code](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)**.
+The native **[all-app release index](https://arasanirohithreddy.github.io/app-releases/releases/)**
+groups the existing histories by app, shows publication dates and stable/pre-release labels,
+and filters without leaving the site. Version links open the selected release's native detail
+anchor; package recommendations and binary downloads stay on that product's history page.
+Saved snapshots appear before a live refresh. If a source is unavailable, that product's
+native history link remains usable—another app's releases are never substituted. With JavaScript
+disabled, the index still provides both native product-history links.
 The **[website](https://arasanirohithreddy.github.io/app-releases/)** links the latest build of each
 app: every product page selects its newest stable release from a same-origin snapshot first, then
 refreshes from GitHub when available, so an API error never removes the saved release history or
 its download links. The raw
 **[GitHub Releases](https://github.com/ArasaniRohithReddy/app-releases/releases)** list remains
-available, including when JavaScript is disabled.
+available as an explicit secondary source.
 
 ### Verifying a download
 

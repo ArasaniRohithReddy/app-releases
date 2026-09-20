@@ -283,7 +283,7 @@ function buildSite(root = ROOT, catalog = manifest) {
       OVERVIEW: overview, OVERVIEW_LABEL: hubPage ? 'All apps' : 'Product overview',
       GUIDES: guides, GUIDES_LABEL: hubPage ? 'Help' : 'Guides',
       DOCUMENTATION_LABEL: hubPage ? 'Help' : 'Documentation',
-      RELEASES: hubPage ? escape(`https://github.com/${catalog.repository}/releases`) : productHome + 'releases/',
+      RELEASES: hubPage ? home + 'releases/' : productHome + 'releases/',
       BACK_GUIDES: hubPage ? 'All help' : 'All guides',
       BACK_OVERVIEW: hubPage ? 'All apps' : 'Back to product',
       SOURCE_URL: escape(`https://github.com/${catalog.repository}/blob/main/${document.source}`),

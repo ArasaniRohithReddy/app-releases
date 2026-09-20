@@ -58,7 +58,7 @@ const shot2codeHelp = [
   { guide: 'CHANGELOG.md', onPage: true }
 ];
 
-const pages = ['docs/index.html', ...products.flatMap(p => [p.productPage, p.releasesPage])];
+const pages = ['docs/index.html', 'docs/releases/index.html', ...products.flatMap(p => [p.productPage, p.releasesPage])];
 const product = read('docs/threat-model-reviewer/index.html');
 const shot2code = read('docs/shot2code/index.html');
 const sample = JSON.parse(read('docs/threat-model-reviewer/samples/customer-portal-review.json'));
@@ -180,6 +180,62 @@ test('every product resolves its own releases by tag prefix', () => {
   const portal = read('docs/index.html');
   for (const entry of products) assert.ok(filtersOn(portal, entry.prefix), `portal does not resolve ${entry.name}`);
   assert.ok(listsReleases(portal), 'the portal does not read the release list');
+});
+
+test('portal and native release hub share the published product registry and existing loader', () => {
+  assert.deepEqual(releaseData.PRODUCTS.map(product => product.id), products.map(product => product.name));
+  for (const product of releaseData.PRODUCTS) {
+    const expected = products.find(entry => entry.name === product.id);
+    assert.equal(product.prefix, expected.prefix);
+    assert.equal('docs/' + product.snapshot, expected.snapshot);
+    assert.equal(product.path, product.id + '/');
+    assert.ok(exists('docs/' + product.path + 'releases/index.html'));
+  }
+  assert.match(read('docs/index.html'), /var PRODUCTS = ReleaseData\.PRODUCTS/);
+  const hub = read('docs/releases/index.js');
+  assert.match(hub, /ReleaseData\.PRODUCTS/);
+  assert.match(hub, /ReleaseData\.load/);
+  assert.match(hub, /prefix: state\.product\.prefix/);
+  assert.match(hub, /ReleaseData\.latestStable/);
+  assert.doesNotMatch(hub, /fetch\(|body_html|JSON\.parse/);
+  const html = read('docs/releases/index.html');
+  for (const product of products)
+    assert.match(html, new RegExp(`href="../${product.name}/releases/"`));
+  assert.match(html, /id="release-filters"[^>]*hidden/);
+  assert.match(html, /id="release-status" role="status"/);
+});
+
+test('shared release navigation is native while explicit GitHub sources stay secondary', () => {
+  for (const name of pages) {
+    const html = read(name);
+    for (const [, attributes, content] of html.matchAll(/<a\b([^>]+)>([\s\S]*?)<\/a>/g)) {
+      const text = visibleText(content);
+      if (!/^(?:All (?:apps['’] )?)?releases\b/i.test(text) || /GitHub/i.test(text + attributes)) continue;
+      const href = attributes.match(/\bhref="([^"]+)"/)?.[1];
+      assert.ok(href && !/^https?:/i.test(href), `${name}: primary ${text} leaves the native site`);
+    }
+  }
+  const portal = read('docs/index.html');
+  assert.equal([...portal.matchAll(/href="\.\/releases\/">(?:All releases|Releases)<\/a>/g)].length, 3);
+  assert.match(portal, /class="catalog-note"[\s\S]*href="\.\/releases\/"/);
+  assert.match(read('README.md'), /native \*\*\[all-app release index\]/);
+  assert.match(read('scripts/build-docs.js'), /RELEASES: hubPage \? home \+ 'releases\/'/);
+  assert.match(read('scripts/docs/layout.html'), /href="{{ROOT}}releases\/">All releases/);
+});
+
+test('native product release detail anchors preserve the existing rendering and recommendations', () => {
+  for (const product of products) {
+    const html = read(product.releasesPage);
+    assert.match(html, /id="' \+ esc\(rel\.tag_name\)/, product.name);
+    assert.match(html, /src="\.\.\/\.\.\/release-links\.js"/, product.name);
+    assert.match(html, /href="\.\.\/\.\.\/releases\/">All apps' releases/);
+    assert.match(html, /details class="notes"/);
+  }
+  assert.match(read('docs/threat-model-reviewer/releases/index.html'), /msi:[^\n]+rec: true/);
+  assert.match(read('docs/shot2code/releases/index.html'), /setup:[^\n]+rec: true/);
+  assert.match(read('docs/release-links.js'), /list\.contains\(target\)/);
+  assert.match(read('docs/release-links.js'), /target\.focus\(\{ preventScroll: true \}\)/);
+  assert.doesNotMatch(read('docs/release-links.js'), /fetch\(/);
 });
 
 test('release snapshots are per product and carry the published assets', () => {
@@ -840,7 +896,7 @@ test('all published pages contain exactly one valid structured-data block and so
 
 test('current copy distinguishes signing, private reports and released command surfaces', () => {
   const portal = read(pages[0]);
-  const releases = read(pages[2]);
+  const releases = read('docs/threat-model-reviewer/releases/index.html');
   assert.doesNotMatch(releases, /All packages are self-contained and Authenticode-signed/i);
   assert.match(releases, /separate skill needs the CLI/);
   assert.doesNotMatch(portal, /vulnerability reports all go to this public/i);

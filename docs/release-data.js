@@ -5,6 +5,13 @@
   const PREFIX = "threat-model-reviewer-v";
   const API = "https://api.github.com/repos/" + REPO + "/releases";
   const RELEASES = "https://github.com/" + REPO + "/releases";
+  // The portal and native hub share product identity, not a repository-wide latest release.
+  const PRODUCTS = Object.freeze([
+    Object.freeze({ id: "threat-model-reviewer", name: "Threat Model Reviewer", prefix: PREFIX,
+      chip: "tmr-version", path: "threat-model-reviewer/", snapshot: "threat-model-reviewer/releases/releases.json" }),
+    Object.freeze({ id: "shot2code", name: "shot2code", prefix: "shot2code-v",
+      chip: "shot2code-version", path: "shot2code/", snapshot: "shot2code/releases/releases.json" })
+  ]);
   const TAG_SUFFIX = "\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$";
   const TAG = new RegExp("^" + PREFIX + TAG_SUFFIX);
   const tagPattern = prefix => prefix === PREFIX ? TAG
@@ -128,7 +135,7 @@
     return releases;
   }
 
-  const data = { PREFIX, kindOf, normalize, latestStable, releaseUrl, merge, load };
+  const data = { PREFIX, PRODUCTS, kindOf, normalize, latestStable, releaseUrl, merge, load };
   if (typeof module === "object" && module.exports) module.exports = data;
   else root.ReleaseData = data;
 })(globalThis);
