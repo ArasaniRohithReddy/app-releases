@@ -216,8 +216,8 @@
     .app-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
     .app-open { display: inline-flex; align-items: center; min-height: 40px; gap: .4rem; font-weight: 600; color: var(--accent); }
     .app-open svg { width: 1em; height: 1em; transition: transform .16s ease; }
-    .ver { font-family: var(--mono); font-size: var(--step--1); color: var(--muted); }
-    .app-release { display: grid; gap: .1rem; min-width: 0; font-size: var(--step--1); color: var(--muted); }
+    .ver { display: inline-flex; min-height: 40px; align-items: center; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); padding: .1rem .45rem; font-family: var(--mono); font-size: var(--step--1); color: var(--muted); white-space: nowrap; }
+    .app-release { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .35rem .55rem; min-width: 0; font-size: var(--step--1); color: var(--muted); }
     /* Whole-card link overlay */
     .stretch::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
     .app-open:focus-visible::after { outline: 2.5px solid var(--accent); outline-offset: 3px; }

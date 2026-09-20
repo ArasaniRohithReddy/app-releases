@@ -241,7 +241,12 @@ async function main() {
       check(await guideMenu.locator('summary').evaluate(element => element === document.activeElement && getComputedStyle(element).outlineStyle !== 'none'),
         'docs: collapsing the sidebar hid keyboard focus');
       await page.keyboard.press('Enter');
-      await guideMenu.getByRole('link', { name: 'Choose an app and its guides', exact: true }).focus();
+      await guideMenu.getByRole('link', { name: 'Security policy', exact: true }).click();
+      await page.waitForURL(base + '/help/security/');
+      const sharedGuideMenu = page.locator('#guide-navigation');
+      await sharedGuideMenu.locator('summary').focus();
+      await page.keyboard.press('Enter');
+      await sharedGuideMenu.getByRole('link', { name: 'Choose an app and its guides', exact: true }).focus();
       await page.keyboard.press('Enter');
       await page.waitForURL(base + '/#apps');
       check(await page.locator('#apps-h').isVisible(), 'shared help: app-directory keyboard link did not return to the product choices');
