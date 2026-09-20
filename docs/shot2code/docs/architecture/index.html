@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 a223c6ce11980a97f4fd5c7e8df3912af0c271a6f9e262441f6e1264846a80dc). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>shot2code architecture — shot2code documentation</title>
+  <meta name="description" content="A summary of how the shipped Windows app is put together, written for reviewers who want to know what runs where. The implementation lives in the source repository." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/architecture/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="shot2code architecture — App Releases" />
+  <meta property="og:description" content="A summary of how the shipped Windows app is put together, written for reviewers who want to know what runs where. The implementation lives in the source repository." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/architecture/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shot2code architecture","description":"A summary of how the shipped Windows app is put together, written for reviewers who want to know what runs where. The implementation lives in the source repository.","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/architecture/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../shot2code/" aria-label="shot2code — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>shot2code</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../shot2code/docs/">Guides</a>
+        <a href="../../../shot2code/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="./" aria-current="page">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../shot2code/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../shot2code/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Architecture</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="shot2code-architecture" tabindex="-1">shot2code architecture</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/ARCHITECTURE.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#the-three-pieces">The three pieces</a></li><li><a href="#startup">Startup</a></li><li><a href="#the-agent-loop">The agent loop</a></li><li><a href="#reviewing-generated-output">Reviewing generated output</a></li><li><a href="#workspace-layout-state">Workspace layout state</a></li><li><a href="#project-history">Project history</a></li><li><a href="#preview">Preview</a></li><li><a href="#import">Import</a></li><li><a href="#export">Export</a></li><li><a href="#packaging">Packaging</a></li><li><a href="#updates">Updates</a></li><li><a href="#diagnostics">Diagnostics</a></li></ul></nav></details>
+        <div class="doc-content"><p>A summary of how the shipped Windows app is put together, written for reviewers
+who want to know what runs where. The implementation lives in the
+<a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">source repository</a>.</p>
+<h2 id="the-three-pieces" tabindex="-1">The three pieces</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code architecture table 1"><table>
+<thead>
+<tr>
+<th scope="col">Piece</th>
+<th scope="col">Technology</th>
+<th scope="col">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Renderer</td>
+<td>React + Vite</td>
+<td>The whole UI: chat, preview, Code tab, History, Help, settings</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>FastAPI (Python)</td>
+<td>The agent loop, tools, model catalogue, project history, import scanning, export</td>
+</tr>
+<tr>
+<td>Desktop shell</td>
+<td>Electron</td>
+<td>Starts the backend, verifies readiness, loads the built UI, owns zoom and the log folder</td>
+</tr>
+</tbody>
+</table></div>
+<p>In the packaged app the shell starts the frozen backend on a <strong>free local port</strong>,
+waits for its <code>/api/health</code> endpoint, and only then loads the built frontend from
+disk. The port is injected into the renderer through preload, because Vite bakes
+environment variables in at build time and cannot know it.</p>
+<p>Generation streams over a <strong>WebSocket</strong> to that local backend; everything else is
+plain HTTP on the same loopback origin.</p>
+<h2 id="startup" tabindex="-1">Startup</h2>
+<p>Startup is deliberately staged, because the packaged backend is a frozen Python
+tree that Windows may still be scanning:</p>
+<ol>
+<li><strong>Core routes first.</strong> Health, settings and model catalogue, design system and
+history are imported before the server starts answering.</li>
+<li><strong>Heavy routers on first use.</strong> Generation, evaluation and the project tools
+are imported the first time a request needs them, not during startup.</li>
+<li><strong>Optional probes in the background.</strong> Chromium and Copilot discovery run as
+bounded background work; neither can delay <code>/api/health</code>.</li>
+</ol>
+<p>The shell's readiness check is strict rather than optimistic: it requires
+HTTP 200 <em>and</em> a genuine <code>{&quot;ok&quot;: true}</code> body, aborts at once if the backend
+process exits or cannot be spawned, records how long readiness took in the log,
+and applies a 90-second cold-start deadline.</p>
+<p>Deferred imports fail loudly. If a lazily loaded router cannot be imported, that
+request returns an error and health fails from then on, so a backend that cannot
+generate never reports itself healthy. Chromium is advertised as available only
+after it has actually launched, and it is closed during backend shutdown.</p>
+<h2 id="the-agent-loop" tabindex="-1">The agent loop</h2>
+<p>The backend runs an agent loop rather than a single prompt:</p>
+<ol>
+<li>The request (images, URL, description or recording, plus the chosen stack and
+models) is turned into a prompt.</li>
+<li>The model calls tools — <code>create_file</code>, <code>edit_file</code>, <code>extract_assets</code>,
+<code>screenshot_preview</code>, and the image tools.</li>
+<li>shot2code executes each tool <strong>locally</strong> and feeds the result back.</li>
+<li>The loop ends with a project: a set of files and a declared entry point.</li>
+</ol>
+<p>Several options can run in parallel, one per selected model, which is why a
+generation can produce more than one candidate. The number is capped per run: up
+to four for a first generation, two for an update or a video.</p>
+<h3 id="the-model-catalogue" tabindex="-1">The model catalogue</h3>
+<p><code>/api/models</code> answers what can actually be used right now. It reports which
+providers have a usable credential and what each model supports — <strong>without
+returning the credential itself</strong>. GitHub Copilot models are discovered from the
+signed-in account, so the list is that account's real entitlement; OpenAI,
+Anthropic and Google Gemini come from maintained catalogues that are validated
+against the models the build knows how to drive. A fifth group, <code>sdk-byok</code>,
+lists the run identities a usable BYOK connection can serve.</p>
+<p>The renderer keeps a provider-neutral list of selected ids. Older settings
+blobs are migrated into it: a <code>copilotModels</code> list moves across verbatim, and a
+single <code>codeGenerationModel</code> is only treated as a real choice when it differs
+from the historical default, so upgrading does not silently pin everyone to one
+model. Ids the catalogue no longer knows are reported as stale and skipped rather
+than deleted — and if the catalogue cannot be loaded at all, the saved selection
+is left alone instead of being reset.</p>
+<h3 id="run-identity-and-runtime" tabindex="-1">Run identity and runtime</h3>
+<p>A selection is not just a model; it is a <strong>run identity plus the runtime that
+executes it</strong>. The generate request carries one entry per pick — the identity,
+the base model behind it, and whether it runs <code>native</code> or <code>copilot-byok</code> —
+in the order the user arranged them, de-duplicated by identity alone.</p>
+<p>A native identity is the model id itself. A BYOK identity is
+<code>sdk-byok/&lt;provider&gt;/&lt;base model&gt;</code>; no model id starts with that prefix, so the
+two can never collide. That is what allows a model and its BYOK counterpart to
+occupy one run as two separate variants, and it is why a native pick is never
+re-routed when a BYOK connection is configured. The identity — not the base
+model — is what the stream reports back, what a variant records, and what a
+retry replays.</p>
+<h3 id="providers" tabindex="-1">Providers</h3>
+<p>Provider adapters live in <code>backend/agent/providers/</code> and implement a shared
+session protocol; a factory maps each run identity to its provider and runtime.</p>
+<p>GitHub Copilot is the unusual one. The Copilot SDK is an <em>agent runtime</em> that owns
+its own planning loop, while shot2code's engine also owns a loop. The provider
+bridges the two: each Copilot tool invocation is parked and handed back to the
+shot2code engine, which resolves it once the tool has actually run. Copilot's own
+file and shell tools are excluded — only shot2code's tools are exposed.</p>
+<h3 id="copilot-sdk-byok" tabindex="-1">Copilot SDK BYOK</h3>
+<p>A BYOK identity runs on that same SDK bridge, but against the endpoint and
+credential configured in Settings rather than a Copilot sign-in. The connection
+is validated into a narrow, typed description before anything uses it: the
+provider must be one of <code>openai</code>, <code>azure</code> or <code>anthropic</code>, an endpoint must be
+<code>https://</code> unless it is loopback, and a credential is required unless the
+endpoint is an OpenAI-compatible loopback host. The direct OpenAI and Anthropic
+keys are never consulted as a fallback for it, and there is no Gemini provider
+in the SDK to map onto.</p>
+<p>The <strong>wire API</strong> is derived rather than assumed. When the connection does not
+pin one, a base URL of its own resolves to Chat Completions — the interface
+almost every OpenAI-compatible server implements — and a provider's own
+endpoint resolves to Responses. The frontend omits the field entirely when the
+user chose Automatic, which is how the backend is asked to decide; a pinned
+value is sent and always wins.</p>
+<p>An endpoint that serves models the catalogue does not know gets a <strong>custom run
+identity</strong>, <code>sdk-byok/&lt;provider&gt;/custom/&lt;url-encoded model&gt;</code>. The model name is
+URL-encoded so a slash or colon inside it cannot be mistaken for structure, and
+the identity resolves back to the exact name to send. Such a model runs under a
+neutral, <em>non-reasoning</em> compatibility template: it needs a known model to
+describe prompt shape and limits, but no thinking level is derived from it or
+sent. The catalogue publishes exactly one entry for that connection rather than
+the whole family, because listing catalogue names against someone else's model
+would be untrue.</p>
+<p><code>/api/integrations/validate</code> answers the same question the generate socket
+would, using the same validator, and nothing else: no endpoint is contacted, no
+server is started, and the response carries presence flags, a host name and
+diagnostics rather than any credential.</p>
+<h3 id="live-provider-checks" tabindex="-1">Live provider checks</h3>
+<p><code>/api/providers/validate</code> is the opposite kind of check: it makes one
+deliberately tiny request — a single-word prompt capped at 16 tokens — to prove
+a credential actually works. Every provider error is normalised into one
+category (<code>ready</code>, <code>credentials</code>, <code>billing</code>, <code>quota</code>, <code>permissions</code>, <code>model</code>,
+<code>network</code>, <code>configuration</code>, <code>unknown</code>) so the UI can offer the right next step
+instead of a stack trace, and the message is scrubbed of anything that was sent.
+For an OpenAI-compatible BYOK connection the check first asks the endpoint what
+it serves at <code>/models</code>, bounded and de-duplicated, so the model picker can offer
+real ids; Azure and Anthropic have no equivalent route and say so.</p>
+<h3 id="in-app-sign-in" tabindex="-1">In-app sign-in</h3>
+<p><code>/api/copilot/login</code> starts, polls and cancels a sign-in that is performed
+entirely by the <strong>official</strong> GitHub Copilot CLI (falling back to the GitHub
+CLI). shot2code runs a fixed argument vector, never a shell, drains the CLI's
+output without storing it, and afterwards re-probes the existing credential
+ladder. No token crosses the API. The start and cancel routes are guarded to
+local and packaged-app origins because they spawn or kill a process.</p>
+<h3 id="mcp-servers" tabindex="-1">MCP servers</h3>
+<p>Configured servers are validated the same way and bounded: at most eight, with
+limits on arguments, environment entries, headers, tool names and timeout. A
+<code>stdio</code> server is spawned as an explicit argument vector — never through a shell
+— and an <code>http</code>/<code>sse</code> server must use <code>https://</code> unless it is loopback. A server
+is handed to a session only when it is both enabled and trusted, and a
+permission handler keeps it read-only unless write tools were explicitly allowed.</p>
+<p>Because MCP is exposed through the SDK, only Copilot subscription variants and
+BYOK variants receive it; a native OpenAI, Anthropic or Gemini variant runs on
+that provider's own client and is never given MCP tools. Environment values and
+request headers are excluded from every safe-metadata projection, so they cannot
+reach a log line, a diagnostic or an API response.</p>
+<p>Nothing here is on the critical path for a direct generation: an invalid,
+incomplete or switched-off integration becomes a diagnostic that travels with
+the response, not an error that stops the run.</p>
+<h2 id="reviewing-generated-output" tabindex="-1">Reviewing generated output</h2>
+<p>The Review workspace renders the preview artifact into two to four frames at
+their <strong>actual</strong> CSS widths (320–1920, defaults 1440/768/390), so layout is
+exercised rather than simulated, and measures horizontal overflow inside each
+running frame.</p>
+<p>The source audit is a deterministic pass in the renderer over the generated
+source: a small tolerant HTML parser produces a node tree, and a fixed set of
+rules reports semantic and accessibility findings with evidence, the affected
+file and guidance. It is a source check, not a conformance assessment, and it
+makes no network call.</p>
+<p>A result is bound to the commit, the variant index, a hash of the source it read
+and the widths it ran at. Any change to those marks the result stale rather than
+letting it be read as current. Selected findings are grouped by rule into an
+instruction that is placed in the composer for the user to send. The JSON report
+reduces file paths to a leaf name and carries no credential of any kind.</p>
+<h2 id="workspace-layout-state" tabindex="-1">Workspace layout state</h2>
+<p>Pane widths — the chat/History divider and the multi-file explorer divider — are
+<strong>view state</strong>, held in the renderer's own local storage and clamped to the
+current viewport on every resize. They are stored apart from project data on
+purpose: the history database records commits, options, retries and prompts, and
+nothing about how wide a pane was. Dragging a divider therefore cannot create or
+mutate a version.</p>
+<p>The dividers are exposed as <code>role=&quot;separator&quot;</code> controls with orientation,
+current/minimum/maximum values, value text and the pane they control, so they are
+operable from the keyboard as well as the mouse.</p>
+<p>Help is a renderer dialog whose links all point at the published hub — the
+product page, the release history and the guides in <code>products/shot2code/</code> — so it
+cannot drift from what is actually published. Its one privileged action is
+&quot;open diagnostic logs&quot;, which asks the shell to reveal the backend log's folder;
+in the browser development build there is no such log and the action reports that
+instead of failing silently. Zoom lives in the shell, in deterministic 10-point
+steps bounded to 50–300%, replacing Chromium's own accelerator handling so a
+single keystroke does not zoom twice.</p>
+<h2 id="project-history" tabindex="-1">Project history</h2>
+<p>Projects, versions (commits), variants, prompts and variant messages are stored in
+a local <strong>SQLite</strong> database with a versioned schema and tracked migrations, served
+over an <code>/api/history</code> route group (list, load, rename, append version, update
+selection, delete).</p>
+<ul>
+<li>Windows: <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code></li>
+<li>macOS (source runs): <code>~/Library/Application Support/shot2code/</code></li>
+<li>Linux (source runs): <code>$XDG_DATA_HOME/shot2code/</code> or <code>~/.local/share/shot2code/</code></li>
+<li>Override with <code>SHOT2CODE_DATA_DIR</code> or <code>SHOT2CODE_HISTORY_DB_PATH</code></li>
+</ul>
+<p>Commits record both a parent and, for a retry, the commit they re-roll, so retry
+ancestry is explicit; ancestry walks detect and reject cycles. A retry reuses the
+provider and model choices its source generation used, and each variant stores
+the concrete model behind it. Saves are debounced.</p>
+<h2 id="preview" tabindex="-1">Preview</h2>
+<p>The file tree is the authoritative project source. The preview is a <strong>derived</strong>,
+self-contained HTML artifact: browser-ready local CSS, JavaScript, images, SVGs
+and encoded fonts are embedded when that can be done safely. When a framework
+build or a local asset cannot be represented, the preview renders a deterministic
+fallback or diagnostic instead of guessing, and every source file remains
+editable and downloadable.</p>
+<p>At <strong>100%</strong> the fixed-width desktop canvas is centred inside a neutral framed
+viewport rather than anchored to the left edge; a window narrower than the canvas
+scrolls the frame horizontally instead of clipping the start of the page. Scale
+(<strong>Fit / 100%</strong>) and version (<strong>History <em>n</em>/<em>m</em></strong>) are separate, labelled
+controls.</p>
+<p>Security properties of a preview document:</p>
+<ul>
+<li>rendered from <code>srcDoc</code> in an iframe <strong>without</strong> <code>allow-same-origin</code>, so it runs
+in an opaque origin and cannot read app state, cookies or storage;</li>
+<li>a restrictive Content-Security-Policy, a <code>no-referrer</code> policy, and a permissions
+list denying camera, microphone, geolocation and display capture;</li>
+<li>select-and-edit uses a per-preview message bridge — messages are accepted only
+when the channel and a random per-preview nonce match, and payloads are capped.</li>
+</ul>
+<h2 id="import" tabindex="-1">Import</h2>
+<p>The import scanner parses <strong>text only</strong>. It never <code>require()</code>s or imports
+<code>tailwind.config.*</code> or any other configuration or application module, and it runs
+no install or build commands. It rejects path traversal, ignores dependency and
+build-output directories, and enforces limits on archive size, entry count, file
+count, per-file size and total decoded text.</p>
+<p>Only a compact <code>ProjectContext</code> summary is persisted. The normalized file payload
+exists for the active editable-import handoff and is not written into stored
+context.</p>
+<h2 id="export" tabindex="-1">Export</h2>
+<p>Export has an explicit strategy per stack rather than one generic scaffold
+generator:</p>
+<ul>
+<li><strong>Single HTML</strong> keeps the generated document intact, pins the working Babel
+runtime where one is used, and bundles downloaded images and fonts under
+<code>assets/</code>.</li>
+<li><strong>Project folder</strong> produces a Vite project. HTML/CDN stacks use a deterministic
+static-copy production build so inline modules, import maps and script ordering
+are preserved; React and Preact use Vite's framework build path when the
+generated source is safely transformable, and a documented Vite HTML fallback
+when it is not.</li>
+<li>A multi-file source project is exported as-is, with its declared entry point and
+existing package/framework configuration preserved. With no valid root build
+command, export keeps every file and adds a <strong>Safe fallback</strong> note instead of
+inventing a scaffold.</li>
+</ul>
+<h2 id="packaging" tabindex="-1">Packaging</h2>
+<ul>
+<li>The backend is frozen with <strong>PyInstaller</strong>.</li>
+<li>Only <code>chromium-headless-shell</code> is bundled; the app always launches headless, and
+full Chromium would add several hundred megabytes.</li>
+<li><strong>electron-builder</strong> produces the NSIS <code>.exe</code> (plus its <code>.exe.blockmap</code> and
+<code>latest.yml</code>), the <code>.msi</code> and the portable <code>.zip</code>.</li>
+<li>The UI is served over <code>file://</code> in the packaged app and <code>http://</code> in development.
+That difference is the source of most desktop-only bugs, so the shell uses a
+hash router, relative asset paths, and an explicit display-media handler.</li>
+</ul>
+<h2 id="updates" tabindex="-1">Updates</h2>
+<p>Per-user NSIS installs update through <code>electron-updater</code> against the public GitHub
+Releases feed. <code>latest.yml</code> carries the installer's SHA-512 and the updater
+refuses a download whose hash does not match.</p>
+<p>There is a single guarded install entry point. Before installing, the bundled
+backend, Copilot CLI and Chromium process tree is stopped <strong>synchronously</strong> with a
+bounded timeout and the process ID is re-probed to confirm it is gone. If that
+cannot be confirmed, the update is not started — the guard is released and the app
+reports that it could not shut down safely, rather than overwriting a live
+PyInstaller tree. Installs under Program Files (the MSI layout) are treated as
+managed: self-update is disabled.</p>
+<p>That guard lives in the <em>running</em> app, which cannot help a machine still on an
+older build. The NSIS installer therefore repeats the check before it uninstalls
+or replaces anything: it enumerates processes whose executable path sits under
+the installed <code>resources\backend</code> directory, terminates each of those trees
+synchronously, and verifies that none remains. Matching is by path, never by
+process name, so an unrelated program with the same executable name is left
+running. A tree that cannot be confirmed stopped aborts the replacement — an
+actionable message interactively, a distinct exit code silently — and both paths
+write to <code>%TEMP%\shot2code-installer-preinstall.log</code>.</p>
+<h2 id="diagnostics" tabindex="-1">Diagnostics</h2>
+<pre tabindex="0" aria-label="Text code example"><code>%APPDATA%\shot2code-desktop\shot2code-backend.log
+</code></pre>
+<p>Backend startup, renderer load failures, crashes and console errors all land
+there. It is the first thing to read for a blank window or a backend that never
+becomes ready. An install that refuses to replace a running backend leaves its
+own trail in <code>%TEMP%\shot2code-installer-preinstall.log</code>.</p>
+<p>Console diagnostics — the prompt preview in particular — are encoded for whatever
+the active output stream can represent, including a strict cp1252 Windows
+console, so box-drawing characters or prompt text cannot raise a
+<code>UnicodeEncodeError</code> in the middle of a generation. That path matters when
+running from source; the packaged app writes to the log file above.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../shot2code/docs/">All guides</a>
+        <a href="../../../shot2code/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../releases/">All releases</a>
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

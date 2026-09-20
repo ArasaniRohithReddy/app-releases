@@ -228,6 +228,7 @@ async function main() {
       await page.getByRole('link', { name: 'Support', exact: true }).last().click();
       await page.waitForURL(base + '/help/');
       check(await page.getByRole('link', { name: 'Open an issue', exact: true }).getAttribute('href') === `https://github.com/${manifest.repository}/issues/new/choose`, 'docs: genuine issue action was redirected');
+      await visit(page, base + '/shot2code/docs/');
       await page.setViewportSize({ width: 1280, height: 900 });
       const guideMenu = page.locator('#guide-navigation');
       await page.waitForFunction(() => document.getElementById('guide-navigation').open);

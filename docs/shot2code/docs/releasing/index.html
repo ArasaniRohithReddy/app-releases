@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<!-- Generated from products/shot2code/RELEASING.md (normalized SHA-256 9b5cc6a973c69910a33eceedbf2bd7f8341db55648b6ab60728144f43c67c331). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Releasing shot2code to this hub — shot2code documentation</title>
+  <meta name="description" content="How a shot2code build becomes a published release here. The engineering process — version bump, build, smoke checks, rollback — lives with the code in docs/RELEASING.md in the proj" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/releasing/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Releasing shot2code to this hub — App Releases" />
+  <meta property="og:description" content="How a shot2code build becomes a published release here. The engineering process — version bump, build, smoke checks, rollback — lives with the code in docs/RELEASING.md in the proj" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/releasing/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Releasing shot2code to this hub","description":"How a shot2code build becomes a published release here. The engineering process — version bump, build, smoke checks, rollback — lives with the code in docs/RELEASING.md in the proj","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/releasing/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../shot2code/" aria-label="shot2code — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>shot2code</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../shot2code/docs/">Guides</a>
+        <a href="../../../shot2code/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="./" aria-current="page">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../shot2code/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../shot2code/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Release process</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="releasing-shot2code-to-this-hub" tabindex="-1">Releasing shot2code to this hub</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/RELEASING.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#tags">Tags</a></li><li><a href="#two-repositories-one-history">Two repositories, one history</a></li><li><a href="#assets-attached-to-a-hub-release">Assets attached to a hub release</a></li><li><a href="#release-notes">Release notes</a></li><li><a href="#final-screenshot-capture-contract">Final screenshot capture contract</a></li><li><a href="#after-publishing">After publishing</a></li><li><a href="#rollback">Rollback</a></li></ul></nav></details>
+        <div class="doc-content"><p>How a shot2code build becomes a published release here. The engineering process —
+version bump, build, smoke checks, rollback — lives with the code in
+<a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/docs/RELEASING.md" rel="noopener noreferrer"><code>docs/RELEASING.md</code></a>
+in the project repository. This page is the hub-side contract.</p>
+<h2 id="tags" tabindex="-1">Tags</h2>
+<p>Releases in this repository are shared by several products, so every tag is
+product-prefixed:</p>
+<pre tabindex="0" aria-label="Text code example"><code>shot2code-v&lt;x.y.z&gt;
+</code></pre>
+<p>The version is the one in the project's <code>desktop/package.json</code>, which is what
+electron-builder stamps into the installer filename, what <code>latest.yml</code> advertises,
+and what <strong>Settings</strong> displays. Tags are never moved or reused.</p>
+<h2 id="two-repositories-one-history" tabindex="-1">Two repositories, one history</h2>
+<p>The complete release history is kept in <strong>both</strong> repositories, and each has a job:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Releasing shot2code to this hub table 1"><table>
+<thead>
+<tr>
+<th scope="col">Repository</th>
+<th scope="col">Tag</th>
+<th scope="col">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/ArasaniRohithReddy/shot2code/releases" rel="noopener noreferrer">ArasaniRohithReddy/shot2code</a></td>
+<td><code>vX.Y.Z</code></td>
+<td><strong>Canonical.</strong> The source of the build and the feed <code>electron-updater</code> reads, so <code>latest.yml</code> must keep describing the binaries attached beside it</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ArasaniRohithReddy/app-releases/releases" rel="noopener noreferrer">ArasaniRohithReddy/app-releases</a> (this hub)</td>
+<td><code>shot2code-vX.Y.Z</code></td>
+<td>The published download and documentation home. It mirrors the same build, with <strong>every</strong> file that release carries</td>
+</tr>
+</tbody>
+</table></div>
+<p>Mirroring means mirroring: a hub release keeps the updater's own inputs
+(<code>latest.yml</code>, the <code>.exe.blockmap</code>) attached alongside the installers, and they
+show up in a release's complete file listing on the releases page. What the
+public cards deliberately do <strong>not</strong> do is offer them as downloads — they are
+machine inputs, and presenting them next to an installer would invite someone to
+download the wrong file. Hiding them from the cards is a presentation choice, not
+a gap in the mirror.</p>
+<p>Nothing is pruned. Builds that predate the MSI or <code>SHA256SUMS.txt</code> stay listed
+with exactly the files they were published with, so the page never implies a
+download that does not exist. Only releases from 0.3.0 onwards have entries in
+<a href="../changelog/">CHANGELOG.md</a>, because nothing earlier was tracked in a changelog;
+their notes still live on the releases in both repositories.</p>
+<h2 id="assets-attached-to-a-hub-release" tabindex="-1">Assets attached to a hub release</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Releasing shot2code to this hub table 2"><table>
+<thead>
+<tr>
+<th scope="col">File</th>
+<th scope="col">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shot2code-&lt;version&gt;-x64.exe</code></td>
+<td>Per-user NSIS installer — the recommended download and the only self-updating format</td>
+</tr>
+<tr>
+<td><code>shot2code-&lt;version&gt;-x64.msi</code></td>
+<td>Per-machine managed deployment</td>
+</tr>
+<tr>
+<td><code>shot2code-&lt;version&gt;-x64.zip</code></td>
+<td>Portable build</td>
+</tr>
+<tr>
+<td><code>SHA256SUMS.txt</code></td>
+<td>SHA-256 hashes for the published files</td>
+</tr>
+</tbody>
+</table></div>
+<p>The project's own release additionally carries <code>shot2code-&lt;version&gt;-x64.exe.blockmap</code>
+and <code>latest.yml</code>. Those are <strong>updater inputs</strong>, not downloads for people:
+<code>latest.yml</code> is the <code>electron-updater</code> manifest (version, filename, size, SHA-512)
+and the blockmap is what makes a differential download possible. Attach them to
+the hub release too — the mirror is only complete if it carries every file — but
+the hub's download cards never present them as options, although they do appear
+in a release's complete file listing.</p>
+<p>Because the binaries are unsigned, <code>SHA256SUMS.txt</code> is the verification story —
+publish it with every release.</p>
+<h2 id="release-notes" tabindex="-1">Release notes</h2>
+<p>Hub release notes summarise the version and link to the upstream release for the
+full notes. Keep them accurate about:</p>
+<ul>
+<li>what changed (features, fixes),</li>
+<li>which downloads exist and which is recommended,</li>
+<li>the fact that the binaries are unsigned and may trigger SmartScreen.</li>
+</ul>
+<p>Then mirror the same summary into <a href="../changelog/">CHANGELOG.md</a> here.</p>
+<h2 id="final-screenshot-capture-contract" tabindex="-1">Final screenshot capture contract</h2>
+<p>This is the capture plan for the forthcoming BYOK, MCP, application-menu and
+Review presentation. It is deliberately <strong>versionless</strong>: do not put a release
+number in a filename, caption or screenshot-only page claim. The existing four
+PNGs remain published until the source integration and visible labels are final.
+Do not capture or replace them early.</p>
+<h3 id="one-reproducible-capture-environment" tabindex="-1">One reproducible capture environment</h3>
+<p>Use the release-candidate desktop build with a new, capture-only profile:</p>
+<ul>
+<li>Windows display scaling: <strong>100%</strong></li>
+<li>app zoom: <strong>100%</strong></li>
+<li>browser/device scale factor: <strong>1</strong></li>
+<li>output: sRGB PNG, one image pixel per CSS pixel</li>
+<li>capture target: the app content viewport only — no desktop, taskbar, window
+shadow or post-capture crop</li>
+<li>project: the synthetic <strong>Northwind Analytics</strong> fixture used by the current
+public screenshots; no customer code, URLs, repository names or local paths</li>
+<li>provider state: <strong>OpenAI BYOK configured</strong> — the <strong>GitHub Copilot SDK BYOK</strong>
+card switched on with the <strong>OpenAI-compatible</strong> provider — all other
+providers disconnected, and
+<strong>Automatic</strong> model selection (zero manually selected models)</li>
+<li>key handling: use a short-lived capture-only credential, keep every key field
+masked, inspect the final PNGs at 400%, then revoke the credential and delete
+the capture profile</li>
+<li>MCP state: one unauthenticated local fixture named <strong>Demo component library</strong>,
+enabled and trusted so it displays the shipped state <strong>Active · read-only</strong>;
+no remote tenant or account</li>
+</ul>
+<p>Wait for fonts, preview rendering and Review results to settle. Dismiss update
+notices, toasts, tooltips and permission prompts. Move the pointer outside the
+capture, stop caret/selection blinking where possible, and never edit or
+recompress the resulting PNG. If a final UI label differs from this plan, use
+the shipped label and update the page's alt text and caption in the same change;
+never stage a screenshot of placeholder UI.</p>
+<h3 id="the-four-replacement-files" tabindex="-1">The four replacement files</h3>
+<p>All dimensions below are <strong>CSS viewport dimensions and required PNG pixel
+dimensions</strong>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Releasing shot2code to this hub table 3"><table>
+<thead>
+<tr>
+<th scope="col">File</th>
+<th scope="col">Viewport and theme</th>
+<th scope="col">Exact app state</th>
+<th scope="col">Pane widths</th>
+<th scope="col">Replaces / published role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>review-workspace-og-light.png</code></td>
+<td><code>1920 × 1008</code>, light</td>
+<td>Northwind Analytics open; the final <strong>Review</strong> destination selected; review complete with its summary and the generated preview visible; no loading or empty state</td>
+<td>64px rail, 320px Chat pane, remaining 1536px workspace including its dividers</td>
+<td><code>workspace-full-hd.png</code> in the hero/gallery, and the current <code>og:image</code></td>
+</tr>
+<tr>
+<td><code>mcp-menu-light.png</code></td>
+<td><code>1440 × 900</code>, light</td>
+<td>Generated project open; <strong>Settings → MCP servers</strong> showing <strong>Demo component library</strong> as <strong>Active · read-only</strong>, with the native <strong>View</strong> menu expanded over it so the shared commands and the menu bar are both legible; no hover-only tooltip</td>
+<td>64px rail; Settings owns the remaining 1376px, with no hidden Chat pane</td>
+<td><code>code-workspace.png</code>, the first detail</td>
+</tr>
+<tr>
+<td><code>byok-settings-dark.png</code></td>
+<td><code>1440 × 900</code>, dark</td>
+<td><strong>Settings → GitHub Copilot SDK BYOK</strong> open and switched on; the <strong>OpenAI-compatible</strong> provider selected with a fully masked key; Copilot signed out and the OpenAI/Anthropic/Gemini fields in <strong>API Keys</strong> empty; model selection shown as <strong>Automatic</strong></td>
+<td>64px rail; Settings owns the remaining 1376px, with no hidden Chat pane</td>
+<td><code>code-workspace-dark.png</code>, the second detail</td>
+</tr>
+<tr>
+<td><code>review-workspace-tablet.png</code></td>
+<td><code>768 × 1024</code>, light</td>
+<td>The same completed synthetic Review in the shipped tablet/single-column navigation; Review, Preview/Code and History destinations remain identifiable</td>
+<td>No desktop rail or draggable split; one 768px content viewport</td>
+<td><code>chat-tablet.png</code>, the centred portrait detail</td>
+</tr>
+</tbody>
+</table></div>
+<p>The lead uses <code>1920 × 1008</code> because it is exactly <strong>40:21</strong>, the same ratio as a
+<code>1200 × 630</code> social card. It can therefore be scaled by an Open Graph consumer
+without cropping the app toolbar or Review result. When these files land:</p>
+<ol>
+<li>Replace the four gallery sources in this order: Review lead, MCP/menu, BYOK
+Settings, tablet Review.</li>
+<li>Point <code>og:image</code> at <code>review-workspace-og-light.png</code>, set its declared size to
+<code>1920 × 1008</code>, and write alt text for only what is visibly present.</li>
+<li>Give the lead a <code>40 / 21</code> aspect wrapper; keep both desktop details on the
+shared <code>16 / 10</code> wrapper and the tablet image on <code>3 / 4</code>.</li>
+<li>Keep the site's documented <code>object-fit: contain</code> policy and neutral frame.
+Never switch a product screenshot to <code>cover</code>: letterboxing is acceptable,
+loss of UI is not.</li>
+<li>Update each <code>&lt;img width height&gt;</code>, link label, alt and caption with the same
+commit. Remove the four superseded PNGs only after no HTML, metadata or test
+references them.</li>
+<li>From the <code>app-releases</code> repository, run <code>npm test</code>; it includes the
+dimension, aspect, reflow and Open Graph checks. Then inspect the light/dark
+gallery and 320px/200%-text portal captures.</li>
+</ol>
+<p>Before approval, inspect every image for exposed keys or tokens, account names,
+email addresses, avatars, filesystem paths, repository names, clipboard
+content, notification text, timestamps and background-window reflections.
+Passing an automated test is not a secrets review.</p>
+<h2 id="after-publishing" tabindex="-1">After publishing</h2>
+<ol>
+<li>
+<p>Confirm the asset list:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>gh release view shot2code-v&lt;version&gt; --json assets --jq &#39;.assets[] | &quot;\(.name)  \(.size)&quot;&#39;
+</code></pre>
+</li>
+<li>
+<p>The <code>update-releases-snapshot</code> workflow regenerates
+<code>docs/shot2code/releases/releases.json</code> from the GitHub API on release events,
+on a schedule, and on demand. The releases page renders that same-origin
+snapshot first and then refreshes from the live API, so a rate-limited visitor
+still sees the list. To refresh it by hand:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>gh api -H &quot;Accept: application/vnd.github.html+json&quot; `
+  &quot;repos/ArasaniRohithReddy/app-releases/releases?per_page=100&quot; `
+  --jq &#39;[ .[] | select(.draft == false) | select(.tag_name | startswith(&quot;shot2code-v&quot;)) |
+          { tag_name, name, published_at, prerelease, body_html,
+            assets: [ .assets[] | { name, size, download_count, browser_download_url } ] } ]
+        | sort_by(.published_at) | reverse&#39; &gt; docs/shot2code/releases/releases.json
+</code></pre>
+</li>
+<li>
+<p>Nothing else on the site needs a version edit. The product page resolves the
+<strong>newest stable release whose tag starts with <code>shot2code-v</code></strong> and fills in the
+version chips, the download links and sizes, the SHA-256 verification command
+and the <code>softwareVersion</code> in its structured data from that release. Its static
+fallbacks point at the product-filtered release list, which carries no version
+and so cannot go stale.</p>
+</li>
+<li>
+<p>Update <a href="../changelog/">CHANGELOG.md</a> with the new version, and any guide whose
+behaviour changed.</p>
+</li>
+</ol>
+<h2 id="rollback" tabindex="-1">Rollback</h2>
+<ul>
+<li>If a release is broken for everyone, mark it as a pre-release or delete the
+release. The hub pages select the newest <strong>stable</strong> release, so both actions
+take it out of circulation while keeping the tag.</li>
+<li>Never delete or replace an installer that clients may already be downloading
+while its manifest is still live.</li>
+<li>The updater does not downgrade: the real fix for a bad build that people have
+already installed is to publish the next patch version.</li>
+</ul>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../shot2code/docs/">All guides</a>
+        <a href="../../../shot2code/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../releases/">All releases</a>
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

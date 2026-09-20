@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 a8d18ff3bd0580da87396a6bda9224e2fb2ee7dc0a89d5d8b8b454c49033e0f2). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>Troubleshooting shot2code — shot2code documentation</title>
+  <meta name="description" content="A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ or the user guide." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Troubleshooting shot2code — App Releases" />
+  <meta property="og:description" content="A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ or the user guide." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Troubleshooting shot2code","description":"A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ or the user guide.","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../shot2code/" aria-label="shot2code — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>shot2code</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../shot2code/docs/">Guides</a>
+        <a href="../../../shot2code/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="./" aria-current="page">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../shot2code/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../shot2code/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Troubleshooting</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="troubleshooting-shot2code" tabindex="-1">Troubleshooting shot2code</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/TROUBLESHOOTING.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#start-here">Start here</a></li><li><a href="#where-the-logs-and-data-live">Where the logs and data live</a></li><li><a href="#the-app-will-not-start">The app will not start</a></li><li><a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a></li><li><a href="#copilot-sdk-byok">Copilot SDK BYOK</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#generation-fails-or-is-wrong">Generation fails or is wrong</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#screenshot-preview-chromium-and-screen-recording">Screenshot preview, Chromium and screen recording</a></li><li><a href="#importing-a-project">Importing a project</a></li><li><a href="#preview-export-and-codepen">Preview, export and CodePen</a></li><li><a href="#history-and-recent-projects">History and recent projects</a></li><li><a href="#the-workspace-layout">The workspace layout</a></li><li><a href="#installing-and-updating">Installing and updating</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav></details>
+        <div class="doc-content"><p>A symptom-first runbook for the published Windows build. If you are looking for
+<em>what a feature does</em> rather than <em>why it is not working</em>, start with the
+<a href="../faq/">FAQ</a> or the <a href="../user-guide/">user guide</a>.</p>
+<p>Everything here is local: shot2code has no service to check and no status page.
+Almost every failure is answered by one of three things — the backend log, the
+provider credential the app can actually see, or a process that did not exit.</p>
+<ul>
+<li><a href="#start-here">Start here</a></li>
+<li><a href="#where-the-logs-and-data-live">Where the logs and data live</a></li>
+<li><a href="#the-app-will-not-start">The app will not start</a></li>
+<li><a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a></li>
+<li><a href="#copilot-sdk-byok">Copilot SDK BYOK</a></li>
+<li><a href="#mcp-servers">MCP servers</a></li>
+<li><a href="#generation-fails-or-is-wrong">Generation fails or is wrong</a></li>
+<li><a href="#the-review-workspace">The Review workspace</a></li>
+<li><a href="#screenshot-preview-chromium-and-screen-recording">Screenshot preview, Chromium and screen recording</a></li>
+<li><a href="#importing-a-project">Importing a project</a></li>
+<li><a href="#preview-export-and-codepen">Preview, export and CodePen</a></li>
+<li><a href="#history-and-recent-projects">History and recent projects</a></li>
+<li><a href="#installing-and-updating">Installing and updating</a></li>
+<li><a href="#reporting-a-problem">Reporting a problem</a></li>
+</ul>
+<h2 id="start-here" tabindex="-1">Start here</h2>
+<p>Four checks resolve most reports before they become issues:</p>
+<ol>
+<li><strong>Which version?</strong> <strong>Settings</strong> shows the running version and the update
+state. Compare it with the <a href="../changelog/">changelog</a> and the
+<a href="../../releases/">releases page</a>.
+Fixes land in the newest release; reproduce there first.</li>
+<li><strong>Which install format?</strong> NSIS <code>.exe</code> (per-user, self-updating), <code>.msi</code>
+(per-machine, managed, no self-update) or the portable <code>.zip</code>. The format
+changes what updating and uninstalling can do — see <a href="../install/">INSTALL.md</a>.</li>
+<li><strong>Which provider?</strong> The chat panel's status callout reports only what the app
+can see from the window. A GitHub Copilot sign-in or a key in <code>backend/.env</code>
+is invisible to it, so &quot;no provider saved&quot; is not the same as &quot;no provider&quot;.
+A Copilot SDK BYOK connection is a separate credential again — check its own
+card in <strong>Settings</strong>.</li>
+<li><strong>Read the log, not the console.</strong> The window is a renderer; the interesting
+failures are in the backend log below.</li>
+</ol>
+<h2 id="where-the-logs-and-data-live" tabindex="-1">Where the logs and data live</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 1"><table>
+<thead>
+<tr>
+<th scope="col">What</th>
+<th scope="col">Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend startup, renderer load failures, crashes, console errors</td>
+<td><code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code></td>
+</tr>
+<tr>
+<td>Installer pre-install safeguard (per-user and silent installs)</td>
+<td><code>%TEMP%\shot2code-installer-preinstall.log</code></td>
+</tr>
+<tr>
+<td>Projects, versions and prompts</td>
+<td><code>%LOCALAPPDATA%\shot2code\history.sqlite3</code></td>
+</tr>
+<tr>
+<td>Everything else the app stores on this device</td>
+<td><code>%LOCALAPPDATA%\shot2code\</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Paste a path into the Explorer address bar to open it. In the packaged desktop
+app, <strong>Help → Support → Open diagnostic logs</strong> opens the backend log's folder
+directly and reports whether it succeeded; the browser development build has no
+such log and says so. The backend log is plain text and is the file to read first
+for a blank window, a splash screen that never clears, or an update that did not
+install.</p>
+<p>The database is <strong>not</strong> encrypted: it holds your prompts and generated code, so
+treat it like any other local project folder. <a href="../data-handling/">DATA-HANDLING.md</a>
+lists every path and every network destination.</p>
+<h2 id="the-app-will-not-start" tabindex="-1">The app will not start</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 2"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First launch sits on the splash screen for a few seconds</td>
+<td>Expected. The splash stays until the frozen Python backend answers its health check — normally about 5–11 seconds from 0.3.3. A fresh portable copy or the first launch after an update takes longer (around 40 seconds) while Windows scans the newly written tree.</td>
+</tr>
+<tr>
+<td>The splash screen never clears</td>
+<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Startup no longer waits on Chromium or Copilot, so a missing optional capability is not the cause.</td>
+</tr>
+<tr>
+<td>The window is blank, or never appears at all</td>
+<td>Read <code>shot2code-backend.log</code>. It records backend startup, <code>did-fail-load</code>, renderer crashes and console errors, which is the difference between &quot;the backend never came up&quot; and &quot;the UI failed to load&quot;. In the packaged app, <strong>Help → Support → Open diagnostic logs</strong> opens that folder for you.</td>
+</tr>
+<tr>
+<td>&quot;Backend did not become ready in time&quot;</td>
+<td>Usually a partially replaced install: an older updater could overwrite files while the backend was still running, leaving native modules missing. Download the newest installer from the releases page and run it manually (right-click → <strong>Properties</strong> → <strong>Unblock</strong> first).</td>
+</tr>
+<tr>
+<td>Generation fails on a backend that reported healthy earlier</td>
+<td>A deferred feature failed to load. Those routers are imported on first use; if one cannot load, the request returns an error and health starts failing too, so the log will show it. Restart the app and read <code>shot2code-backend.log</code>.</td>
+</tr>
+<tr>
+<td>The app starts, but everything says no provider</td>
+<td>Nothing is wrong with the app. Go to <a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a>.</td>
+</tr>
+<tr>
+<td>Windows says &quot;Windows protected your PC&quot;</td>
+<td>Expected — the builds are not code-signed. Verify the SHA-256 hash against <code>SHA256SUMS.txt</code> from the same release first, then <strong>More info → Run anyway</strong>. See <a href="../install/#about-the-smartscreen-warning">INSTALL.md</a> and <a href="../security/">SECURITY.md</a>.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="providers-and-the-model-catalogue" tabindex="-1">Providers and the model catalogue</h2>
+<p>shot2code ships no model and no inference. It needs <strong>one</strong> of: a GitHub Copilot
+sign-in, a Gemini, Anthropic or OpenAI API key, or a Copilot SDK BYOK connection.
+Without one, generation fails immediately and says so.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 3"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;No API key found and no GitHub Copilot credentials detected&quot;</td>
+<td>Use <strong>Settings → GitHub Copilot → Sign in with GitHub</strong>, run <code>gh auth login</code> (or <code>copilot</code>) once and restart shot2code, or paste a key into <strong>Settings</strong>.</td>
+</tr>
+<tr>
+<td><strong>Sign in with GitHub</strong> is disabled and says it is unavailable</td>
+<td>Neither the GitHub Copilot CLI nor the GitHub CLI is on <code>PATH</code>. The warning links the official install instructions. You can still sign in from a terminal or paste a token.</td>
+</tr>
+<tr>
+<td>The browser opened but Settings still says &quot;Not signed in&quot;</td>
+<td>Finish the flow in the browser — the app polls until the CLI reports a result, and only then re-probes. If you closed the window, choose <strong>Cancel</strong> and try again.</td>
+</tr>
+<tr>
+<td>Sign-in is refused with &quot;can only be started from the shot2code app on this machine&quot;</td>
+<td>Starting a sign-in spawns a process, so it is only accepted from the app itself. Use the button in Settings rather than calling the API from elsewhere.</td>
+</tr>
+<tr>
+<td>Copilot shows &quot;Not signed in&quot; although the CLI works</td>
+<td>Credentials are resolved in order: a token in <strong>Settings</strong>, then <code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code>, then a stored <code>copilot</code> login, then <code>gh auth login</code>. Sign in again and restart so the check re-runs. A fine-grained token with the <strong>Copilot Requests</strong> permission also works.</td>
+</tr>
+<tr>
+<td>A provider is missing from <strong>Settings → Models</strong></td>
+<td>A provider appears only once the app can see a credential for it. Add the key first; the catalogue follows. A BYOK connection never makes a native provider available — each still needs its own key.</td>
+</tr>
+<tr>
+<td>The Copilot list is empty even though you are signed in</td>
+<td>Only models that accept images are offered, because turning a screenshot into code requires image input. An empty list usually means your plan currently has no vision-capable model.</td>
+</tr>
+<tr>
+<td>A model you used before has vanished</td>
+<td>Deprecated models are hidden unless you tick <strong>Show deprecated models</strong> — or unless one is already selected, in which case it stays visible where you picked it.</td>
+</tr>
+<tr>
+<td>&quot;N saved models can no longer run&quot;</td>
+<td>The key for them was removed, or the provider retired them. They are ignored rather than deleted silently; use <strong>Remove</strong> to clear them.</td>
+</tr>
+<tr>
+<td>Your whole selection reset itself</td>
+<td>It should not, and it does not: if the catalogue cannot be loaded at all, the saved selection is left untouched rather than being cleared.</td>
+</tr>
+<tr>
+<td>Fewer options than models you ticked</td>
+<td>The per-run cap applies: up to 4 options for a first generation, up to 2 for an update or a video. Only the first models up to the limit run, and the picker says so in words.</td>
+</tr>
+<tr>
+<td>No models at all in video mode</td>
+<td>In video mode the list is filtered to models that can read video. Everything else would fail on the input. BYOK options are not offered for video either.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Keys are stored on the device you entered them on and are sent only to the
+provider they belong to. <code>REPLICATE_API_KEY</code> has no Settings field — it is read
+from <code>backend/.env</code>, so it applies to source runs only.</p>
+<h3 id="reading-a-connection-check" tabindex="-1">Reading a connection check</h3>
+<p><strong>Settings → Connection checks</strong> tests one provider at a time with a single tiny
+request. What it reports is what to do:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 4"><table>
+<thead>
+<tr>
+<th scope="col">Result</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Out of credit</strong></td>
+<td>The credential is valid; the account has nothing left to spend. Follow the billing link in the result. Waiting does <strong>not</strong> help — providers report an empty balance in a way that reads like a rate limit.</td>
+</tr>
+<tr>
+<td><strong>Key rejected</strong></td>
+<td>The credential was refused. Check it for a typo, or issue a new one and paste it in.</td>
+</tr>
+<tr>
+<td><strong>Rate limited</strong></td>
+<td>Temporary. Try again shortly, or generate fewer options at once.</td>
+</tr>
+<tr>
+<td><strong>Access denied</strong></td>
+<td>The account cannot use that model. Enable it on the provider, or pick another in <strong>Settings → Models</strong>.</td>
+</tr>
+<tr>
+<td><strong>Model unavailable</strong></td>
+<td>The provider does not offer the model that was tried. Pick another.</td>
+</tr>
+<tr>
+<td><strong>Configuration problem</strong></td>
+<td>Usually a missing key, or a base URL the request cannot use.</td>
+</tr>
+<tr>
+<td><strong>Could not reach the provider</strong></td>
+<td>Network, proxy or firewall. The provider was never reached.</td>
+</tr>
+<tr>
+<td>&quot;A custom OpenAI base URL needs its own API key in the same request&quot;</td>
+<td>Deliberate. The key configured on the server is only used with the server's own endpoint, so a request naming its own base URL must carry its own key.</td>
+</tr>
+<tr>
+<td>&quot;This backend does not offer connection checks yet&quot;</td>
+<td>The backend predates the feature. Start a generation to find out whether the credential works.</td>
+</tr>
+</tbody>
+</table></div>
+<p>A check is a real request and may use a little quota on a metered account.
+Replicate is checked against its account endpoint, so it starts no prediction.</p>
+<h2 id="copilot-sdk-byok" tabindex="-1">Copilot SDK BYOK</h2>
+<p>BYOK is optional and additive. Nothing here stops a direct generation: an
+incomplete connection is reported as a notice and skipped.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 5"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No <strong>Copilot SDK (BYOK)</strong> group in <strong>Settings → Models</strong></td>
+<td>The connection is switched off or not usable yet. The card states the reason — <em>switched off</em>, <em>needs its own API key or bearer token</em>, or <em>needs the endpoint URL of your Azure OpenAI resource</em>.</td>
+</tr>
+<tr>
+<td>&quot;Add a dedicated API key…&quot; although OpenAI already works</td>
+<td>That is intended. BYOK carries its own credential; the direct OpenAI and Anthropic keys are never borrowed for it. Only an <strong>OpenAI-compatible</strong> endpoint on <code>localhost</code> may run without one.</td>
+</tr>
+<tr>
+<td>&quot;must use https:// unless it points at localhost&quot;</td>
+<td>Plain <code>http://</code> is only accepted for a loopback host. Use <code>https://</code>, or point the base URL at <code>localhost</code>/<code>127.0.0.1</code>.</td>
+</tr>
+<tr>
+<td>Azure refuses to validate</td>
+<td>Azure needs the endpoint URL of your resource <strong>and</strong> its own credential. The <code>api-version</code> field applies to Azure only.</td>
+</tr>
+<tr>
+<td>You want a Gemini BYOK option</td>
+<td>There is none. The Copilot SDK has no Gemini provider, so Gemini models always use the Gemini API key directly. The app reports this as a notice.</td>
+</tr>
+<tr>
+<td>Selecting a BYOK option seems to have moved a native one</td>
+<td>It has not. A native pick always runs on its native provider; the two are separate identities and produce separate options. Check the identity recorded against each option in <strong>History</strong>.</td>
+</tr>
+<tr>
+<td>A saved BYOK pick stopped matching</td>
+<td>You changed the connection's provider, or switched it off. The card says how many selected options no longer match; reselect them in <strong>Settings → Models</strong>.</td>
+</tr>
+<tr>
+<td><strong>Validate connection</strong> succeeds but generation fails</td>
+<td>Validation checks the settings only — it never calls your endpoint. Use <strong>Test model access</strong> to contact it. A failure at generation time is the endpoint's own response, passed through unchanged.</td>
+</tr>
+<tr>
+<td><strong>Test model access</strong> finds no models to choose from</td>
+<td>Only OpenAI-compatible endpoints expose <code>/models</code>. Azure OpenAI and Anthropic do not list models here, so type the model id (or Azure deployment name) by hand.</td>
+</tr>
+<tr>
+<td>&quot;The endpoint does not list ‹model›&quot;</td>
+<td>The name is not one the endpoint reported. Pick one from the list the check returned, or check the spelling.</td>
+</tr>
+<tr>
+<td>The endpoint model you typed is refused</td>
+<td>Ids may be up to <strong>128</strong> characters and may contain <code>. _ : / @ + -</code>. Spaces are not allowed. An over-long id is reported rather than trimmed, because trimming would run a different model.</td>
+</tr>
+<tr>
+<td>The model answers the check but generation fails on the first screenshot</td>
+<td>The model must support <strong>image input and tool calling</strong>. A text-only model passes a plain-text check and then fails a real run. Neither the check nor the endpoint's model list can tell you which models qualify — see the endpoint's documentation.</td>
+</tr>
+<tr>
+<td>Your endpoint rejects the request shape</td>
+<td>The <strong>Wire API</strong> is <strong>Automatic</strong> by default: Chat Completions for an endpoint with its own base URL, Responses for a provider's own endpoint. Pin the one your endpoint needs.</td>
+</tr>
+<tr>
+<td>Only one option appears for your endpoint</td>
+<td>Correct, when you named an endpoint model the catalog does not know. It appears once as <code>‹model› via ‹provider›</code>; listing catalog names against it would be untrue.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="mcp-servers" tabindex="-1">MCP servers</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 6"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A server is configured but no tools appear</td>
+<td>A server needs <strong>both</strong> switches: <strong>Enabled</strong> <em>and</em> <strong>Trusted</strong>. Until then the picker reports <em>&quot;'‹name›' is not marked trusted, so shot2code will not start it or approve its tools.&quot;</em></td>
+</tr>
+<tr>
+<td>Tools appear for one option but not another</td>
+<td>MCP reaches the SDK runtimes only. GitHub Copilot options and Copilot SDK BYOK options get the tools; an option on your own OpenAI, Anthropic or Gemini key never does.</td>
+</tr>
+<tr>
+<td>A tool that should change something does nothing</td>
+<td>Servers are read-only by default. Turn on <strong>Allow write tools</strong> for that server — it is the switch that permits changing files, data or remote state.</td>
+</tr>
+<tr>
+<td>&quot;Use https:// unless the server runs on localhost&quot;</td>
+<td>An <code>http://</code> URL is accepted only for a loopback host.</td>
+</tr>
+<tr>
+<td>&quot;A local server needs a command to run&quot;</td>
+<td>A <code>stdio</code> server needs its command. Arguments go <strong>one per line</strong>, because the command is spawned as an argument vector rather than through a shell.</td>
+</tr>
+<tr>
+<td>Quoting in the command does not behave like a shell</td>
+<td>Correct — there is no shell. Split the command and each argument into their own fields instead of relying on <code>cmd</code> or PowerShell quoting.</td>
+</tr>
+<tr>
+<td>&quot;Another server already uses the name…&quot;</td>
+<td>Two names reduce to the same internal id. Give them distinct names.</td>
+</tr>
+<tr>
+<td>A value you typed is now masked</td>
+<td>Environment values and request headers that look like credentials are masked on purpose. Use <strong>Show values to edit</strong> to reveal them for editing.</td>
+</tr>
+<tr>
+<td><strong>Validate servers</strong> passes but a server never starts</td>
+<td>Validation checks the configuration only; it starts nothing. Check the server's own command, URL or credentials.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="generation-fails-or-is-wrong" tabindex="-1">Generation fails or is wrong</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 7"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The run stops with a provider error</td>
+<td>The request reached the provider and it refused. Quota, rate limits, model availability and billing belong to your account, not to shot2code; the message is passed through unchanged.</td>
+</tr>
+<tr>
+<td>The generated code is wrong, inaccessible or insecure</td>
+<td>It is model output, not a guarantee. Refine it in chat, retry the version to re-roll it, or edit the files directly — and review anything before you run it outside the sandboxed preview.</td>
+</tr>
+<tr>
+<td>Only one of several screenshots appears</td>
+<td>Upload them together and choose <strong>Separate pages</strong>. That mode requires one navigable view per screenshot. <strong>Responsive views</strong> is for the same page at different widths, <strong>UI states</strong> for before/after states.</td>
+</tr>
+<tr>
+<td>A refinement replaced work you wanted to keep</td>
+<td>Nothing is overwritten — each refinement is a new version. Step back through <strong>History</strong>.</td>
+</tr>
+<tr>
+<td>The result ignores an imported component</td>
+<td>Imported component paths are naming and API context. A generated preview is self-contained, so it cannot resolve imports from your local project.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="the-review-workspace" tabindex="-1">The Review workspace</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 8"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The result says <strong>stale</strong></td>
+<td>A review is bound to the version, the option, a hash of the source it read and the widths it ran at. Change any of those and it is marked stale rather than shown as current. Run it again.</td>
+</tr>
+<tr>
+<td>&quot;Width must be between 320px and 1920px.&quot;</td>
+<td>Custom widths are whole numbers in that range. The input refuses anything else instead of clamping it silently.</td>
+</tr>
+<tr>
+<td>You cannot remove a frame</td>
+<td>Keep between two and four. One frame is not a comparison; more than four stops being readable.</td>
+</tr>
+<tr>
+<td>A frame shows overflow you cannot see in Preview</td>
+<td>Overflow is measured in the running frame at that real width. Preview at 100% is one width — Review is the one that exercises the others.</td>
+</tr>
+<tr>
+<td>The audit missed an accessibility problem</td>
+<td>It is a bounded set of source rules, not a conformance tool. It is <strong>not a WCAG assessment</strong> and does not replace testing with assistive technology. A framework project's runtime DOM can also differ from the source it read.</td>
+</tr>
+<tr>
+<td>Findings were not sent to the model</td>
+<td>By design. Selected findings are written into the composer for you to read, edit and send. Nothing is sent on your behalf.</td>
+</tr>
+<tr>
+<td>You want to attach the result to an issue</td>
+<td>Export the JSON report. It carries severities, rule ids, messages, evidence and guidance, reduces file paths to a leaf name, and contains no credential of any kind — read it before posting, as with any export.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="screenshot-preview-chromium-and-screen-recording" tabindex="-1">Screenshot preview, Chromium and screen recording</h2>
+<p><strong>Screenshot preview</strong> is the tool the agent uses to render its own output and
+check its work. Chromium ships with the desktop app; <strong>Settings</strong> reports whether
+it is available, and if it is not, the app skips that tool instead of failing the
+run. Only the headless shell is bundled — full Chromium would add several hundred
+megabytes and the app always launches headless.</p>
+<p>When Settings reports it unavailable, <strong>Check again</strong> re-probes the backend, so
+you can fix the cause and confirm it without restarting shot2code. The advice
+depends on how you are running it:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 9"><table>
+<thead>
+<tr>
+<th scope="col">Running</th>
+<th scope="col">What the warning says</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The packaged desktop app</td>
+<td>The browser is bundled, so <strong>nothing needs installing</strong>. It could not start. Restart shot2code, then <strong>Check again</strong>; if it still fails, reinstall and open the diagnostic log — antivirus quarantining the bundled browser is the usual cause</td>
+</tr>
+<tr>
+<td>From source</td>
+<td>The browser is genuinely missing. Run <code>cd backend &amp;&amp; uv run playwright install chromium-headless-shell</code>, restart the backend, then <strong>Check again</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>&quot;Could not start screen recording&quot;</strong> means the app could not grant itself
+permission to the display. Search the backend log for a <code>screen capture</code> line: it
+records which source was chosen, or why the request failed. Video and screen
+recording input also need a Gemini key.</p>
+<h2 id="importing-a-project" tabindex="-1">Importing a project</h2>
+<p>Import reads a folder, a ZIP or individual source files. It parses text — it
+<strong>never</strong> executes your project's code, including <code>tailwind.config.js</code>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 10"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No components or tokens were found</td>
+<td>The scanner reads HTML, CSS, JavaScript, TypeScript, Vue, JSON, Markdown and YAML, and skips <code>node_modules</code>, build output, binaries and large files. Components are recognised from exported React/TypeScript components and <code>.vue</code> files; CSS variables and reusable classes become design tokens.</td>
+</tr>
+<tr>
+<td>Part of the project is missing</td>
+<td>Deliberate. There are limits on archive size, entry count, file count, per-file size and total decoded text. Point it at the part of the project you actually want as context.</td>
+</tr>
+<tr>
+<td>The import was rejected outright</td>
+<td>Unsafe or malformed input — traversal paths in an archive, for example — is refused rather than sanitised.</td>
+</tr>
+<tr>
+<td>You wanted the files, not a summary</td>
+<td><strong>Use as design context</strong> keeps only a compact summary. Choose <strong>Open editable project</strong> to hand the normalized files to the editor instead.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="preview-export-and-codepen" tabindex="-1">Preview, export and CodePen</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 11"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The preview shows a fallback or a diagnostic</td>
+<td>The preview is derived, not the source of truth. When a framework build or a local asset cannot be represented safely it degrades deterministically, while every source file stays editable and downloadable in the <strong>Code</strong> tab.</td>
+</tr>
+<tr>
+<td>The preview scrolls sideways at <strong>100%</strong></td>
+<td>Intended. A fixed-width desktop canvas is centred in a neutral frame; when the window is narrower than the canvas the frame scrolls rather than cropping the start of the page. Use <strong>Fit</strong> to scale it down.</td>
+</tr>
+<tr>
+<td><strong>CodePen</strong> is greyed out</td>
+<td>It is offered only when the selected stack can honestly run in a browser-only Pen. The status bar states the reason. Download the project folder for build-dependent stacks. Sharing always asks first, because the code leaves your device.</td>
+</tr>
+<tr>
+<td>The exported project has a <strong>Safe fallback</strong> note</td>
+<td>There was no valid root <code>package.json</code> build command, so export kept every source file rather than generating a plausible but broken scaffold.</td>
+</tr>
+<tr>
+<td><strong>Format</strong> did nothing</td>
+<td>It is whitespace-only and deliberately conservative: it refuses component source (JSX/TSX/Vue) and leaves a file untouched when the syntax is ambiguous or unbalanced, so exports keep their original bytes.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="history-and-recent-projects" tabindex="-1">History and recent projects</h2>
+<p>Every generation becomes a version. <strong>History</strong> is the name used everywhere in
+the app — the rail entry, the <strong>History <em>n</em>/<em>m</em></strong> preview control, and the
+separate destination on narrow windows.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 12"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>History</strong> is not visible on a narrow window</td>
+<td>It is not hidden behind the Preview/Chat switch; it is a third labelled destination in the top bar.</td>
+</tr>
+<tr>
+<td>The options strip is missing</td>
+<td>It appears only when a version actually has more than one option.</td>
+</tr>
+<tr>
+<td>A retry looks like an unrelated branch</td>
+<td>It should not: a retry reuses the provider and model choices behind the original options and keeps a link to the version it re-rolls.</td>
+</tr>
+<tr>
+<td>A project is gone from <strong>Recent projects</strong></td>
+<td>Deleting a project removes it and all of its versions from the device. There is no cloud copy and no undo.</td>
+</tr>
+<tr>
+<td>Recent work is missing after reinstalling</td>
+<td>Projects live in <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>. An uninstall that removed that folder removed the history with it.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="the-workspace-layout" tabindex="-1">The workspace layout</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 13"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Settings will not scroll to its final controls</td>
+<td>Update to v0.4.0 or newer. Settings now owns a viewport-bounded scroll area in both empty and active projects. On an older build, close Settings, resize the window or reduce zoom temporarily, then install the current release.</td>
+</tr>
+<tr>
+<td>There is no divider to drag</td>
+<td>Dividers appear on windows at least 1280px wide. Below that, <strong>Preview</strong>, <strong>Chat</strong> and <strong>History</strong> stay separate destinations by design. The explorer divider also needs a project with more than one file.</td>
+</tr>
+<tr>
+<td>A pane is too narrow to use</td>
+<td>Widths are clamped to the window, so neither side can be dragged away entirely. Press <strong>Enter</strong> or double-click a divider to restore its default, or <strong>Home</strong>/<strong>End</strong> to jump to the allowed limits.</td>
+</tr>
+<tr>
+<td>Widths changed after resizing the window</td>
+<td>Expected: saved widths re-clamp to the current viewport so both panes stay usable.</td>
+</tr>
+<tr>
+<td>A pane cannot be moved with the keyboard</td>
+<td>Focus the divider first, then use <code>←</code>/<code>→</code> (16px), <code>Shift</code>+<code>←</code>/<code>→</code> (64px), <code>Home</code>/<code>End</code>, <code>Enter</code> to reset, <code>Escape</code> to cancel a drag.</td>
+</tr>
+<tr>
+<td>Resizing seems to have created a version</td>
+<td>It cannot. Pane widths are a view preference stored separately from project data; resizing never creates or changes a version, an option, a retry or anything in History.</td>
+</tr>
+<tr>
+<td>The app is too small or too large to read</td>
+<td>In the desktop app, <code>Ctrl+=</code>/<code>Ctrl++</code> zoom in, <code>Ctrl+-</code> zooms out and <code>Ctrl+0</code> resets, in 10-point steps between 50% and 300%. Numpad add and subtract work with <code>Ctrl</code> too.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="installing-and-updating" tabindex="-1">Installing and updating</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 14"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The installer seems to do nothing</td>
+<td>It unpacks roughly 600 MB, so it can sit for a minute before showing progress.</td>
+</tr>
+<tr>
+<td>The MSI says updates are managed by an administrator</td>
+<td>Intentional. MSI is the per-machine deployment format and does not self-update. Use the <code>.exe</code> installer for per-user automatic updates.</td>
+</tr>
+<tr>
+<td>An update downloaded but nothing happened</td>
+<td><strong>Settings</strong> shows <strong>Restart &amp; install</strong> when a download is ready. The install runs silently and relaunches.</td>
+</tr>
+<tr>
+<td>&quot;The update was not started because shot2code could not shut down safely&quot;</td>
+<td>The safe outcome, not a crash: the updater refuses to replace files while the bundled backend tree may still be running. Quit the app completely and try again.</td>
+</tr>
+<tr>
+<td>The installer stopped and could not stop the installed backend</td>
+<td>The installer repeats the same check independently, so an update starting from an older client is protected too. It identifies processes by executable path under the installed <code>resources\backend</code> folder — never by process name — stops each tree, and refuses to replace anything it cannot confirm is stopped. Close shot2code and any leftover backend process, then run it again. A silent install returns a distinct exit code instead of a dialog, and both write to <code>%TEMP%\shot2code-installer-preinstall.log</code>.</td>
+</tr>
+<tr>
+<td>You need an older version</td>
+<td>Download it from the releases page and install it; the updater itself never downgrades. Not every older build shipped all four files — checksums arrived with 0.3.1 — so the page shows exactly what each release carries.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="reporting-a-problem" tabindex="-1">Reporting a problem</h2>
+<p>Bugs and ideas belong in this hub:
+<strong><a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">open an issue</a></strong>
+and pick <strong>shot2code</strong>. Suspected vulnerabilities are
+<a href="../security/">reported privately</a>, never in a public issue. The hub's
+<a href="../../../help/">support policy</a> sets the triage order for issues filed here,
+and <a href="../contributing/">CONTRIBUTING.md</a> explains where code changes go.</p>
+<p>Include, and a fix gets much faster:</p>
+<ol>
+<li><strong>Version</strong> from <strong>Settings</strong>, and the <strong>install format</strong> (<code>.exe</code>, <code>.msi</code> or <code>.zip</code>).</li>
+<li><strong>Windows version and build</strong>, and whether the install is per-user or per-machine.</li>
+<li><strong>What you expected, what happened</strong>, and the exact wording of any error.</li>
+<li><strong>Which provider and which model</strong> were selected — Copilot, OpenAI, Anthropic
+or Gemini — and whether the failure also happens with a different one.</li>
+<li><strong>The tail of <code>shot2code-backend.log</code></strong> — <strong>Help → Support → Open diagnostic
+logs</strong> finds it for you — and
+<code>%TEMP%\shot2code-installer-preinstall.log</code> for an install or update problem.</li>
+<li><strong>The input</strong>, if you can share it: the screenshot, URL or description, the
+output stack, and the multi-screenshot mode you chose.</li>
+</ol>
+<p><strong>Never paste secrets into a public issue.</strong> Redact before you attach anything:</p>
+<ul>
+<li>API keys, GitHub tokens and anything from <code>backend/.env</code> — log lines can quote
+them, and an issue is public and permanently indexed.</li>
+<li>Screenshots of <strong>Settings</strong> showing a key, even partially.</li>
+<li><code>history.sqlite3</code>, exported projects or generated code you do not want public;
+they contain your prompts and your work.</li>
+<li>Screenshots of internal systems. Redact or reproduce the problem with a
+throwaway example instead.</li>
+</ul>
+<p>If a credential does leak, revoke it with the provider immediately — deleting the
+comment is not enough.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../shot2code/docs/">All guides</a>
+        <a href="../../../shot2code/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../releases/">All releases</a>
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

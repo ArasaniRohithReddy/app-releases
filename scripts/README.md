@@ -117,8 +117,9 @@ node scripts/verify-site.js docs
 
 Serves `docs/` under `/app-releases/` on a temporary loopback port (matching the Pages project
 path) and checks **every page of every product** — the
-portal plus each product's page and releases page — at widths from 320 to 1920 pixels and in both
-colour schemes: no horizontal overflow, no JavaScript errors, no failed same-origin requests,
+portal plus each product's page and releases page — at 320, 352, 390, 768, 1024, 1366, 1440 and
+1920 pixels (plus retained boundary probes) and in both colour schemes, at normal and 200% root
+text size: no horizontal overflow, no JavaScript errors, no failed same-origin requests,
 exactly one `<h1>`, exactly one JSON-LD block and one `og:image`, every image loaded and carrying
 alt text, and nothing that should stay on one line wrapping onto two.
 
@@ -144,6 +145,15 @@ additionally verifies the twelve listed stacks, the unsigned-binary warning in t
 section, that every screenshot in the gallery links to a file that exists, and that the version,
 the structured data and the SHA-256 verification command are all filled in from the resolved
 release rather than hard-coded.
+
+`site-presentation-checks.js` owns the visual regressions for the mixed shot2code gallery and the
+two live portal cards. It checks PNG natural dimensions against markup, explicit 16:9/16:10/3:4
+frames, the documented `object-fit: contain` policy, opaque stages and borders, aligned detail
+captions, the centred 640px-high portrait ceiling, and geometry before/after delayed image decode.
+For the portal it checks the icon/title/status grid, equal heights and footer baselines whenever
+the cards share a row, contained tag wrapping, independent resolved version chips, and the
+single-column 320px/200%-text reflow. These checks run in light and dark at the full presentation
+width matrix; they do not compare fragile pixel snapshots.
 
 To rehearse a release, copy `docs/` aside, add a newer entry to a product's `releases.json`, and
 run the checks against the copy: everything on the page should follow the new version without a
@@ -198,7 +208,9 @@ The fast Node tests also exercise live pagination, request timeouts, metadata an
 link targets. These are preservation checks, not a release inventory or installer-signature audit.
 
 Set `SITE_SCREENSHOTS` to a directory to capture `<product>-desktop.png`, `<product>-tablet.png`
-and `<product>-mobile.png`, plus each route in both themes, while the checks run:
+and `<product>-mobile.png`, plus each route in both themes, while the checks run. The presentation
+suite also writes focused `shot2code-gallery-*.png`, `portal-cards-*-1440.png`, and
+`portal-cards-*-320-200pct.png` evidence:
 
 ```powershell
 $env:SITE_SCREENSHOTS = Join-Path (Get-Location) 'test-results/site-preservation/local'
@@ -239,4 +251,6 @@ node scripts/find-overflow.js docs /shot2code/releases/
 
 When `verify-site.js` reports horizontal overflow, this attributes it: it lists the innermost
 elements extending past the viewport, so the cause is identified rather than guessed at. The second
-argument is the route to inspect; it defaults to the Threat Model Reviewer page.
+argument is the route to inspect; it defaults to the Threat Model Reviewer page. Its default matrix
+is 320, 352, 390, 768, 1024, 1366, 1440 and 1920 pixels; pass `200%` as the fourth argument to
+repeat it with enlarged root text.

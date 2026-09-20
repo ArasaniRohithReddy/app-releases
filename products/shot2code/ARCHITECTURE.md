@@ -64,9 +64,10 @@ providers have a usable credential and what each model supports — **without
 returning the credential itself**. GitHub Copilot models are discovered from the
 signed-in account, so the list is that account's real entitlement; OpenAI,
 Anthropic and Google Gemini come from maintained catalogues that are validated
-against the models the build knows how to drive.
+against the models the build knows how to drive. A fifth group, `sdk-byok`,
+lists the run identities a usable BYOK connection can serve.
 
-The renderer keeps a provider-neutral list of selected model ids. Older settings
+The renderer keeps a provider-neutral list of selected ids. Older settings
 blobs are migrated into it: a `copilotModels` list moves across verbatim, and a
 single `codeGenerationModel` is only treated as a real choice when it differs
 from the historical default, so upgrading does not silently pin everyone to one
@@ -74,16 +75,123 @@ model. Ids the catalogue no longer knows are reported as stale and skipped rathe
 than deleted — and if the catalogue cannot be loaded at all, the saved selection
 is left alone instead of being reset.
 
+### Run identity and runtime
+
+A selection is not just a model; it is a **run identity plus the runtime that
+executes it**. The generate request carries one entry per pick — the identity,
+the base model behind it, and whether it runs `native` or `copilot-byok` —
+in the order the user arranged them, de-duplicated by identity alone.
+
+A native identity is the model id itself. A BYOK identity is
+`sdk-byok/<provider>/<base model>`; no model id starts with that prefix, so the
+two can never collide. That is what allows a model and its BYOK counterpart to
+occupy one run as two separate variants, and it is why a native pick is never
+re-routed when a BYOK connection is configured. The identity — not the base
+model — is what the stream reports back, what a variant records, and what a
+retry replays.
+
 ### Providers
 
 Provider adapters live in `backend/agent/providers/` and implement a shared
-session protocol; a factory maps the selected model to its provider.
+session protocol; a factory maps each run identity to its provider and runtime.
 
 GitHub Copilot is the unusual one. The Copilot SDK is an *agent runtime* that owns
 its own planning loop, while shot2code's engine also owns a loop. The provider
 bridges the two: each Copilot tool invocation is parked and handed back to the
 shot2code engine, which resolves it once the tool has actually run. Copilot's own
 file and shell tools are excluded — only shot2code's tools are exposed.
+
+### Copilot SDK BYOK
+
+A BYOK identity runs on that same SDK bridge, but against the endpoint and
+credential configured in Settings rather than a Copilot sign-in. The connection
+is validated into a narrow, typed description before anything uses it: the
+provider must be one of `openai`, `azure` or `anthropic`, an endpoint must be
+`https://` unless it is loopback, and a credential is required unless the
+endpoint is an OpenAI-compatible loopback host. The direct OpenAI and Anthropic
+keys are never consulted as a fallback for it, and there is no Gemini provider
+in the SDK to map onto.
+
+The **wire API** is derived rather than assumed. When the connection does not
+pin one, a base URL of its own resolves to Chat Completions — the interface
+almost every OpenAI-compatible server implements — and a provider's own
+endpoint resolves to Responses. The frontend omits the field entirely when the
+user chose Automatic, which is how the backend is asked to decide; a pinned
+value is sent and always wins.
+
+An endpoint that serves models the catalogue does not know gets a **custom run
+identity**, `sdk-byok/<provider>/custom/<url-encoded model>`. The model name is
+URL-encoded so a slash or colon inside it cannot be mistaken for structure, and
+the identity resolves back to the exact name to send. Such a model runs under a
+neutral, *non-reasoning* compatibility template: it needs a known model to
+describe prompt shape and limits, but no thinking level is derived from it or
+sent. The catalogue publishes exactly one entry for that connection rather than
+the whole family, because listing catalogue names against someone else's model
+would be untrue.
+
+`/api/integrations/validate` answers the same question the generate socket
+would, using the same validator, and nothing else: no endpoint is contacted, no
+server is started, and the response carries presence flags, a host name and
+diagnostics rather than any credential.
+
+### Live provider checks
+
+`/api/providers/validate` is the opposite kind of check: it makes one
+deliberately tiny request — a single-word prompt capped at 16 tokens — to prove
+a credential actually works. Every provider error is normalised into one
+category (`ready`, `credentials`, `billing`, `quota`, `permissions`, `model`,
+`network`, `configuration`, `unknown`) so the UI can offer the right next step
+instead of a stack trace, and the message is scrubbed of anything that was sent.
+For an OpenAI-compatible BYOK connection the check first asks the endpoint what
+it serves at `/models`, bounded and de-duplicated, so the model picker can offer
+real ids; Azure and Anthropic have no equivalent route and say so.
+
+### In-app sign-in
+
+`/api/copilot/login` starts, polls and cancels a sign-in that is performed
+entirely by the **official** GitHub Copilot CLI (falling back to the GitHub
+CLI). shot2code runs a fixed argument vector, never a shell, drains the CLI's
+output without storing it, and afterwards re-probes the existing credential
+ladder. No token crosses the API. The start and cancel routes are guarded to
+local and packaged-app origins because they spawn or kill a process.
+
+### MCP servers
+
+Configured servers are validated the same way and bounded: at most eight, with
+limits on arguments, environment entries, headers, tool names and timeout. A
+`stdio` server is spawned as an explicit argument vector — never through a shell
+— and an `http`/`sse` server must use `https://` unless it is loopback. A server
+is handed to a session only when it is both enabled and trusted, and a
+permission handler keeps it read-only unless write tools were explicitly allowed.
+
+Because MCP is exposed through the SDK, only Copilot subscription variants and
+BYOK variants receive it; a native OpenAI, Anthropic or Gemini variant runs on
+that provider's own client and is never given MCP tools. Environment values and
+request headers are excluded from every safe-metadata projection, so they cannot
+reach a log line, a diagnostic or an API response.
+
+Nothing here is on the critical path for a direct generation: an invalid,
+incomplete or switched-off integration becomes a diagnostic that travels with
+the response, not an error that stops the run.
+
+## Reviewing generated output
+
+The Review workspace renders the preview artifact into two to four frames at
+their **actual** CSS widths (320–1920, defaults 1440/768/390), so layout is
+exercised rather than simulated, and measures horizontal overflow inside each
+running frame.
+
+The source audit is a deterministic pass in the renderer over the generated
+source: a small tolerant HTML parser produces a node tree, and a fixed set of
+rules reports semantic and accessibility findings with evidence, the affected
+file and guidance. It is a source check, not a conformance assessment, and it
+makes no network call.
+
+A result is bound to the commit, the variant index, a hash of the source it read
+and the widths it ran at. Any change to those marks the result stale rather than
+letting it be read as current. Selected findings are grouped by rule into an
+instruction that is placed in the composer for the user to send. The JSON report
+reduces file paths to a leaf name and carries no credential of any kind.
 
 ## Workspace layout state
 

@@ -349,13 +349,26 @@ test('every product ships the guides its pages link to', () => {
 });
 
 test('every shot2code help target exists, is indexed, and is reachable from the product page', () => {
-  const blob = 'https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/';
   const index = read('products/shot2code/README.md');
   for (const { guide, onPage } of shot2codeHelp) {
     assert.ok(exists(`products/shot2code/${guide}`), `products/shot2code/${guide} is missing`);
+    const document = require('./docs/manifest.json').documents.find(
+      entry => entry.source === `products/shot2code/${guide}`
+    );
+    assert.ok(document, `${guide} is missing from the static documentation manifest`);
+    assert.ok(
+      exists(`docs${document.route}index.html`),
+      `${guide} has no generated site page`
+    );
     // README.md is the guide index the Help centre and the repository both read from.
     assert.match(index, new RegExp(`\\]\\(${guide.replace('.', '\\.')}\\)`), `README.md does not index ${guide}`);
-    if (onPage) assert.ok(shot2code.includes(`href="${blob}${guide}"`), `the product page does not link ${guide}`);
+    if (onPage) {
+      const localHref = `.${document.route.slice('/shot2code'.length)}`;
+      assert.ok(
+        shot2code.includes(`href="${localHref}"`),
+        `the product page does not link the local page for ${guide}`
+      );
+    }
   }
   // The index is the complete set: a guide added to the folder has to be published, not stranded.
   const authored = fs.readdirSync(path.join(root, 'products/shot2code')).filter(name => name.endsWith('.md'));
@@ -644,6 +657,317 @@ test('the shot2code guides describe the v0.3.2 installer safeguard, model choice
   assert.match(faq, /can no longer run/);
 });
 
+test('the shot2code guides describe BYOK as a separate, additive connection', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  assert.match(guide, /^## Using your own endpoint \(Copilot SDK BYOK\)$/m);
+  // The three provider types it can reach, and the one it deliberately cannot.
+  for (const provider of ['OpenAI-compatible', 'Azure OpenAI', 'Anthropic'])
+    assert.ok(guide.includes(provider), `USER-GUIDE.md: BYOK does not offer ${provider}`);
+  assert.match(guide, /\*\*There is no Gemini BYOK\.\*\*/);
+  assert.match(guide, /No Copilot subscription is required/i);
+  // A dedicated credential, with the single documented exception.
+  assert.match(guide, /will \*\*not\*\* fall back to your direct OpenAI or Anthropic key/);
+  assert.match(guide, /OpenAI-compatible endpoint on\s+`localhost`\*\*, which may run without a credential/);
+  // The identity, and what it buys.
+  assert.match(guide, /sdk-byok\/<provider>\/<base model>/);
+  assert.match(guide, /can both be selected for the same generation/i);
+  assert.match(guide, /A native pick is never re-routed/);
+  assert.match(guide, /reasoning effort carries across|effort is part of the base model name/i);
+  assert.match(guide, /retrying a BYOK option re-runs it on your endpoint/i);
+  // An incomplete draft is a notice, not a blocker.
+  assert.match(guide, /^### An incomplete connection does not block anything$/m);
+
+  const readme = read('products/shot2code/README.md');
+  assert.match(readme, /\*\*Copilot SDK BYOK\*\*/);
+  assert.match(readme, /No Copilot subscription required/i);
+
+  const faq = read('products/shot2code/FAQ.md');
+  assert.match(faq, /\*\*Do I need a Copilot subscription to use BYOK\?\*\*/);
+  assert.match(faq, /\*\*Can I point it at Gemini\?\*\*/);
+  assert.match(faq, /\*\*Will it use my existing OpenAI or Anthropic key\?\*\*/);
+
+  // Nothing claims BYOK reaches a provider the SDK has no adapter for.
+  for (const name of ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'ARCHITECTURE.md', 'SECURITY.md'])
+    assert.doesNotMatch(read(`products/shot2code/${name}`), /BYOK[^.]{0,80}\bGemini\b(?![^.]*\b(no|never|cannot|has no|always use)\b)/i,
+      `${name}: implies a Gemini BYOK provider`);
+});
+
+test('the shot2code guides describe the MCP trust model and its scope', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  assert.match(guide, /^## MCP servers$/m);
+  for (const transport of ['stdio', 'HTTP', 'SSE'])
+    assert.ok(guide.includes(transport), `USER-GUIDE.md: the ${transport} transport is not documented`);
+  assert.match(guide, /\*\*eight\*\*|up to \*\*eight\*\*/i);
+  // Both gates, then the separate write gate.
+  assert.match(guide, /\*\*Enabled\*\*/);
+  assert.match(guide, /\*\*Trusted\*\*/);
+  assert.match(guide, /still \*\*read-only\*\*/);
+  assert.match(guide, /\*\*Allow write tools\*\*/);
+  // Local execution and transport safety.
+  assert.match(guide, /\*\*argument vector, never through a shell\*\*/);
+  assert.match(guide, /`https:\/\/` is required unless the host is `localhost`/);
+  // Secrets.
+  assert.match(guide, /\*\*masked\*\*/);
+  assert.match(guide, /never\*\* written into a project snapshot/);
+  // Scope: SDK runtimes only.
+  assert.match(guide, /A model on your own OpenAI, Anthropic or Gemini key \| \*\*No\*\*/);
+  assert.match(guide, /never blocks a direct generation/i);
+
+  const security = read('products/shot2code/SECURITY.md');
+  assert.match(security, /^## MCP servers$/m);
+  assert.match(security, /\*\*Two switches, not one\.\*\*/);
+  assert.match(security, /\*\*Read-only by default\.\*\*/);
+  assert.match(security, /\*\*No shell\.\*\*/);
+
+  const data = read('products/shot2code/DATA-HANDLING.md');
+  assert.match(data, /MCP environment values and request headers are treated as secrets/i);
+});
+
+test('the shot2code guides describe the Review workspace without claiming certification', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  assert.match(guide, /^## The Review workspace$/m);
+  // Frame count and the real widths.
+  assert.match(guide, /\*\*two to four widths simultaneously\*\*/);
+  for (const width of ['1440', '768', '390', '320', '1920'])
+    assert.ok(guide.includes(width), `USER-GUIDE.md: the Review width ${width} is not documented`);
+  assert.match(guide, /not a scaled-down screenshot/i);
+  // Overflow is measured, not inferred.
+  assert.match(guide, /\*\*measured in the running frame\*\*/);
+  // The audit, and the limit of the claim.
+  assert.match(guide, /\*\*deterministic, local pass over the\s+generated source\*\*/);
+  assert.match(guide, /It is not a WCAG conformance\s+assessment/);
+  // Findings reach the composer, not the model.
+  assert.match(guide, /does \*\*not\*\* send\s+them for you/);
+  // Stale binding.
+  assert.match(guide, /marked \*\*stale\*\*/);
+  // The report is safe to share.
+  assert.match(guide, /no credential of any kind[\s\S]{0,120}is included/);
+
+  // The certification disclaimer appears everywhere the audit is described.
+  // Line wrapping is a formatting detail, so whitespace is tolerated.
+  for (const name of ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'DATA-HANDLING.md', 'SECURITY.md', 'TROUBLESHOOTING.md'])
+    assert.match(read(`products/shot2code/${name}`), /not\s+\*{0,2}a\s+WCAG|NOT\s+a\s+WCAG/i,
+      `${name}: describes the audit without disclaiming WCAG conformance`);
+  // And nothing claims conformance anywhere.
+  for (const name of ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'DATA-HANDLING.md', 'SECURITY.md'])
+    assert.doesNotMatch(read(`products/shot2code/${name}`), /WCAG[- ](?:AA|AAA|2\.[12])\s*(?:compliant|conformant|certified)/i,
+      `${name}: claims WCAG conformance`);
+});
+
+test('the shot2code guides describe the native menu and its shared commands', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  assert.match(guide, /^## The menu bar$/m);
+  for (const menu of ['File', 'Edit', 'View', 'Window', 'Help'])
+    assert.match(guide, new RegExp(`\\*\\*${menu}\\*\\*`), `USER-GUIDE.md: the ${menu} menu is not documented`);
+  assert.match(guide, /driving exactly the same commands as the keyboard/i);
+  assert.match(guide, /\*\*disabled\*\* until one is open/);
+  // The one new accelerator is documented alongside the rest.
+  assert.match(guide, /`Ctrl\+Alt\+C` \| Show the Chat panel/);
+});
+
+test('the shot2code 0.4.0 changelog entry matches the landed behaviour', () => {
+  const changelog = read('products/shot2code/CHANGELOG.md');
+  const entry = changelog.match(/## \[0\.4\.0\] — 2026-09-20([\s\S]*?)\n## \[0\.3\.3\]/);
+  assert.ok(entry, 'CHANGELOG.md has no 0.4.0 entry dated 2026-09-20');
+  const notes = entry[1];
+  for (const claim of [
+    /No Copilot subscription/i,
+    /sdk-byok\/<provider>\/<base model>/,
+    /\*\*never\*\* used as a fallback/,
+    /`localhost` may run without a credential/,
+    /\*\*stdio\*\*, \*\*HTTP\*\* or \*\*SSE\*\*/,
+    /Up to \*\*8\*\*/,
+    /\*\*enabled\*\* \*and\* explicitly\s+marked \*\*trusted\*\*/,
+    /\*\*Read-only by default\.\*\*/,
+    /argument vector, never through a shell/,
+    /\*\*two to four real widths\*\*/,
+    /\*\*1440\*\*, \*\*768\*\* and\s+\*\*390\*\*/,
+    /\*\*320\*\* to \*\*1920\*\*/,
+    /\*\*It is not sent for you\*\*/,
+    /marked stale/,
+    /\*\*File\*\*, \*\*Edit\*\*, \*\*View\*\*, \*\*Window\*\* and\s+\*\*Help\*\*/,
+    /never block a direct generation/,
+    /no Gemini BYOK/i,
+    /not a WCAG conformance assessment/
+  ]) assert.match(notes, claim, `the 0.4.0 entry does not state ${claim}`);
+
+  // The release adds capability; it must not claim things the build does not do.
+  assert.doesNotMatch(notes, /code[- ]signed(?! )|now signed|signing certificate/i);
+  assert.doesNotMatch(notes, /\btelemetry\b(?![^.]*\bno\b)/i);
+});
+
+test('the shot2code 0.4.0 entry states the provider reliability behaviour', () => {
+  const changelog = read('products/shot2code/CHANGELOG.md');
+  const entry = changelog.match(/## \[0\.4\.0\] \u2014 2026-09-20([\s\S]*?)\n## \[0\.3\.3\]/);
+  assert.ok(entry, 'CHANGELOG.md has no 0.4.0 entry dated 2026-09-20');
+  const notes = entry[1];
+  for (const claim of [
+    // In-app sign-in, delegated and tokenless.
+    /Sign in with GitHub/,
+    /\*\*official\*\* GitHub Copilot CLI web flow/,
+    /never receives, stores or sees the token/i,
+    /fixed argument vector/i,
+    /origin-guarded/i,
+    // Live checks and what they cost.
+    /one deliberately tiny request/i,
+    /16 tokens/,
+    /may use a small amount of quota|use a little quota/i,
+    /account endpoint, so\s+it starts no prediction/i,
+    // Every actionable category the UI can report.
+    /\*\*Out of\s+credit\*\*/,
+    /\*\*Key\s+rejected\*\*/,
+    /\*\*Rate limited\*\*/,
+    /\*\*Access denied\*\*/,
+    /\*\*Model unavailable\*\*/,
+    /\*\*Configuration problem\*\*/,
+    /\*\*Could not reach the provider\*\*/,
+    // Generic endpoint support and the derived wire API.
+    /any endpoint\s+that speaks the OpenAI wire format|any endpoint that speaks the OpenAI\s+wire format/i,
+    /\*\*Automatic\*\* is the default/,
+    /\*\*Chat Completions\*\*/,
+    /\*\*Responses\*\*/,
+    // Endpoint models: discovery, manual fallback, identity, bounds.
+    /`\/models`/,
+    /typed by hand|is typed by hand/i,
+    /up to \*\*128\*\* characters/,
+    /sdk-byok\/<provider>\/custom\/<model>/,
+    /No reasoning effort is sent for it/i,
+    /image input and tool calling/i,
+    // The key-borrowing guard and masking.
+    /only ever used with the server's[\s\S]{0,4}own[\s\S]{0,4}endpoint/i,
+    /Every API key field is masked/i,
+    // Screenshot preview recovery.
+    /Check again/,
+    /bundled browser could not start/i
+  ]) assert.match(notes, claim, `the 0.4.0 entry does not state ${claim}`);
+
+  // Azure and Anthropic are preserved, not replaced by the generic mode.
+  assert.match(notes, /\*\*Azure\s+OpenAI\*\*/);
+  assert.match(notes, /\*\*Anthropic\*\*/);
+  // Capability is never inferred from a model listing.
+  assert.match(notes, /Neither the\s+connection check nor the endpoint's model list can tell you which models\s+qualify/i);
+});
+
+test('the shot2code guides document signing in, testing a provider and endpoint models', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  const faq = read('products/shot2code/FAQ.md');
+  const trouble = read('products/shot2code/TROUBLESHOOTING.md');
+
+  // The sign-in button, and the promise that matters about it.
+  assert.match(guide, /Sign in with\s+GitHub/);
+  assert.match(guide, /\*\*shot2code never receives or saves your token\*\*/);
+  assert.match(guide, /official/i);
+  // The terminal ladder survives beside it.
+  assert.match(guide, /gh auth login/);
+  assert.match(guide, /paste it into Settings/i);
+
+  // Connection checks: cost, isolation and every reported outcome.
+  assert.match(guide, /Connection checks/);
+  assert.match(guide, /one deliberately tiny\s+request/i);
+  assert.match(guide, /Testing Gemini never puts your\s+OpenAI key on the wire/i);
+  for (const outcome of ['Out of credit', 'Key rejected', 'Rate limited',
+    'Access denied', 'Model unavailable', 'Configuration problem'])
+    assert.ok(guide.includes(outcome), `the user guide does not report "${outcome}"`);
+
+  // Endpoint models: both routes, the bound, and the capability caveat.
+  assert.match(guide, /Endpoint model/);
+  assert.match(guide, /`\/models`/);
+  assert.match(guide, /Type the id yourself/i);
+  assert.match(guide, /up to \*\*128\*\*/);
+  assert.match(guide, /never which of those models can read images or call tools/i);
+  assert.match(guide, /sdk-byok\/<provider>\/custom\/<model>/);
+
+  // Automatic wire API, both directions.
+  assert.match(guide, /\*\*Automatic\*\* is the default/);
+  assert.match(guide, /Chat Completions/);
+  assert.match(guide, /Responses/);
+
+  // Azure and Anthropic keep their own route.
+  assert.match(guide, /Azure OpenAI/);
+  assert.match(guide, /deployment name/i);
+
+  // The FAQ answers the money question honestly.
+  assert.match(faq, /Does it cost anything\?/i);
+  assert.match(faq, /not free/i);
+  assert.match(faq, /Out of credit/);
+
+  // Troubleshooting covers recovery, including the packaged app.
+  assert.match(trouble, /Check again/);
+  assert.match(trouble, /nothing needs installing/i);
+  assert.match(trouble, /chromium-headless-shell/);
+});
+
+test('the shot2code security and data documents state the provider-check guards', () => {
+  const security = read('products/shot2code/SECURITY.md');
+  const data = read('products/shot2code/DATA-HANDLING.md');
+
+  // Sign-in is delegated and guarded, and the guard is described accurately:
+  // reading status is deliberately not guarded.
+  assert.match(security, /fixed argument vector/i);
+  assert.match(security, /(never|rather than)\s+through a shell/i);
+  assert.match(security, /origin-guarded/i);
+  assert.match(security, /`null` origin/);
+  assert.match(security, /Reading the sign-in\s+status is not guarded/i);
+  assert.match(security, /never receives the token/i);
+
+  // The server's key is not lent to a caller-supplied URL.
+  assert.match(security, /only ever used with the server's[\s\S]{0,4}own[\s\S]{0,4}endpoint/i);
+
+  // The live check is listed as a real network destination, unlike validation.
+  assert.match(data, /Connection checks/);
+  assert.match(data, /16 tokens/);
+  assert.match(data, /only the credential for the provider being tested/i);
+  assert.match(data, /`\/models` route/);
+  assert.match(data, /never sees the token/i);
+
+  // Validation still contacts nothing, and the distinction is explicit.
+  assert.match(data, /No endpoint is called, no MCP server is started/i);
+});
+
+test('the shot2code page describes BYOK, MCP, Review and the menu', () => {
+  const copy = visibleText(shot2code);
+  // BYOK: what it reaches, what it needs, and what it does not touch.
+  assert.match(copy, /Copilot SDK BYOK/);
+  assert.match(copy, /No Copilot subscription is required/i);
+  for (const provider of ['OpenAI-compatible', 'Azure OpenAI', 'Anthropic'])
+    assert.ok(copy.includes(provider), `the product page does not name the BYOK provider ${provider}`);
+  assert.match(copy, /its own API key or bearer token/i);
+  assert.match(copy, /never borrowed for it/i);
+  assert.match(copy, /only an OpenAI-compatible endpoint on localhost may run without one/i);
+  assert.match(copy, /no Gemini equivalent/i);
+  // The placeholder form survives HTML-escaping, so match either rendering.
+  assert.match(copy, /sdk-byok\/(?:<|&lt;)provider(?:>|&gt;)\/(?:<|&lt;)model(?:>|&gt;)/);
+  assert.match(copy, /a native pick always runs on its native provider/i);
+  assert.match(copy, /never blocks a direct generation/i);
+
+  // MCP: the gates, the shell promise, the transport rule and the scope.
+  assert.match(copy, /enabled and explicitly trusted|enabled and trusted/i);
+  assert.match(copy, /read-only until (?:you|write)/i);
+  assert.match(copy, /argument vector rather than through a shell/i);
+  assert.match(copy, /https:\/\/ unless it is on localhost/i);
+  assert.match(copy, /stdio, HTTP or SSE/i);
+  assert.match(copy, /never sees them/i);
+
+  // Review: real widths, the defaults, the range, and the honest limit.
+  assert.match(copy, /two to four (?:real|actual) widths/i);
+  for (const width of ['1440', '768', '390', '320', '1920'])
+    assert.ok(copy.includes(width), `the product page does not name the Review width ${width}`);
+  assert.match(copy, /horizontal overflow/i);
+  assert.match(copy, /not a WCAG conformance assessment/i);
+
+  // The menu, and that it cannot drift from the keyboard.
+  for (const menu of ['File', 'Edit', 'View', 'Window', 'Help'])
+    assert.ok(copy.includes(menu), `the product page does not name the ${menu} menu`);
+  assert.match(copy, /same commands as the keyboard/i);
+
+  // Structured data stays inside what the build actually does.
+  const featureList = JSON.parse(shot2code.match(/<script type="application\/ld\+json" id="structured-data">([\s\S]*?)<\/script>/)[1]).featureList.join(' ');
+  assert.match(featureList, /Copilot SDK BYOK/);
+  assert.match(featureList, /requiring no Copilot subscription/i);
+  assert.match(featureList, /not a WCAG conformance assessment/i);
+  assert.doesNotMatch(featureList, /code[- ]signed|telemetry|cloud|hosted service|sync/i);
+});
+
 test('release-history copy names the canonical repository and the mirrored assets', () => {
   const releasing = read('products/shot2code/RELEASING.md');
   const plain = releasing.replace(/[*`]/g, '').replace(/\s+/g, ' ');
@@ -682,6 +1006,37 @@ test('release-history copy names the canonical repository and the mirrored asset
     'checksums no longer start at the version the page claims'
   );
   assert.ok(published.length > checksummed.length, 'every release has checksums, so the caveat is wrong');
+});
+
+test('the next shot2code screenshot capture has a versionless, secrets-safe contract', () => {
+  const releasing = read('products/shot2code/RELEASING.md');
+  const section = releasing.match(/## Final screenshot capture contract([\s\S]*?)\n## After publishing/);
+  assert.ok(section, 'RELEASING.md has no final screenshot capture contract');
+  const plan = section[1];
+  const captures = [
+    ['review-workspace-og-light.png', '1920 × 1008', 'workspace-full-hd.png'],
+    ['mcp-menu-light.png', '1440 × 900', 'code-workspace.png'],
+    ['byok-settings-dark.png', '1440 × 900', 'code-workspace-dark.png'],
+    ['review-workspace-tablet.png', '768 × 1024', 'chat-tablet.png']
+  ];
+  for (const [filename, dimensions, replaced] of captures) {
+    assert.ok(plan.includes('`' + filename + '`'), `${filename} is not named`);
+    assert.ok(plan.includes(dimensions), `${filename}: ${dimensions} is not specified`);
+    assert.ok(plan.includes('`' + replaced + '`'), `${filename}: replacement target ${replaced} is not named`);
+  }
+  for (const requirement of [
+    /device scale factor: \*\*1\*\*/i,
+    /OpenAI BYOK configured/i,
+    /\*\*Automatic\*\* model selection \(zero manually selected models\)/i,
+    /Demo component library/i,
+    /fully masked key/i,
+    /revoke the credential/i,
+    /`object-fit: contain`/i,
+    /Never switch[^.]+`cover`/i,
+    /Point `og:image` at `review-workspace-og-light\.png`/i
+  ]) assert.match(plan, requirement);
+  assert.doesNotMatch(plan, /\bv?\d+\.\d+\.\d+\b/,
+    'the future screenshot contract hard-codes a release version');
 });
 
 test('the shot2code page describes model choice, History and the installer safeguard', () => {
@@ -804,6 +1159,41 @@ test('shot2code screenshot markup matches the files and the alternative text des
   const alts = tags.map(([tag]) => tag.match(/alt="([^"]+)"/)[1]).join(' ');
   for (const subject of [/History/, /model options|model options|generated model options/, /centered|centred/])
     assert.match(alts, subject, `the screenshots do not describe ${subject}`);
+
+  const frames = [...shot2code.matchAll(/<a class="shot-frame ([^"]+)"[^>]*>\s*<img/g)]
+    .map(match => match[1]);
+  assert.deepEqual(frames, [
+    'shot-frame--16x9', 'shot-frame--16x9',
+    'shot-frame--detail', 'shot-frame--detail', 'shot-frame--portrait'
+  ], 'the hero and gallery do not use their intended aspect wrappers');
+  assert.match(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*contain;/s);
+  assert.doesNotMatch(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*cover;/s);
+  assert.match(shot2code, /\.shot-frame--16x9\s*\{\s*aspect-ratio:\s*16\s*\/\s*9;/);
+  assert.match(shot2code, /\.shot-frame--detail\s*\{\s*aspect-ratio:\s*16\s*\/\s*10;/);
+  assert.match(shot2code, /\.shot-frame--portrait\s*\{\s*aspect-ratio:\s*3\s*\/\s*4;/);
+
+  const figures = [...shot2code.matchAll(/<figure class="shot[^"]*"[\s\S]*?<\/figure>/g)]
+    .map(match => match[0]);
+  assert.equal(figures.length, 4);
+  for (const figure of figures) {
+    assert.match(figure, /<figcaption><strong>[^<]+ · \d+×\d+\.<\/strong>[^<]+<\/figcaption>/,
+      'a gallery caption does not have a stable title and accurate dimensions');
+    assert.match(figure, /aria-label="[^"]+ at \d+ by \d+"/,
+      'a full-resolution gallery link does not name its source dimensions');
+  }
+});
+
+test('shot2code Open Graph dimensions and alternative text match the source PNG', () => {
+  const source = shot2code.match(/<meta property="og:image" content="[^"]+\/shot2code\/(img\/[^"]+)"/)?.[1];
+  assert.ok(source, 'shot2code og:image does not point at a product image');
+  const png = fs.readFileSync(path.join(root, 'docs/shot2code', source));
+  const width = png.readUInt32BE(16), height = png.readUInt32BE(20);
+  assert.equal(Number(shot2code.match(/<meta property="og:image:width" content="(\d+)"/)?.[1]), width);
+  assert.equal(Number(shot2code.match(/<meta property="og:image:height" content="(\d+)"/)?.[1]), height);
+  assert.match(shot2code, /<meta property="og:image:alt" content="[^"]{40,}"/);
+  assert.match(shot2code, new RegExp(
+    `<img src="${source.replace(/\./g, '\\.')}" width="${width}" height="${height}"`),
+  'the Open Graph source is not also published with matching intrinsic dimensions');
 });
 
 test('the hub portal and README present every product', () => {

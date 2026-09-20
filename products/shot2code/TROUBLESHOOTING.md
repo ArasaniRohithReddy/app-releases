@@ -12,7 +12,10 @@ provider credential the app can actually see, or a process that did not exit.
 - [Where the logs and data live](#where-the-logs-and-data-live)
 - [The app will not start](#the-app-will-not-start)
 - [Providers and the model catalogue](#providers-and-the-model-catalogue)
+- [Copilot SDK BYOK](#copilot-sdk-byok)
+- [MCP servers](#mcp-servers)
 - [Generation fails or is wrong](#generation-fails-or-is-wrong)
+- [The Review workspace](#the-review-workspace)
 - [Screenshot preview, Chromium and screen recording](#screenshot-preview-chromium-and-screen-recording)
 - [Importing a project](#importing-a-project)
 - [Preview, export and CodePen](#preview-export-and-codepen)
@@ -34,6 +37,8 @@ Four checks resolve most reports before they become issues:
 3. **Which provider?** The chat panel's status callout reports only what the app
    can see from the window. A GitHub Copilot sign-in or a key in `backend/.env`
    is invisible to it, so "no provider saved" is not the same as "no provider".
+   A Copilot SDK BYOK connection is a separate credential again — check its own
+   card in **Settings**.
 4. **Read the log, not the console.** The window is a renderer; the interesting
    failures are in the backend log below.
 
@@ -72,24 +77,83 @@ lists every path and every network destination.
 ## Providers and the model catalogue
 
 shot2code ships no model and no inference. It needs **one** of: a GitHub Copilot
-sign-in, or a Gemini, Anthropic or OpenAI API key. Without one, generation fails
-immediately and says so.
+sign-in, a Gemini, Anthropic or OpenAI API key, or a Copilot SDK BYOK connection.
+Without one, generation fails immediately and says so.
 
 | Symptom | Cause and fix |
 | --- | --- |
-| "No API key found and no GitHub Copilot credentials detected" | Run `gh auth login` (or `copilot`) once and restart shot2code, or paste a key into **Settings**. |
+| "No API key found and no GitHub Copilot credentials detected" | Use **Settings → GitHub Copilot → Sign in with GitHub**, run `gh auth login` (or `copilot`) once and restart shot2code, or paste a key into **Settings**. |
+| **Sign in with GitHub** is disabled and says it is unavailable | Neither the GitHub Copilot CLI nor the GitHub CLI is on `PATH`. The warning links the official install instructions. You can still sign in from a terminal or paste a token. |
+| The browser opened but Settings still says "Not signed in" | Finish the flow in the browser — the app polls until the CLI reports a result, and only then re-probes. If you closed the window, choose **Cancel** and try again. |
+| Sign-in is refused with "can only be started from the shot2code app on this machine" | Starting a sign-in spawns a process, so it is only accepted from the app itself. Use the button in Settings rather than calling the API from elsewhere. |
 | Copilot shows "Not signed in" although the CLI works | Credentials are resolved in order: a token in **Settings**, then `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`, then a stored `copilot` login, then `gh auth login`. Sign in again and restart so the check re-runs. A fine-grained token with the **Copilot Requests** permission also works. |
-| A provider is missing from **Settings → Models** | A provider appears only once the app can see a credential for it. Add the key first; the catalogue follows. |
+| A provider is missing from **Settings → Models** | A provider appears only once the app can see a credential for it. Add the key first; the catalogue follows. A BYOK connection never makes a native provider available — each still needs its own key. |
 | The Copilot list is empty even though you are signed in | Only models that accept images are offered, because turning a screenshot into code requires image input. An empty list usually means your plan currently has no vision-capable model. |
 | A model you used before has vanished | Deprecated models are hidden unless you tick **Show deprecated models** — or unless one is already selected, in which case it stays visible where you picked it. |
 | "N saved models can no longer run" | The key for them was removed, or the provider retired them. They are ignored rather than deleted silently; use **Remove** to clear them. |
 | Your whole selection reset itself | It should not, and it does not: if the catalogue cannot be loaded at all, the saved selection is left untouched rather than being cleared. |
 | Fewer options than models you ticked | The per-run cap applies: up to 4 options for a first generation, up to 2 for an update or a video. Only the first models up to the limit run, and the picker says so in words. |
-| No models at all in video mode | In video mode the list is filtered to models that can read video. Everything else would fail on the input. |
+| No models at all in video mode | In video mode the list is filtered to models that can read video. Everything else would fail on the input. BYOK options are not offered for video either. |
 
 Keys are stored on the device you entered them on and are sent only to the
 provider they belong to. `REPLICATE_API_KEY` has no Settings field — it is read
 from `backend/.env`, so it applies to source runs only.
+
+### Reading a connection check
+
+**Settings → Connection checks** tests one provider at a time with a single tiny
+request. What it reports is what to do:
+
+| Result | Cause and fix |
+| --- | --- |
+| **Out of credit** | The credential is valid; the account has nothing left to spend. Follow the billing link in the result. Waiting does **not** help — providers report an empty balance in a way that reads like a rate limit. |
+| **Key rejected** | The credential was refused. Check it for a typo, or issue a new one and paste it in. |
+| **Rate limited** | Temporary. Try again shortly, or generate fewer options at once. |
+| **Access denied** | The account cannot use that model. Enable it on the provider, or pick another in **Settings → Models**. |
+| **Model unavailable** | The provider does not offer the model that was tried. Pick another. |
+| **Configuration problem** | Usually a missing key, or a base URL the request cannot use. |
+| **Could not reach the provider** | Network, proxy or firewall. The provider was never reached. |
+| "A custom OpenAI base URL needs its own API key in the same request" | Deliberate. The key configured on the server is only used with the server's own endpoint, so a request naming its own base URL must carry its own key. |
+| "This backend does not offer connection checks yet" | The backend predates the feature. Start a generation to find out whether the credential works. |
+
+A check is a real request and may use a little quota on a metered account.
+Replicate is checked against its account endpoint, so it starts no prediction.
+
+## Copilot SDK BYOK
+
+BYOK is optional and additive. Nothing here stops a direct generation: an
+incomplete connection is reported as a notice and skipped.
+
+| Symptom | Cause and fix |
+| --- | --- |
+| No **Copilot SDK (BYOK)** group in **Settings → Models** | The connection is switched off or not usable yet. The card states the reason — *switched off*, *needs its own API key or bearer token*, or *needs the endpoint URL of your Azure OpenAI resource*. |
+| "Add a dedicated API key…" although OpenAI already works | That is intended. BYOK carries its own credential; the direct OpenAI and Anthropic keys are never borrowed for it. Only an **OpenAI-compatible** endpoint on `localhost` may run without one. |
+| "must use https:// unless it points at localhost" | Plain `http://` is only accepted for a loopback host. Use `https://`, or point the base URL at `localhost`/`127.0.0.1`. |
+| Azure refuses to validate | Azure needs the endpoint URL of your resource **and** its own credential. The `api-version` field applies to Azure only. |
+| You want a Gemini BYOK option | There is none. The Copilot SDK has no Gemini provider, so Gemini models always use the Gemini API key directly. The app reports this as a notice. |
+| Selecting a BYOK option seems to have moved a native one | It has not. A native pick always runs on its native provider; the two are separate identities and produce separate options. Check the identity recorded against each option in **History**. |
+| A saved BYOK pick stopped matching | You changed the connection's provider, or switched it off. The card says how many selected options no longer match; reselect them in **Settings → Models**. |
+| **Validate connection** succeeds but generation fails | Validation checks the settings only — it never calls your endpoint. Use **Test model access** to contact it. A failure at generation time is the endpoint's own response, passed through unchanged. |
+| **Test model access** finds no models to choose from | Only OpenAI-compatible endpoints expose `/models`. Azure OpenAI and Anthropic do not list models here, so type the model id (or Azure deployment name) by hand. |
+| "The endpoint does not list ‹model›" | The name is not one the endpoint reported. Pick one from the list the check returned, or check the spelling. |
+| The endpoint model you typed is refused | Ids may be up to **128** characters and may contain `. _ : / @ + -`. Spaces are not allowed. An over-long id is reported rather than trimmed, because trimming would run a different model. |
+| The model answers the check but generation fails on the first screenshot | The model must support **image input and tool calling**. A text-only model passes a plain-text check and then fails a real run. Neither the check nor the endpoint's model list can tell you which models qualify — see the endpoint's documentation. |
+| Your endpoint rejects the request shape | The **Wire API** is **Automatic** by default: Chat Completions for an endpoint with its own base URL, Responses for a provider's own endpoint. Pin the one your endpoint needs. |
+| Only one option appears for your endpoint | Correct, when you named an endpoint model the catalog does not know. It appears once as `‹model› via ‹provider›`; listing catalog names against it would be untrue. |
+
+## MCP servers
+
+| Symptom | Cause and fix |
+| --- | --- |
+| A server is configured but no tools appear | A server needs **both** switches: **Enabled** *and* **Trusted**. Until then the picker reports *"'‹name›' is not marked trusted, so shot2code will not start it or approve its tools."* |
+| Tools appear for one option but not another | MCP reaches the SDK runtimes only. GitHub Copilot options and Copilot SDK BYOK options get the tools; an option on your own OpenAI, Anthropic or Gemini key never does. |
+| A tool that should change something does nothing | Servers are read-only by default. Turn on **Allow write tools** for that server — it is the switch that permits changing files, data or remote state. |
+| "Use https:// unless the server runs on localhost" | An `http://` URL is accepted only for a loopback host. |
+| "A local server needs a command to run" | A `stdio` server needs its command. Arguments go **one per line**, because the command is spawned as an argument vector rather than through a shell. |
+| Quoting in the command does not behave like a shell | Correct — there is no shell. Split the command and each argument into their own fields instead of relying on `cmd` or PowerShell quoting. |
+| "Another server already uses the name…" | Two names reduce to the same internal id. Give them distinct names. |
+| A value you typed is now masked | Environment values and request headers that look like credentials are masked on purpose. Use **Show values to edit** to reveal them for editing. |
+| **Validate servers** passes but a server never starts | Validation checks the configuration only; it starts nothing. Check the server's own command, URL or credentials. |
 
 ## Generation fails or is wrong
 
@@ -101,6 +165,18 @@ from `backend/.env`, so it applies to source runs only.
 | A refinement replaced work you wanted to keep | Nothing is overwritten — each refinement is a new version. Step back through **History**. |
 | The result ignores an imported component | Imported component paths are naming and API context. A generated preview is self-contained, so it cannot resolve imports from your local project. |
 
+## The Review workspace
+
+| Symptom | Cause and fix |
+| --- | --- |
+| The result says **stale** | A review is bound to the version, the option, a hash of the source it read and the widths it ran at. Change any of those and it is marked stale rather than shown as current. Run it again. |
+| "Width must be between 320px and 1920px." | Custom widths are whole numbers in that range. The input refuses anything else instead of clamping it silently. |
+| You cannot remove a frame | Keep between two and four. One frame is not a comparison; more than four stops being readable. |
+| A frame shows overflow you cannot see in Preview | Overflow is measured in the running frame at that real width. Preview at 100% is one width — Review is the one that exercises the others. |
+| The audit missed an accessibility problem | It is a bounded set of source rules, not a conformance tool. It is **not a WCAG assessment** and does not replace testing with assistive technology. A framework project's runtime DOM can also differ from the source it read. |
+| Findings were not sent to the model | By design. Selected findings are written into the composer for you to read, edit and send. Nothing is sent on your behalf. |
+| You want to attach the result to an issue | Export the JSON report. It carries severities, rule ids, messages, evidence and guidance, reduces file paths to a leaf name, and contains no credential of any kind — read it before posting, as with any export. |
+
 ## Screenshot preview, Chromium and screen recording
 
 **Screenshot preview** is the tool the agent uses to render its own output and
@@ -108,6 +184,15 @@ check its work. Chromium ships with the desktop app; **Settings** reports whethe
 it is available, and if it is not, the app skips that tool instead of failing the
 run. Only the headless shell is bundled — full Chromium would add several hundred
 megabytes and the app always launches headless.
+
+When Settings reports it unavailable, **Check again** re-probes the backend, so
+you can fix the cause and confirm it without restarting shot2code. The advice
+depends on how you are running it:
+
+| Running | What the warning says |
+| --- | --- |
+| The packaged desktop app | The browser is bundled, so **nothing needs installing**. It could not start. Restart shot2code, then **Check again**; if it still fails, reinstall and open the diagnostic log — antivirus quarantining the bundled browser is the usual cause |
+| From source | The browser is genuinely missing. Run `cd backend && uv run playwright install chromium-headless-shell`, restart the backend, then **Check again** |
 
 **"Could not start screen recording"** means the app could not grant itself
 permission to the display. Search the backend log for a `screen capture` line: it
@@ -154,6 +239,7 @@ separate destination on narrow windows.
 
 | Symptom | Cause and fix |
 | --- | --- |
+| Settings will not scroll to its final controls | Update to v0.4.0 or newer. Settings now owns a viewport-bounded scroll area in both empty and active projects. On an older build, close Settings, resize the window or reduce zoom temporarily, then install the current release. |
 | There is no divider to drag | Dividers appear on windows at least 1280px wide. Below that, **Preview**, **Chat** and **History** stay separate destinations by design. The explorer divider also needs a project with more than one file. |
 | A pane is too narrow to use | Widths are clamped to the window, so neither side can be dragged away entirely. Press **Enter** or double-click a divider to restore its default, or **Home**/**End** to jump to the allowed limits. |
 | Widths changed after resizing the window | Expected: saved widths re-clamp to the current viewport so both panes stay usable. |

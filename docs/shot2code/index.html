@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>shot2code — turn screenshots into working code on your own machine</title>
-  <meta name="description" content="A local-first Windows desktop app that turns screenshots, mockups, URLs, descriptions or screen recordings into editable web code. GitHub Copilot or your own API key, model selection across four providers, 12 output stacks, local SQLite project history." />
+  <meta name="description" content="A local-first Windows desktop app that turns screenshots, mockups, URLs, descriptions or screen recordings into editable web code. GitHub Copilot, your own API key or your own endpoint through the Copilot SDK, MCP servers for Copilot runs, a responsive Review workspace, 12 output stacks and local SQLite project history." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -15,7 +15,7 @@
   <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="shot2code" />
-  <meta property="og:description" content="Screenshots, mockups, URLs, descriptions and screen recordings become editable web code — generated locally on your Windows machine, with your own model provider." />
+  <meta property="og:description" content="Screenshots, mockups, URLs, descriptions and screen recordings become editable web code — generated locally on your Windows machine, with your own model provider or your own endpoint." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/workspace-full-hd.png" />
   <meta property="og:image:width" content="1920" />
@@ -39,12 +39,21 @@
     "url": "https://arasanirohithreddy.github.io/app-releases/shot2code/",
     "downloadUrl": "https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&expanded=true",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "A Windows desktop app that turns screenshots, mockups, URLs, text descriptions and screen recordings into editable web code. Generation runs from your machine against the model provider you configure; projects, versions and prompts are stored in a local SQLite database. The published Windows binaries are not code-signed. The running version is resolved from the newest published shot2code release.",
+    "description": "A Windows desktop app that turns screenshots, mockups, URLs, text descriptions and screen recordings into editable web code. Generation runs from your machine against the model provider you configure — GitHub Copilot, your own API key, or your own endpoint through the Copilot SDK — and projects, versions and prompts are stored in a local SQLite database. The published Windows binaries are not code-signed. The running version is resolved from the newest published shot2code release.",
     "featureList": [
       "Generates a working page from screenshots, a URL, a description or a screen recording",
       "Twelve output stacks, including HTML + Tailwind, React, Vue, Preact, Bootstrap and Material 3",
       "Model selection across GitHub Copilot, OpenAI, Anthropic and Google Gemini, with one option generated per selected model",
+      "Optional Copilot SDK BYOK connection to any OpenAI-compatible, Azure OpenAI or Anthropic endpoint with its own credential, requiring no Copilot subscription",
+      "Endpoint models the catalogue does not know, discovered from the endpoint or typed by hand, each shown as a single honest option",
+      "In-app GitHub Copilot sign-in delegated to the official CLI browser flow, so the token stays with that tool",
+      "Per-provider connection checks that make one minimal request and report billing, credential, quota, model, configuration and network problems",
+      "A model and its BYOK counterpart can be selected together, producing one option per runtime for comparison",
+      "Optional MCP servers over stdio, HTTP or SSE, offered to GitHub Copilot and Copilot SDK BYOK options only",
+      "Review workspace rendering the result at two to four real widths with horizontal-overflow measurement",
+      "Local, deterministic source audit for semantic and accessibility problems, exported as JSON — not a WCAG conformance assessment",
       "Multi-file project editor with a file tree, whitespace-only formatting and local History",
+      "Native Windows File, Edit, View, Window and Help menus driving the same commands as the keyboard",
       "Resizable chat and file-explorer panes with keyboard-operable separators and remembered widths",
       "In-app Help centre linking the published guides, and an action that opens the backend log folder",
       "Local SQLite project history stored under %LOCALAPPDATA%\\shot2code",
@@ -86,6 +95,8 @@
       --warn-tint: #FBF0E1;
       --danger:    #C5221F;
       --danger-tint:#FBE9E8;
+      --media-stage:#ECEEF3;
+      --media-line:#C8CCD7;
 
       --radius:    14px;
       --radius-sm: 10px;
@@ -112,6 +123,7 @@
       --btn:#5B54E8; --btn-hover:#4F46E5; --on-btn:#FFFFFF;
       --ok:#4ADE80; --ok-tint:#12251B; --warn:#FBBF57; --warn-tint:#2A2113;
       --danger:#F87171; --danger-tint:#2A1717;
+      --media-stage:#090B10; --media-line:#3A404D;
       --shadow:0 1px 2px rgba(0,0,0,.4);
     }
     @media (prefers-color-scheme: dark) {
@@ -122,6 +134,7 @@
         --btn:#5B54E8; --btn-hover:#4F46E5; --on-btn:#FFFFFF;
         --ok:#4ADE80; --ok-tint:#12251B; --warn:#FBBF57; --warn-tint:#2A2113;
         --danger:#F87171; --danger-tint:#2A1717;
+        --media-stage:#090B10; --media-line:#3A404D;
         --shadow:0 1px 2px rgba(0,0,0,.4);
       }
     }
@@ -229,7 +242,7 @@
     .meta-line .chip { font-family: var(--mono); background: var(--surface-2); border: 1px solid var(--line); padding: .15rem .55rem; border-radius: 7px; color: var(--ink-2); }
 
     .hero-proof { margin: 0; }
-    .hero-proof img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+    .hero-proof .shot-frame { border-radius: var(--radius-sm); }
     .hero-proof figcaption { color: var(--ink-2); font-size: var(--step--1); margin-top: .9rem; max-width: 55ch; }
     .trust-strip { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; margin: 2rem 0 0; padding: 1rem 0 0; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--step--1); }
     .download-hint { color: var(--muted); font-size: var(--step--1); margin: .8rem 0 0; }
@@ -257,24 +270,37 @@
     .steps p { margin: 0; color: var(--muted); font-size: var(--step--1); line-height: 1.6; text-wrap: pretty; }
     .how-note { margin: 2rem 0 0; padding-top: 1.4rem; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--step-0); line-height: 1.65; max-width: 68ch; text-wrap: pretty; }
 
-    /* Screenshots. A product shot is evidence, so it gets a real frame rather than a drop shadow. */
+    /* Screenshots are evidence, so each gets a stable, neutral stage rather than a drop shadow.
+       `contain` is deliberate: mixed source ratios may letterbox, but are never stretched or
+       cropped. The detail pair shares a 16:10 stage so its captions start on the same row. */
     .shot { margin: 0; }
-    .shot a { display: block; border-radius: var(--radius); }
-    .shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); }
-    .shot a:hover img { border-color: var(--accent); }
+    .shot-frame {
+      display: grid; place-items: center; width: 100%; min-width: 0; overflow: hidden;
+      border: 1px solid var(--media-line); border-radius: var(--radius);
+      background: var(--media-stage);
+    }
+    .shot-frame--16x9 { aspect-ratio: 16 / 9; }
+    .shot-frame--detail { aspect-ratio: 16 / 10; }
+    .shot-frame--portrait { aspect-ratio: 3 / 4; }
+    .shot-frame img {
+      display: block; width: 100%; height: 100%; min-width: 0;
+      object-fit: contain; background: transparent;
+    }
+    .shot-frame:hover { border-color: var(--accent); }
     .shot figcaption { margin-top: .8rem; color: var(--muted); font-size: var(--step--1); line-height: 1.6; text-wrap: pretty; }
     .shot figcaption strong { color: var(--ink); font-weight: 650; }
-    .shot-lead { margin-bottom: 2.2rem; }
+    .shot-lead { margin-bottom: 2.4rem; }
     .shot-lead figcaption { max-width: 62ch; }
-    .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.8rem; align-items: start; }
-    /* The tablet capture is portrait, so putting it in the landscape grid left a column of dead
-       space. It gets its own row instead, with the caption beside it. */
-    .shot-portrait { display: grid; grid-template-columns: minmax(0, 260px) 1fr; gap: clamp(1.2rem, 3vw, 2.4rem); align-items: center; margin-top: 2.2rem; padding-top: 2rem; border-top: 1px solid var(--line); }
-    .shot-portrait figcaption { margin-top: 0; max-width: 54ch; }
-    @media (max-width: 700px) {
-      .shot-portrait { grid-template-columns: 1fr; }
-      .shot-portrait figcaption { margin-top: .8rem; }
+    .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.8rem; align-items: stretch; }
+    .shot-grid .shot { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+    /* The tablet capture gets a centred row and a fixed pixel ceiling. Root-font enlargement
+       therefore improves its caption without turning the portrait image into a page-height wall. */
+    .shot-portrait {
+      display: grid; justify-items: center; margin-top: 2.4rem;
+      padding-top: 2rem; border-top: 1px solid var(--line);
     }
+    .shot-portrait .shot-frame { width: min(100%, 480px); }
+    .shot-portrait figcaption { width: min(100%, 54ch); max-width: 54ch; }
 
     /* Capability list */
     .coverage-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 3rem; margin: 0; }
@@ -381,7 +407,7 @@
         <a href="#how">How it works</a>
         <a href="#features">Capabilities</a>
         <a href="#stacks">Stacks</a>
-        <a href="#docs">Docs</a>
+        <a href="./docs/">Guides</a>
       </nav>
       <div class="nav-links">
         <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme" disabled>
@@ -414,7 +440,7 @@
             </a>
             <a class="btn btn-secondary" href="#how">See how it works</a>
           </div>
-          <p class="download-hint">Installer <code>.exe</code> recommended. Bring a GitHub Copilot sign-in or one API key.</p>
+          <p class="download-hint">Installer <code>.exe</code> recommended. Bring a GitHub Copilot sign-in, one API key, or your own endpoint.</p>
           <div class="meta-line">
             <span class="chip" id="version-chip">latest</span>
             <span>Windows 10/11 · x64</span>
@@ -423,7 +449,7 @@
         </div>
 
         <figure class="hero-proof">
-          <a href="#screens" aria-label="See the workspace screenshots at a larger size">
+          <a class="shot-frame shot-frame--16x9" href="#screens" aria-label="See the workspace screenshots at a larger size">
             <img src="img/workspace-full-hd.png" width="1920" height="1080" fetchpriority="high" decoding="async"
                  alt="The shot2code workspace at 1920 by 1080: an icon rail with Chat, History, New, Shortcuts and Settings, two generated model options in the conversation panel, and a 1366-pixel desktop preview centered on a neutral backdrop with Fit, 100 percent and History controls." />
           </a>
@@ -472,7 +498,7 @@
             <p>Export a self-contained single HTML file, or a Vite project folder for the stack you chose. Multi-file source projects are exported as they are rather than wrapped in an invented scaffold.</p>
           </article>
         </div>
-        <p class="scope-note"><strong>You still need a model provider.</strong> shot2code does not ship a model. A GitHub Copilot sign-in (no API key needed) or a Gemini, Anthropic or OpenAI key makes generation work; without one, the app tells you so instead of pretending to be connected.</p>
+        <p class="scope-note"><strong>You still need a model provider.</strong> shot2code does not ship a model. A GitHub Copilot sign-in (no API key needed), a Gemini, Anthropic or OpenAI key, or a Copilot SDK BYOK connection to your own endpoint makes generation work; without one, the app tells you so instead of pretending to be connected.</p>
       </div>
     </section>
 
@@ -481,41 +507,41 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="screens-h">What it looks like</h2>
-          <p>The workspace in both themes and at three window sizes. Select any screenshot to open it at full resolution.</p>
+          <p>A lead Preview view, two Code details in light and dark themes, and Chat at tablet width. Select any screenshot to open its original pixels.</p>
         </div>
 
         <figure class="shot shot-lead">
-          <a href="img/workspace-full-hd.png" aria-label="Open the full-resolution 1920 by 1080 workspace screenshot">
+          <a class="shot-frame shot-frame--16x9" href="img/workspace-full-hd.png" aria-label="Open the Preview workspace screenshot at 1920 by 1080">
             <img src="img/workspace-full-hd.png" width="1920" height="1080" loading="lazy" decoding="async"
                  alt="shot2code at 1920 by 1080: the rail labels Chat, History, New, Shortcuts and Settings; the conversation panel shows two generated model options and activity; the main workspace centers a 1366-pixel desktop preview with Desktop, Mobile and Code tabs, Fit and 100 percent controls, History 2 of 2, Select and edit, download and refresh actions." />
           </a>
-          <figcaption><strong>The workspace at 1920×1080.</strong> The fixed-width preview is centred instead of pinned to one side, and Chat can collapse when the canvas needs the full window.</figcaption>
+          <figcaption><strong>Lead Preview workspace · 1920×1080.</strong> The fixed-width desktop preview is centred beside Chat, with model options and the current History position visible.</figcaption>
         </figure>
 
         <div class="shot-grid">
           <figure class="shot">
-            <a href="img/code-workspace.png" aria-label="Open the full-resolution light-theme workspace screenshot">
+            <a class="shot-frame shot-frame--detail" href="img/code-workspace.png" aria-label="Open the light-theme Code workspace screenshot at 1920 by 1080">
               <img src="img/code-workspace.png" width="1920" height="1080" loading="lazy" decoding="async"
                    alt="The shot2code Code workspace at 1920 by 1080 in the light theme: two generated model options appear in Chat, while index.html is formatted across 88 lines with Entry and Preview badges, Format, Copy, Download and CodePen actions, and a language and line-count status bar." />
             </a>
-            <figcaption><strong>Light theme.</strong> Every generation becomes a version you can step back through in <strong>History</strong>, which records the model behind each option, and a retried version keeps a link to the version it re-rolls.</figcaption>
+            <figcaption><strong>Light Code workspace · 1920×1080.</strong> The editor, file badges and file actions stay visible beside the same conversation and generated model options.</figcaption>
           </figure>
 
           <figure class="shot">
-            <a href="img/code-workspace-dark.png" aria-label="Open the full-resolution dark-theme workspace screenshot">
+            <a class="shot-frame shot-frame--detail" href="img/code-workspace-dark.png" aria-label="Open the dark-theme Code workspace screenshot at 1440 by 900">
               <img src="img/code-workspace-dark.png" width="1440" height="900" loading="lazy" decoding="async"
                    alt="The shot2code Code workspace at 1440 by 900 in the dark theme: the rail, Chat, toolbar, file header and syntax-highlighted editor use coordinated dark surfaces while keeping the same History, model-option and file actions." />
             </a>
-            <figcaption><strong>Dark theme.</strong> The editor highlights the active line and gutter and uses theme-correct surfaces, so the code stays legible in either theme.</figcaption>
+            <figcaption><strong>Dark Code workspace · 1440×900.</strong> The active line, gutter, syntax colours and surrounding controls use coordinated dark surfaces.</figcaption>
           </figure>
         </div>
 
         <figure class="shot shot-portrait">
-          <a href="img/chat-tablet.png" aria-label="Open the full-resolution tablet-width chat panel screenshot">
+          <a class="shot-frame shot-frame--portrait" href="img/chat-tablet.png" aria-label="Open the tablet-width Chat workspace screenshot at 768 by 1024">
             <img src="img/chat-tablet.png" width="768" height="1024" loading="lazy" decoding="async"
                  alt="The shot2code Chat workspace at 768 by 1024: the rail becomes a top bar, Preview and Chat are paired beside a separate History button, two generated model options are visible, and agent activity plus the update composer remain usable in one column." />
           </a>
-          <figcaption><strong>Narrow windows.</strong> Preview, Chat and History remain separate, labelled destinations, and model options plus the update composer reflow without horizontal scrolling.</figcaption>
+          <figcaption><strong>Tablet-width Chat workspace · 768×1024.</strong> Preview, Chat and History remain separate destinations while model options, activity and the update composer reflow into one column.</figcaption>
         </figure>
       </div>
     </section>
@@ -569,11 +595,15 @@
         <dl class="coverage-list">
           <div><dt>Inputs</dt><dd>Screenshots, multiple related screenshots, a URL, a text description, or a screen recording. Video input needs a Gemini key.</dd></div>
           <div><dt>Model choice</dt><dd>Pick models from GitHub Copilot, OpenAI, Anthropic and Google Gemini in Settings or beside the composer. One option per selected model; tick nothing to leave it automatic.</dd></div>
+          <div><dt>Your own endpoint</dt><dd>An optional Copilot SDK BYOK connection — OpenAI-compatible, Azure OpenAI or Anthropic — with its own key or bearer token and no Copilot subscription. Its models are separate selections, so a model and its BYOK counterpart can run in the same generation and be compared.</dd></div>
+          <div><dt>Provider checks</dt><dd>Sign in to GitHub Copilot from Settings through the official CLI’s browser flow — the token stays with that tool. Test OpenAI, Anthropic, Gemini and Replicate individually with one minimal request each, and read the answer as Ready, Out of credit, Key rejected, Rate limited, Access denied, Model unavailable, a configuration problem or unreachable. A test may use a little quota.</dd></div>
+        <div><dt>MCP servers</dt><dd>Up to eight servers over stdio, HTTP or SSE. Each needs to be enabled <em>and</em> trusted before it starts, stays read-only until write tools are explicitly allowed, and is offered to GitHub Copilot and Copilot SDK BYOK options only.</dd></div>
           <div><dt>Editing</dt><dd>Multi-file tree, file tabs, a collapsible explorer, select-and-edit from the preview, and a formatter that only ever changes whitespace and refuses component source.</dd></div>
+          <div><dt>Review</dt><dd>The result rendered at two to four real widths at once — 1440, 768 and 390 by default, 320–1920 for a custom one — with horizontal overflow measured in the running frame and a local source audit beside it.</dd></div>
           <div><dt>Layout</dt><dd>On wide windows, drag or keyboard-move the dividers between Chat and the workspace, and between the file tree and the editor. Widths persist, clamp to the window, and stay a view preference — resizing never creates a version.</dd></div>
           <div><dt>Startup</dt><dd>Core routes come up first; generation, evaluation and project tooling load on first use, and the Chromium and Copilot probes run in the background. The shell requires a genuine health response and gives up after 90 seconds rather than hanging.</dd></div>
-          <div><dt>Help</dt><dd><span class="kbd">Ctrl+/</span> opens Get started, Guides, Support and the shortcut reference, linking these published guides. In the desktop app it also opens the backend log folder for a bug report.</dd></div>
-          <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts and retry ancestry, and records the model behind each option. Nothing is uploaded; deleting a project deletes it from disk.</dd></div>
+          <div><dt>Menus and help</dt><dd>A native File, Edit, View, Window and Help menu drives the same commands as the keyboard, disabling what needs a project. <span class="kbd">Ctrl+/</span> opens Get started, Guides, Support and the shortcut reference, and in the desktop app opens the backend log folder.</dd></div>
+          <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts and retry ancestry, and records the run identity behind each option — so a retry repeats the runtime it actually used. Nothing is uploaded; deleting a project deletes it from disk.</dd></div>
           <div><dt>Import</dt><dd>Point at a folder, ZIP or selected source files. The scanner parses text only — it never executes the project's configuration or code — then offers design context or an editable project.</dd></div>
           <div><dt>Preview</dt><dd>A derived, self-contained artifact rendered in an opaque-origin sandbox with a restrictive Content-Security-Policy. At 100% a fixed-width canvas is centred in a neutral frame. When a build cannot be represented safely it shows a diagnostic instead of guessing.</dd></div>
           <div><dt>Assets and images</dt><dd>Asset extraction reuses the real logos from your screenshot (Gemini key). Image generation, editing and background removal need a Replicate key set in <code>backend/.env</code>.</dd></div>
@@ -582,7 +612,7 @@
         <div class="features" style="margin-top:1.6rem">
           <div class="feature">
             <h3><span class="tick">✓</span> Keyboard-first</h3>
-            <p><span class="kbd">Ctrl+/</span> opens the Help centre, which carries the full shortcut reference. <span class="kbd">Ctrl+1–4</span> switch Preview, Code, Chat and History; <span class="kbd">Ctrl+3</span> again collapses the chat panel on wide windows. Project actions use <span class="kbd">Ctrl+Alt</span> combinations — <span class="kbd">N</span> new, <span class="kbd">I</span> import, <span class="kbd">U</span> upload, <span class="kbd">S</span> settings, <span class="kbd">E</span> export. Pane dividers take arrow keys, <span class="kbd">Shift</span> for larger steps, <span class="kbd">Home</span>/<span class="kbd">End</span> and <span class="kbd">Enter</span> to reset. In the desktop app, <span class="kbd">Ctrl+=</span> and <span class="kbd">Ctrl+-</span> zoom in fixed steps between 50% and 300%, and <span class="kbd">Ctrl+0</span> resets.</p>
+            <p><span class="kbd">Ctrl+/</span> opens the Help centre, which carries the full shortcut reference. <span class="kbd">Ctrl+1–4</span> switch Preview, Code, Chat and History; <span class="kbd">Ctrl+3</span> again collapses the chat panel on wide windows, and <span class="kbd">Ctrl+Alt+C</span> brings it back. Project actions use <span class="kbd">Ctrl+Alt</span> combinations — <span class="kbd">N</span> new, <span class="kbd">I</span> import, <span class="kbd">U</span> upload, <span class="kbd">S</span> settings, <span class="kbd">E</span> export. The same commands sit in the native <strong>File</strong>, <strong>View</strong> and <strong>Help</strong> menus, greyed out until a project makes them possible. Pane dividers take arrow keys, <span class="kbd">Shift</span> for larger steps, <span class="kbd">Home</span>/<span class="kbd">End</span> and <span class="kbd">Enter</span> to reset. In the desktop app, <span class="kbd">Ctrl+=</span> and <span class="kbd">Ctrl+-</span> zoom in fixed steps between 50% and 300%, and <span class="kbd">Ctrl+0</span> resets.</p>
           </div>
           <div class="feature">
             <h3><span class="tick">✓</span> Sharing that asks first</h3>
@@ -591,6 +621,18 @@
           <div class="feature">
             <h3><span class="tick">✓</span> Honest fallbacks</h3>
             <p>When export cannot find a valid root build command, it keeps every source file and adds a <strong>Safe fallback</strong> note rather than inventing a scaffold that looks plausible and breaks later.</p>
+          </div>
+          <div class="feature">
+            <h3><span class="tick">✓</span> It starts in seconds</h3>
+            <p>Only the core routes have to be ready before the window opens — generation, evaluation and project tooling load on first use, and the Chromium and Copilot checks run in the background. The shell demands a real health response rather than any reply, gives up after 90 seconds instead of hanging, and logs how long readiness took.</p>
+          </div>
+          <div class="feature">
+            <h3><span class="tick">✓</span> A workspace you can resize</h3>
+            <p>Drag the divider between Chat and the preview, or between the file tree and the editor. Arrow keys move it, <strong>Shift</strong> moves it further, <strong>Home</strong> and <strong>End</strong> jump to the limits, <strong>Enter</strong> resets and <strong>Escape</strong> cancels a drag. Widths persist, clamp to the window, and never touch a project's versions.</p>
+          </div>
+          <div class="feature">
+            <h3><span class="tick">✓</span> Help, and the log, in the app</h3>
+            <p><strong>Ctrl+/</strong> opens a Help centre — Get started, Guides, Support and the full shortcut reference — linking the published guides rather than a private copy. In the desktop app it also opens the backend log folder, which is the first thing to attach to a bug report.</p>
           </div>
         </div>
       </div>
@@ -632,20 +674,27 @@
           <article class="workflow">
             <h3>GitHub Copilot</h3>
             <p>The easiest option, because there is no API key to manage: run <code>gh auth login</code> (or <code>copilot</code>) once and shot2code picks the sign-in up. Needs an active Copilot subscription, and reaches Claude, GPT, Gemini and Grok models through it. The model list is discovered live from the signed-in account, so it is your plan's real entitlement.</p>
-            <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md#choosing-a-model-provider">Provider guide</a>
+            <a href="./docs/user-guide/#choosing-a-model-provider">Provider guide</a>
           </article>
           <article class="workflow">
             <h3>Gemini, Anthropic, OpenAI</h3>
             <p>Paste an API key into <strong>Settings</strong>. It is kept on this device and sent with the generation request to that provider only. Each of these providers has a maintained, validated model list, so picking models for them contacts nobody. Gemini additionally powers video input and asset extraction.</p>
-            <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md#choosing-a-model-provider">Key setup</a>
+            <a href="./docs/user-guide/#choosing-a-model-provider">Key setup</a>
+          </article>
+          <article class="workflow">
+            <h3>Your own endpoint (BYOK)</h3>
+            <p>An optional Copilot SDK BYOK connection reaches an <strong>OpenAI-compatible</strong>, <strong>Azure OpenAI</strong> or <strong>Anthropic</strong> endpoint of your own. <strong>No Copilot subscription is required</strong> — it is the SDK, not your entitlement. <strong>OpenAI-compatible</strong> means any endpoint that speaks that wire format — a vendor API, a gateway, a self-hosted server or one your organisation runs — over any <code>https://</code> URL, or <code>http://</code> on <code>localhost</code>. It carries its own API key or bearer token; your direct OpenAI and Anthropic keys are never borrowed for it, and only an OpenAI-compatible endpoint on <code>localhost</code> may run without one. Models the catalogue does not know are discovered from the endpoint or typed by hand, and appear as one honest option. There is no Gemini equivalent, because the SDK has no Gemini provider.</p>
+            <a href="./docs/user-guide/#using-your-own-endpoint-copilot-sdk-byok">BYOK guide</a>
           </article>
           <article class="workflow">
             <h3>Replicate (optional)</h3>
             <p>Image generation, image editing and background removal. This one has no Settings field by design — it must be set as <code>REPLICATE_API_KEY</code> in <code>backend/.env</code>, which means it is only available when you run from source.</p>
-            <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/FAQ.md">What needs which key</a>
+            <a href="./docs/faq/">What needs which key</a>
           </article>
         </div>
-        <p class="scope-note"><strong>Choosing models is part of Settings, not a Copilot-only extra.</strong> <strong>Settings → Models</strong> — and the compact picker beside the composer — group every model you can currently use under <strong>GitHub Copilot</strong>, <strong>OpenAI</strong>, <strong>Anthropic</strong> and <strong>Google Gemini</strong>. Tick as many as you like, across providers, and each run produces one option per selected model, up to 4 for a first generation and 2 for an update or a video; tick nothing and the choice stays automatic. Models that cannot read the input you gave — video in particular — are filtered out rather than offered and failed, deprecated models stay hidden unless you ask for them or already picked one, and a saved model that can no longer run is reported and skipped instead of silently deleted. A provider only appears once the app can actually see a credential for it.</p>
+        <p class="scope-note"><strong>Choosing models is part of Settings, not a Copilot-only extra.</strong> <strong>Settings → Models</strong> — and the compact picker beside the composer — group every model you can currently use under <strong>GitHub Copilot</strong>, <strong>OpenAI</strong>, <strong>Anthropic</strong>, <strong>Google Gemini</strong> and, when you configure one, <strong>Copilot SDK (BYOK)</strong>. Tick as many as you like, across providers, and each run produces one option per selected model, up to 4 for a first generation and 2 for an update or a video; tick nothing and the choice stays automatic. Models that cannot read the input you gave — video in particular — are filtered out rather than offered and failed, deprecated models stay hidden unless you ask for them or already picked one, and a saved model that can no longer run is reported and skipped instead of silently deleted. A provider only appears once the app can actually see a credential for it.</p>
+        <p class="scope-note"><strong>A BYOK option is its own selection, not a redirect.</strong> Each model your endpoint can serve is listed separately as <code>sdk-byok/&lt;provider&gt;/&lt;model&gt;</code>, so you can tick a model <em>and</em> its BYOK counterpart and get both results from one generation — at the same reasoning effort, side by side. The four native groups are untouched by it: each still needs its own key or sign-in, and a native pick always runs on its native provider. History records the identity each option actually ran as, so a retry repeats the same runtime. An incomplete or switched-off connection is reported as a notice and never blocks a direct generation.</p>
+        <p class="scope-note"><strong>MCP servers extend the SDK runtimes only.</strong> Up to eight servers over <strong>stdio</strong>, <strong>HTTP</strong> or <strong>SSE</strong>. A server must be <strong>enabled</strong> <em>and</em> explicitly <strong>trusted</strong> before shot2code starts it or approves its tools, it stays <strong>read-only</strong> until you also allow write tools, a local server is spawned as an argument vector rather than through a shell, and a remote one must use <code>https://</code> unless it is on <code>localhost</code>. Environment values and request headers are masked in the UI and excluded from logs, diagnostics, project history and exported reports. Their tools reach <strong>GitHub Copilot</strong> and <strong>Copilot SDK BYOK</strong> options; an option running on your own OpenAI, Anthropic or Gemini key never sees them, and the picker says so.</p>
       </div>
     </section>
 
@@ -654,23 +703,31 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="whats-new-h">Recently improved</h2>
-          <p>The most recent work went into starting fast, letting you set how the workspace splits its width, and putting the guides and the log you need inside the app.</p>
+          <p>The most recent work added a second way to reach a model, tools for Copilot runs, a responsive review of what was generated, and a real Windows menu bar.</p>
         </div>
         <div class="features">
           <div class="feature">
-            <h3><span class="tick">✓</span> It starts in seconds</h3>
-            <p>Only the core routes have to be ready before the window opens — generation, evaluation and project tooling load on first use, and the Chromium and Copilot checks run in the background. The shell demands a real health response rather than any reply, gives up after 90 seconds instead of hanging, and logs how long readiness took.</p>
+            <h3><span class="tick">✓</span> Your own endpoint, alongside the rest</h3>
+            <p>A Copilot SDK BYOK connection reaches any OpenAI-compatible endpoint, Azure OpenAI or Anthropic, with its own credential and <strong>no Copilot subscription</strong>. Its models are separate selections, so a model and its BYOK counterpart can run in the same generation and be compared. Name a model only your endpoint serves — discovered from its model list or typed — and it appears exactly once, as <code>&lt;model&gt; via &lt;provider&gt;</code>, keeping that identity through History and retries. The wire API is chosen for you: Chat Completions for an endpoint with its own base URL, Responses for a provider's own. Such a model must support image input and tool calling.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> A workspace you can resize</h3>
-            <p>Drag the divider between Chat and the preview, or between the file tree and the editor. Arrow keys move it, <strong>Shift</strong> moves it further, <strong>Home</strong> and <strong>End</strong> jump to the limits, <strong>Enter</strong> resets and <strong>Escape</strong> cancels a drag. Widths persist, clamp to the window, and never touch a project's versions.</p>
+            <h3><span class="tick">✓</span> Know a provider works before you generate</h3>
+            <p>Sign in to GitHub Copilot from Settings: shot2code runs the <strong>official</strong> CLI’s browser flow, so the credential stays with that tool and the app never sees your token. Test OpenAI, Anthropic, Gemini and Replicate individually with one deliberately tiny request each, sending only that provider’s key. An empty account is reported as <strong>Out of credit</strong> with a link to billing rather than as an unexplained failure, alongside rejected keys, rate limits, unavailable models, configuration and network problems. A test may use a little quota.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Help, and the log, in the app</h3>
-            <p><strong>Ctrl+/</strong> now opens a Help centre — Get started, Guides, Support and the full shortcut reference — linking the published guides rather than a private copy. In the desktop app it also opens the backend log folder, which is the first thing to attach to a bug report. Zoom is explicit too: <strong>Ctrl+=</strong>, <strong>Ctrl+-</strong> and <strong>Ctrl+0</strong>, in fixed steps between 50% and 300%.</p>
+            <h3><span class="tick">✓</span> MCP tools for Copilot runs</h3>
+            <p>Up to eight MCP servers over stdio, HTTP or SSE. Each needs to be enabled <em>and</em> trusted before it starts, stays read-only until write tools are explicitly allowed, runs as an argument vector rather than through a shell, and keeps its tokens masked and out of logs, history and exports. GitHub Copilot and BYOK options get the tools; native provider options do not.</p>
+          </div>
+          <div class="feature">
+            <h3><span class="tick">✓</span> Review it at real widths</h3>
+            <p>A <strong>Review</strong> destination renders the result at two to four actual widths at once — 1440, 768 and 390 by default, 320–1920 for a custom one — measures horizontal overflow in the running frame, and runs a local, deterministic source audit for semantic and accessibility problems. Send selected findings to the composer to read and edit before sending, or export the whole result as source-safe JSON. It is an automated source check, not a WCAG conformance assessment.</p>
+          </div>
+          <div class="feature">
+            <h3><span class="tick">✓</span> A real menu bar</h3>
+            <p>Native <strong>File</strong>, <strong>Edit</strong>, <strong>View</strong>, <strong>Window</strong> and <strong>Help</strong> menus drive exactly the same commands as the keyboard — new project, upload, import, export, the four destinations, the chat panel, Settings, zoom and the Help centre — with project-only items disabled until a project is open.</p>
           </div>
         </div>
-        <p class="dl-note">Every version, its notes and all its files are on the <a href="./releases/">releases page</a>. The full history lives in the <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">changelog</a>.</p>
+        <p class="dl-note">Every version, its notes and all its files are on the <a href="./releases/">releases page</a>. The full history lives in the <a href="./docs/changelog/">changelog</a>.</p>
       </div>
     </section>
 
@@ -737,7 +794,7 @@
         <div class="callouts">
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Local by default</h3>
-            <p>Screenshots, generated code and project history stay on the device. The generation request goes to the provider you configured — and nowhere else. Keys are stored locally and are not sent anywhere but their own provider.</p>
+            <p>Screenshots, generated code and project history stay on the device. The generation request goes to the provider you configured — your own endpoint included, if you set one up — and nowhere else. Keys are stored locally and are not sent anywhere but their own provider. Validating a BYOK connection or an MCP server, and running the Review audit, contact nothing at all.</p>
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg> No telemetry</h3>
@@ -745,13 +802,13 @@
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Untrusted input, treated as such</h3>
-            <p>Imported projects are parsed, never executed. Previews run in an opaque origin with a restrictive CSP, a <code>no-referrer</code> policy, and camera, microphone, geolocation and display capture denied.</p>
+            <p>Imported projects are parsed, never executed. Previews run in an opaque origin with a restrictive CSP, a <code>no-referrer</code> policy, and camera, microphone, geolocation and display capture denied. An MCP server runs only once you enable <em>and</em> trust it, stays read-only until you allow write tools, and never has its tokens written into a log, project history or an exported report.</p>
           </div>
         </div>
         <div class="docs-grid" style="margin-top:1.4rem">
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/DATA-HANDLING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Data handling &amp; privacy<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/SECURITY.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Security &amp; unsigned builds<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/ARCHITECTURE.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> Architecture<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/data-handling/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Data handling &amp; privacy<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/security/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Security &amp; unsigned builds<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/architecture/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> Architecture<span class="arrow">→</span></a>
           <a class="doc-link" href="https://github.com/ArasaniRohithReddy/shot2code"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> Source repository<span class="arrow">→</span></a>
         </div>
       </div>
@@ -765,15 +822,15 @@
           <p>Everything needed to install it, use it, work out what went wrong, and see what ships inside it.</p>
         </div>
         <div class="docs-grid">
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/INSTALL.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/FAQ.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/TROUBLESHOOTING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg> Troubleshooting<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/install/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/user-guide/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/faq/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/troubleshooting/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg> Troubleshooting<span class="arrow">→</span></a>
           <a class="doc-link" href="./releases/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> All releases<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/RELEASING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg> How releases are cut<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CONTRIBUTING.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/></svg> Issues &amp; contributing<span class="arrow">→</span></a>
-          <a class="doc-link" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/THIRD-PARTY-NOTICES.md"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 21h8M3 7h18M7 7l-3.5 6h7zM17 7l-3.5 6h7z"/></svg> Third-party notices<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/changelog/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg> Changelog<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/releasing/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg> How releases are cut<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/contributing/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/></svg> Issues &amp; contributing<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/third-party-notices/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 21h8M3 7h18M7 7l-3.5 6h7zM17 7l-3.5 6h7z"/></svg> Third-party notices<span class="arrow">→</span></a>
         </div>
       </div>
     </section>
@@ -793,7 +850,7 @@
         <a href="https://github.com/ArasaniRohithReddy/shot2code">Source</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
         <a href="https://github.com/ArasaniRohithReddy/app-releases/security/advisories/new">Report a vulnerability</a>
-        <a href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/LICENSE">License</a>
+        <a href="../help/license/">License</a>
       </nav>
     </div>
   </footer>

@@ -9,17 +9,21 @@ runbook. The application itself is developed at
 
 - [First run](#first-run)
 - [Choosing a model provider](#choosing-a-model-provider)
+- [Using your own endpoint (Copilot SDK BYOK)](#using-your-own-endpoint-copilot-sdk-byok)
 - [Choosing which models run](#choosing-which-models-run)
+- [MCP servers](#mcp-servers)
 - [Generating your first page](#generating-your-first-page)
 - [Using more than one screenshot](#using-more-than-one-screenshot)
 - [Refining the result](#refining-the-result)
 - [The Code tab](#the-code-tab)
+- [The Review workspace](#the-review-workspace)
 - [Sizing the workspace](#sizing-the-workspace)
 - [History and retries](#history-and-retries)
 - [Recent projects](#recent-projects)
 - [Importing an existing project](#importing-an-existing-project)
 - [Preview, CodePen and sharing](#preview-codepen-and-sharing)
 - [Exporting a project](#exporting-a-project)
+- [The menu bar](#the-menu-bar)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [The Help centre](#the-help-centre)
 - [Settings](#settings)
@@ -57,7 +61,15 @@ You need **one** provider.
 
 ### GitHub Copilot (no API key)
 
-If you already use the GitHub CLI, this is the least work:
+The quickest route is the button: **Settings → GitHub Copilot → Sign in with
+GitHub**. It runs the **official** GitHub Copilot CLI web-flow login (falling
+back to the GitHub CLI), which opens your browser. The credential is stored by
+that tool on this device — **shot2code never receives or saves your token**; it
+only learns afterwards whether a session exists. You can cancel while it is
+waiting, and if neither CLI is installed the app says so and links the official
+install instructions rather than pretending to sign you in.
+
+The terminal route still works, and is unchanged:
 
 ```powershell
 gh auth login        # or: copilot
@@ -83,6 +95,7 @@ Copilot's model list is the one your account actually has — see
 
 Paste a **Gemini**, **Anthropic** or **OpenAI** key into **Settings**. Keys are
 stored on this device and sent with the generation request to that provider only.
+Every key field is masked as you type.
 
 Two capabilities need a specific provider:
 
@@ -90,6 +103,162 @@ Two capabilities need a specific provider:
 | --- | --- |
 | Video / screen-recording input, asset extraction | A Gemini key |
 | Image generation, image editing, background removal | `REPLICATE_API_KEY` in `backend/.env` — there is no Settings field, so this is only available when running from source |
+
+### Testing a provider before you generate
+
+Under the keys, **Connection checks** gives OpenAI, Anthropic, Gemini and
+Replicate a **Test** button each. A test makes **one deliberately tiny
+request** — a single-word prompt capped at 16 tokens — so a credential that is
+malformed, revoked, out of credit or pointed at a model your account cannot see
+fails there rather than halfway through a generation.
+
+- Only the tested provider's credential is sent. Testing Gemini never puts your
+  OpenAI key on the wire.
+- Leave a field empty and the test uses the key the backend holds in its own
+  configuration instead, so you can check that too.
+- On a metered account a test may use **a small amount of quota**. Replicate is
+  checked against its account endpoint, so it starts no prediction.
+
+The answer is always something you can act on:
+
+| Result | What it means |
+| --- | --- |
+| **Ready** | The provider answered the test request |
+| **Out of credit** | The key works, but the account has nothing left to spend. Links straight to that provider's billing page |
+| **Key rejected** | The credential was refused — check it for a typo or issue a new one |
+| **Rate limited** | Temporary. Wait for the limit to reset, or generate fewer options at once |
+| **Access denied** | The account does not have access to that model |
+| **Model unavailable** | The provider does not offer the model that was tried |
+| **Configuration problem** | Something in the setup is wrong — usually a missing key or a base URL |
+| **Could not reach the provider** | A network, proxy or firewall problem |
+
+**Out of credit** is the case this exists for. Providers report an empty balance
+in a way that reads like a rate limit, so it is easy to spend an afternoon
+re-checking a key that was fine all along.
+
+## Using your own endpoint (Copilot SDK BYOK)
+
+**Settings → GitHub Copilot SDK BYOK** adds a second, optional way to reach a
+model: your own endpoint, through the GitHub Copilot SDK. It is **additive**.
+Switching it on does not change, relabel or re-route any of the providers above,
+and you can leave it off forever without missing anything.
+
+**No Copilot subscription is required for it.** It is the Copilot *SDK* — the
+runtime — not your Copilot entitlement.
+
+### Configuring the connection
+
+There is one connection, with its own settings:
+
+| Field | What it is |
+| --- | --- |
+| **Provider** | **OpenAI-compatible**, **Azure OpenAI** or **Anthropic** |
+| **Base URL** | Your endpoint. Required for Azure OpenAI. `https://` is required unless the host is `localhost` |
+| **API key** | The credential **dedicated to this connection** |
+| **Bearer token** | Sent instead of the API key when your gateway expects an `Authorization` header |
+| **Wire API** | **Automatic** by default — see below. Pin **Responses** or **Chat Completions** only if your endpoint needs one |
+| **Endpoint model** | The model id your endpoint serves, when it is not one of the catalog models |
+| **Azure API version** | The `api-version` your resource expects. Azure only |
+
+**OpenAI-compatible** is deliberately broad: it works with any endpoint that
+speaks the OpenAI wire format — a vendor API, a gateway, a self-hosted server,
+or one your organisation runs — over any `https://` URL, or `http://` when the
+host is `localhost`.
+
+**Validate connection** checks the settings and nothing else — no request is
+made to your endpoint, and the response never contains your credential.
+**Test model access** is the opposite: it contacts the endpoint, and it says so.
+
+### The wire API is chosen for you
+
+**Automatic** is the default and is usually right:
+
+| Your connection | Automatic picks |
+| --- | --- |
+| Has its own base URL | **Chat Completions** — the interface almost every OpenAI-compatible server implements |
+| Has no base URL (the provider's own endpoint) | **Responses** |
+
+Pin a protocol only if your endpoint needs a specific one. A pinned choice
+always wins, and upgrading never changes a protocol you chose deliberately.
+
+### Naming the model your endpoint serves
+
+If your endpoint serves models the catalog does not know, put the id in
+**Endpoint model**. There are two ways to fill it in:
+
+- **Discovered.** If the endpoint lists models at `/models`, **Test model
+  access** fills a picker with the ids it reported. Only OpenAI-compatible
+  endpoints expose that route.
+- **Typed.** Type the id yourself. This is always available, and it is the only
+  way for **Azure OpenAI** (use the deployment name) and **Anthropic**, neither
+  of which lists models here.
+
+Ids may be up to **128** characters and may contain the `. _ : / @ + -`
+characters real deployments use. Spaces are not allowed.
+
+> The discovered list is **ids only**. It tells you what the endpoint serves,
+> never which of those models can read images or call tools.
+
+**The model must support vision and tool calling.** Screenshots are sent as
+images and the agent works by calling tools, so a text-only model will fail even
+if the connection check passes. Only the endpoint's own documentation can tell
+you which models qualify.
+
+### One honest option for a custom model
+
+Name a model the catalog does not know and **Settings → Models** shows exactly
+**one** entry for it — `<model> via <provider>`, with the run identity
+`sdk-byok/<provider>/custom/<model>`. It deliberately does not list the catalog
+model names against it: those names would be untrue, and they would all reach
+the same model anyway. No reasoning effort is sent for a custom model, because
+an arbitrary endpoint model has no thinking level.
+
+That identity is what History records and what a retry replays, so re-running
+the option reaches the same endpoint and the same model.
+
+### The credential is its own
+
+shot2code will **not** fall back to your direct OpenAI or Anthropic key for this
+connection. Those belong to the native providers and keep working there
+untouched. The one exception is an **OpenAI-compatible endpoint on
+`localhost`**, which may run without a credential — a local Ollama, LM Studio or
+vLLM server, typically.
+
+**There is no Gemini BYOK.** The Copilot SDK has no Gemini provider, so Gemini
+models always use the Gemini API key directly. The app says so as a notice
+rather than leaving you to work it out.
+
+### BYOK models are separate selections
+
+Every model the connection can serve appears in **Settings → Models** under
+**Copilot SDK (BYOK)** as its own entry, with the run identity:
+
+```
+sdk-byok/<provider>/<base model>
+```
+
+for example `sdk-byok/azure/gpt-5.6-sol (high thinking)`. No direct model id
+starts with `sdk-byok/`, so the two can never be confused — which means:
+
+- **A model and its BYOK twin can both be selected for the same generation.**
+  Tick `gpt-5.6-sol (high thinking)` *and*
+  `sdk-byok/azure/gpt-5.6-sol (high thinking)` and you get two options: one on
+  OpenAI's own API, one on your endpoint, side by side.
+- **A native pick is never re-routed.** Having BYOK switched on does not move a
+  native selection onto your endpoint. There is nothing to warn about, because
+  nothing is silently redirected.
+- **The reasoning effort carries across.** The effort is part of the base model
+  name, so the BYOK entry runs at the same effort you picked.
+- **The identity is what History records.** Each option stores the identity it
+  actually ran as, so retrying a BYOK option re-runs it on your endpoint rather
+  than on the provider whose model it borrowed.
+
+### An incomplete connection does not block anything
+
+If the connection is switched off, missing its credential, or missing the Azure
+endpoint, shot2code reports it as a notice beside the model picker and carries
+on. Your direct OpenAI, Anthropic, Gemini and Copilot generations are
+unaffected.
 
 ## Choosing which models run
 
@@ -103,10 +272,13 @@ grouped by provider:
 | **OpenAI** | A maintained, validated catalogue — marked *Curated* |
 | **Anthropic** | A maintained, validated catalogue — marked *Curated* |
 | **Google Gemini** | A maintained, validated catalogue — marked *Curated* |
+| **Copilot SDK (BYOK)** | The models your own connection can serve — marked *Yours* and *Experimental* |
 
 A provider only appears once shot2code can see a credential for it. With none
 configured, the picker says so and points at Settings and GitHub sign-in rather
-than showing an empty list.
+than showing an empty list. The four native groups still require their own key
+or sign-in: a BYOK connection never makes one of them available, and never
+changes what a native group says about where its credential came from.
 
 ### Selecting one model, several, or none
 
@@ -151,6 +323,86 @@ models up to the limit are used, and the rest are ignored for that run.
 
 Selecting models is a preference, not a purchase: each option is still a real
 request billed by the provider it belongs to.
+
+## MCP servers
+
+**Settings → MCP servers** lets a generation call tools from Model Context
+Protocol servers you configure — a component-library lookup, a design-token
+service, an internal documentation index. Up to **eight** can be configured.
+
+### Which options actually get the tools
+
+MCP is a Copilot SDK feature, so it reaches the runtimes that use the SDK:
+
+| Option | Sees MCP tools? |
+| --- | --- |
+| A **GitHub Copilot** subscription model | Yes |
+| A **Copilot SDK BYOK** model | Yes |
+| A model on your own OpenAI, Anthropic or Gemini key | **No** — it runs on that provider's own client |
+
+The picker states this for the current selection rather than leaving you to
+infer it from an empty activity list.
+
+### Adding a server
+
+| Field | Applies to | What it is |
+| --- | --- | --- |
+| **Name** | All | What appears in the activity list |
+| **Transport** | All | **Local program (stdio)**, **HTTP** or **Server-sent events (SSE)** |
+| **Command** and **Arguments** | stdio | The program to run and its arguments, one per line |
+| **Environment variables** | stdio | `NAME=value` per line, or a pasted JSON object |
+| **Working directory** | stdio | Optional |
+| **URL** | HTTP / SSE | `https://` is required unless the host is `localhost` |
+| **Request headers** | HTTP / SSE | `Name=value` per line, or a pasted JSON object |
+| **Tool allowlist** | All | Optional. Leave empty to allow every tool the server offers |
+| **Timeout** | All | Optional, in milliseconds |
+
+**Validate servers** checks the configuration only. No server is started and no
+URL is contacted.
+
+### Two switches, then a third for writes
+
+A server does nothing until **both** of these are on:
+
+- **Enabled** — the ordinary on/off.
+- **Trusted** — the separate acknowledgement that shot2code may start it and
+  approve its tools. For a local server that means **running that program on
+  this device**.
+
+A trusted, enabled server is still **read-only**. Tools that can change files,
+data or remote state require **Allow write tools** as well, which is labelled as
+the risk it is. Each row shows its current state — *Off*, *Not trusted — will
+not start*, *Active · read-only* or *Active · write tools allowed*.
+
+### How a local server is launched
+
+The command is spawned as an **argument vector, never through a shell**, so
+nothing in the command or its arguments is re-interpreted by `cmd` or
+PowerShell. Arguments are given one per line for exactly that reason.
+
+### Server secrets
+
+Environment values and request headers often carry tokens, so:
+
+- values that look like credentials are **masked** in the server list;
+- in the editor they stay **masked and read-only** until you click **Show values
+  to edit**;
+- only key and header **names** ever appear in a diagnostic or a validation
+  response;
+- values are **never** written into a project snapshot, the local history
+  database or an exported review report.
+
+### When a server is not running
+
+A disabled or untrusted server is reported as a notice beside the model picker —
+*"'Docs' is not marked trusted, so shot2code will not start it or approve its
+tools."* — and the generation proceeds without it. An incomplete MCP draft
+**never blocks a direct generation**.
+
+### Seeing the tools run
+
+MCP tool calls appear in the option's activity list as
+`MCP · <server> · <tool>`, alongside shot2code's own tools.
 
 ## Generating your first page
 
@@ -212,6 +464,84 @@ file tabs (shown once a project has more than one file), and an editor.
   also drag the divider between the tree and the editor — see
   [Sizing the workspace](#sizing-the-workspace).
 
+## The Review workspace
+
+**Review** sits beside Preview and Code. It answers two questions about the
+generated page at once: *does it hold together at the widths I care about*, and
+*is the source it produced sound*.
+
+### Real-width frames
+
+The page is rendered at **two to four widths simultaneously**, each in a frame
+of that actual width — not a scaled-down screenshot, so a layout that breaks at
+390px breaks visibly in the 390px frame.
+
+| Default | Width |
+| --- | --- |
+| Desktop | 1440 |
+| Tablet | 768 |
+| Mobile | 390 |
+
+Add, remove or edit them. A custom width is any whole number from **320** to
+**1920**; anything else is refused with *"Width must be between 320px and
+1920px."* rather than silently clamped. Keep between two and four — the point is
+comparison, so one frame is not a review and five is not readable. Your set is
+remembered on this device.
+
+### Horizontal overflow
+
+Overflow is **measured in the running frame**, not guessed from the source: each
+frame reports whether its content is wider than the viewport, and by how much.
+That catches a fixed-width element, an unwrapped table or a long unbroken string
+that only misbehaves once it is actually laid out.
+
+### The local source audit
+
+Alongside the frames, shot2code runs a **deterministic, local pass over the
+generated source** and reports semantic and accessibility problems by severity:
+
+| Checks include |
+| --- |
+| Missing `lang` on `<html>`, a missing or empty `<title>`, a missing viewport meta |
+| Heading order that skips levels, or a document with no first-level heading |
+| No `main` landmark, or more than one |
+| Images without alternative text |
+| Form controls and interactive elements with no accessible name |
+| Duplicate `id` values, positive `tabindex`, interactive elements nested inside each other |
+| Tables without a caption or header cells |
+| Fixed widths that will overflow your narrowest frame |
+
+Each finding carries the **evidence** from the source, the **affected file** and
+**what to do about it**.
+
+**This is an automated check of generated source. It is not a WCAG conformance
+assessment, and it does not replace testing with real assistive technology.**
+A framework project's runtime DOM can also differ from the source that was
+audited; the report says so.
+
+### Sending findings to Chat
+
+Tick the findings you want addressed and send them to the conversation. They are
+grouped by rule and **written into the composer** — shot2code does **not** send
+them for you. Read the instruction, edit it, then send it like any other
+request.
+
+### Results are bound to what produced them
+
+A review records the version, the option, a hash of the source it audited and
+the widths it ran at. Edit the code, switch option, generate a new version or
+change the widths, and the result is marked **stale** instead of being presented
+as if it were current. Re-run it to get an answer about what is on screen now.
+
+### The JSON report
+
+Export the review as JSON for an issue or a pull request. It contains the
+severities, rule ids, messages, evidence, guidance and a summary count, plus the
+version, option, source hash and widths it was bound to. File paths are reduced
+to a leaf name, and **no credential of any kind — provider key, BYOK key, MCP
+environment value or request header — is included**. The report carries its own
+notice that it is an automated source audit rather than certification.
+
 ## Sizing the workspace
 
 On wide windows (≥ 1280px) you decide how the width is shared. Two dividers do
@@ -265,8 +595,11 @@ reads **History _n_/_m_**, and the narrow-window destination.
 
 Retrying a version reuses the provider and model choices that produced the
 original options, and the retry keeps a link to the version it re-rolls, so it
-does not look like an unrelated branch. History records the concrete model behind
-each option, so you can tell which one you kept.
+does not look like an unrelated branch. History records the concrete **run
+identity** behind each option — `gpt-5.6-sol (high thinking)` for a native
+option, `sdk-byok/azure/gpt-5.6-sol (high thinking)` for one that ran on your
+own endpoint — so you can tell which one you kept, and a retry re-runs it on the
+same runtime rather than on the provider whose model it borrowed.
 
 The options strip appears only when a version actually has more than one option.
 
@@ -348,6 +681,24 @@ no valid root `package.json` build command, export keeps every source file and
 adds a **Safe fallback** note instead of generating a plausible but potentially
 broken scaffold.
 
+## The menu bar
+
+The desktop app has a native Windows menu bar — **File**, **Edit**, **View**,
+**Window** and **Help** — driving exactly the same commands as the keyboard, so
+the two can never disagree.
+
+| Menu | Holds |
+| --- | --- |
+| **File** | New project, Upload screenshots…, Import project…, Export current project…, Settings…, Exit |
+| **Edit** | The standard editing commands |
+| **View** | Preview, Code, Chat, History, **Show Chat panel**, Reload, Toggle Developer Tools, Zoom In / Zoom Out / Actual Size |
+| **Window** | The standard window commands |
+| **Help** | The Help centre, the keyboard shortcut reference, and About shot2code with the running version |
+
+Items that need a project — export, the destinations, the chat panel — are
+**disabled** until one is open, rather than being offered and failing. The
+accelerators shown in the menu are the shortcuts documented below.
+
 ## Keyboard shortcuts
 
 Press **Ctrl+/** (or **Help** in the rail) to open the [Help centre](#the-help-centre),
@@ -357,6 +708,7 @@ which carries the complete reference.
 | --- | --- |
 | `Ctrl+1` … `Ctrl+4` | Preview, Code, Chat, History |
 | `Ctrl+3` (again) | Collapse the chat panel on wide windows; `Ctrl+1` or `Ctrl+4` bring it back |
+| `Ctrl+Alt+C` | Show the Chat panel |
 | `Ctrl+Shift+Enter` | Retry an AI-generated version |
 | `Ctrl+Alt+N` | New project |
 | `Ctrl+Alt+I` | Import |
@@ -407,10 +759,18 @@ that cannot work.
 ## Settings
 
 Settings holds your provider keys, the
-[model selection](#choosing-which-models-run) for all four code providers, the
-running version and the update state (**Check now**, download progress,
-**Restart & install**), and it reports whether the screenshot-preview browser is
-available.
+[model selection](#choosing-which-models-run) across every group, the
+[Copilot SDK BYOK connection](#using-your-own-endpoint-copilot-sdk-byok), your
+[MCP servers](#mcp-servers), the running version and the update state
+(**Check now**, download progress, **Restart & install**), and it reports whether
+the screenshot-preview browser is available.
+
+Every credential field is a password input, and nothing you type into one
+reaches a log line, a toast or a validation response.
+
+The page has its own viewport-bounded scrollbar. Even with a project open, you
+can scroll through the full settings list to the final Screenshot by URL and
+capability controls without changing browser zoom.
 
 Screenshot preview lets the agent render its own output in a headless browser and
 check its work. Chromium ships with the desktop app; if it is unavailable,

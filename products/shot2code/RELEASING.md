@@ -72,6 +72,81 @@ full notes. Keep them accurate about:
 
 Then mirror the same summary into [CHANGELOG.md](CHANGELOG.md) here.
 
+## Final screenshot capture contract
+
+This is the capture plan for the forthcoming BYOK, MCP, application-menu and
+Review presentation. It is deliberately **versionless**: do not put a release
+number in a filename, caption or screenshot-only page claim. The existing four
+PNGs remain published until the source integration and visible labels are final.
+Do not capture or replace them early.
+
+### One reproducible capture environment
+
+Use the release-candidate desktop build with a new, capture-only profile:
+
+- Windows display scaling: **100%**
+- app zoom: **100%**
+- browser/device scale factor: **1**
+- output: sRGB PNG, one image pixel per CSS pixel
+- capture target: the app content viewport only — no desktop, taskbar, window
+  shadow or post-capture crop
+- project: the synthetic **Northwind Analytics** fixture used by the current
+  public screenshots; no customer code, URLs, repository names or local paths
+- provider state: **OpenAI BYOK configured** — the **GitHub Copilot SDK BYOK**
+  card switched on with the **OpenAI-compatible** provider — all other
+  providers disconnected, and
+  **Automatic** model selection (zero manually selected models)
+- key handling: use a short-lived capture-only credential, keep every key field
+  masked, inspect the final PNGs at 400%, then revoke the credential and delete
+  the capture profile
+- MCP state: one unauthenticated local fixture named **Demo component library**,
+  enabled and trusted so it displays the shipped state **Active · read-only**;
+  no remote tenant or account
+
+Wait for fonts, preview rendering and Review results to settle. Dismiss update
+notices, toasts, tooltips and permission prompts. Move the pointer outside the
+capture, stop caret/selection blinking where possible, and never edit or
+recompress the resulting PNG. If a final UI label differs from this plan, use
+the shipped label and update the page's alt text and caption in the same change;
+never stage a screenshot of placeholder UI.
+
+### The four replacement files
+
+All dimensions below are **CSS viewport dimensions and required PNG pixel
+dimensions**.
+
+| File | Viewport and theme | Exact app state | Pane widths | Replaces / published role |
+| --- | --- | --- | --- | --- |
+| `review-workspace-og-light.png` | `1920 × 1008`, light | Northwind Analytics open; the final **Review** destination selected; review complete with its summary and the generated preview visible; no loading or empty state | 64px rail, 320px Chat pane, remaining 1536px workspace including its dividers | `workspace-full-hd.png` in the hero/gallery, and the current `og:image` |
+| `mcp-menu-light.png` | `1440 × 900`, light | Generated project open; **Settings → MCP servers** showing **Demo component library** as **Active · read-only**, with the native **View** menu expanded over it so the shared commands and the menu bar are both legible; no hover-only tooltip | 64px rail; Settings owns the remaining 1376px, with no hidden Chat pane | `code-workspace.png`, the first detail |
+| `byok-settings-dark.png` | `1440 × 900`, dark | **Settings → GitHub Copilot SDK BYOK** open and switched on; the **OpenAI-compatible** provider selected with a fully masked key; Copilot signed out and the OpenAI/Anthropic/Gemini fields in **API Keys** empty; model selection shown as **Automatic** | 64px rail; Settings owns the remaining 1376px, with no hidden Chat pane | `code-workspace-dark.png`, the second detail |
+| `review-workspace-tablet.png` | `768 × 1024`, light | The same completed synthetic Review in the shipped tablet/single-column navigation; Review, Preview/Code and History destinations remain identifiable | No desktop rail or draggable split; one 768px content viewport | `chat-tablet.png`, the centred portrait detail |
+
+The lead uses `1920 × 1008` because it is exactly **40:21**, the same ratio as a
+`1200 × 630` social card. It can therefore be scaled by an Open Graph consumer
+without cropping the app toolbar or Review result. When these files land:
+
+1. Replace the four gallery sources in this order: Review lead, MCP/menu, BYOK
+   Settings, tablet Review.
+2. Point `og:image` at `review-workspace-og-light.png`, set its declared size to
+   `1920 × 1008`, and write alt text for only what is visibly present.
+3. Give the lead a `40 / 21` aspect wrapper; keep both desktop details on the
+   shared `16 / 10` wrapper and the tablet image on `3 / 4`.
+4. Keep the site's documented `object-fit: contain` policy and neutral frame.
+   Never switch a product screenshot to `cover`: letterboxing is acceptable,
+   loss of UI is not.
+5. Update each `<img width height>`, link label, alt and caption with the same
+   commit. Remove the four superseded PNGs only after no HTML, metadata or test
+   references them.
+6. From the `app-releases` repository, run `npm test`; it includes the
+   dimension, aspect, reflow and Open Graph checks. Then inspect the light/dark
+   gallery and 320px/200%-text portal captures.
+
+Before approval, inspect every image for exposed keys or tokens, account names,
+email addresses, avatars, filesystem paths, repository names, clipboard
+content, notification text, timestamps and background-window reflections.
+Passing an automated test is not a secrets review.
+
 ## After publishing
 
 1. Confirm the asset list:

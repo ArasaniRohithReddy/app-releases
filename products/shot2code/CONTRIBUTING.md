@@ -7,7 +7,7 @@ which one your contribution belongs to.
 | --- | --- |
 | Change application code, add a stack, fix a bug in the app | **Source repository** — [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) |
 | Report a bug or request a feature in a published Windows build | **This hub** — [open an issue](https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose) and pick **shot2code** |
-| Correct or improve these published guides | **This hub** — the files under [`products/shot2code/`](https://github.com/ArasaniRohithReddy/app-releases/tree/main/products/shot2code) |
+| Correct or improve these published guides | **This hub** — start from the [shot2code documentation](README.md), then use **View source on GitHub** on the page you want to edit |
 | Report a security vulnerability | **Privately** — see [SECURITY.md](SECURITY.md). Never in a public issue |
 
 This hub publishes the Windows builds and their documentation. It does not

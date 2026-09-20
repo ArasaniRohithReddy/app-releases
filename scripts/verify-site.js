@@ -5,6 +5,11 @@ const releaseData = require('../docs/release-data.js');
 const { createSiteServer, mount } = require('./site-server.js');
 const accessibilityChecks = require('./site-accessibility-checks.js');
 const releaseHubChecks = require('./site-release-hub-checks.js');
+const presentationChecks = require('./site-presentation-checks.js');
+
+const PRESENTATION_WIDTHS = presentationChecks.PRESENTATION_WIDTHS;
+const SITE_WIDTHS = [...new Set([...PRESENTATION_WIDTHS, 360, 1280])].sort((a, b) => a - b);
+const TEXT_REFLOW_WIDTHS = [...new Set([...PRESENTATION_WIDTHS, 640, 1280])].sort((a, b) => a - b);
 
 const root = path.resolve(process.argv[2] || path.join(__dirname, '..', 'docs'));
 
@@ -492,7 +497,7 @@ async function main() {
           check(await image.evaluate(el => el.naturalWidth > 0), `${name}/${theme}: image did not load`);
           check(Boolean((await image.getAttribute('alt'))?.trim()), `${name}/${theme}: missing image alternative`);
         }
-        for (const width of [320, 360, 390, 768, 1024, 1280, 1440, 1920]) {
+        for (const width of SITE_WIDTHS) {
           await page.setViewportSize({ width, height: 900 });
           const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
           check(overflow <= 0, `${name}/${theme}@${width}: ${overflow}px horizontal overflow`);
@@ -517,7 +522,7 @@ async function main() {
         }
 
         await page.evaluate(() => document.documentElement.style.fontSize = '200%');
-        for (const width of [320, 640, 1280]) {
+        for (const width of TEXT_REFLOW_WIDTHS) {
           await page.setViewportSize({ width, height: 900 });
           const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
           check(overflow <= 0, `${name}/${theme}@${width}, 200% text: ${overflow}px horizontal overflow`);
@@ -745,6 +750,7 @@ async function main() {
     await releaseHubChecks({ browser, base, root, products, allReleases, check, mockReleases, visit });
     await preservationChecks(browser, base);
     await accessibilityChecks({ browser, base, snapshot, check, mockReleases, visit });
+    await presentationChecks({ browser, base, check, mockReleases, visit });
 
     {
       const context = await browser.newContext({ viewport: { width: 1366, height: 768 } });

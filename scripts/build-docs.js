@@ -12,6 +12,23 @@ const escape = value => String(value).replace(/[&<>"']/g, c =>
 const hash = text => crypto.createHash('sha256').update(text).digest('hex');
 const parser = new MarkdownIt({ html: false, linkify: false, typographer: false });
 
+const PRODUCT_DOCS = {
+  'products/threat-model-reviewer/': {
+    id: 'threat-model-reviewer',
+    name: 'Threat Model Reviewer'
+  },
+  'products/shot2code/': {
+    id: 'shot2code',
+    name: 'shot2code'
+  }
+};
+
+function productFor(entry) {
+  for (const [prefix, product] of Object.entries(PRODUCT_DOCS))
+    if (entry.source.startsWith(prefix)) return product;
+  return { id: '', name: 'App Releases' };
+}
+
 function safeUrl(value) {
   try {
     const decoded = parser.utils.unescapeAll(String(value));
@@ -62,13 +79,13 @@ function validateManifest(catalog) {
   const sources = new Set(), routes = new Set();
   const shared = new Set(['SECURITY.md', 'SUPPORT.md', 'LICENSE', 'CODE_OF_CONDUCT.md']);
   for (const entry of catalog.documents) {
-    if (!(shared.has(entry.source) || /^products\/threat-model-reviewer\/(?:[A-Z-]+\.md|LICENSE)$/.test(entry.source)))
+    if (!(shared.has(entry.source) || /^products\/(?:threat-model-reviewer|shot2code)\/(?:[A-Z-]+\.md|LICENSE)$/.test(entry.source)))
       throw new Error(`Source outside the approved public roots: ${entry.source}`);
-    if (!/^\/(?:threat-model-reviewer\/docs|help)\/(?:[a-z0-9-]+\/)*$/.test(entry.route))
+    if (!/^\/(?:(?:threat-model-reviewer|shot2code)\/docs|help)\/(?:[a-z0-9-]+\/)*$/.test(entry.route))
       throw new Error(`Invalid documentation route: ${entry.route}`);
     if (sources.has(entry.source) || routes.has(entry.route)) throw new Error('Duplicate documentation source or route.');
-    if (entry.history && entry.source !== 'products/threat-model-reviewer/CHANGELOG.md')
-      throw new Error('Only the public changelog may contain labelled unreleased history.');
+    if (entry.history && !/^products\/(?:threat-model-reviewer|shot2code)\/CHANGELOG\.md$/.test(entry.source))
+      throw new Error('Only a public product changelog may contain labelled unreleased history.');
     sources.add(entry.source); routes.add(entry.route);
   }
   for (const [alias, source] of Object.entries(catalog.legacyLinks || {})) {
@@ -116,7 +133,18 @@ function prepareDocument(entry, source) {
   }
   const firstParagraph = tokens.find((token, i) => token.type === 'inline' && tokens[i - 1]?.type === 'paragraph_open');
   const description = inlineText(firstParagraph).trim().replace(/\s+/g, ' ').slice(0, 180) || `${title} in the public App Releases documentation.`;
-  return { ...entry, text, tokens, title, titleId, headings, fragments, description, sourceHash: hash(text) };
+  return {
+    ...entry,
+    product: productFor(entry),
+    text,
+    tokens,
+    title,
+    titleId,
+    headings,
+    fragments,
+    description,
+    sourceHash: hash(text)
+  };
 }
 
 function relativeRoute(from, to) {
@@ -216,8 +244,10 @@ function renderContent(document, documents, root = ROOT, catalog = manifest) {
 }
 
 function navigation(document, documents) {
-  const hubPage = !document.source.startsWith('products/');
-  const visible = hubPage ? documents.filter(doc => !doc.source.startsWith('products/')) : documents;
+  const hubPage = !document.product.id;
+  const visible = hubPage
+    ? documents.filter(doc => !doc.product.id)
+    : documents.filter(doc => doc.product.id === document.product.id || !doc.product.id);
   const groups = [...new Set(visible.map(doc => doc.group))];
   const apps = hubPage ? `<div><p class="nav-group">Apps</p><ul><li><a href="${relativeRoute(document.route, '/')}#apps">Choose an app and its guides</a></li></ul></div>\n` : '';
   return apps + groups.map(group => `<div><p class="nav-group">${escape(group)}</p><ul>${visible.filter(doc => doc.group === group).map(doc =>
@@ -263,22 +293,24 @@ function buildSite(root = ROOT, catalog = manifest) {
   for (const document of documents) {
     const toc = document.headings.filter(heading => heading.level === 2);
     const canonical = new URL(document.route.slice(1), catalog.site).href;
-    const hubPage = !document.source.startsWith('products/');
+    const hubPage = !document.product.id;
     const home = relativeRoute(document.route, '/');
-    const productHome = home + 'threat-model-reviewer/';
+    const productHome = hubPage ? home : home + document.product.id + '/';
     const overview = hubPage ? home : productHome;
     const guides = hubPage ? home + 'help/' : productHome + 'docs/';
     const brandGlyph = hubPage
       ? '<g fill="var(--on-accent)"><rect x="8" y="8" width="6.5" height="6.5" rx="1.6"/><rect x="17.5" y="8" width="6.5" height="6.5" rx="1.6"/><rect x="8" y="17.5" width="6.5" height="6.5" rx="1.6"/><rect x="17.5" y="17.5" width="6.5" height="6.5" rx="1.6"/></g>'
-      : '<path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
+      : document.product.id === 'shot2code'
+        ? '<rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+        : '<path d="M16 4l9 3v7c0 6-3.9 10.4-9 12-5.1-1.6-9-6-9-12V7l9-3z" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 16.2l3.1 3.1 6-6.4" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
     const values = {
       SOURCE: escape(document.source), SOURCE_HASH: document.sourceHash,
       TITLE: escape(document.title), TITLE_ID: escape(document.titleId),
       DESCRIPTION: escape(document.description), LABEL: escape(document.label),
       CANONICAL: escape(canonical), ROOT: relativeRoute(document.route, '/'),
-      TITLE_CONTEXT: hubPage ? 'App Releases help' : 'Threat Model Reviewer documentation',
-      BRAND_NAME: hubPage ? 'App Releases' : 'Threat Model Reviewer',
-      BRAND_LABEL: hubPage ? 'App Releases — home' : 'Threat Model Reviewer — product overview',
+      TITLE_CONTEXT: hubPage ? 'App Releases help' : `${document.product.name} documentation`,
+      BRAND_NAME: hubPage ? 'App Releases' : document.product.name,
+      BRAND_LABEL: hubPage ? 'App Releases — home' : `${document.product.name} — product overview`,
       BRAND_GLYPH: brandGlyph,
       OVERVIEW: overview, OVERVIEW_LABEL: hubPage ? 'All apps' : 'Product overview',
       GUIDES: guides, GUIDES_LABEL: hubPage ? 'Help' : 'Guides',
@@ -332,6 +364,7 @@ function checkOrWrite(root = ROOT, check = false) {
     }
   }
   inspect(path.join(root, 'docs/threat-model-reviewer/docs'));
+  inspect(path.join(root, 'docs/shot2code/docs'));
   inspect(path.join(root, 'docs/help'));
   if (unexpected.length) throw new Error(`Unmapped generated pages require explicit review: ${unexpected.join(', ')}`);
   const drift = [];

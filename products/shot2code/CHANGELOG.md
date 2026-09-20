@@ -13,16 +13,220 @@ The full engineering changelog lives with the code:
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.
 
+## [0.4.0] — 2026-09-20
+
+[Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.4.0) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.4.0)
+
+The current release. It adds a second, optional way to reach a model — your own
+endpoint through the GitHub Copilot SDK — lets Copilot runs call MCP servers you
+configure, turns the preview into a side-by-side responsive **Review** with a
+local source audit, and puts a real Windows menu bar on the app.
+
+Everything here is **additive**. If you do not configure any of it, the app
+behaves exactly as it did in 0.3.3.
+
+### Added
+
+- **Copilot SDK BYOK: bring your own endpoint.** A single, separate connection
+  in **Settings** with its own credential — **OpenAI-compatible**, **Azure
+  OpenAI** or **Anthropic**, an optional base URL, an API key *or* a bearer
+  token, an optional endpoint model, and an Azure `api-version`.
+  **No Copilot subscription is required.** The OpenAI-compatible mode works
+  with any endpoint that speaks the OpenAI wire format — a vendor API, a
+  gateway, a self-hosted server or one your organisation runs — over any
+  `https://` URL, or `http://` when the host is `localhost`. An
+  OpenAI-compatible endpoint on `localhost` may run without a credential;
+  everything else must carry its own. The direct OpenAI and Anthropic keys are
+  **never** used as a fallback for it.
+- **The wire API is chosen for you.** **Automatic** is the default: an endpoint
+  with its own base URL gets **Chat Completions**, the interface almost every
+  OpenAI-compatible server implements, and a provider's own endpoint gets
+  **Responses**. You can pin either protocol if your endpoint needs one, and a
+  pinned choice always wins.
+- **Endpoint models, discovered or typed.** If the endpoint lists models at
+  `/models`, **Test model access** fills a picker with the ids it reported —
+  de-duplicated and capped — and you choose one. Azure and Anthropic do not
+  expose that route, so the name is typed by hand there; typing is available
+  everywhere. Model ids may be up to **128** characters and may contain the
+  `. _ : / @ + -` characters real deployments use.
+- **A custom endpoint model is one honest option.** Name a model the catalog
+  does not know and **Settings → Models** shows exactly one entry for it —
+  `<model> via <provider>`, with the run identity
+  `sdk-byok/<provider>/custom/<model>` — instead of a list of catalog names
+  that would all reach the same model. No reasoning effort is sent for it,
+  because an arbitrary endpoint model has no thinking level.
+- **BYOK models are their own selections.** Each model the connection can serve
+  appears in **Settings → Models** under **Copilot SDK (BYOK)** with the run
+  identity `sdk-byok/<provider>/<base model>`. Because that id can never collide
+  with a direct model id, you can select a model *and* its BYOK twin in the same
+  generation and compare the two results side by side. The reasoning effort you
+  picked is part of the base model, so it carries across unchanged.
+- **The identity survives History and retries.** Each option records the
+  identity it actually ran as, so retrying a BYOK option re-runs it on your
+  endpoint rather than on the provider whose model it borrowed. A custom
+  endpoint model keeps its own identity through both.
+- **Sign in to GitHub Copilot from the app.** **Settings → GitHub Copilot**
+  offers **Sign in with GitHub** when nobody is signed in. It runs the
+  **official** GitHub Copilot CLI web flow — falling back to the GitHub CLI —
+  which opens your browser and stores the credential in that tool's own
+  keychain. shot2code never receives, stores or sees the token; it only learns
+  whether a session now exists. The flow can be cancelled, and if neither CLI
+  is installed the app says so and links the official install instructions. The
+  optional token field and the terminal route are unchanged.
+- **Test a provider before you generate.** A compact **Connection checks** area
+  under the API keys tests **OpenAI**, **Anthropic**, **Gemini** and
+  **Replicate** individually, and the BYOK card gains **Test model access**.
+  Each test makes one deliberately tiny request — a single-word prompt capped
+  at 16 tokens — so a key that is malformed, revoked, out of credit or pointed
+  at a model your account cannot see fails here rather than halfway through a
+  generation. Leaving a field empty tests the key the backend holds in its own
+  configuration instead. Replicate is checked against its account endpoint, so
+  it starts no prediction.
+- **Results say what to do next.** An answer is reported as **Ready**, **Out of
+  credit** (with a link straight to that provider's billing page), **Key
+  rejected**, **Rate limited**, **Access denied**, **Model unavailable**,
+  **Configuration problem** or **Could not reach the provider** — never as an
+  unexplained failure. An account with no credit left is the case this exists
+  for: it looks like a rate limit and waiting never fixes it.
+- **Re-check the screenshot preview without restarting.** The Screenshot
+  Preview warning gains **Check again**, which re-probes the backend. Running
+  from source it gives the exact install command and asks you to restart the
+  backend; in the packaged app — where the browser is bundled — it says the
+  bundled browser could not start, suggests a restart or reinstall, and opens
+  the diagnostic log.
+- **MCP servers for Copilot runs.** Up to **8** servers in **Settings**, over
+  **stdio**, **HTTP** or **SSE**, with an optional tool allowlist and timeout.
+  Their tools appear in the activity list as `MCP · <server> · <tool>`.
+- **A responsive Review workspace.** A **Review** destination renders the
+  generated page at **two to four real widths** at once — **1440**, **768** and
+  **390** by default, any whole width from **320** to **1920** if you add your
+  own. Frames are rendered at their actual width rather than scaled screenshots,
+  and horizontal overflow is measured in the running frame.
+- **A local source audit beside the frames.** A deterministic pass over the
+  generated source reports semantic and accessibility problems — missing
+  `lang`, no `<title>`, missing viewport meta, heading order, missing `main`,
+  unlabelled images, form controls and interactive elements, duplicate `id`s,
+  positive `tabindex`, nested interactive elements, missing table captions and
+  headers, and fixed widths that will overflow your narrowest frame — each with
+  the evidence, the affected file and what to do about it.
+- **Send findings to Chat.** Tick the findings you want and they are written
+  into the composer as a grouped instruction. **It is not sent for you** — read
+  it, edit it, then send.
+- **A source-safe JSON report.** Export the review as JSON: severities, rule
+  ids, messages, evidence and guidance, with file paths reduced to a leaf name
+  and no credentials of any kind.
+- **A native Windows menu bar.** **File**, **Edit**, **View**, **Window** and
+  **Help**, driving the same commands as the keyboard: new project, upload,
+  import, export, the Preview/Code/Chat/History destinations, **Show Chat
+  panel** (`Ctrl+Alt+C`), Settings, zoom, the Help centre and the shortcut
+  reference. Items that cannot work without a project are disabled rather than
+  offered.
+
+### Changed
+
+- **The model picker has a fifth group.** **Copilot SDK (BYOK)** sits beside
+  GitHub Copilot, OpenAI, Anthropic and Google Gemini. The four native groups
+  are untouched: each still needs its own key or sign-in, and none of them is
+  ever relabelled or re-routed because BYOK is configured.
+- **Every API key field is masked.** The OpenAI, Anthropic, Gemini and
+  Replicate keys are password inputs with autocomplete off, matching the
+  Copilot token and BYOK credential fields. The OpenAI base URL stays readable,
+  because it is not a secret.
+- **A failed generation keeps its explanation.** When the backend diagnoses a
+  problem and then the connection closes, the actionable message is what you
+  see. The generic "check the console" text now appears only when there really
+  was no diagnosis, and it no longer replaces a specific one that arrived
+  first.
+- **MCP tools reach the SDK runtimes only.** A GitHub Copilot subscription
+  option and a Copilot SDK BYOK option can call them. An option running on your
+  own OpenAI, Anthropic or Gemini key runs on that provider's own client and
+  never sees an MCP tool. The picker says so.
+- **Review results are bound to what produced them.** A result records the
+  version, the option, a hash of the source and the widths it ran at. Change any
+  of those and the result is marked stale instead of being presented as current.
+
+### Fixed
+
+- **Every Settings control remains reachable.** Settings now owns a
+  viewport-bounded scroll area whether the app is empty or a project is open,
+  so the final Screenshot by URL and capability controls no longer extend below
+  the fixed desktop shell.
+
+### Security
+
+- **Sign-in is delegated, never implemented.** shot2code runs the official
+  CLI's own login command with a **fixed argument vector**, spawned directly
+  and never through a shell. Nothing a request sends can influence that command
+  line. The CLI's output is drained but never returned, logged or stored,
+  because a login flow prints one-time codes and can echo tokens. The run is
+  bounded by a timeout, can be cancelled, and is killed when the backend stops.
+- **Starting or cancelling a sign-in is origin-guarded.** Both spawn or kill a
+  process, so they are refused unless the request comes from the app on this
+  machine — `localhost`, `127.0.0.1`, `::1`, or the `null` origin the packaged
+  `file://` app sends. A missing origin is refused too, because CORS does not
+  stop a cross-site POST from being *sent*. Reading the status is unguarded
+  only because it changes nothing and returns no token.
+- **The server's key is never lent to a caller's URL.** A connection check that
+  names its own OpenAI base URL must carry its own API key in the same request.
+  The key configured on the server is only ever used with the server's own
+  endpoint, so no caller can point shot2code at a host it controls and have the
+  server's credential sent there.
+- **An MCP server needs two switches.** It must be **enabled** *and* explicitly
+  marked **trusted** before shot2code will start it or approve its tools.
+- **Read-only by default.** A trusted server still cannot use write tools until
+  **Allow write tools** is turned on for it, which the settings page labels as
+  the risk it is.
+- **A local server is spawned as an argument vector, never through a shell**, so
+  nothing in a command or its arguments is re-interpreted by `cmd` or
+  PowerShell.
+- **Remote servers must use `https://`** unless the host is `localhost`.
+- **Server secrets stay secret.** Environment values and request headers that
+  look like credentials are masked in the list and stay masked, read-only, in
+  the editor until you ask to reveal them. Only key and header *names* appear in
+  diagnostics; values never reach a log line, a validation response, a project
+  snapshot or the exported review report.
+- **Connection checks return no credential.** A result carries a category, a
+  message and the model that was tried. Provider error text is scrubbed of any
+  value that was sent before it is shown.
+- **Validation contacts nothing.** **Validate connection** and **Validate
+  servers** check the configuration only — no endpoint is called and no MCP
+  server is started. **Test model access** and the per-provider checks are the
+  opposite and say so: they contact the endpoint and may use a little quota.
+
+### Notes
+
+- Configuring neither BYOK nor MCP changes nothing: an incomplete or switched-off
+  BYOK connection, and a disabled or untrusted MCP server, are reported as
+  notices and **never block a direct generation**.
+- There is **no Gemini BYOK**: the Copilot SDK has no Gemini provider, so Gemini
+  models always use the Gemini API key directly.
+- A model reached through your own endpoint must accept the wire API in use and
+  support **image input and tool calling**. Screenshots are sent as images and
+  the agent works by calling tools, so a text-only model will fail. Neither the
+  connection check nor the endpoint's model list can tell you which models
+  qualify — only the endpoint's own documentation can.
+- A connection check is a real request to a real provider and may consume a
+  small amount of quota. It is deliberately tiny, but it is not free on a
+  metered account.
+- The source audit is a **local, deterministic check of generated source**. It is
+  not a WCAG conformance assessment and does not replace testing with real
+  assistive technology.
+
 ## [0.3.3] — 2026-09-14
 
 [Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
 [hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.3.3) ·
 [upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.3.3)
 
-The current release. It makes the packaged app start in seconds instead of
+It makes the packaged app start in seconds instead of
 minutes, lets you decide how the workspace splits its width, and replaces the
 shortcuts-only dialog with a Help centre that can open the log you need to
 attach to a bug report.
+
+Superseded by 0.4.0, which adds Copilot SDK BYOK, MCP servers and the Review
+workspace.
 
 ### Fixed
 

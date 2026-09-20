@@ -9,7 +9,7 @@ const URL_PATH = process.argv[3] || '/threat-model-reviewer/';
 // The reflow checks also run at an enlarged root font size, so reproduce that here rather than
 // guessing which rule breaks only at 200% text.
 const TEXT = process.argv[4] || '';
-const WIDTHS = (process.argv[5] || '360,390,768,1280').split(',').map(Number);
+const WIDTHS = (process.argv[5] || '320,352,390,768,1024,1366,1440,1920').split(',').map(Number);
 const PORT = 8098;
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
 

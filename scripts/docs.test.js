@@ -17,9 +17,12 @@ test('only the current public guide allowlist is generated, with deterministic o
   const productSources = fs.readdirSync(path.join(root, 'products/threat-model-reviewer'))
     .filter(name => name.endsWith('.md') || name === 'LICENSE').map(name => 'products/threat-model-reviewer/' + name).sort();
   assert.deepEqual(docs.manifest.documents.filter(doc => doc.source.startsWith('products/threat-model-reviewer/')).map(doc => doc.source).sort(), productSources);
-  assert.equal(built.documents.length, 22);
+  const shot2codeSources = fs.readdirSync(path.join(root, 'products/shot2code'))
+    .filter(name => name.endsWith('.md')).map(name => 'products/shot2code/' + name).sort();
+  assert.deepEqual(docs.manifest.documents.filter(doc => doc.source.startsWith('products/shot2code/')).map(doc => doc.source).sort(), shot2codeSources);
+  assert.equal(built.documents.length, 34);
   assert.deepEqual([...built.outputs], [...docs.buildSite().outputs]);
-  assert.deepEqual(docs.checkOrWrite(root, true), { pages: 22, changed: 0 });
+  assert.deepEqual(docs.checkOrWrite(root, true), { pages: 34, changed: 0 });
 });
 
 test('development sources, traversing paths and duplicate routes are rejected', () => {
@@ -40,13 +43,22 @@ test('development sources, traversing paths and duplicate routes are rejected', 
   assert.doesNotThrow(() => render('# Examples\n\n~~~text\nchannel: development\n~~~\n\n```text\n# Development-only\n```\n'));
 });
 
-test('the public changelog retains labelled history without presenting it as stable functionality', () => {
-  const history = built.documents.find(doc => doc.history);
-  assert.equal(history.source, 'products/threat-model-reviewer/CHANGELOG.md');
-  const html = built.outputs.get('docs' + history.route + 'index.html');
-  assert.match(html, /Unreleased items are not claims about the stable binary/);
-  assert.ok(history.headings.some(heading => heading.text === '[Unreleased]'));
-  assert.ok(history.headings.some(heading => heading.text.includes('2.5.1')));
+test('public changelogs retain labelled history without presenting it as stable functionality', () => {
+  const histories = built.documents.filter(doc => doc.history);
+  assert.deepEqual(
+    histories.map(doc => doc.source).sort(),
+    [
+      'products/shot2code/CHANGELOG.md',
+      'products/threat-model-reviewer/CHANGELOG.md'
+    ]
+  );
+  for (const history of histories) {
+    const html = built.outputs.get('docs' + history.route + 'index.html');
+    assert.match(html, /Unreleased items are not claims about the stable binary/);
+  }
+  const threatHistory = histories.find(doc => doc.source === 'products/threat-model-reviewer/CHANGELOG.md');
+  assert.ok(threatHistory.headings.some(heading => heading.text === '[Unreleased]'));
+  assert.ok(threatHistory.headings.some(heading => heading.text.includes('2.5.1')));
 });
 
 test('raw HTML and active URL schemes cannot become executable documentation', () => {
@@ -140,8 +152,14 @@ test('shared help uses hub navigation without imposing a product brand or guide 
   assert.match(productGuide, /href="\.\.\/\.\.\/threat-model-reviewer\/releases\/">Releases<\/a>/);
 });
 
-test('the three authored routes link to native guides and workflows check generated drift', () => {
-  for (const file of ['docs/index.html', 'docs/threat-model-reviewer/index.html', 'docs/threat-model-reviewer/releases/index.html']) {
+test('authored routes link to native guides and workflows check generated drift', () => {
+  for (const file of [
+    'docs/index.html',
+    'docs/threat-model-reviewer/index.html',
+    'docs/threat-model-reviewer/releases/index.html',
+    'docs/shot2code/index.html',
+    'docs/shot2code/releases/index.html'
+  ]) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
     assert.doesNotMatch(html, /<a\b[^>]*href="https:\/\/github\.com\/ArasaniRohithReddy\/app-releases\/(?:blob|tree)\/main\//, file);
     if (file === 'docs/index.html') assert.match(html, /href="#apps">Apps &amp; guides<\/a>/, file);
@@ -182,7 +200,7 @@ test('drift checks are read-only, fail on edited output, and recover by determin
     assert.throws(() => docs.checkOrWrite(temporary, true), /drift/);
     assert.equal(fs.readFileSync(target, 'utf8'), changed, 'Check must never rewrite output');
     docs.checkOrWrite(temporary, false);
-    assert.deepEqual(docs.checkOrWrite(temporary, true), { pages: 22, changed: 0 });
+    assert.deepEqual(docs.checkOrWrite(temporary, true), { pages: 34, changed: 0 });
     const unapproved = path.join(temporary, 'docs/threat-model-reviewer/docs/development-preview.md');
     fs.writeFileSync(unapproved, '# Unreleased preview fixture');
     assert.throws(() => docs.checkOrWrite(temporary, true), /Unmapped generated pages/);

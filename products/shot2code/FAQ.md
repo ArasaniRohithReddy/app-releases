@@ -9,14 +9,16 @@ logs live.
 
 **Is it free?**
 The app is free and MIT-licensed. The model provider is not: you need either an
-active GitHub Copilot subscription or your own API key, and you pay that provider
+active GitHub Copilot subscription, your own API key, or your own endpoint
+reached through a Copilot SDK BYOK connection — and you pay that provider
 directly.
 
 **Does my code or my screenshots leave the machine?**
-Only in the generation request sent to the provider you configured, and only when
-you ask for something. Projects and their history are stored locally. CodePen
-sharing is the one deliberate export, and it always asks first. Full detail:
-[DATA-HANDLING.md](DATA-HANDLING.md).
+Only in the generation request sent to the provider you configured — including
+your own endpoint, if you configured a BYOK connection — and only when you ask
+for something. Projects and their history are stored locally. The Review audit
+runs locally. CodePen sharing is the one deliberate export, and it always asks
+first. Full detail: [DATA-HANDLING.md](DATA-HANDLING.md).
 
 **Is there a macOS or Linux build?**
 No. Those platforms are supported only by
@@ -155,6 +157,197 @@ request failed.
 | Asset extraction (reusing real logos from a screenshot) | A Gemini key |
 | Image generation, editing, background removal | `REPLICATE_API_KEY` in `backend/.env` — no Settings field, so source runs only |
 | Screenshot preview (the agent checking its own output) | Chromium, which ships with the desktop app; Settings reports if it is unavailable |
+| Your own model endpoint | A Copilot SDK BYOK connection with its own credential — see below |
+| Tools from an MCP server | A server that is both enabled and trusted, and an option running on Copilot or BYOK |
+
+## Copilot SDK BYOK
+
+**Do I need a Copilot subscription to use BYOK?**
+No. It is the Copilot *SDK* — the runtime that talks to your endpoint — not your
+Copilot entitlement. A subscription is only needed for the **GitHub Copilot**
+provider, which reaches models through your plan.
+
+**Which endpoints can it reach?**
+**OpenAI-compatible**, **Azure OpenAI** and **Anthropic**. The
+OpenAI-compatible mode is deliberately broad: any endpoint that speaks the
+OpenAI wire format — a vendor API, a gateway, a self-hosted server or one your
+organisation runs — over any `https://` URL, or `http://` when the host is
+`localhost`.
+
+**My endpoint serves its own model, not a catalogue one. Does that work?**
+Yes. Put its id in **Endpoint model**. If the endpoint lists models at
+`/models`, **Test model access** fills a picker with the ids it reported;
+otherwise type it. Ids may be up to **128** characters and may contain
+`. _ : / @ + -`. It then appears in **Settings → Models** as exactly one option,
+`<model> via <provider>`, rather than a list of catalogue names that would all
+reach the same model.
+
+**Does the model need anything in particular?**
+Yes: it must accept the wire API in use and support **image input and tool
+calling**. Screenshots are sent as images and the agent works by calling tools,
+so a text-only model will fail even if the connection check passes. Neither the
+check nor the endpoint's model list tells you which models qualify — only the
+endpoint's documentation can.
+
+**Which wire API should I choose?**
+**Automatic**, unless you know otherwise. It picks Chat Completions for an
+endpoint with its own base URL — the interface almost every OpenAI-compatible
+server implements — and Responses for a provider's own endpoint. Pin one if your
+endpoint needs it; a pinned choice always wins.
+
+**Can I point it at Gemini?**
+No. The Copilot SDK has no Gemini provider, so Gemini models always use the
+Gemini API key directly. The app states this as a notice rather than failing
+later.
+
+**Will it use my existing OpenAI or Anthropic key?**
+No, and that is deliberate. The connection carries its own API key or bearer
+token. Your direct keys belong to the native providers and keep working there
+untouched.
+
+**Can I run it without a key at all?**
+Only for an **OpenAI-compatible endpoint on `localhost`** — a local Ollama, LM
+Studio or vLLM server. Everything else, including Azure and Anthropic, must have
+its own credential.
+
+**Does switching BYOK on change how my existing models run?**
+No. A native selection always runs on its native provider. Nothing is re-routed,
+which is why there is no warning about it.
+
+**Can I compare a model against the same model on my endpoint?**
+Yes — that is the point of the separate identity. Tick both
+`gpt-5.6-sol (high thinking)` and `sdk-byok/azure/gpt-5.6-sol (high thinking)`
+and one generation produces both options side by side. The reasoning effort is
+part of the base model name, so both run at the effort you picked.
+
+**Does the identity survive History and a retry?**
+Yes. Each option records the identity it ran as, so retrying a BYOK option
+re-runs it on your endpoint.
+
+**What does Validate connection actually do?**
+It checks the settings. No request is made to your endpoint, and the response
+contains presence flags and the host name only — never your credential.
+
+**And Test model access?**
+The opposite, and the card says so: it contacts the endpoint with one tiny
+request and may use a small amount of quota. It also lists the models the
+endpoint reports, when it exposes them.
+
+**My connection is half-finished. Will generation fail?**
+No. An incomplete or switched-off connection is reported as a notice and
+skipped; your direct generations are unaffected.
+
+## Checking a provider works
+
+**What does a connection check actually send?**
+One deliberately tiny request — a single-word prompt capped at 16 tokens — to
+the provider you asked about, using **only** that provider's credential. Testing
+Gemini never puts your OpenAI key on the wire.
+
+**Does it cost anything?**
+On a metered account it may use **a small amount of quota**. It is as small as a
+request can be, but it is not free. Replicate is the exception: it is checked
+against its account endpoint, so no prediction is started.
+
+**I have a valid key but everything fails. Why?**
+Check it. **Out of credit** is the usual answer: the key is fine and the account
+has nothing left to spend. Providers report that in a way that reads like a rate
+limit, so the result links straight to the billing page instead of telling you
+to wait.
+
+**Can I test the key in `backend/.env` rather than one in Settings?**
+Yes. Leave the Settings field empty and the check uses the key the backend
+holds in its own configuration.
+
+**Why was my check refused when I gave a custom OpenAI base URL?**
+A request naming its own base URL must carry its own API key. The key configured
+on the server is only ever used with the server's own endpoint, so nobody can
+point the app at a host they control and have your server's key sent there.
+
+## Signing in to GitHub Copilot
+
+**Does shot2code see my GitHub token?**
+No. **Sign in with GitHub** runs the **official** GitHub Copilot CLI web flow
+(falling back to the GitHub CLI). That tool opens your browser and stores the
+credential itself. shot2code only learns afterwards whether a session exists.
+
+**What if neither CLI is installed?**
+The button says so and links the official install instructions. You can still
+run `gh auth login` or `copilot` in a terminal, or paste a token into Settings —
+both routes are unchanged.
+
+**Can I stop a sign-in half way?**
+Yes. **Cancel** stops the flow and ends the CLI process. A sign-in is also
+bounded by a timeout and is killed if the backend stops.
+
+## MCP servers
+
+**Which options can use MCP tools?**
+GitHub Copilot subscription options and Copilot SDK BYOK options. An option
+running on your own OpenAI, Anthropic or Gemini key uses that provider's own
+client and never sees an MCP tool.
+
+**How many servers can I add?**
+Up to eight, over stdio, HTTP or SSE.
+
+**I added a server and nothing happened.**
+A server needs **both** switches: **Enabled** and **Trusted**. Until it is
+trusted, shot2code will not start it or approve its tools, and says so as a
+notice beside the model picker.
+
+**Why is my server read-only?**
+Because that is the default. Tools that can change files, data or remote state
+need **Allow write tools** turned on for that server as well.
+
+**Is my command run through a shell?**
+No. A local server is spawned as an argument vector, so nothing in the command
+or its arguments is re-interpreted by `cmd` or PowerShell. That is why arguments
+are entered one per line.
+
+**Can I use an `http://` URL?**
+Only for `localhost`. Any other host must use `https://`.
+
+**Where do my tokens end up?**
+In Settings on this device. Values that look like credentials are masked in the
+list and stay masked and read-only in the editor until you reveal them. Only
+key and header *names* ever appear in a diagnostic or validation response, and
+no value is written into project history or an exported review report.
+
+**Does Validate servers start anything?**
+No. It checks the configuration only.
+
+## Reviewing the result
+
+**What does Review actually render?**
+The generated page at two to four real widths at once — 1440, 768 and 390 by
+default. Each frame is that actual width, not a scaled screenshot, so a layout
+that breaks at 390px breaks visibly.
+
+**Can I use my own widths?**
+Yes: any whole number from 320 to 1920, keeping between two and four frames.
+Your set is remembered on this device.
+
+**Is the audit a WCAG check?**
+**No.** It is a deterministic, local pass over the generated source that reports
+semantic and accessibility problems with evidence and guidance. It is **not a
+WCAG conformance assessment** and does not replace testing with real assistive
+technology. A framework project's runtime DOM can also differ from the source
+that was audited.
+
+**Does it send my code anywhere?**
+No. The audit runs locally on the generated source.
+
+**Why is my result marked stale?**
+Because something it was bound to changed — the version, the option, the source,
+or the widths. Re-run it to get an answer about what is on screen now.
+
+**Do the findings get sent to the model automatically?**
+No. Selected findings are written into the composer as a grouped instruction.
+Read it, edit it, then send it yourself.
+
+**Is the JSON report safe to attach to an issue?**
+It is built to be: file paths are reduced to a leaf name and no credential of
+any kind is included. Read it before you post it, as you would any export.
 
 ## Importing
 

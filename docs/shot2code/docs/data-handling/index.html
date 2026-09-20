@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!-- Generated from products/shot2code/DATA-HANDLING.md (normalized SHA-256 7e34e841b78fb499d980b0b5dcb9a10fea60bbd5826e579ff69ac56251c523a2). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>shot2code — data handling &amp; privacy — shot2code documentation</title>
+  <meta name="description" content="This page enumerates what shot2code stores, what it sends, and where. It describes the published Windows build; anything marked source only is unavailable in the packaged app. The " />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/data-handling/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="shot2code — data handling &amp; privacy — App Releases" />
+  <meta property="og:description" content="This page enumerates what shot2code stores, what it sends, and where. It describes the published Windows build; anything marked source only is unavailable in the packaged app. The " />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/data-handling/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shot2code — data handling & privacy","description":"This page enumerates what shot2code stores, what it sends, and where. It describes the published Windows build; anything marked source only is unavailable in the packaged app. The ","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/data-handling/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../shot2code/" aria-label="shot2code — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>shot2code</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../shot2code/docs/">Guides</a>
+        <a href="../../../shot2code/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="./" aria-current="page">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../shot2code/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../shot2code/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Data handling &amp; privacy</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="shot2code--data-handling--privacy" tabindex="-1">shot2code — data handling &amp; privacy</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/DATA-HANDLING.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-what-leaves-the-device">1. What leaves the device</a></li><li><a href="#2-what-is-stored-on-disk">2. What is stored on disk</a></li><li><a href="#3-api-keys-and-credentials">3. API keys and credentials</a></li><li><a href="#4-telemetry">4. Telemetry</a></li><li><a href="#5-imported-projects">5. Imported projects</a></li><li><a href="#6-generated-code-and-previews">6. Generated code and previews</a></li><li><a href="#7-verifying-these-claims">7. Verifying these claims</a></li><li><a href="#8-deleting-your-data">8. Deleting your data</a></li></ul></nav></details>
+        <div class="doc-content"><p>This page enumerates what shot2code stores, what it sends, and where. It describes
+the published Windows build; anything marked <em>source only</em> is unavailable in the
+packaged app. The behaviour described here can be checked against the source at
+<a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">ArasaniRohithReddy/shot2code</a>.</p>
+<p><strong>Summary:</strong> screenshots, generated code, project history and API keys stay on
+your machine. The only outbound traffic is the request to the model provider you
+configured, the update check, and anything you explicitly share.</p>
+<h2 id="1-what-leaves-the-device" tabindex="-1">1. What leaves the device</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code — data handling &amp; privacy table 1"><table>
+<thead>
+<tr>
+<th scope="col">Destination</th>
+<th scope="col">When</th>
+<th scope="col">What is sent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The model provider you configured (GitHub Copilot, Gemini, Anthropic or OpenAI)</td>
+<td>You start or refine a generation</td>
+<td>Your prompt, the screenshots/URL/description you supplied, and the working project context the agent needs</td>
+</tr>
+<tr>
+<td><strong>Your own endpoint</strong> (Copilot SDK BYOK)</td>
+<td>You start or refine a generation with a <code>sdk-byok/…</code> option selected</td>
+<td>The same request, sent to the base URL you configured, authenticated with that connection's own key or bearer token</td>
+</tr>
+<tr>
+<td><strong>An MCP server you enabled and trusted</strong></td>
+<td>A Copilot or BYOK option calls one of its tools</td>
+<td>The tool call the model made, plus the environment values or request headers you configured for that server</td>
+</tr>
+<tr>
+<td>GitHub Copilot</td>
+<td>Listing the models your account can use</td>
+<td>The Copilot credential, to ask which models the signed-in plan offers. No prompt, project or screenshot is sent</td>
+</tr>
+<tr>
+<td>Gemini</td>
+<td>Asset extraction, or video/screen-recording input</td>
+<td>The selected image or recording</td>
+</tr>
+<tr>
+<td>Replicate (<em>source only</em>)</td>
+<td>Image generation, editing or background removal</td>
+<td>The prompt and the image you act on</td>
+</tr>
+<tr>
+<td><code>github.com</code></td>
+<td>Update check on per-user NSIS installs</td>
+<td>Nothing about you: a request for the release feed</td>
+</tr>
+<tr>
+<td>A URL you paste</td>
+<td>You generate from a URL</td>
+<td>A request to that URL to capture it</td>
+</tr>
+<tr>
+<td><strong>A provider you test</strong></td>
+<td>You choose <strong>Test</strong> in <strong>Settings → Connection checks</strong>, or <strong>Test model access</strong></td>
+<td>One minimal request — a single-word prompt capped at 16 tokens — authenticated with <strong>only</strong> that provider's credential. Replicate is checked against its account endpoint instead, so no prediction is started</td>
+</tr>
+<tr>
+<td><strong>Your own endpoint</strong> (model discovery)</td>
+<td>You choose <strong>Test model access</strong> on an OpenAI-compatible connection</td>
+<td>A request to that endpoint's <code>/models</code> route, to list the model ids it serves</td>
+</tr>
+<tr>
+<td><strong>GitHub, via the official CLI</strong></td>
+<td>You choose <strong>Sign in with GitHub</strong></td>
+<td>Nothing from shot2code. The CLI runs its own web flow in your browser and stores the credential itself; shot2code never sees the token</td>
+</tr>
+<tr>
+<td>CodePen</td>
+<td>You confirm a share</td>
+<td>The code being shared</td>
+</tr>
+</tbody>
+</table></div>
+<p>The model lists for OpenAI, Anthropic and Gemini are <strong>maintained catalogues
+inside the app</strong>, so choosing models for those providers contacts nobody. The
+BYOK list is derived from the connection you configured, not fetched from it.
+The catalogue is served to the UI by the local backend on <code>/api/models</code>, which
+reports provider availability and model capabilities and <strong>never returns a key or
+token</strong>.</p>
+<p>A connection check sends <strong>only the credential for the provider being tested</strong>.
+Testing Gemini never puts an OpenAI key on the wire, and a check that names its
+own OpenAI base URL must carry its own key — the key configured on the server is
+only ever used with the server's own endpoint.</p>
+<p>Two things deliberately contact nothing:</p>
+<ul>
+<li><strong>Validating a BYOK connection or an MCP server</strong> checks the configuration
+only. No endpoint is called, no MCP server is started. The live <strong>Test model
+access</strong> and per-provider checks are separate actions, and the app says they
+contact the endpoint before you use them.</li>
+<li><strong>The Review source audit</strong> runs locally against the generated source. No code
+and no finding is uploaded.</li>
+</ul>
+<p>Nothing else is contacted in normal use. Opening a link from the in-app <strong>Help</strong>
+centre hands the URL to your default browser — the app itself fetches nothing for
+Help, and every target is a public page on this hub or the source repository.
+Previews may load CDN-hosted framework assets declared by the generated page
+itself (for example a Tailwind or Bootstrap CDN); those requests come from the
+preview document, not from a background service.</p>
+<h2 id="2-what-is-stored-on-disk" tabindex="-1">2. What is stored on disk</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code — data handling &amp; privacy table 2"><table>
+<thead>
+<tr>
+<th scope="col">Path</th>
+<th scope="col">Contents</th>
+<th scope="col">Removed by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%LOCALAPPDATA%\shot2code\history.sqlite3</code></td>
+<td>Projects, versions, variants, prompts and variant messages</td>
+<td>Deleting a project in <strong>Recent projects</strong>, or deleting the folder</td>
+</tr>
+<tr>
+<td><code>%APPDATA%\shot2code-desktop\</code></td>
+<td>Desktop shell state and <code>shot2code-backend.log</code></td>
+<td>Deleting the folder</td>
+</tr>
+<tr>
+<td><code>%TEMP%\shot2code-installer-preinstall.log</code></td>
+<td>What the installer's pre-install safeguard found and stopped — process paths and outcome, no project data</td>
+<td>Deleting the file</td>
+</tr>
+<tr>
+<td>The app's own local storage</td>
+<td>Provider API keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), selected models, Review widths, pane widths and UI preferences</td>
+<td>Clearing them in <strong>Settings</strong></td>
+</tr>
+<tr>
+<td><code>backend/.env</code> (<em>source only</em>)</td>
+<td><code>REPLICATE_API_KEY</code>, optional <code>OPENAI_BASE_URL</code></td>
+<td>Editing the file</td>
+</tr>
+</tbody>
+</table></div>
+<p>The history database is <strong>not encrypted</strong>. Treat it like any other local project
+folder: it contains your prompts and your generated code.</p>
+<p><strong>No credential is written into the history database.</strong> A version records the run
+identity behind each option — <code>gpt-5.6-sol (high thinking)</code>, or
+<code>sdk-byok/azure/gpt-5.6-sol (high thinking)</code> — and nothing about the key, the
+endpoint or an MCP server's environment. The same is true of an exported Review
+report.</p>
+<p>Layout preferences — the chat and file-explorer pane widths — and your Review
+viewport widths are view state in the app's own local storage, never in the
+history database. Resizing a pane cannot create or alter a project version, an
+option or a retry.</p>
+<p>The database location can be redirected with <code>SHOT2CODE_DATA_DIR</code> or
+<code>SHOT2CODE_HISTORY_DB_PATH</code>.</p>
+<h2 id="3-api-keys-and-credentials" tabindex="-1">3. API keys and credentials</h2>
+<ul>
+<li>Keys entered in <strong>Settings</strong> are stored by the app on that device only. They are
+sent to the backend with a generation request and used to call that provider —
+they are not stored server-side (there is no server) and are not sent anywhere
+else.</li>
+<li><strong>The Copilot SDK BYOK connection carries its own credential.</strong> The key or
+bearer token you enter for it is used only for that endpoint; the direct
+OpenAI and Anthropic keys are never substituted for it. An OpenAI-compatible
+endpoint on <code>localhost</code> may be configured without one.</li>
+<li><strong>MCP environment values and request headers are treated as secrets.</strong> They
+are masked in the server list, masked and read-only in the editor until you
+reveal them, and only their <em>names</em> appear in a diagnostic or a validation
+response. Values are excluded from logs, from project history and from the
+exported review report.</li>
+<li>The local <code>/api/models</code> route uses those credentials only to decide which
+providers are usable and, for Copilot, to read the account's model list. It
+returns provider availability and model capabilities, never a key or token.
+<code>/api/integrations/validate</code> answers with presence flags, a host name and
+diagnostics — never a credential.</li>
+<li><code>REPLICATE_API_KEY</code> has no Settings field by design. It must be set in
+<code>backend/.env</code>, which means it is only usable when running from source.</li>
+<li>GitHub Copilot credentials are resolved at request time: a token in Settings,
+then <code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code>, then a stored
+<code>copilot</code> login, then a stored <code>gh auth login</code>. Tokens are not persisted by the
+app and not logged; the model cache is keyed by a SHA-256 fingerprint of the
+credential rather than the credential itself.</li>
+<li>Redact keys and tokens from logs and screenshots before attaching them to an
+issue.</li>
+</ul>
+<h2 id="4-telemetry" tabindex="-1">4. Telemetry</h2>
+<p>There is <strong>no analytics or telemetry SDK</strong> in the app. Nothing about your usage,
+your prompts or your projects is collected by the project.</p>
+<p>The only unsolicited network call is the update check on per-user installs, which
+reads the public GitHub Releases feed.</p>
+<h2 id="5-imported-projects" tabindex="-1">5. Imported projects</h2>
+<p>Imported code is treated as untrusted input:</p>
+<ul>
+<li><strong>It is never executed.</strong> The scanner parses text only; it does not import
+<code>tailwind.config.*</code> or any other configuration or application module, and it
+runs no install or build commands.</li>
+<li>Path traversal is rejected; dependency and build-output directories are ignored;
+archive size, entry count, file count, per-file size and total decoded text are
+all capped.</li>
+<li>Raw imported source is <strong>not</strong> written into persisted project context. Only the
+compact summary is stored; the normalized payload exists for the active
+editable-import handoff.</li>
+<li>Imported files are not uploaded anywhere by the import itself. Whatever ends up
+in the working project context can be sent to your provider on a later
+generation, exactly like the rest of the project.</li>
+</ul>
+<h2 id="6-generated-code-and-previews" tabindex="-1">6. Generated code and previews</h2>
+<ul>
+<li>Preview documents render in an <strong>opaque origin</strong> (an iframe without
+<code>allow-same-origin</code>) under a restrictive Content-Security-Policy, a
+<code>no-referrer</code> policy, and a permissions list denying camera, microphone,
+geolocation and display capture. The Review frames render the same artifact
+under the same protections, at two to four real widths.</li>
+<li>Select-and-edit uses a per-preview message bridge with a random nonce and capped
+payloads.</li>
+<li><strong>The Review source audit is local and offline.</strong> It parses the generated
+source in the app and reports findings; nothing is uploaded, and no provider is
+contacted to produce it. An exported report contains severities, rule ids,
+messages, evidence, guidance and the binding it was produced from, with file
+paths reduced to a leaf name and no credential of any kind. It is an automated
+source check, <strong>not a WCAG conformance assessment</strong>.</li>
+<li>Generated code is still model output. <strong>Review it before running it outside the
+preview</strong>, especially anything touching the network, the filesystem or
+credentials.</li>
+<li>CodePen sharing sends code to a third party. It is never automatic, always asks
+first, and public Pens may be visible to others.</li>
+</ul>
+<h2 id="7-verifying-these-claims" tabindex="-1">7. Verifying these claims</h2>
+<ul>
+<li>Run the app behind an HTTP proxy and watch the destinations for a generation, an
+import and an idle session. Validating a BYOK connection or an MCP server, and
+running a Review audit, should add no outbound request at all.</li>
+<li>Disconnect the network: the app starts, projects open from the local database,
+and generation fails with a provider error rather than silently doing something
+else.</li>
+<li>Inspect <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code> with any SQLite client to see
+exactly what is stored — including that a version records only the run identity
+behind each option, never a key or an endpoint.</li>
+<li>Read <code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code> for what the backend did
+at startup.</li>
+</ul>
+<h2 id="8-deleting-your-data" tabindex="-1">8. Deleting your data</h2>
+<ol>
+<li>Delete individual projects from <strong>Recent projects</strong> — that removes the project
+and all of its versions from the device.</li>
+<li>Clear provider keys in <strong>Settings</strong>, along with the BYOK connection's
+credential and any MCP server whose environment values or headers hold a
+token. Deleting a server removes its stored values with it.</li>
+<li>Uninstall the app (<a href="../install/#uninstalling">INSTALL.md</a>).</li>
+<li>Delete <code>%LOCALAPPDATA%\shot2code\</code> and <code>%APPDATA%\shot2code-desktop\</code>.</li>
+</ol>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../shot2code/docs/">All guides</a>
+        <a href="../../../shot2code/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../releases/">All releases</a>
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

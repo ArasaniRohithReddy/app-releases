@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 1431f8dd87f935f8b885327d985eddd16036a5a1439b4d85bc6fb5bb1071c795). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>shot2code user guide — shot2code documentation</title>
+  <meta name="description" content="Everything below describes the published Windows build. If something here does not match what you see, check the version in Settings against CHANGELOG.md. If something is failing r" />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/user-guide/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="shot2code user guide — App Releases" />
+  <meta property="og:description" content="Everything below describes the published Windows build. If something here does not match what you see, check the version in Settings against CHANGELOG.md. If something is failing r" />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/user-guide/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shot2code user guide","description":"Everything below describes the published Windows build. If something here does not match what you see, check the version in Settings against CHANGELOG.md. If something is failing r","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/user-guide/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../../shot2code/" aria-label="shot2code — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>shot2code</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../../">All apps</a>
+        <a href="../../../shot2code/docs/">Guides</a>
+        <a href="../../../shot2code/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="./" aria-current="page">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../../shot2code/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../../shot2code/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">User guide</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="shot2code-user-guide" tabindex="-1">shot2code user guide</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#first-run">First run</a></li><li><a href="#choosing-a-model-provider">Choosing a model provider</a></li><li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li><li><a href="#choosing-which-models-run">Choosing which models run</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#generating-your-first-page">Generating your first page</a></li><li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li><li><a href="#refining-the-result">Refining the result</a></li><li><a href="#the-code-tab">The Code tab</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#sizing-the-workspace">Sizing the workspace</a></li><li><a href="#history-and-retries">History and retries</a></li><li><a href="#recent-projects">Recent projects</a></li><li><a href="#importing-an-existing-project">Importing an existing project</a></li><li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li><li><a href="#exporting-a-project">Exporting a project</a></li><li><a href="#the-menu-bar">The menu bar</a></li><li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li><li><a href="#the-help-centre">The Help centre</a></li><li><a href="#settings">Settings</a></li><li><a href="#when-something-goes-wrong">When something goes wrong</a></li></ul></nav></details>
+        <div class="doc-content"><p>Everything below describes the published Windows build. If something here does
+not match what you see, check the version in <strong>Settings</strong> against
+<a href="../changelog/">CHANGELOG.md</a>. If something is failing rather than merely
+unfamiliar, <a href="../troubleshooting/">TROUBLESHOOTING.md</a> is the symptom-first
+runbook. The application itself is developed at
+<a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">ArasaniRohithReddy/shot2code</a>.</p>
+<ul>
+<li><a href="#first-run">First run</a></li>
+<li><a href="#choosing-a-model-provider">Choosing a model provider</a></li>
+<li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li>
+<li><a href="#choosing-which-models-run">Choosing which models run</a></li>
+<li><a href="#mcp-servers">MCP servers</a></li>
+<li><a href="#generating-your-first-page">Generating your first page</a></li>
+<li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li>
+<li><a href="#refining-the-result">Refining the result</a></li>
+<li><a href="#the-code-tab">The Code tab</a></li>
+<li><a href="#the-review-workspace">The Review workspace</a></li>
+<li><a href="#sizing-the-workspace">Sizing the workspace</a></li>
+<li><a href="#history-and-retries">History and retries</a></li>
+<li><a href="#recent-projects">Recent projects</a></li>
+<li><a href="#importing-an-existing-project">Importing an existing project</a></li>
+<li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li>
+<li><a href="#exporting-a-project">Exporting a project</a></li>
+<li><a href="#the-menu-bar">The menu bar</a></li>
+<li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li>
+<li><a href="#the-help-centre">The Help centre</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#when-something-goes-wrong">When something goes wrong</a></li>
+</ul>
+<h2 id="first-run" tabindex="-1">First run</h2>
+<p>Install it with the <a href="../install/">install guide</a>, then start it. The splash screen
+stays until the bundled backend answers its health check, which from 0.3.3 is
+normally a few seconds — around 5–11 seconds on a warm machine, and longer the
+first time a fresh portable copy or a freshly updated install has to be scanned.
+The shell gives up after 90 seconds rather than waiting indefinitely; if you hit
+that, see <a href="../troubleshooting/#the-app-will-not-start">TROUBLESHOOTING.md</a>.</p>
+<p>Only the core routes have to be ready for the window to open. Generation,
+evaluation and project tooling are loaded the first time you use them, and the
+Chromium and Copilot checks run in the background — so an optional capability
+that is slow or missing no longer holds up the app.</p>
+<p>The chat panel shows a <strong>provider status callout</strong>. It only states what the app
+can actually see from the window:</p>
+<ul>
+<li><em>&quot;No model provider saved in this browser&quot;</em> — no key has been entered here. The
+app will still try credentials it cannot see from the UI, such as a GitHub
+Copilot sign-in or a key in <code>backend/.env</code>.</li>
+<li><em>&quot;… saved on this device&quot;</em> — a key exists.</li>
+</ul>
+<p>It never claims a provider is connected or verified, because that is only proved
+by a real request. The callout's actions are <strong>Add a key in Settings</strong> and
+<strong>Setup guide</strong>.</p>
+<h2 id="choosing-a-model-provider" tabindex="-1">Choosing a model provider</h2>
+<p>You need <strong>one</strong> provider.</p>
+<h3 id="github-copilot-no-api-key" tabindex="-1">GitHub Copilot (no API key)</h3>
+<p>The quickest route is the button: <strong>Settings → GitHub Copilot → Sign in with
+GitHub</strong>. It runs the <strong>official</strong> GitHub Copilot CLI web-flow login (falling
+back to the GitHub CLI), which opens your browser. The credential is stored by
+that tool on this device — <strong>shot2code never receives or saves your token</strong>; it
+only learns afterwards whether a session exists. You can cancel while it is
+waiting, and if neither CLI is installed the app says so and links the official
+install instructions rather than pretending to sign you in.</p>
+<p>The terminal route still works, and is unchanged:</p>
+<pre tabindex="0" aria-label="powershell code example"><code>gh auth login        # or: copilot
+</code></pre>
+<p>Restart shot2code and open <strong>Settings</strong> — it shows which account was picked up.
+An active Copilot subscription is required.</p>
+<p>Credentials are resolved in this order:</p>
+<ol>
+<li>A token pasted into <strong>Settings</strong></li>
+<li><code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code></li>
+<li>A stored <code>copilot</code> CLI login</li>
+<li>A stored <code>gh auth login</code></li>
+</ol>
+<p>If you would rather use a token, create a fine-grained token with the
+<strong>Copilot Requests</strong> permission and paste it into Settings.</p>
+<p>Copilot's model list is the one your account actually has — see
+<a href="#choosing-which-models-run">Choosing which models run</a>.</p>
+<h3 id="api-keys" tabindex="-1">API keys</h3>
+<p>Paste a <strong>Gemini</strong>, <strong>Anthropic</strong> or <strong>OpenAI</strong> key into <strong>Settings</strong>. Keys are
+stored on this device and sent with the generation request to that provider only.
+Every key field is masked as you type.</p>
+<p>Two capabilities need a specific provider:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 1"><table>
+<thead>
+<tr>
+<th scope="col">Capability</th>
+<th scope="col">Needs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Video / screen-recording input, asset extraction</td>
+<td>A Gemini key</td>
+</tr>
+<tr>
+<td>Image generation, image editing, background removal</td>
+<td><code>REPLICATE_API_KEY</code> in <code>backend/.env</code> — there is no Settings field, so this is only available when running from source</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="testing-a-provider-before-you-generate" tabindex="-1">Testing a provider before you generate</h3>
+<p>Under the keys, <strong>Connection checks</strong> gives OpenAI, Anthropic, Gemini and
+Replicate a <strong>Test</strong> button each. A test makes <strong>one deliberately tiny
+request</strong> — a single-word prompt capped at 16 tokens — so a credential that is
+malformed, revoked, out of credit or pointed at a model your account cannot see
+fails there rather than halfway through a generation.</p>
+<ul>
+<li>Only the tested provider's credential is sent. Testing Gemini never puts your
+OpenAI key on the wire.</li>
+<li>Leave a field empty and the test uses the key the backend holds in its own
+configuration instead, so you can check that too.</li>
+<li>On a metered account a test may use <strong>a small amount of quota</strong>. Replicate is
+checked against its account endpoint, so it starts no prediction.</li>
+</ul>
+<p>The answer is always something you can act on:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 2"><table>
+<thead>
+<tr>
+<th scope="col">Result</th>
+<th scope="col">What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ready</strong></td>
+<td>The provider answered the test request</td>
+</tr>
+<tr>
+<td><strong>Out of credit</strong></td>
+<td>The key works, but the account has nothing left to spend. Links straight to that provider's billing page</td>
+</tr>
+<tr>
+<td><strong>Key rejected</strong></td>
+<td>The credential was refused — check it for a typo or issue a new one</td>
+</tr>
+<tr>
+<td><strong>Rate limited</strong></td>
+<td>Temporary. Wait for the limit to reset, or generate fewer options at once</td>
+</tr>
+<tr>
+<td><strong>Access denied</strong></td>
+<td>The account does not have access to that model</td>
+</tr>
+<tr>
+<td><strong>Model unavailable</strong></td>
+<td>The provider does not offer the model that was tried</td>
+</tr>
+<tr>
+<td><strong>Configuration problem</strong></td>
+<td>Something in the setup is wrong — usually a missing key or a base URL</td>
+</tr>
+<tr>
+<td><strong>Could not reach the provider</strong></td>
+<td>A network, proxy or firewall problem</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Out of credit</strong> is the case this exists for. Providers report an empty balance
+in a way that reads like a rate limit, so it is easy to spend an afternoon
+re-checking a key that was fine all along.</p>
+<h2 id="using-your-own-endpoint-copilot-sdk-byok" tabindex="-1">Using your own endpoint (Copilot SDK BYOK)</h2>
+<p><strong>Settings → GitHub Copilot SDK BYOK</strong> adds a second, optional way to reach a
+model: your own endpoint, through the GitHub Copilot SDK. It is <strong>additive</strong>.
+Switching it on does not change, relabel or re-route any of the providers above,
+and you can leave it off forever without missing anything.</p>
+<p><strong>No Copilot subscription is required for it.</strong> It is the Copilot <em>SDK</em> — the
+runtime — not your Copilot entitlement.</p>
+<h3 id="configuring-the-connection" tabindex="-1">Configuring the connection</h3>
+<p>There is one connection, with its own settings:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 3"><table>
+<thead>
+<tr>
+<th scope="col">Field</th>
+<th scope="col">What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Provider</strong></td>
+<td><strong>OpenAI-compatible</strong>, <strong>Azure OpenAI</strong> or <strong>Anthropic</strong></td>
+</tr>
+<tr>
+<td><strong>Base URL</strong></td>
+<td>Your endpoint. Required for Azure OpenAI. <code>https://</code> is required unless the host is <code>localhost</code></td>
+</tr>
+<tr>
+<td><strong>API key</strong></td>
+<td>The credential <strong>dedicated to this connection</strong></td>
+</tr>
+<tr>
+<td><strong>Bearer token</strong></td>
+<td>Sent instead of the API key when your gateway expects an <code>Authorization</code> header</td>
+</tr>
+<tr>
+<td><strong>Wire API</strong></td>
+<td><strong>Automatic</strong> by default — see below. Pin <strong>Responses</strong> or <strong>Chat Completions</strong> only if your endpoint needs one</td>
+</tr>
+<tr>
+<td><strong>Endpoint model</strong></td>
+<td>The model id your endpoint serves, when it is not one of the catalog models</td>
+</tr>
+<tr>
+<td><strong>Azure API version</strong></td>
+<td>The <code>api-version</code> your resource expects. Azure only</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>OpenAI-compatible</strong> is deliberately broad: it works with any endpoint that
+speaks the OpenAI wire format — a vendor API, a gateway, a self-hosted server,
+or one your organisation runs — over any <code>https://</code> URL, or <code>http://</code> when the
+host is <code>localhost</code>.</p>
+<p><strong>Validate connection</strong> checks the settings and nothing else — no request is
+made to your endpoint, and the response never contains your credential.
+<strong>Test model access</strong> is the opposite: it contacts the endpoint, and it says so.</p>
+<h3 id="the-wire-api-is-chosen-for-you" tabindex="-1">The wire API is chosen for you</h3>
+<p><strong>Automatic</strong> is the default and is usually right:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 4"><table>
+<thead>
+<tr>
+<th scope="col">Your connection</th>
+<th scope="col">Automatic picks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Has its own base URL</td>
+<td><strong>Chat Completions</strong> — the interface almost every OpenAI-compatible server implements</td>
+</tr>
+<tr>
+<td>Has no base URL (the provider's own endpoint)</td>
+<td><strong>Responses</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Pin a protocol only if your endpoint needs a specific one. A pinned choice
+always wins, and upgrading never changes a protocol you chose deliberately.</p>
+<h3 id="naming-the-model-your-endpoint-serves" tabindex="-1">Naming the model your endpoint serves</h3>
+<p>If your endpoint serves models the catalog does not know, put the id in
+<strong>Endpoint model</strong>. There are two ways to fill it in:</p>
+<ul>
+<li><strong>Discovered.</strong> If the endpoint lists models at <code>/models</code>, <strong>Test model
+access</strong> fills a picker with the ids it reported. Only OpenAI-compatible
+endpoints expose that route.</li>
+<li><strong>Typed.</strong> Type the id yourself. This is always available, and it is the only
+way for <strong>Azure OpenAI</strong> (use the deployment name) and <strong>Anthropic</strong>, neither
+of which lists models here.</li>
+</ul>
+<p>Ids may be up to <strong>128</strong> characters and may contain the <code>. _ : / @ + -</code>
+characters real deployments use. Spaces are not allowed.</p>
+<blockquote>
+<p>The discovered list is <strong>ids only</strong>. It tells you what the endpoint serves,
+never which of those models can read images or call tools.</p>
+</blockquote>
+<p><strong>The model must support vision and tool calling.</strong> Screenshots are sent as
+images and the agent works by calling tools, so a text-only model will fail even
+if the connection check passes. Only the endpoint's own documentation can tell
+you which models qualify.</p>
+<h3 id="one-honest-option-for-a-custom-model" tabindex="-1">One honest option for a custom model</h3>
+<p>Name a model the catalog does not know and <strong>Settings → Models</strong> shows exactly
+<strong>one</strong> entry for it — <code>&lt;model&gt; via &lt;provider&gt;</code>, with the run identity
+<code>sdk-byok/&lt;provider&gt;/custom/&lt;model&gt;</code>. It deliberately does not list the catalog
+model names against it: those names would be untrue, and they would all reach
+the same model anyway. No reasoning effort is sent for a custom model, because
+an arbitrary endpoint model has no thinking level.</p>
+<p>That identity is what History records and what a retry replays, so re-running
+the option reaches the same endpoint and the same model.</p>
+<h3 id="the-credential-is-its-own" tabindex="-1">The credential is its own</h3>
+<p>shot2code will <strong>not</strong> fall back to your direct OpenAI or Anthropic key for this
+connection. Those belong to the native providers and keep working there
+untouched. The one exception is an <strong>OpenAI-compatible endpoint on
+<code>localhost</code></strong>, which may run without a credential — a local Ollama, LM Studio or
+vLLM server, typically.</p>
+<p><strong>There is no Gemini BYOK.</strong> The Copilot SDK has no Gemini provider, so Gemini
+models always use the Gemini API key directly. The app says so as a notice
+rather than leaving you to work it out.</p>
+<h3 id="byok-models-are-separate-selections" tabindex="-1">BYOK models are separate selections</h3>
+<p>Every model the connection can serve appears in <strong>Settings → Models</strong> under
+<strong>Copilot SDK (BYOK)</strong> as its own entry, with the run identity:</p>
+<pre tabindex="0" aria-label="Text code example"><code>sdk-byok/&lt;provider&gt;/&lt;base model&gt;
+</code></pre>
+<p>for example <code>sdk-byok/azure/gpt-5.6-sol (high thinking)</code>. No direct model id
+starts with <code>sdk-byok/</code>, so the two can never be confused — which means:</p>
+<ul>
+<li><strong>A model and its BYOK twin can both be selected for the same generation.</strong>
+Tick <code>gpt-5.6-sol (high thinking)</code> <em>and</em>
+<code>sdk-byok/azure/gpt-5.6-sol (high thinking)</code> and you get two options: one on
+OpenAI's own API, one on your endpoint, side by side.</li>
+<li><strong>A native pick is never re-routed.</strong> Having BYOK switched on does not move a
+native selection onto your endpoint. There is nothing to warn about, because
+nothing is silently redirected.</li>
+<li><strong>The reasoning effort carries across.</strong> The effort is part of the base model
+name, so the BYOK entry runs at the same effort you picked.</li>
+<li><strong>The identity is what History records.</strong> Each option stores the identity it
+actually ran as, so retrying a BYOK option re-runs it on your endpoint rather
+than on the provider whose model it borrowed.</li>
+</ul>
+<h3 id="an-incomplete-connection-does-not-block-anything" tabindex="-1">An incomplete connection does not block anything</h3>
+<p>If the connection is switched off, missing its credential, or missing the Azure
+endpoint, shot2code reports it as a notice beside the model picker and carries
+on. Your direct OpenAI, Anthropic, Gemini and Copilot generations are
+unaffected.</p>
+<h2 id="choosing-which-models-run" tabindex="-1">Choosing which models run</h2>
+<p>Model selection is not a Copilot-only feature. <strong>Settings → Models</strong>, and the
+compact picker beside the composer, show every model you can currently use,
+grouped by provider:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 5"><table>
+<thead>
+<tr>
+<th scope="col">Group</th>
+<th scope="col">Where the list comes from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>Discovered from the signed-in account — marked <em>Live</em>, because it is your plan's real entitlement</td>
+</tr>
+<tr>
+<td><strong>OpenAI</strong></td>
+<td>A maintained, validated catalogue — marked <em>Curated</em></td>
+</tr>
+<tr>
+<td><strong>Anthropic</strong></td>
+<td>A maintained, validated catalogue — marked <em>Curated</em></td>
+</tr>
+<tr>
+<td><strong>Google Gemini</strong></td>
+<td>A maintained, validated catalogue — marked <em>Curated</em></td>
+</tr>
+<tr>
+<td><strong>Copilot SDK (BYOK)</strong></td>
+<td>The models your own connection can serve — marked <em>Yours</em> and <em>Experimental</em></td>
+</tr>
+</tbody>
+</table></div>
+<p>A provider only appears once shot2code can see a credential for it. With none
+configured, the picker says so and points at Settings and GitHub sign-in rather
+than showing an empty list. The four native groups still require their own key
+or sign-in: a BYOK connection never makes one of them available, and never
+changes what a native group says about where its credential came from.</p>
+<h3 id="selecting-one-model-several-or-none" tabindex="-1">Selecting one model, several, or none</h3>
+<ul>
+<li><strong>Tick nothing</strong> — <em>automatic</em>. shot2code chooses for you and produces the
+full number of options the run allows.</li>
+<li><strong>Tick one</strong> — a single option, generated by exactly that model.</li>
+<li><strong>Tick several, across providers if you like</strong> — one option per selected model,
+so you can compare an OpenAI and an Anthropic attempt at the same screenshot
+side by side.</li>
+</ul>
+<h3 id="how-many-options-you-actually-get" tabindex="-1">How many options you actually get</h3>
+<p>One option is generated per selected model, capped by the per-run limit:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 6"><table>
+<thead>
+<tr>
+<th scope="col">Run</th>
+<th scope="col">Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First generation from screenshots, a URL or a description</td>
+<td>Up to 4</td>
+</tr>
+<tr>
+<td>An update to an existing version</td>
+<td>Up to 2</td>
+</tr>
+<tr>
+<td>Anything generated from a video or screen recording</td>
+<td>Up to 2</td>
+</tr>
+</tbody>
+</table></div>
+<p>The picker states the result in words — <em>&quot;3 options, one per selected model.&quot;</em>
+If you tick more models than the run allows, it says so too: only the first
+models up to the limit are used, and the rest are ignored for that run.</p>
+<h3 id="stale-deprecated-and-video-incapable-picks" tabindex="-1">Stale, deprecated and video-incapable picks</h3>
+<ul>
+<li><strong>A saved model that can no longer run</strong> — because the key was removed, or the
+provider retired it — is called out as <em>&quot;N saved models can no longer run …
+They are ignored until you remove them.&quot;</em>, with a <strong>Remove</strong> action. Your other
+picks keep working.</li>
+<li>If the catalogue cannot be loaded at all, your selection is left alone rather
+than being quietly reset.</li>
+<li><strong>Deprecated models are hidden</strong> unless you tick <strong>Show deprecated models</strong>, or
+you already have one selected — a pick never disappears from the list it was
+made in.</li>
+<li><strong>In video mode the list is filtered to models that can read video</strong>, because
+everything else would fail on the input. The same is true of the Copilot list
+generally: models that cannot read images are not offered, since turning a
+screenshot into code requires image input.</li>
+<li>If your plan offers models this build does not support yet, the provider says
+how many — it does not pretend they are unavailable to you.</li>
+</ul>
+<p>Selecting models is a preference, not a purchase: each option is still a real
+request billed by the provider it belongs to.</p>
+<h2 id="mcp-servers" tabindex="-1">MCP servers</h2>
+<p><strong>Settings → MCP servers</strong> lets a generation call tools from Model Context
+Protocol servers you configure — a component-library lookup, a design-token
+service, an internal documentation index. Up to <strong>eight</strong> can be configured.</p>
+<h3 id="which-options-actually-get-the-tools" tabindex="-1">Which options actually get the tools</h3>
+<p>MCP is a Copilot SDK feature, so it reaches the runtimes that use the SDK:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 7"><table>
+<thead>
+<tr>
+<th scope="col">Option</th>
+<th scope="col">Sees MCP tools?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A <strong>GitHub Copilot</strong> subscription model</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>A <strong>Copilot SDK BYOK</strong> model</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>A model on your own OpenAI, Anthropic or Gemini key</td>
+<td><strong>No</strong> — it runs on that provider's own client</td>
+</tr>
+</tbody>
+</table></div>
+<p>The picker states this for the current selection rather than leaving you to
+infer it from an empty activity list.</p>
+<h3 id="adding-a-server" tabindex="-1">Adding a server</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 8"><table>
+<thead>
+<tr>
+<th scope="col">Field</th>
+<th scope="col">Applies to</th>
+<th scope="col">What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td>All</td>
+<td>What appears in the activity list</td>
+</tr>
+<tr>
+<td><strong>Transport</strong></td>
+<td>All</td>
+<td><strong>Local program (stdio)</strong>, <strong>HTTP</strong> or <strong>Server-sent events (SSE)</strong></td>
+</tr>
+<tr>
+<td><strong>Command</strong> and <strong>Arguments</strong></td>
+<td>stdio</td>
+<td>The program to run and its arguments, one per line</td>
+</tr>
+<tr>
+<td><strong>Environment variables</strong></td>
+<td>stdio</td>
+<td><code>NAME=value</code> per line, or a pasted JSON object</td>
+</tr>
+<tr>
+<td><strong>Working directory</strong></td>
+<td>stdio</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td><strong>URL</strong></td>
+<td>HTTP / SSE</td>
+<td><code>https://</code> is required unless the host is <code>localhost</code></td>
+</tr>
+<tr>
+<td><strong>Request headers</strong></td>
+<td>HTTP / SSE</td>
+<td><code>Name=value</code> per line, or a pasted JSON object</td>
+</tr>
+<tr>
+<td><strong>Tool allowlist</strong></td>
+<td>All</td>
+<td>Optional. Leave empty to allow every tool the server offers</td>
+</tr>
+<tr>
+<td><strong>Timeout</strong></td>
+<td>All</td>
+<td>Optional, in milliseconds</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Validate servers</strong> checks the configuration only. No server is started and no
+URL is contacted.</p>
+<h3 id="two-switches-then-a-third-for-writes" tabindex="-1">Two switches, then a third for writes</h3>
+<p>A server does nothing until <strong>both</strong> of these are on:</p>
+<ul>
+<li><strong>Enabled</strong> — the ordinary on/off.</li>
+<li><strong>Trusted</strong> — the separate acknowledgement that shot2code may start it and
+approve its tools. For a local server that means <strong>running that program on
+this device</strong>.</li>
+</ul>
+<p>A trusted, enabled server is still <strong>read-only</strong>. Tools that can change files,
+data or remote state require <strong>Allow write tools</strong> as well, which is labelled as
+the risk it is. Each row shows its current state — <em>Off</em>, <em>Not trusted — will
+not start</em>, <em>Active · read-only</em> or <em>Active · write tools allowed</em>.</p>
+<h3 id="how-a-local-server-is-launched" tabindex="-1">How a local server is launched</h3>
+<p>The command is spawned as an <strong>argument vector, never through a shell</strong>, so
+nothing in the command or its arguments is re-interpreted by <code>cmd</code> or
+PowerShell. Arguments are given one per line for exactly that reason.</p>
+<h3 id="server-secrets" tabindex="-1">Server secrets</h3>
+<p>Environment values and request headers often carry tokens, so:</p>
+<ul>
+<li>values that look like credentials are <strong>masked</strong> in the server list;</li>
+<li>in the editor they stay <strong>masked and read-only</strong> until you click <strong>Show values
+to edit</strong>;</li>
+<li>only key and header <strong>names</strong> ever appear in a diagnostic or a validation
+response;</li>
+<li>values are <strong>never</strong> written into a project snapshot, the local history
+database or an exported review report.</li>
+</ul>
+<h3 id="when-a-server-is-not-running" tabindex="-1">When a server is not running</h3>
+<p>A disabled or untrusted server is reported as a notice beside the model picker —
+<em>&quot;'Docs' is not marked trusted, so shot2code will not start it or approve its
+tools.&quot;</em> — and the generation proceeds without it. An incomplete MCP draft
+<strong>never blocks a direct generation</strong>.</p>
+<h3 id="seeing-the-tools-run" tabindex="-1">Seeing the tools run</h3>
+<p>MCP tool calls appear in the option's activity list as
+<code>MCP · &lt;server&gt; · &lt;tool&gt;</code>, alongside shot2code's own tools.</p>
+<h2 id="generating-your-first-page" tabindex="-1">Generating your first page</h2>
+<ol>
+<li>Choose an input: upload a screenshot, paste a URL, write a description, or
+record the screen.</li>
+<li>Pick the output stack (see the <a href="../#output-stacks">stack list</a>).</li>
+<li>Optionally pick the models — see
+<a href="#choosing-which-models-run">Choosing which models run</a>.</li>
+<li>Generate. The options run in parallel — one per selected model, or the
+automatic set — so you can compare and keep the closest one.</li>
+</ol>
+<p>Behind the scenes the model calls tools (create a file, edit a file, extract
+assets, render a screenshot preview) and shot2code runs them locally and feeds
+the results back. See <a href="../architecture/">ARCHITECTURE.md</a>.</p>
+<h2 id="using-more-than-one-screenshot" tabindex="-1">Using more than one screenshot</h2>
+<p>When you upload more than one screenshot, shot2code asks how they relate. The
+answer changes what the model is required to produce:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 9"><table>
+<thead>
+<tr>
+<th scope="col">Mode</th>
+<th scope="col">Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Separate pages</strong> (default)</td>
+<td>One navigable route or view per screenshot; none may be omitted</td>
+</tr>
+<tr>
+<td>Responsive views</td>
+<td>One page, with breakpoints inferred from the screenshots</td>
+</tr>
+<tr>
+<td>UI states</td>
+<td>One interface, with interactions that move between the states</td>
+</tr>
+<tr>
+<td>Supporting references</td>
+<td>Screenshot 1 is the target; the rest clarify details</td>
+</tr>
+</tbody>
+</table></div>
+<p>If only one of several screenshots shows up in the result, upload them together
+and pick <strong>Separate pages</strong> — that mode makes the model account for every view.</p>
+<h2 id="refining-the-result" tabindex="-1">Refining the result</h2>
+<ul>
+<li><strong>Say what to change</strong> in the chat panel. A new version is created; the previous
+one is kept.</li>
+<li><strong>Select an element</strong> in the preview and describe the change to scope an edit to
+that element.</li>
+<li>A new project offers three starter suggestions (for example <em>Make the layout
+responsive</em>, <em>Fix accessibility issues</em>, <em>Polish spacing and typography</em>). They
+<strong>insert</strong> the full instruction into the composer so you can edit it first —
+nothing is sent on your behalf.</li>
+</ul>
+<h2 id="the-code-tab" tabindex="-1">The Code tab</h2>
+<p>The Code tab is the authoritative project source: a keyboard-navigable file tree,
+file tabs (shown once a project has more than one file), and an editor.</p>
+<ul>
+<li>Badges tell you what a file is: <strong>Entry</strong>, <strong>Preview</strong>, <strong>Read-only</strong>,
+<strong>Generated</strong>.</li>
+<li><strong>Format</strong> reflows HTML, CSS, JavaScript and JSON. It is never automatic, never
+evaluates the file, refuses component source (JSX/TSX/Vue) instead of rewriting
+it, and leaves the file untouched when the syntax is ambiguous or unbalanced —
+so exports keep their original bytes.</li>
+<li><strong>Copy</strong>, <strong>Download</strong> and <strong>CodePen</strong> sit next to it.</li>
+<li>The status bar shows the language and line count (for example <em>HTML · 26 lines</em>),
+the hint <em>&quot;Tab moves focus outside the editor; Ctrl+] indents&quot;</em>, and the reason
+CodePen is unavailable when it is.</li>
+<li>The file explorer is collapsible and remembers your choice; it opens by default
+only when a project has more than one file. On a multi-file project you can
+also drag the divider between the tree and the editor — see
+<a href="#sizing-the-workspace">Sizing the workspace</a>.</li>
+</ul>
+<h2 id="the-review-workspace" tabindex="-1">The Review workspace</h2>
+<p><strong>Review</strong> sits beside Preview and Code. It answers two questions about the
+generated page at once: <em>does it hold together at the widths I care about</em>, and
+<em>is the source it produced sound</em>.</p>
+<h3 id="real-width-frames" tabindex="-1">Real-width frames</h3>
+<p>The page is rendered at <strong>two to four widths simultaneously</strong>, each in a frame
+of that actual width — not a scaled-down screenshot, so a layout that breaks at
+390px breaks visibly in the 390px frame.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 10"><table>
+<thead>
+<tr>
+<th scope="col">Default</th>
+<th scope="col">Width</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop</td>
+<td>1440</td>
+</tr>
+<tr>
+<td>Tablet</td>
+<td>768</td>
+</tr>
+<tr>
+<td>Mobile</td>
+<td>390</td>
+</tr>
+</tbody>
+</table></div>
+<p>Add, remove or edit them. A custom width is any whole number from <strong>320</strong> to
+<strong>1920</strong>; anything else is refused with <em>&quot;Width must be between 320px and
+1920px.&quot;</em> rather than silently clamped. Keep between two and four — the point is
+comparison, so one frame is not a review and five is not readable. Your set is
+remembered on this device.</p>
+<h3 id="horizontal-overflow" tabindex="-1">Horizontal overflow</h3>
+<p>Overflow is <strong>measured in the running frame</strong>, not guessed from the source: each
+frame reports whether its content is wider than the viewport, and by how much.
+That catches a fixed-width element, an unwrapped table or a long unbroken string
+that only misbehaves once it is actually laid out.</p>
+<h3 id="the-local-source-audit" tabindex="-1">The local source audit</h3>
+<p>Alongside the frames, shot2code runs a <strong>deterministic, local pass over the
+generated source</strong> and reports semantic and accessibility problems by severity:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 11"><table>
+<thead>
+<tr>
+<th scope="col">Checks include</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing <code>lang</code> on <code>&lt;html&gt;</code>, a missing or empty <code>&lt;title&gt;</code>, a missing viewport meta</td>
+</tr>
+<tr>
+<td>Heading order that skips levels, or a document with no first-level heading</td>
+</tr>
+<tr>
+<td>No <code>main</code> landmark, or more than one</td>
+</tr>
+<tr>
+<td>Images without alternative text</td>
+</tr>
+<tr>
+<td>Form controls and interactive elements with no accessible name</td>
+</tr>
+<tr>
+<td>Duplicate <code>id</code> values, positive <code>tabindex</code>, interactive elements nested inside each other</td>
+</tr>
+<tr>
+<td>Tables without a caption or header cells</td>
+</tr>
+<tr>
+<td>Fixed widths that will overflow your narrowest frame</td>
+</tr>
+</tbody>
+</table></div>
+<p>Each finding carries the <strong>evidence</strong> from the source, the <strong>affected file</strong> and
+<strong>what to do about it</strong>.</p>
+<p><strong>This is an automated check of generated source. It is not a WCAG conformance
+assessment, and it does not replace testing with real assistive technology.</strong>
+A framework project's runtime DOM can also differ from the source that was
+audited; the report says so.</p>
+<h3 id="sending-findings-to-chat" tabindex="-1">Sending findings to Chat</h3>
+<p>Tick the findings you want addressed and send them to the conversation. They are
+grouped by rule and <strong>written into the composer</strong> — shot2code does <strong>not</strong> send
+them for you. Read the instruction, edit it, then send it like any other
+request.</p>
+<h3 id="results-are-bound-to-what-produced-them" tabindex="-1">Results are bound to what produced them</h3>
+<p>A review records the version, the option, a hash of the source it audited and
+the widths it ran at. Edit the code, switch option, generate a new version or
+change the widths, and the result is marked <strong>stale</strong> instead of being presented
+as if it were current. Re-run it to get an answer about what is on screen now.</p>
+<h3 id="the-json-report" tabindex="-1">The JSON report</h3>
+<p>Export the review as JSON for an issue or a pull request. It contains the
+severities, rule ids, messages, evidence, guidance and a summary count, plus the
+version, option, source hash and widths it was bound to. File paths are reduced
+to a leaf name, and <strong>no credential of any kind — provider key, BYOK key, MCP
+environment value or request header — is included</strong>. The report carries its own
+notice that it is an automated source audit rather than certification.</p>
+<h2 id="sizing-the-workspace" tabindex="-1">Sizing the workspace</h2>
+<p>On wide windows (≥ 1280px) you decide how the width is shared. Two dividers do
+this:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 12"><table>
+<thead>
+<tr>
+<th scope="col">Divider</th>
+<th scope="col">Between</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chat divider</td>
+<td>The conversation/History panel and Preview or Code</td>
+</tr>
+<tr>
+<td>Explorer divider</td>
+<td>The project file tree and the editor, on multi-file projects</td>
+</tr>
+</tbody>
+</table></div>
+<p>Drag either one, or focus it and use the keyboard:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 13"><table>
+<thead>
+<tr>
+<th scope="col">Key</th>
+<th scope="col">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>←</code> / <code>→</code></td>
+<td>Move the divider 16px</td>
+</tr>
+<tr>
+<td><code>Shift</code> + <code>←</code> / <code>→</code></td>
+<td>Move it 64px</td>
+</tr>
+<tr>
+<td><code>Home</code> / <code>End</code></td>
+<td>Jump to the narrowest / widest allowed width</td>
+</tr>
+<tr>
+<td><code>Enter</code>, or double-click</td>
+<td>Restore the default width</td>
+</tr>
+<tr>
+<td><code>Escape</code></td>
+<td>Cancel a drag that is in progress</td>
+</tr>
+</tbody>
+</table></div>
+<p>Each divider is a real separator for assistive technology: it reports its
+orientation, its current, minimum and maximum values, readable value text, and
+which pane it controls, and it carries a 44-pixel interaction gutter with visible
+focus.</p>
+<p>Two things worth knowing:</p>
+<ul>
+<li><strong>Widths are clamped to the window.</strong> Neither the chat panel nor the main
+workspace can be dragged into uselessness, and the widths re-clamp if you
+resize the window.</li>
+<li><strong>A width is a view preference, nothing more.</strong> Your widths are remembered
+across restarts and across collapse/reopen cycles, and they are stored
+separately from your projects. Resizing a pane can never change or create a
+version, an option, a retry or anything in History.</li>
+</ul>
+<p>Below that breakpoint nothing changes: <strong>Preview</strong>, <strong>Chat</strong> and <strong>History</strong>
+remain three separate destinations and no divider is shown.</p>
+<h2 id="history-and-retries" tabindex="-1">History and retries</h2>
+<p>Every generation becomes a version you can step back through. <strong>History</strong> is what
+this is called everywhere in the app — the rail entry, the preview control that
+reads <strong>History <em>n</em>/<em>m</em></strong>, and the narrow-window destination.</p>
+<ul>
+<li>On a wide window, open it from the rail or from the preview toolbar.</li>
+<li>On a narrow window, <strong>Preview</strong>, <strong>Chat</strong> and <strong>History</strong> are three separate,
+labelled destinations in the top bar, so History never hides behind the
+Preview/Chat switch.</li>
+<li>History rows are real buttons: reachable by keyboard, with visible focus and
+touch-sized targets.</li>
+</ul>
+<p>Retrying a version reuses the provider and model choices that produced the
+original options, and the retry keeps a link to the version it re-rolls, so it
+does not look like an unrelated branch. History records the concrete <strong>run
+identity</strong> behind each option — <code>gpt-5.6-sol (high thinking)</code> for a native
+option, <code>sdk-byok/azure/gpt-5.6-sol (high thinking)</code> for one that ran on your
+own endpoint — so you can tell which one you kept, and a retry re-runs it on the
+same runtime rather than on the provider whose model it borrowed.</p>
+<p>The options strip appears only when a version actually has more than one option.</p>
+<h2 id="recent-projects" tabindex="-1">Recent projects</h2>
+<p>Projects, versions and prompts are saved in a local SQLite database
+(<code>history.sqlite3</code> under <code>%LOCALAPPDATA%\shot2code\</code>), so <strong>Recent projects</strong> can
+reopen earlier work. Saves are debounced, so ordinary typing does not thrash the
+disk.</p>
+<p>Deleting a project removes it and every saved version from the device. Nothing is
+uploaded anywhere.</p>
+<h2 id="importing-an-existing-project" tabindex="-1">Importing an existing project</h2>
+<p><strong>Import → Folder, ZIP or source files</strong> takes a project folder, a ZIP archive, or
+individual source files.</p>
+<p>shot2code validates paths and size limits, ignores dependency and build-output
+directories, rejects unsafe or malformed input, and detects the likely framework
+from package metadata, source files and CDN tags — <strong>without executing</strong> any of
+the project's configuration or application code.</p>
+<p>After inspection you choose:</p>
+<ul>
+<li><strong>Use as design context</strong> — only a compact summary is kept and added to the
+design-system context for later prompts, or</li>
+<li><strong>Open editable project</strong> — the normalized file payload is handed to the editor.</li>
+</ul>
+<p>Raw source is held only for that active handoff; it is never written into
+persisted project context. The active context is shown above every input tab and
+can be cleared.</p>
+<p>Note that imported component paths are naming and API context. A generated
+preview is self-contained, so it will not resolve imports from your local
+project.</p>
+<h2 id="preview-codepen-and-sharing" tabindex="-1">Preview, CodePen and sharing</h2>
+<p>The preview is a <strong>derived</strong> artifact, not the source of truth: browser-ready
+local CSS, JavaScript, images, SVGs and encoded fonts are inlined where possible.
+If a framework build or a local asset cannot be represented safely, the preview
+shows a deterministic fallback or diagnostic while every source file stays
+editable and downloadable.</p>
+<p>The controls above it are grouped by what they do: a <strong>Fit / 100%</strong> segmented
+control for scale, and a labelled <strong>History <em>n</em>/<em>m</em></strong> control for versions. At
+<strong>100%</strong> a fixed-width desktop canvas is centred inside a neutral framed
+viewport rather than pinned to the left edge; when the window is narrower than
+the canvas, the frame scrolls horizontally on purpose instead of cropping the
+start of the page.</p>
+<p>Preview documents run in an opaque-origin sandbox with a restrictive
+Content-Security-Policy; select-and-edit talks to the app through validated,
+per-preview messages rather than direct parent-window access.</p>
+<p><strong>CodePen</strong> is offered only when the selected stack can honestly run in a
+browser-only Pen. Sharing always asks first, because the code leaves your device
+and a public Pen may be visible to others. For build-dependent projects, download
+the project folder instead.</p>
+<h2 id="exporting-a-project" tabindex="-1">Exporting a project</h2>
+<p>Two shapes:</p>
+<ul>
+<li><strong>Single HTML</strong> — keeps the generated document intact, pins the working Babel
+runtime where one is used, and bundles downloaded images and fonts under
+<code>assets/</code>.</li>
+<li><strong>Project folder</strong> — a Vite project using an explicit strategy per stack. HTML
+and CDN stacks get a deterministic static-copy production build so inline
+modules and import maps are not rebundled or reordered; React and Preact use
+Vite's framework build path when the generated source is safely transformable,
+and a documented Vite HTML fallback when it is not.</li>
+</ul>
+<p>When the editor holds a multi-file project, export treats that source tree and its
+declared entry point as authoritative — even if the preview used a composed HTML
+fallback — and preserves existing package and framework configuration. If there is
+no valid root <code>package.json</code> build command, export keeps every source file and
+adds a <strong>Safe fallback</strong> note instead of generating a plausible but potentially
+broken scaffold.</p>
+<h2 id="the-menu-bar" tabindex="-1">The menu bar</h2>
+<p>The desktop app has a native Windows menu bar — <strong>File</strong>, <strong>Edit</strong>, <strong>View</strong>,
+<strong>Window</strong> and <strong>Help</strong> — driving exactly the same commands as the keyboard, so
+the two can never disagree.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 14"><table>
+<thead>
+<tr>
+<th scope="col">Menu</th>
+<th scope="col">Holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File</strong></td>
+<td>New project, Upload screenshots…, Import project…, Export current project…, Settings…, Exit</td>
+</tr>
+<tr>
+<td><strong>Edit</strong></td>
+<td>The standard editing commands</td>
+</tr>
+<tr>
+<td><strong>View</strong></td>
+<td>Preview, Code, Chat, History, <strong>Show Chat panel</strong>, Reload, Toggle Developer Tools, Zoom In / Zoom Out / Actual Size</td>
+</tr>
+<tr>
+<td><strong>Window</strong></td>
+<td>The standard window commands</td>
+</tr>
+<tr>
+<td><strong>Help</strong></td>
+<td>The Help centre, the keyboard shortcut reference, and About shot2code with the running version</td>
+</tr>
+</tbody>
+</table></div>
+<p>Items that need a project — export, the destinations, the chat panel — are
+<strong>disabled</strong> until one is open, rather than being offered and failing. The
+accelerators shown in the menu are the shortcuts documented below.</p>
+<h2 id="keyboard-shortcuts" tabindex="-1">Keyboard shortcuts</h2>
+<p>Press <strong>Ctrl+/</strong> (or <strong>Help</strong> in the rail) to open the <a href="#the-help-centre">Help centre</a>,
+which carries the complete reference.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 15"><table>
+<thead>
+<tr>
+<th scope="col">Shortcut</th>
+<th scope="col">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+1</code> … <code>Ctrl+4</code></td>
+<td>Preview, Code, Chat, History</td>
+</tr>
+<tr>
+<td><code>Ctrl+3</code> (again)</td>
+<td>Collapse the chat panel on wide windows; <code>Ctrl+1</code> or <code>Ctrl+4</code> bring it back</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+C</code></td>
+<td>Show the Chat panel</td>
+</tr>
+<tr>
+<td><code>Ctrl+Shift+Enter</code></td>
+<td>Retry an AI-generated version</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+N</code></td>
+<td>New project</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+I</code></td>
+<td>Import</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+U</code></td>
+<td>Upload</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+S</code></td>
+<td>Settings</td>
+</tr>
+<tr>
+<td><code>Ctrl+Alt+E</code></td>
+<td>Export the current project</td>
+</tr>
+<tr>
+<td><code>Ctrl+/</code></td>
+<td>Help centre, including the shortcut reference</td>
+</tr>
+<tr>
+<td><code>Tab</code> / <code>Ctrl+]</code> (in the editor)</td>
+<td>Move focus out of the editor / indent</td>
+</tr>
+<tr>
+<td><code>←</code> <code>→</code> / <code>Shift</code>+<code>←</code> <code>→</code> / <code>Home</code> <code>End</code> (on a divider)</td>
+<td>Resize a pane — see <a href="#sizing-the-workspace">Sizing the workspace</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>In the <strong>desktop app</strong> only, zoom is explicit:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 16"><table>
+<thead>
+<tr>
+<th scope="col">Shortcut</th>
+<th scope="col">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+=</code> or <code>Ctrl++</code> (numpad add works too)</td>
+<td>Zoom in</td>
+</tr>
+<tr>
+<td><code>Ctrl+-</code> (numpad subtract works too)</td>
+<td>Zoom out</td>
+</tr>
+<tr>
+<td><code>Ctrl+0</code></td>
+<td>Reset to 100%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Zoom moves in 10-point steps and stops at 50% and 300%. The recognised zoom keys
+replace Chromium's own handling rather than firing twice, and they leave ordinary
+editor input, AltGr and IME composition alone.</p>
+<p>Navigation shortcuts pause while you are typing or while a dialog is open.</p>
+<h2 id="the-help-centre" tabindex="-1">The Help centre</h2>
+<p><strong>Ctrl+/</strong>, or <strong>Help</strong> in the rail, opens four sections:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 17"><table>
+<thead>
+<tr>
+<th scope="col">Section</th>
+<th scope="col">What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Get started</strong></td>
+<td>Connecting a model provider, then going from a screenshot to an export</td>
+</tr>
+<tr>
+<td><strong>Guides</strong></td>
+<td>The published architecture, data-handling, security, changelog, releasing and contributing documents</td>
+</tr>
+<tr>
+<td><strong>Support</strong></td>
+<td>The FAQ, the troubleshooting runbook, the issue tracker and the source repository</td>
+</tr>
+<tr>
+<td><strong>Keyboard shortcuts</strong></td>
+<td>The full reference</td>
+</tr>
+</tbody>
+</table></div>
+<p>Every link opens in your browser and points at the authoritative copy — the
+<a href="../../">product page</a>, the
+<a href="../../releases/">complete release history</a>,
+or the guide in this repository — so Help never drifts from what is published.</p>
+<p>In the packaged desktop app, <strong>Support</strong> also offers <strong>Open diagnostic logs</strong>,
+which opens the folder holding
+<code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code> and tells you whether that
+succeeded. That log is the first thing to attach to a bug report. The browser
+development build writes no such log and says so instead of showing a button
+that cannot work.</p>
+<h2 id="settings" tabindex="-1">Settings</h2>
+<p>Settings holds your provider keys, the
+<a href="#choosing-which-models-run">model selection</a> across every group, the
+<a href="#using-your-own-endpoint-copilot-sdk-byok">Copilot SDK BYOK connection</a>, your
+<a href="#mcp-servers">MCP servers</a>, the running version and the update state
+(<strong>Check now</strong>, download progress, <strong>Restart &amp; install</strong>), and it reports whether
+the screenshot-preview browser is available.</p>
+<p>Every credential field is a password input, and nothing you type into one
+reaches a log line, a toast or a validation response.</p>
+<p>The page has its own viewport-bounded scrollbar. Even with a project open, you
+can scroll through the full settings list to the final Screenshot by URL and
+capability controls without changing browser zoom.</p>
+<p>Screenshot preview lets the agent render its own output in a headless browser and
+check its work. Chromium ships with the desktop app; if it is unavailable,
+Settings says so and the app skips that tool.</p>
+<p>If Settings reports that the update was <strong>not</strong> started because shot2code could
+not shut down safely, that is the guard working: quit the app completely and try
+again. From 0.3.2 the installer runs the same check itself, so an update that
+starts from an older build is protected as well — see
+<a href="../install/#updates">INSTALL.md</a>.</p>
+<h2 id="when-something-goes-wrong" tabindex="-1">When something goes wrong</h2>
+<p><a href="../troubleshooting/">TROUBLESHOOTING.md</a> is organised by symptom and names the
+file to read for each one — the backend log at
+<code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code> for a blank window or a
+failed start, and <code>%TEMP%\shot2code-installer-preinstall.log</code> for an install or
+update that stopped. In the desktop app, <strong>Help → Support → Open diagnostic
+logs</strong> opens the first of those folders for you. The <a href="../faq/">FAQ</a> answers the
+<em>why</em> behind the behaviour; the runbook gets you unstuck.</p>
+<p>When a problem needs an issue, <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">open one in this hub</a>
+and pick <strong>shot2code</strong>, including the details under
+<a href="../troubleshooting/#reporting-a-problem">Reporting a problem</a> — and never paste
+keys, tokens or unredacted log lines into a public issue. Vulnerabilities go
+<a href="../security/">privately</a> instead. <a href="../contributing/">CONTRIBUTING.md</a> explains
+which repository a fix belongs in.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../../shot2code/docs/">All guides</a>
+        <a href="../../../shot2code/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../../releases/">All releases</a>
+        <a href="../../../help/">Support</a>
+        <a href="../../../help/security/">Security</a>
+        <a href="../../../help/license/">License</a>
+        <a href="../../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../../theme.js"></script>
+  <script src="../../../docs.js"></script>
+</body>
+</html>

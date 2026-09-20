@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<!-- Generated from products/shot2code/README.md (normalized SHA-256 993f75c027c3bfaefdf7770164b6b2b3016a54086c10f6b09e10afb222e38d5f). Edit the public source and run npm run build:docs. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
+  <title>shot2code — shot2code documentation</title>
+  <meta name="description" content="Turn a screenshot into working code — on your own machine." />
+  <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="shot2code — App Releases" />
+  <meta property="og:description" content="Turn a screenshot into working code — on your own machine." />
+  <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/" />
+  <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../docs.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shot2code","description":"Turn a screenshot into working code — on your own machine.","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap doc-topbar">
+      <a class="brand" href="../../shot2code/" aria-label="shot2code — product overview">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="var(--on-accent)" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>shot2code</span>
+      </a>
+      <nav class="top-links" aria-label="Primary">
+        <a href="../../">All apps</a>
+        <a href="../../shot2code/docs/">Guides</a>
+        <a href="../../shot2code/releases/">Releases</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme" hidden>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <aside class="doc-sidebar">
+      <details id="guide-navigation" class="guide-navigation" open>
+        <summary>Browse guides</summary>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="./" aria-current="page">Overview</a></li><li><a href="install/">Install</a></li><li><a href="user-guide/">User guide</a></li><li><a href="faq/">FAQ</a></li><li><a href="troubleshooting/">Troubleshooting</a></li><li><a href="data-handling/">Data handling &amp; privacy</a></li><li><a href="security/">Product security</a></li><li><a href="architecture/">Architecture</a></li><li><a href="third-party-notices/">Third-party notices</a></li><li><a href="releasing/">Release process</a></li><li><a href="changelog/">Changelog</a></li><li><a href="contributing/">Contributing</a></li></ul></div>
+<div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../help/">Support</a></li><li><a href="../../help/security/">Security policy</a></li><li><a href="../../help/license/">License</a></li><li><a href="../../help/conduct/">Code of conduct</a></li></ul></div></nav>
+      </details>
+    </aside>
+    <main id="main" class="doc-main" tabindex="-1">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../../shot2code/">Product overview</a>
+        <span aria-hidden="true">/</span>
+        <a href="../../shot2code/docs/">Documentation</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Overview</span>
+      </nav>
+      <article>
+        <header class="doc-heading" id="doc-top" tabindex="-1">
+          <h1 id="shot2code" tabindex="-1">shot2code</h1>
+          <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/README.md">View source on GitHub</a></p>
+
+        </header>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
+        <div class="doc-content"><p><strong>Turn a screenshot into working code — on your own machine.</strong></p>
+<p><a href="../releases/"><span class="image-alt">Latest release</span></a></p>
+<p>shot2code is a <strong>Windows desktop app</strong>. Give it a screenshot, several related
+screens, a URL, a written description or a screen recording, and it generates a
+working page you can edit, version and export. Generation runs from your machine
+against the model provider you configure; your screenshots, the generated code
+and your API keys are not sent anywhere else.</p>
+<p><strong><a href="../">Product site</a></strong>
+<strong><a href="../releases/">Downloads</a></strong>
+<strong><a href="install/">Install</a></strong> <strong><a href="user-guide/">User guide</a></strong> <strong><a href="faq/">FAQ</a></strong>
+<strong><a href="troubleshooting/">Troubleshooting</a></strong></p>
+<p>Source code, issues about the code itself, and the upstream release notes live in
+the project repository: <strong><a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">https://github.com/ArasaniRohithReddy/shot2code</a></strong>.
+This hub is where the Windows builds and their documentation are published.</p>
+<h2 id="what-you-need" tabindex="-1">What you need</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 1"><table>
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operating system</td>
+<td>Windows 10 or 11, 64-bit (x64). No macOS or Linux builds — run from source there.</td>
+</tr>
+<tr>
+<td>Disk</td>
+<td>The installer unpacks roughly 600 MB: the Python backend and a headless Chromium ship inside the app.</td>
+</tr>
+<tr>
+<td>A model provider</td>
+<td><strong>One</strong> of: a GitHub Copilot sign-in (no API key), a Gemini, Anthropic or OpenAI API key, or a <strong>Copilot SDK BYOK</strong> connection to your own endpoint (no Copilot subscription needed).</td>
+</tr>
+</tbody>
+</table></div>
+<p>Without a provider, generation fails fast and says so. The app does not ship a
+model and cannot generate anything on its own.</p>
+<h2 id="what-you-can-do" tabindex="-1">What you can do</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 2"><table>
+<thead>
+<tr>
+<th scope="col">Task</th>
+<th scope="col">Where</th>
+<th scope="col">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Generate from a reference</td>
+<td>Upload a screenshot, paste a URL, describe a screen, or record one</td>
+<td>A working page in the stack you chose, usually as several parallel options</td>
+</tr>
+<tr>
+<td>Choose which models try it</td>
+<td><strong>Settings → Models</strong>, or the picker beside the composer</td>
+<td>One option per selected model, across Copilot, OpenAI, Anthropic, Gemini and your own BYOK endpoint</td>
+</tr>
+<tr>
+<td>Use your own endpoint</td>
+<td><strong>Settings → GitHub Copilot SDK BYOK</strong></td>
+<td>Models served by your OpenAI-compatible, Azure OpenAI or Anthropic endpoint, selectable beside the native ones — including a model only your endpoint knows</td>
+</tr>
+<tr>
+<td>Sign in to Copilot in the app</td>
+<td><strong>Settings → Sign in with GitHub</strong></td>
+<td>The official CLI's browser flow; the credential stays with that tool and shot2code never sees the token</td>
+</tr>
+<tr>
+<td>Check a provider before generating</td>
+<td><strong>Settings → Connection checks</strong>, or <strong>Test model access</strong></td>
+<td>One tiny request per provider, answered as Ready, Out of credit, Key rejected, Rate limited, Access denied, Model unavailable, Configuration problem or unreachable</td>
+</tr>
+<tr>
+<td>Give Copilot runs extra tools</td>
+<td><strong>Settings → MCP servers</strong></td>
+<td>Tools from MCP servers you enable <em>and</em> trust, offered to Copilot and BYOK options</td>
+</tr>
+<tr>
+<td>Refine it</td>
+<td>Chat panel, or select an element in the preview</td>
+<td>A new version that keeps the previous one</td>
+</tr>
+<tr>
+<td>Edit the source</td>
+<td>Code tab</td>
+<td>Multi-file tree, editor, whitespace-only <strong>Format</strong>, file badges</td>
+</tr>
+<tr>
+<td>Check it at several widths</td>
+<td><strong>Review</strong></td>
+<td>Two to four real-width frames, overflow detection and a local source audit</td>
+</tr>
+<tr>
+<td>Set how the width is shared</td>
+<td>Drag (or keyboard-move) the chat and file-explorer dividers</td>
+<td>A remembered view preference that never touches a project's versions</td>
+</tr>
+<tr>
+<td>Step back through earlier attempts</td>
+<td><strong>History</strong></td>
+<td>Every version, the identity behind each option, and a retry that re-rolls one</td>
+</tr>
+<tr>
+<td>Reopen earlier work</td>
+<td><strong>Recent projects</strong></td>
+<td>Projects, versions and prompts restored from the local database</td>
+</tr>
+<tr>
+<td>Reuse an existing project</td>
+<td><strong>Import → Folder, ZIP or source files</strong></td>
+<td>Design context, or a normalized editable project</td>
+</tr>
+<tr>
+<td>Drive it from the menu bar</td>
+<td><strong>File · Edit · View · Window · Help</strong></td>
+<td>The same commands as the keyboard, with project-only items disabled until they apply</td>
+</tr>
+<tr>
+<td>Find a guide, or the log to attach</td>
+<td><strong>Help</strong> in the rail, or <strong>Ctrl+/</strong></td>
+<td>Get started, Guides, Support, shortcuts — and <strong>Open diagnostic logs</strong> in the desktop app</td>
+</tr>
+<tr>
+<td>Take it away</td>
+<td><strong>Download</strong></td>
+<td>A single self-contained HTML file, or a Vite project folder</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="output-stacks" tabindex="-1">Output stacks</h2>
+<p>HTML + Tailwind · HTML + CSS · React + Tailwind · Vue + Tailwind · Bootstrap ·
+Ionic + Tailwind · Alpine.js + Tailwind · Preact + Tailwind · Tailwind + daisyUI ·
+Bulma · Material 3 · htmx + Tailwind</p>
+<p>Each stack has an explicit single-HTML and project-folder export strategy, so the
+download builds rather than being a plausible-looking scaffold. See
+<a href="user-guide/#exporting-a-project">USER-GUIDE.md</a>.</p>
+<h2 id="model-providers" tabindex="-1">Model providers</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 3"><table>
+<thead>
+<tr>
+<th scope="col">Provider</th>
+<th scope="col">Setup</th>
+<th scope="col">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td><strong>Sign in with GitHub</strong> in Settings, or <code>gh auth login</code> / <code>copilot</code> — needs an active Copilot subscription</td>
+<td>No API key to manage; reaches Claude, GPT, Gemini and Grok models. The model list is discovered from your account</td>
+</tr>
+<tr>
+<td>Gemini</td>
+<td>API key in <strong>Settings</strong></td>
+<td>Also powers video input and asset extraction</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>API key in <strong>Settings</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>OpenAI</td>
+<td>API key in <strong>Settings</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Copilot SDK BYOK</strong></td>
+<td>Your own endpoint and credential in <strong>Settings</strong></td>
+<td>Optional and additive. OpenAI-compatible (any <code>https://</code> endpoint, or <code>http://</code> on <code>localhost</code>), Azure OpenAI or Anthropic. <strong>No Copilot subscription required.</strong> No Gemini equivalent</td>
+</tr>
+<tr>
+<td>Replicate</td>
+<td><code>REPLICATE_API_KEY</code> in <code>backend/.env</code></td>
+<td>Image generation, editing and background removal; source runs only</td>
+</tr>
+</tbody>
+</table></div>
+<p>All of these support <strong>model selection</strong>: tick as many models as you like in
+<strong>Settings → Models</strong> or in the picker beside the composer, and each run
+produces one option per selected model, up to the per-run limit. Tick nothing to
+leave it automatic. See
+<a href="user-guide/#choosing-which-models-run">USER-GUIDE.md</a>.</p>
+<p><strong>BYOK is a separate connection, not a replacement.</strong> It carries its own API key
+or bearer token — the direct OpenAI and Anthropic keys are never borrowed for
+it — and only an OpenAI-compatible endpoint on <code>localhost</code> may run without a
+credential. Its models appear under <strong>Copilot SDK (BYOK)</strong> with the run identity
+<code>sdk-byok/&lt;provider&gt;/&lt;base model&gt;</code>, so a model and its BYOK twin can run in the
+same generation and be compared. Configuring it changes nothing about how the
+native providers behave. See
+<a href="user-guide/#using-your-own-endpoint-copilot-sdk-byok">USER-GUIDE.md</a>.</p>
+<p><strong>It also reaches models the catalogue does not know.</strong> Name the id your
+endpoint serves — discovered from its <code>/models</code> route where one exists, typed by
+hand otherwise — and it appears as a single honest option,
+<code>&lt;model&gt; via &lt;provider&gt;</code>, with the identity
+<code>sdk-byok/&lt;provider&gt;/custom/&lt;model&gt;</code> carried through History and retries. The
+wire API is chosen automatically: Chat Completions for an endpoint with its own
+base URL, Responses for a provider's own. Any such model must support <strong>image
+input and tool calling</strong>, which only the endpoint's documentation can confirm.</p>
+<p><strong>Test before you generate.</strong> <strong>Connection checks</strong> under the API keys test
+OpenAI, Anthropic, Gemini and Replicate individually with one minimal request,
+so an unpaid account or a revoked key is reported — with the action that fixes
+it — before a generation is half-finished.</p>
+<h2 id="mcp-servers" tabindex="-1">MCP servers</h2>
+<p>Up to eight Model Context Protocol servers can be configured in <strong>Settings</strong> over
+<strong>stdio</strong>, <strong>HTTP</strong> or <strong>SSE</strong>. A server must be <strong>enabled</strong> <em>and</em> explicitly
+<strong>trusted</strong> before shot2code will start it, it is <strong>read-only</strong> until you also
+allow write tools, a local server is spawned as an argument vector rather than
+through a shell, and a remote one must use <code>https://</code> unless it is on
+<code>localhost</code>. Their tools are offered to <strong>GitHub Copilot</strong> and <strong>Copilot SDK
+BYOK</strong> options only — an option running on your own OpenAI, Anthropic or Gemini
+key never sees them. See <a href="user-guide/#mcp-servers">USER-GUIDE.md</a>.</p>
+<h2 id="reviewing-what-was-generated" tabindex="-1">Reviewing what was generated</h2>
+<p><strong>Review</strong> renders the generated page at two to four real widths at once — 1440,
+768 and 390 by default, any whole width from 320 to 1920 if you add your own —
+measures horizontal overflow in the running frame, and runs a local,
+deterministic audit of the generated source for semantic and accessibility
+problems. Selected findings can be written into the Chat composer for you to
+read and send, and the whole result exports as JSON. It is an automated source
+check, <strong>not a WCAG conformance assessment</strong>. See
+<a href="user-guide/#the-review-workspace">USER-GUIDE.md</a>.</p>
+<p>Keys entered in Settings are stored on your device and sent only to the provider
+they belong to. See <a href="data-handling/">DATA-HANDLING.md</a>.</p>
+<h2 id="what-it-does-not-do" tabindex="-1">What it does not do</h2>
+<ul>
+<li>It is <strong>not</strong> a hosted service and has no account, sync or cloud storage.</li>
+<li>It does <strong>not</strong> include a model or any free inference. You bring the provider.</li>
+<li>It does <strong>not</strong> guarantee that generated code is correct, accessible or secure.
+It is model output: review it before running it outside the sandboxed preview.</li>
+<li>The published Windows binaries are <strong>not code-signed</strong>, so SmartScreen will warn
+on first run. Verify the SHA-256 checksum instead — see <a href="security/">SECURITY.md</a>.</li>
+</ul>
+<h2 id="documentation" tabindex="-1">Documentation</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 4"><table>
+<thead>
+<tr>
+<th scope="col">Guide</th>
+<th scope="col">What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="install/">INSTALL.md</a></td>
+<td>Downloads, checksum verification, SmartScreen, updates, uninstall</td>
+</tr>
+<tr>
+<td><a href="user-guide/">USER-GUIDE.md</a></td>
+<td>First run, providers, BYOK, MCP, model selection, generating, editing, Review, resizing, History, import, export, the menu bar, shortcuts, Help</td>
+</tr>
+<tr>
+<td><a href="faq/">FAQ.md</a></td>
+<td>Common questions, in the order people ask them</td>
+</tr>
+<tr>
+<td><a href="troubleshooting/">TROUBLESHOOTING.md</a></td>
+<td>Symptom-first runbook: startup, providers, Chromium, import, export, updates, where the logs live</td>
+</tr>
+<tr>
+<td><a href="architecture/">ARCHITECTURE.md</a></td>
+<td>How the app, backend, agent loop and packaging fit together</td>
+</tr>
+<tr>
+<td><a href="data-handling/">DATA-HANDLING.md</a></td>
+<td>Every network destination and on-disk path</td>
+</tr>
+<tr>
+<td><a href="security/">SECURITY.md</a></td>
+<td>Reporting a vulnerability, unsigned builds, update integrity</td>
+</tr>
+<tr>
+<td><a href="contributing/">CONTRIBUTING.md</a></td>
+<td>Where issues, documentation fixes and code changes each go</td>
+</tr>
+<tr>
+<td><a href="third-party-notices/">THIRD-PARTY-NOTICES.md</a></td>
+<td>Bundled runtimes and principal dependencies, with links to the source manifests</td>
+</tr>
+<tr>
+<td><a href="releasing/">RELEASING.md</a></td>
+<td>How a build becomes a release in this hub</td>
+</tr>
+<tr>
+<td><a href="changelog/">CHANGELOG.md</a></td>
+<td>What changed in each published version</td>
+</tr>
+</tbody>
+</table></div>
+<p>Bugs and ideas belong in this hub —
+<a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose" rel="noopener noreferrer">open an issue</a>
+and pick <strong>shot2code</strong>. Vulnerabilities are <a href="security/">reported privately</a>.
+The hub's <a href="../../help/">support policy</a> covers triage for every product
+published here.</p>
+<h2 id="license" tabindex="-1">License</h2>
+<p>The application is MIT-licensed in its
+<a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/LICENSE" rel="noopener noreferrer">source repository</a>.
+The documentation and release assets in this hub are provided under the
+<a href="../../help/license/">MIT License</a>. Components that ship inside the app — Electron and
+Chromium, the frozen Python runtime, the headless browser — are listed in
+<a href="third-party-notices/">THIRD-PARTY-NOTICES.md</a>.</p>
+</div>
+      </article>
+      <nav class="doc-bottom" aria-label="Document navigation">
+        <a href="../../shot2code/docs/">All guides</a>
+        <a href="../../shot2code/">Back to product</a>
+        <a href="#doc-top">Back to top</a>
+      </nav>
+    </main>
+  </div>
+  <footer class="site">
+    <div class="wrap foot-grid">
+      <span>App Releases · Public documentation</span>
+      <nav aria-label="Footer">
+        <a href="../../releases/">All releases</a>
+        <a href="../../help/">Support</a>
+        <a href="../../help/security/">Security</a>
+        <a href="../../help/license/">License</a>
+        <a href="../../help/conduct/">Code of conduct</a>
+        <a href="https://github.com/ArasaniRohithReddy/app-releases/issues/new/choose">Report an issue</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../theme.js"></script>
+  <script src="../../docs.js"></script>
+</body>
+</html>
