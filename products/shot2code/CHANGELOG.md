@@ -13,13 +13,51 @@ The full engineering changelog lives with the code:
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.
 
-## [0.5.0] — 2026-09-27
+## [0.5.1] — 2026-09-27
 
 [Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.1) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.1)
+
+The current release, and the first stable build of the 0.5 line. It carries the
+whole 0.5.0 feature set — described in full below — plus one correction to
+**Test model access**.
+
+### Fixed
+
+- **A manually configured endpoint model is tested directly.** Listing models at
+  `/models` is optional: plenty of OpenAI-compatible endpoints, gateways and
+  self-hosted servers do not expose that route, or refuse it to the credential
+  you use for inference. 0.5.0 treated a failed listing as fatal and reported
+  the whole check as a failure **even when you had already named the model
+  yourself**, which made a perfectly working endpoint look broken. When a model
+  is configured by hand, the check now goes straight to that model and reports
+  what the endpoint actually said about it.
+- **The failures that matter are still failures.** A rejected or missing
+  credential is still reported as a credential problem, and a discovery failure
+  with **no** model configured is still reported with the action that fixes it —
+  name the model, or the Azure deployment, by hand. Only the case where model
+  listing is unavailable *and* you have supplied the model is downgraded from an
+  error to what it is: a route the endpoint does not offer.
+
+### Notes
+
+- Nothing else changed. Every capability, limit and guarantee in the 0.5.0 notes
+  below applies unchanged to this build.
+- **0.5.0 was marked a pre-release and was not published as a stable build.**
+  Its tag exists, and its entry is kept below because that is where the 0.5 work
+  is documented, but 0.5.1 is the build to install.
+
+## [0.5.0] — 2026-09-27
+
 [hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.0) ·
 [upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.0)
 
-The current release. It signs you in to GitHub Copilot from the app itself with
+**Marked a pre-release and superseded by 0.5.1**, which fixes a **Test model
+access** check that failed an otherwise working endpoint. Download 0.5.1
+instead; everything described here ships in it.
+
+It signs you in to GitHub Copilot from the app itself with
 no command-line tool installed, opens the official **MCP Registry** and an
 **Agent Skills** library, makes **Figma** and **Google Stitch** first-class
 design sources, restores the whole conversation in Chat, shows the exact files
@@ -240,7 +278,7 @@ endpoint through the GitHub Copilot SDK — lets Copilot runs call MCP servers y
 configure, turns the preview into a side-by-side responsive **Review** with a
 local source audit, and puts a real Windows menu bar on the app.
 
-Superseded by 0.5.0, which adds CLI-free GitHub sign-in, the MCP Registry,
+Superseded by 0.5.1, which adds CLI-free GitHub sign-in, the MCP Registry,
 Agent Skills, Figma and Google Stitch.
 
 Everything here is **additive**. If you do not configure any of it, the app

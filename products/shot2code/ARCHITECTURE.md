@@ -166,6 +166,13 @@ For an OpenAI-compatible BYOK connection the check first asks the endpoint what
 it serves at `/models`, bounded and de-duplicated, so the model picker can offer
 real ids; Azure and Anthropic have no equivalent route and say so.
 
+**That listing is optional, and it is not the check.** When a model is already
+configured, a `/models` route that is absent or refuses the inference credential
+no longer fails the check: the configured model is exercised directly and the
+endpoint's own answer about it is what gets reported. Credential failures keep
+their own category, and a discovery failure with no configured model is still
+surfaced as a configuration problem with the action that resolves it.
+
 ### In-app sign-in
 
 In the packaged desktop app, **Sign in with GitHub** runs a **GitHub OAuth

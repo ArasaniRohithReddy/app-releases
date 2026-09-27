@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 1ec16dd5bfc2df151ead820640ec25b57207342743d6b623999e13b520938393). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 73790d994ec36997d6e065e4248e1a9f38ff610d9e067fbdaadf40f660a51975). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -383,6 +383,18 @@ incomplete connection is reported as a notice and skipped.</p>
 <td>Only OpenAI-compatible endpoints expose <code>/models</code>. Azure OpenAI and Anthropic do not list models here, so type the model id (or Azure deployment name) by hand.</td>
 </tr>
 <tr>
+<td><strong>Test model access</strong> failed but the endpoint works</td>
+<td>Model listing is optional, and some endpoints refuse <code>/models</code> to the credential you use for inference. From 0.5.1, when you have already named a model by hand the check tests <strong>that model directly</strong> instead of failing on the listing. On an older build, the same endpoint reports a failure it should not — update.</td>
+</tr>
+<tr>
+<td>The check still fails with a model configured</td>
+<td>Then it is not the listing. A rejected or missing credential is reported as a credential problem, and anything else is the endpoint's own answer about that model, passed through unchanged.</td>
+</tr>
+<tr>
+<td>The check fails and you have <strong>not</strong> named a model</td>
+<td>That is reported, and it is actionable: the endpoint offers no usable model list, so type the model id — or the Azure deployment name — into <strong>Endpoint model</strong> yourself.</td>
+</tr>
+<tr>
 <td>&quot;The endpoint does not list ‹model›&quot;</td>
 <td>The name is not one the endpoint reported. Pick one from the list the check returned, or check the spelling.</td>
 </tr>
@@ -467,7 +479,7 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>A GitHub skill imported with empty files</td>
-<td>Fixed in 0.5.0: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again.</td>
+<td>Fixed in 0.5.1: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again.</td>
 </tr>
 <tr>
 <td>A skill's script did not run</td>
@@ -541,7 +553,7 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>The very first generation after launch failed</td>
-<td>Fixed in 0.5.0: the connection is accepted and replayed while the generation routes are still loading, instead of being dropped during a cold start. Update if you are on an older build.</td>
+<td>Fixed in 0.5.1: the connection is accepted and replayed while the generation routes are still loading, instead of being dropped during a cold start. Update if you are on an older build.</td>
 </tr>
 <tr>
 <td>A long run looked frozen</td>
@@ -765,7 +777,7 @@ separate destination on narrow windows.</p>
 </tr>
 <tr>
 <td>Chat shows the prompts but not the answers</td>
-<td>It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before 0.5.0 and has no stored response to show.</td>
+<td>It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before the 0.5 line and has no stored response to show.</td>
 </tr>
 </tbody>
 </table></div>

@@ -149,6 +149,9 @@ incomplete connection is reported as a notice and skipped.
 | A saved BYOK pick stopped matching | You changed the connection's provider, or switched it off. The card says how many selected options no longer match; reselect them in **Settings → Models**. |
 | **Validate connection** succeeds but generation fails | Validation checks the settings only — it never calls your endpoint. Use **Test model access** to contact it. A failure at generation time is the endpoint's own response, passed through unchanged. |
 | **Test model access** finds no models to choose from | Only OpenAI-compatible endpoints expose `/models`. Azure OpenAI and Anthropic do not list models here, so type the model id (or Azure deployment name) by hand. |
+| **Test model access** failed but the endpoint works | Model listing is optional, and some endpoints refuse `/models` to the credential you use for inference. From 0.5.1, when you have already named a model by hand the check tests **that model directly** instead of failing on the listing. On an older build, the same endpoint reports a failure it should not — update. |
+| The check still fails with a model configured | Then it is not the listing. A rejected or missing credential is reported as a credential problem, and anything else is the endpoint's own answer about that model, passed through unchanged. |
+| The check fails and you have **not** named a model | That is reported, and it is actionable: the endpoint offers no usable model list, so type the model id — or the Azure deployment name — into **Endpoint model** yourself. |
 | "The endpoint does not list ‹model›" | The name is not one the endpoint reported. Pick one from the list the check returned, or check the spelling. |
 | The endpoint model you typed is refused | Ids may be up to **128** characters and may contain `. _ : / @ + -`. Spaces are not allowed. An over-long id is reported rather than trimmed, because trimming would run a different model. |
 | The model answers the check but generation fails on the first screenshot | The model must support **image input and tool calling**. A text-only model passes a plain-text check and then fails a real run. Neither the check nor the endpoint's model list can tell you which models qualify — see the endpoint's documentation. |
@@ -172,7 +175,7 @@ incomplete connection is reported as a notice and skipped.
 | **Validate servers** passes but a server never starts | Validation checks the configuration only; it starts nothing. Check the server's own command, URL or credentials. |
 | An imported skill has no effect | Skills are **disabled by default** — enable it — and, like MCP tools, only a Copilot or BYOK option can use one. |
 | A skill import was rejected | Front matter has to parse, paths are normalised with traversal rejected, and the file count and sizes are bounded. Point the import at the skill folder itself rather than a whole repository. |
-| A GitHub skill imported with empty files | Fixed in 0.5.0: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again. |
+| A GitHub skill imported with empty files | Fixed in 0.5.1: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again. |
 | A skill's script did not run | It cannot. Script files are stored as inert resources; shot2code exposes no shell tool and no unrestricted host-filesystem tool to any model. |
 | Web search produced nothing | **Allow web search** is off by default, and it only applies to Copilot and BYOK options. Your search queries leave the device when it is on. |
 
@@ -195,7 +198,7 @@ incomplete connection is reported as a notice and skipped.
 | --- | --- |
 | The run stops with a provider error | The request reached the provider and it refused. Quota, rate limits, model availability and billing belong to your account, not to shot2code; the message is passed through unchanged. |
 | "Something went wrong — check the console" with no detail | That wording is now a last resort. When the backend diagnosed the failure you get its message and a pointer to the diagnostic log; if you still see the generic text, attach `shot2code-backend.log` to an issue. |
-| The very first generation after launch failed | Fixed in 0.5.0: the connection is accepted and replayed while the generation routes are still loading, instead of being dropped during a cold start. Update if you are on an older build. |
+| The very first generation after launch failed | Fixed in 0.5.1: the connection is accepted and replayed while the generation routes are still loading, instead of being dropped during a cold start. Update if you are on an older build. |
 | A long run looked frozen | The backend sends a heartbeat every 15 seconds so a long Copilot run is not mistaken for a dead connection. Watch the activity list rather than the elapsed time. |
 | The run "failed" although an option finished | An abnormal socket closure after every option reached a terminal state is treated as completion, and if the option you were on was cancelled or failed while another finished, the usable one is selected for you. |
 | Screenshot by URL failed | The error now names the cause — a rejected key, a billing or credit problem, a rate limit, a timeout, an invalid URL, or the provider being unavailable. Test the ScreenshotOne key from the URL tab with one minimal request. |
@@ -280,7 +283,7 @@ separate destination on narrow windows.
 | A retry looks like an unrelated branch | It should not: a retry reuses the provider and model choices behind the original options and keeps a link to the version it re-rolls. |
 | A project is gone from **Recent projects** | Deleting a project removes it and all of its versions from the device. There is no cloud copy and no undo. |
 | Recent work is missing after reinstalling | Projects live in `%LOCALAPPDATA%\shot2code\history.sqlite3`, outside the installation directory, and an upgrade leaves it alone. Only an uninstall that also removed that folder removes the history. |
-| Chat shows the prompts but not the answers | It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before 0.5.0 and has no stored response to show. |
+| Chat shows the prompts but not the answers | It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before the 0.5 line and has no stored response to show. |
 
 ## The workspace layout
 

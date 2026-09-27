@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 2ea13b28b8934964faaec4533bd307db1404035a7019cd34ee4c7b12b2e03130). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 32c8cefd5471d34b2c116b65c020fb47ff7ea324bb20c1172303b832d4fb0aa3). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -343,6 +343,13 @@ endpoints expose that route.</li>
 way for <strong>Azure OpenAI</strong> (use the deployment name) and <strong>Anthropic</strong>, neither
 of which lists models here.</li>
 </ul>
+<p><strong>Model listing is optional, and a missing one is not a failure.</strong> Plenty of
+endpoints do not expose <code>/models</code>, or refuse it to the credential you use for
+inference. When you have named a model yourself, <strong>Test model access</strong> tests
+that model directly and reports what the endpoint said about it. A rejected or
+missing credential is still reported as a credential problem, and a listing
+failure with <strong>no</strong> model configured is still reported with the fix: type the
+model id, or the Azure deployment name, by hand.</p>
 <p>You are not limited to one. Every id you pick or type becomes its own selectable
 entry, so several models from the same endpoint can run in a single generation
 and be compared against each other.</p>

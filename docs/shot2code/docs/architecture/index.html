@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 b7c7c34cc01d87425f21ad914f11bb55a5b19f3cee6766602e8e08f2ef14febf). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 86a41bd95569b555814781d77c8351c26bc425cdec5f23c9955f5df0b8bf17d1). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -222,6 +222,12 @@ instead of a stack trace, and the message is scrubbed of anything that was sent.
 For an OpenAI-compatible BYOK connection the check first asks the endpoint what
 it serves at <code>/models</code>, bounded and de-duplicated, so the model picker can offer
 real ids; Azure and Anthropic have no equivalent route and say so.</p>
+<p><strong>That listing is optional, and it is not the check.</strong> When a model is already
+configured, a <code>/models</code> route that is absent or refuses the inference credential
+no longer fails the check: the configured model is exercised directly and the
+endpoint's own answer about it is what gets reported. Credential failures keep
+their own category, and a discovery failure with no configured model is still
+surfaced as a configuration problem with the action that resolves it.</p>
 <h3 id="in-app-sign-in" tabindex="-1">In-app sign-in</h3>
 <p>In the packaged desktop app, <strong>Sign in with GitHub</strong> runs a <strong>GitHub OAuth
 device flow</strong> owned by shot2code itself: the shell requests a device code,

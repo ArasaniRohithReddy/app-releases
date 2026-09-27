@@ -266,7 +266,10 @@ contains presence flags and the host name only — never your credential.
 **And Test model access?**
 The opposite, and the card says so: it contacts the endpoint with one tiny
 request and may use a small amount of quota. It also lists the models the
-endpoint reports, when it exposes them.
+endpoint reports, when it exposes them — and when it does not, a model you
+configured by hand is tested directly rather than the whole check being failed
+on a listing your endpoint never offered. A rejected credential, or a discovery
+failure with no model named, is still reported with the action that fixes it.
 
 **My connection is half-finished. Will generation fail?**
 No. An incomplete or switched-off connection is reported as a notice and

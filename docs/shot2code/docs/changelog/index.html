@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 d28ff28aceae609add0e63d7c2633deae6fa8cc9ea9e335d1543c0840a873e4d). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 d37ee4c24d36ac6d46c95cfd1c35ab9ab0ae495d0ba0e43641acadeba80a4c0a). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">View source on GitHub</a></p>
           <p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#051--2026-09-27">[0.5.1] — 2026-09-27</a></li><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
         <div class="doc-content"><p>Published Windows builds of shot2code, newest first. Tags in this hub are
 product-prefixed (<code>shot2code-vX.Y.Z</code>); the upstream project tags the same build as
 <code>vX.Y.Z</code>.</p>
@@ -73,11 +73,45 @@ which is generated from the release feed; this file summarises each one.</p>
 <a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/CHANGELOG.md" rel="noopener noreferrer">CHANGELOG.md</a>.
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.</p>
-<h2 id="050--2026-09-27" tabindex="-1">[0.5.0] — 2026-09-27</h2>
+<h2 id="051--2026-09-27" tabindex="-1">[0.5.1] — 2026-09-27</h2>
 <p><a href="../../releases/">Download</a> ·
-<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.0" rel="noopener noreferrer">hub release</a> ·
+<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.1" rel="noopener noreferrer">hub release</a> ·
+<a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.1" rel="noopener noreferrer">upstream notes</a></p>
+<p>The current release, and the first stable build of the 0.5 line. It carries the
+whole 0.5.0 feature set — described in full below — plus one correction to
+<strong>Test model access</strong>.</p>
+<h3 id="fixed" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>A manually configured endpoint model is tested directly.</strong> Listing models at
+<code>/models</code> is optional: plenty of OpenAI-compatible endpoints, gateways and
+self-hosted servers do not expose that route, or refuse it to the credential
+you use for inference. 0.5.0 treated a failed listing as fatal and reported
+the whole check as a failure <strong>even when you had already named the model
+yourself</strong>, which made a perfectly working endpoint look broken. When a model
+is configured by hand, the check now goes straight to that model and reports
+what the endpoint actually said about it.</li>
+<li><strong>The failures that matter are still failures.</strong> A rejected or missing
+credential is still reported as a credential problem, and a discovery failure
+with <strong>no</strong> model configured is still reported with the action that fixes it —
+name the model, or the Azure deployment, by hand. Only the case where model
+listing is unavailable <em>and</em> you have supplied the model is downgraded from an
+error to what it is: a route the endpoint does not offer.</li>
+</ul>
+<h3 id="notes" tabindex="-1">Notes</h3>
+<ul>
+<li>Nothing else changed. Every capability, limit and guarantee in the 0.5.0 notes
+below applies unchanged to this build.</li>
+<li><strong>0.5.0 was marked a pre-release and was not published as a stable build.</strong>
+Its tag exists, and its entry is kept below because that is where the 0.5 work
+is documented, but 0.5.1 is the build to install.</li>
+</ul>
+<h2 id="050--2026-09-27" tabindex="-1">[0.5.0] — 2026-09-27</h2>
+<p><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.0" rel="noopener noreferrer">hub release</a> ·
 <a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.0" rel="noopener noreferrer">upstream notes</a></p>
-<p>The current release. It signs you in to GitHub Copilot from the app itself with
+<p><strong>Marked a pre-release and superseded by 0.5.1</strong>, which fixes a <strong>Test model
+access</strong> check that failed an otherwise working endpoint. Download 0.5.1
+instead; everything described here ships in it.</p>
+<p>It signs you in to GitHub Copilot from the app itself with
 no command-line tool installed, opens the official <strong>MCP Registry</strong> and an
 <strong>Agent Skills</strong> library, makes <strong>Figma</strong> and <strong>Google Stitch</strong> first-class
 design sources, restores the whole conversation in Chat, shows the exact files
@@ -205,7 +239,7 @@ Chromium is allowed more time on its first launch, because that is when
 antivirus software scans a newly written tree — the previous budget could
 report the browser unavailable on a machine where it was merely slow.</li>
 </ul>
-<h3 id="fixed" tabindex="-1">Fixed</h3>
+<h3 id="fixed-1" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>A generation started during a cold start no longer fails.</strong> The deferred
 route loader accepts the WebSocket handshake before the frozen generation
@@ -261,7 +295,7 @@ cannot become a second agent.</li>
 <li><strong>Stitch downloads are constrained.</strong> HTML and image fetches made on the
 SDK's behalf must be <code>https://</code> and are size-bounded.</li>
 </ul>
-<h3 id="notes" tabindex="-1">Notes</h3>
+<h3 id="notes-1" tabindex="-1">Notes</h3>
 <ul>
 <li>The GitHub device flow is a feature of the <strong>desktop app</strong>. Where it is not
 available, the existing delegated route is used instead and <strong>shot2code never
@@ -293,7 +327,7 @@ packaged build.</li>
 endpoint through the GitHub Copilot SDK — lets Copilot runs call MCP servers you
 configure, turns the preview into a side-by-side responsive <strong>Review</strong> with a
 local source audit, and puts a real Windows menu bar on the app.</p>
-<p>Superseded by 0.5.0, which adds CLI-free GitHub sign-in, the MCP Registry,
+<p>Superseded by 0.5.1, which adds CLI-free GitHub sign-in, the MCP Registry,
 Agent Skills, Figma and Google Stitch.</p>
 <p>Everything here is <strong>additive</strong>. If you do not configure any of it, the app
 behaves exactly as it did in 0.3.3.</p>
@@ -417,7 +451,7 @@ never sees an MCP tool. The picker says so.</li>
 version, the option, a hash of the source and the widths it ran at. Change any
 of those and the result is marked stale instead of being presented as current.</li>
 </ul>
-<h3 id="fixed-1" tabindex="-1">Fixed</h3>
+<h3 id="fixed-2" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>Every Settings control remains reachable.</strong> Settings now owns a
 viewport-bounded scroll area whether the app is empty or a project is open,
@@ -465,7 +499,7 @@ servers</strong> check the configuration only — no endpoint is called and no M
 server is started. <strong>Test model access</strong> and the per-provider checks are the
 opposite and say so: they contact the endpoint and may use a little quota.</li>
 </ul>
-<h3 id="notes-1" tabindex="-1">Notes</h3>
+<h3 id="notes-2" tabindex="-1">Notes</h3>
 <ul>
 <li>Configuring neither BYOK nor MCP changes nothing: an incomplete or switched-off
 BYOK connection, and a disabled or untrusted MCP server, are reported as
@@ -494,7 +528,7 @@ shortcuts-only dialog with a Help centre that can open the log you need to
 attach to a bug report.</p>
 <p>Superseded by 0.4.0, which adds Copilot SDK BYOK, MCP servers and the Review
 workspace.</p>
-<h3 id="fixed-2" tabindex="-1">Fixed</h3>
+<h3 id="fixed-3" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>Startup no longer waits for features you have not used yet.</strong> The frozen
 backend used to import the generation, evaluation and project-tool
@@ -575,7 +609,7 @@ swallowing ordinary editor input, AltGr or composition events.</li>
 extends model selection to every supported code provider, and finishes the
 responsive <strong>Preview</strong> and <strong>History</strong> work.</p>
 <p>Superseded by 0.3.3, which makes the packaged app start in seconds.</p>
-<h3 id="fixed-3" tabindex="-1">Fixed</h3>
+<h3 id="fixed-4" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>An old client can no longer be replaced while its backend is running.</strong> The
 0.3.1 guard lives in the <em>app</em>, so a machine still on an older build could not
@@ -643,7 +677,7 @@ reworks the workspace around the chat panel, the code editor and the provider
 status the app can honestly report.</p>
 <p>Superseded by 0.3.2, which moves the shutdown guard into the installer so it also
 protects machines updating <em>from</em> an older client.</p>
-<h3 id="fixed-4" tabindex="-1">Fixed</h3>
+<h3 id="fixed-5" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>The updater could start a second installer.</strong> Both install paths — the
 automatic one after a download, and <strong>Restart &amp; install</strong> in Settings — called

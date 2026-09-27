@@ -229,6 +229,14 @@ If your endpoint serves models the catalog does not know, put their ids in
   way for **Azure OpenAI** (use the deployment name) and **Anthropic**, neither
   of which lists models here.
 
+**Model listing is optional, and a missing one is not a failure.** Plenty of
+endpoints do not expose `/models`, or refuse it to the credential you use for
+inference. When you have named a model yourself, **Test model access** tests
+that model directly and reports what the endpoint said about it. A rejected or
+missing credential is still reported as a credential problem, and a listing
+failure with **no** model configured is still reported with the fix: type the
+model id, or the Azure deployment name, by hand.
+
 You are not limited to one. Every id you pick or type becomes its own selectable
 entry, so several models from the same endpoint can run in a single generation
 and be compared against each other.
