@@ -12,7 +12,24 @@ runbook. The application itself is developed at
 - [Using your own endpoint (Copilot SDK BYOK)](#using-your-own-endpoint-copilot-sdk-byok)
 - [Choosing which models run](#choosing-which-models-run)
 - [MCP servers](#mcp-servers)
+- [Agent Skills and web search](#agent-skills-and-web-search)
+- [Figma and Google Stitch](#figma-and-google-stitch)
 - [Generating your first page](#generating-your-first-page)
+- [Using more than one screenshot](#using-more-than-one-screenshot)
+- [Refining the result](#refining-the-result)
+- [The Code tab](#the-code-tab)
+- [The Review workspace](#the-review-workspace)
+- [Sizing the workspace](#sizing-the-workspace)
+- [History and retries](#history-and-retries)
+- [Recent projects](#recent-projects)
+- [Importing an existing project](#importing-an-existing-project)
+- [Preview, CodePen and sharing](#preview-codepen-and-sharing)
+- [Exporting a project](#exporting-a-project)
+- [The menu bar](#the-menu-bar)
+- [Keyboard shortcuts](#keyboard-shortcuts)
+- [The Help centre](#the-help-centre)
+- [Settings](#settings)
+- [When something goes wrong](#when-something-goes-wrong)
 - [Using more than one screenshot](#using-more-than-one-screenshot)
 - [Refining the result](#refining-the-result)
 - [The Code tab](#the-code-tab)
@@ -62,12 +79,30 @@ You need **one** provider.
 ### GitHub Copilot (no API key)
 
 The quickest route is the button: **Settings → GitHub Copilot → Sign in with
-GitHub**. It runs the **official** GitHub Copilot CLI web-flow login (falling
-back to the GitHub CLI), which opens your browser. The credential is stored by
-that tool on this device — **shot2code never receives or saves your token**; it
-only learns afterwards whether a session exists. You can cancel while it is
-waiting, and if neither CLI is installed the app says so and links the official
-install instructions rather than pretending to sign you in.
+GitHub**. In the desktop app this runs **shot2code's own GitHub OAuth device
+flow**: it shows a one-time code, opens your browser, and finishes without the
+GitHub Copilot CLI or the GitHub CLI being installed at all. The application is
+registered with a **public client id and no client secret**, because a desktop
+app cannot keep one.
+
+The credential it receives — an access token and its refresh token — is stored
+under the app's own user-data folder and **encrypted with Electron
+`safeStorage`**, the operating system's key store. It is refreshed for you when
+it expires, and the backend is handed the token on a restart that is serialised,
+so repeated sign-in or disconnect clicks cannot race each other.
+
+**Disconnect GitHub from shot2code** clears only what *this app* holds. A
+`gh auth login` or `copilot` session on the same machine **stays signed in** —
+shot2code did not create it and does not end it. The app says so rather than
+leaving you to check.
+
+Where that flow is unavailable — the browser development build — the button
+falls back to the **official** GitHub Copilot CLI web-flow login (and then the
+GitHub CLI), which opens your browser and stores the credential in that tool's
+own keychain. In that mode **shot2code never receives or saves your token**; it
+only learns afterwards whether a session exists. Either way you can cancel while
+it is waiting, and if no route is available the app says so and links the
+official install instructions rather than pretending to sign you in.
 
 The terminal route still works, and is unchanged:
 
@@ -81,7 +116,8 @@ An active Copilot subscription is required.
 Credentials are resolved in this order:
 
 1. A token pasted into **Settings**
-2. `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`
+2. `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN` — which is how the
+   token from the in-app sign-in reaches the backend
 3. A stored `copilot` CLI login
 4. A stored `gh auth login`
 
@@ -181,9 +217,9 @@ made to your endpoint, and the response never contains your credential.
 Pin a protocol only if your endpoint needs a specific one. A pinned choice
 always wins, and upgrading never changes a protocol you chose deliberately.
 
-### Naming the model your endpoint serves
+### Naming the models your endpoint serves
 
-If your endpoint serves models the catalog does not know, put the id in
+If your endpoint serves models the catalog does not know, put their ids in
 **Endpoint model**. There are two ways to fill it in:
 
 - **Discovered.** If the endpoint lists models at `/models`, **Test model
@@ -192,6 +228,10 @@ If your endpoint serves models the catalog does not know, put the id in
 - **Typed.** Type the id yourself. This is always available, and it is the only
   way for **Azure OpenAI** (use the deployment name) and **Anthropic**, neither
   of which lists models here.
+
+You are not limited to one. Every id you pick or type becomes its own selectable
+entry, so several models from the same endpoint can run in a single generation
+and be compared against each other.
 
 Ids may be up to **128** characters and may contain the `. _ : / @ + -`
 characters real deployments use. Spaces are not allowed.
@@ -211,7 +251,8 @@ Name a model the catalog does not know and **Settings → Models** shows exactly
 `sdk-byok/<provider>/custom/<model>`. It deliberately does not list the catalog
 model names against it: those names would be untrue, and they would all reach
 the same model anyway. No reasoning effort is sent for a custom model, because
-an arbitrary endpoint model has no thinking level.
+an arbitrary endpoint model has no thinking level. Name several models and you
+get one such entry each, never a family of catalog names standing in for them.
 
 That identity is what History records and what a retry replays, so re-running
 the option reaches the same endpoint and the same model.
@@ -341,7 +382,35 @@ MCP is a Copilot SDK feature, so it reaches the runtimes that use the SDK:
 | A model on your own OpenAI, Anthropic or Gemini key | **No** — it runs on that provider's own client |
 
 The picker states this for the current selection rather than leaving you to
-infer it from an empty activity list.
+infer it from an empty activity list. [Agent Skills](#agent-skills-and-web-search)
+and Copilot web search follow exactly the same rule.
+
+### Installing from the official MCP Registry
+
+**MCP Registry** searches
+[`registry.modelcontextprotocol.io`](https://registry.modelcontextprotocol.io)
+from inside Settings, so you do not have to copy a URL out of a README. Only
+remote `https://` entries are listed, and several published versions of the same
+server collapse to the latest active one.
+
+**Installing adds a disabled, untrusted draft.** The entry's URL and headers are
+filled in for you to review; nothing starts until you turn on the same two
+switches as any other server. A registry listing is not an endorsement, and
+shot2code treats it as untrusted input.
+
+Three integrations are offered as featured drafts with the right transport and
+endpoint already set:
+
+| Featured | Endpoint |
+| --- | --- |
+| **Figma Desktop MCP** | `http://127.0.0.1:3845/mcp` — your own running Figma desktop app |
+| **Figma Remote MCP** | `https://mcp.figma.com/mcp` |
+| **Google Stitch MCP** | `https://stitch.googleapis.com/mcp` |
+
+Figma currently admits only clients listed in its own MCP catalogue to the remote
+server, and shot2code does not impersonate another editor to get in — see
+[Figma and Google Stitch](#figma-and-google-stitch) for the route that works
+today.
 
 ### Adding a server
 
@@ -404,14 +473,93 @@ tools."* — and the generation proceeds without it. An incomplete MCP draft
 MCP tool calls appear in the option's activity list as
 `MCP · <server> · <tool>`, alongside shot2code's own tools.
 
+## Agent Skills and web search
+
+**Settings → Agent Skills** holds reusable instruction folders — a house style
+guide, a component convention, a checklist — that a Copilot run can follow.
+
+### Importing a skill
+
+| From | How |
+| --- | --- |
+| **A local folder** | Pick the folder on this device. Its files are copied into shot2code's own data directory |
+| **A public GitHub folder** | Paste a URL of the form `https://github.com/owner/repo/tree/main/path/to/skill` |
+
+Each import is validated before it is kept: the front matter has to parse, paths
+are normalised and traversal is rejected, and the file count and sizes are
+bounded. Where the skill came from is recorded as provenance, so you can see
+later what you installed and from where.
+
+### Skills are off until you switch them on
+
+**Every imported skill arrives disabled.** Enable, disable or remove one at any
+time. Only **GitHub Copilot** and **Copilot SDK BYOK** options can use them, for
+the same reason MCP tools are limited to those runtimes.
+
+### Scripts are stored, never run
+
+A skill may ship scripts. shot2code keeps those files as resources — and
+**cannot execute them**, because it exposes no shell tool and no unrestricted
+host-filesystem tool to any model. A skill is instructions and reference
+material, not a program shot2code will run on your machine.
+
+### Copilot web research
+
+**Settings → Copilot web research → Allow web search** lets GitHub Copilot and
+Copilot SDK BYOK options search the public web when a prompt needs current
+documentation or examples. It is **off by default**, and the setting states the
+trade-off plainly: **search queries leave this device**. It adds search and
+nothing else — shell access and unrestricted computer files stay disabled.
+
+## Figma and Google Stitch
+
+A screenshot is not the only starting point. shot2code can take a design
+straight from Figma or Google Stitch.
+
+### Figma, four ways
+
+| Route | What you need | Notes |
+| --- | --- | --- |
+| **Exported screenshots** | A PNG or JPEG exported from Figma | Works exactly like any other upload |
+| **Exported SVG** | An `.svg` exported from Figma | Rasterised **locally** before it is sent, so the model sees the same picture you do |
+| **Desktop MCP** | The Figma desktop app running on this machine | A featured MCP draft pointing at `http://127.0.0.1:3845/mcp`; it still has to be enabled and trusted |
+| **REST import** | A Figma file URL and your own personal access token with `file_content:read` | shot2code reads the file and node ids out of the URL, asks Figma to render those frames, and brings the images in as local data URLs |
+
+The **REST import** is the route that works for most accounts today, because
+Figma's remote MCP server currently admits only clients listed in its own MCP
+catalogue. shot2code does not impersonate another editor or reuse its sign-in to
+get around that.
+
+Your Figma token is **capture-only**: it is sent to `api.figma.com` and nowhere
+else, and it is never part of a generation request, project history or an export.
+
+### Google Stitch, two ways
+
+| Route | What you need |
+| --- | --- |
+| **Stitch MCP** | The featured draft pointing at `https://stitch.googleapis.com/mcp`, enabled and trusted like any other server |
+| **The bundled SDK** | A Stitch API key in **Settings**. The desktop app ships `@google/stitch-sdk`, which can validate the key, generate a screen from a prompt, or import an existing Stitch project or screen |
+
+`@google/stitch-sdk` is **experimental**: it is published by Google Labs, which
+states that it is not an officially supported Google product. It is bundled at
+version **0.3.5** under Apache-2.0 and is used only when you supply a key. Any
+HTML or image it downloads on your behalf must be `https://` and is size-bounded.
+
+Like the Figma token, the Stitch API key is **capture-only**. It is stored on
+this device, handed to the bundled SDK through the desktop app, and excluded from
+model requests, from history and from exports.
+
 ## Generating your first page
 
-1. Choose an input: upload a screenshot, paste a URL, write a description, or
-   record the screen.
+1. Choose an input: upload a screenshot, paste a URL, write a description, record
+   the screen, or bring a [Figma or Stitch design](#figma-and-google-stitch).
 2. Pick the output stack (see the [stack list](README.md#output-stacks)).
 3. Optionally pick the models — see
    [Choosing which models run](#choosing-which-models-run).
-4. Generate. The options run in parallel — one per selected model, or the
+4. Optionally write a **first instruction**. Both **Upload** and **Import** take
+   one before anything is generated, so the first attempt follows what you
+   actually want instead of a default reading of the image.
+5. Generate. The options run in parallel — one per selected model, or the
    automatic set — so you can compare and keep the closest one.
 
 Behind the scenes the model calls tools (create a file, edit a file, extract
@@ -444,6 +592,14 @@ and pick **Separate pages** — that mode makes the model account for every view
   **insert** the full instruction into the composer so you can edit it first —
   nothing is sent on your behalf.
 
+The chat panel shows the **whole conversation for the branch you are on**, in
+order: your prompts, the screenshots or recording you attached, any
+selected-element context, the model identity behind each attempt, its generation
+state, **and the assistant's own responses**. Answers from earlier versions are
+kept in expandable, scrollable blocks rather than collapsing to a one-line
+summary, so you can read back what was actually said. **History** remains the
+durable cross-branch timeline of the project.
+
 ## The Code tab
 
 The Code tab is the authoritative project source: a keyboard-navigable file tree,
@@ -463,6 +619,21 @@ file tabs (shown once a project has more than one file), and an editor.
   only when a project has more than one file. On a multi-file project you can
   also drag the divider between the tree and the editor — see
   [Sizing the workspace](#sizing-the-workspace).
+
+### Current code and Export project
+
+Two views sit side by side:
+
+| View | Shows |
+| --- | --- |
+| **Current code** | The editable project source — what the agent wrote and what you have changed |
+| **Export project** | **Read-only.** The exact text files and assets the download will contain for the stack you chose |
+
+Some stacks expand a single generated document into a project layout at export
+time. **Export project** shows that layout *before* you download it, so the ZIP
+is no longer the first place you find out what it contains. It is a view of the
+export, not a second copy you can edit — see
+[Exporting a project](#exporting-a-project).
 
 ## The Review workspace
 
@@ -525,6 +696,49 @@ Tick the findings you want addressed and send them to the conversation. They are
 grouped by rule and **written into the composer** — shot2code does **not** send
 them for you. Read the instruction, edit it, then send it like any other
 request.
+
+### Finding what matters, and fixing it
+
+A long audit is only useful if you can narrow it:
+
+- **Filter by severity** and **search the text** of the findings.
+- **Select visible** ticks everything the current filter shows.
+- **Select errors + warnings** ticks the two severities that usually matter.
+
+**Fix selected findings** goes one step further than the composer: it sends a
+targeted update immediately, against the **exact version and option that was
+reviewed** rather than whatever is on screen when you click. The result is a new
+version, like any other refinement, so nothing is overwritten.
+
+### An optional AI review
+
+Beside the deterministic audit you can ask for a **second opinion from the model
+that option actually ran on** — the exact identity is shown, so you know what you
+are asking. It is deliberately bounded: the review runs with **no tools, no MCP
+servers, no skills, no web search, no shell and no file writes**. It reads the
+source and answers.
+
+Its findings are kept **separate** from the local ones, which remain the
+authoritative set, and they can be selected and fixed in the same way. An option
+that does not record a model identity cannot be AI-reviewed; retry it first.
+
+**An AI review is a real request to your provider and may use quota.** The local
+audit is free, deterministic and offline.
+
+### The Design Inspector
+
+The Design Inspector reads the generated source and reports the design decisions
+inside it: repeated colours, CSS variables, typography, spacing, radii, shadows,
+motion, and counts of the semantic components it found. It exports:
+
+| Artifact | What it is |
+| --- | --- |
+| **`DESIGN.md`** | The design system it extracted, in Markdown — also available as a single copy action |
+| **`SKILL.md`** | The same system written as reusable instructions |
+| **A palette PNG** | The colours it found, as an image you can share |
+
+It analyses the composed source, so it describes what the generated code
+declares rather than what a browser finally computes.
 
 ### Results are bound to what produced them
 
@@ -610,6 +824,11 @@ Projects, versions and prompts are saved in a local SQLite database
 reopen earlier work. Saves are debounced, so ordinary typing does not thrash the
 disk.
 
+**That folder is outside the installation directory**, and the installer is
+configured not to remove application data, so upgrading the app — or replacing
+the installed program entirely — leaves every project, version and prompt where
+it was.
+
 Deleting a project removes it and every saved version from the device. Nothing is
 uploaded anywhere.
 
@@ -656,6 +875,14 @@ Preview documents run in an opaque-origin sandbox with a restrictive
 Content-Security-Policy; select-and-edit talks to the app through validated,
 per-preview messages rather than direct parent-window access.
 
+**Stack preview** is a second, optional view. The default stays the composed HTML
+document; **Stack preview** renders the controlled Vite HTML, React and Preact
+files of the generated project inside that same browser sandbox, so you can see
+the project shape rather than the flattened page. **No package script and no
+project configuration is executed** to produce it — it is a render in the
+existing sandbox, not a build. It becomes available once a generation has
+finished.
+
 **CodePen** is offered only when the selected stack can honestly run in a
 browser-only Pen. Sharing always asks first, because the code leaves your device
 and a public Pen may be visible to others. For build-dependent projects, download
@@ -673,6 +900,10 @@ Two shapes:
   modules and import maps are not rebundled or reordered; React and Preact use
   Vite's framework build path when the generated source is safely transformable,
   and a documented Vite HTML fallback when it is not.
+
+The Code tab's read-only **[Export project](#current-code-and-export-project)**
+view lists the exact files and assets a project-folder download will contain, so
+you can check the layout before you download it.
 
 When the editor holds a multi-file project, export treats that source tree and its
 declared entry point as authoritative — even if the preview used a composed HTML
@@ -761,20 +992,35 @@ that cannot work.
 Settings holds your provider keys, the
 [model selection](#choosing-which-models-run) across every group, the
 [Copilot SDK BYOK connection](#using-your-own-endpoint-copilot-sdk-byok), your
-[MCP servers](#mcp-servers), the running version and the update state
-(**Check now**, download progress, **Restart & install**), and it reports whether
-the screenshot-preview browser is available.
+[MCP servers](#mcp-servers) and the registry browser,
+[Agent Skills and web search](#agent-skills-and-web-search), the
+[Figma and Google Stitch](#figma-and-google-stitch) credentials, the running
+version and the update state (**Check now**, download progress, **Restart &
+install**), and it reports whether the screenshot-preview browser is available.
 
 Every credential field is a password input, and nothing you type into one
-reaches a log line, a toast or a validation response.
+reaches a log line, a toast or a validation response. The Figma token and the
+Stitch API key are **capture-only**: they are used by the code that calls those
+services and are excluded from generation requests, project history and exports.
+
+Image generation, editing and background removal are offered only when an
+effective **Replicate** key exists — including one that comes from
+`backend/.env` — rather than being advertised and then failing.
 
 The page has its own viewport-bounded scrollbar. Even with a project open, you
 can scroll through the full settings list to the final Screenshot by URL and
 capability controls without changing browser zoom.
 
+**Screenshot by URL** uses ScreenshotOne. Its key can be tested from the URL tab
+with one minimal request, and a failed capture is reported for what it is — a
+rejected key, a billing or credit problem, a rate limit, a timeout, an invalid
+URL, or the provider being unavailable — instead of a single generic error.
+
 Screenshot preview lets the agent render its own output in a headless browser and
 check its work. Chromium ships with the desktop app; if it is unavailable,
-Settings says so and the app skips that tool.
+Settings says so and the app skips that tool. Its **first** launch is given a
+longer budget than later ones, because that is when antivirus software scans the
+newly written tree.
 
 If Settings reports that the update was **not** started because shot2code could
 not shut down safely, that is the guard working: quit the app completely and try

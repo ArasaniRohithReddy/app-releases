@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 a9339a7e2bb080677b8f6b521d53e519f5b3b83787d0498f319dddaf75cbec84). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 d28ff28aceae609add0e63d7c2633deae6fa8cc9ea9e335d1543c0840a873e4d). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">View source on GitHub</a></p>
           <p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
         <div class="doc-content"><p>Published Windows builds of shot2code, newest first. Tags in this hub are
 product-prefixed (<code>shot2code-vX.Y.Z</code>); the upstream project tags the same build as
 <code>vX.Y.Z</code>.</p>
@@ -73,17 +73,231 @@ which is generated from the release feed; this file summarises each one.</p>
 <a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/CHANGELOG.md" rel="noopener noreferrer">CHANGELOG.md</a>.
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.</p>
+<h2 id="050--2026-09-27" tabindex="-1">[0.5.0] — 2026-09-27</h2>
+<p><a href="../../releases/">Download</a> ·
+<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.0" rel="noopener noreferrer">hub release</a> ·
+<a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.0" rel="noopener noreferrer">upstream notes</a></p>
+<p>The current release. It signs you in to GitHub Copilot from the app itself with
+no command-line tool installed, opens the official <strong>MCP Registry</strong> and an
+<strong>Agent Skills</strong> library, makes <strong>Figma</strong> and <strong>Google Stitch</strong> first-class
+design sources, restores the whole conversation in Chat, shows the exact files
+an export will contain before you download them, and keeps your projects when
+the installation directory is replaced.</p>
+<p>Everything new here is <strong>additive and off until you switch it on</strong>. If you
+configure none of it, the app behaves as it did in 0.4.0 — the native OpenAI,
+Anthropic, Gemini and Copilot routes are untouched.</p>
+<h3 id="added" tabindex="-1">Added</h3>
+<ul>
+<li><strong>Sign in to GitHub Copilot without a CLI.</strong> The desktop app now runs its own
+<strong>GitHub OAuth device flow</strong> against an application registered for shot2code.
+It shows a one-time code, opens your browser, and completes without the
+GitHub Copilot CLI or the GitHub CLI being installed. The app uses a
+<strong>public client id and no client secret</strong>, because a desktop application
+cannot keep one.</li>
+<li><strong>The token is encrypted at rest.</strong> The access token and its refresh token
+are stored under the app's own user-data folder, encrypted with Electron
+<strong><code>safeStorage</code></strong> — the operating system's own key store. They are refreshed
+automatically when they expire.</li>
+<li><strong>Disconnecting is app-only.</strong> <strong>Disconnect GitHub from shot2code</strong> clears
+the credential this app holds and nothing else: a <code>gh auth login</code> or
+<code>copilot</code> session on the same machine <strong>stays signed in</strong>, because shot2code
+did not create it and has no business ending it. The app also says so, rather
+than leaving you to guess what it touched.</li>
+<li><strong>The official MCP Registry, in the app.</strong> <strong>Settings → MCP servers →
+MCP Registry</strong> searches
+<a href="https://registry.modelcontextprotocol.io" rel="noopener noreferrer"><code>registry.modelcontextprotocol.io</code></a>
+and installs an entry as a <strong>disabled, untrusted draft</strong> with its URL and
+headers laid out for review. Nothing a registry returns can start a server:
+the two existing switches still have to be turned on by hand. Only remote
+<code>https://</code> entries are offered, and duplicates collapse to the latest active
+version.</li>
+<li><strong>Featured integrations you would otherwise have to hand-configure.</strong>
+<strong>Figma Desktop MCP</strong>, <strong>Figma Remote MCP</strong> and <strong>Google Stitch MCP</strong> are
+offered as one-click drafts with the correct transport and endpoint
+pre-filled — and, like every other server, arrive disabled and untrusted.</li>
+<li><strong>An Agent Skills library.</strong> <strong>Settings → Agent Skills</strong> imports a skill from
+a <strong>local folder</strong> or from a <strong>public GitHub folder URL</strong>
+(<code>https://github.com/owner/repo/tree/main/path</code>). Front matter, paths and
+sizes are validated, the origin is recorded as provenance, and each skill can
+be enabled, disabled or removed. <strong>Every imported skill is disabled by
+default.</strong></li>
+<li><strong>Figma, four ways.</strong> Exported <strong>screenshots</strong>, exported <strong>SVG</strong> files (which
+are rasterised locally before they are sent), the <strong>Figma Desktop MCP</strong>
+server on <code>http://127.0.0.1:3845/mcp</code>, and a <strong>REST import</strong> that takes a
+Figma URL plus a personal access token with <code>file_content:read</code>, resolves the
+file and node ids in the URL, asks Figma to render those frames, and brings
+the images in as local data URLs.</li>
+<li><strong>Google Stitch, two ways.</strong> The official <strong>Stitch MCP</strong> endpoint at
+<code>https://stitch.googleapis.com/mcp</code>, and a bundled <strong>experimental</strong>
+<code>@google/stitch-sdk</code> in the desktop app that validates a Stitch API key,
+generates a screen from a prompt, and imports an existing Stitch project or
+screen. HTML and image downloads made on its behalf are <strong>HTTPS-only and
+size-bounded</strong>.</li>
+<li><strong>Chat shows the whole conversation again.</strong> The active branch is
+reconstructed in order — your prompts, the screenshots or recording you
+attached, any selected-element context, the model identity, the generation
+state <strong>and the assistant's own responses</strong>, in expandable, scrollable blocks.
+Older versions no longer collapse to <em>&quot;Option ready.&quot;</em></li>
+<li><strong>A first instruction on Upload and Import.</strong> Both tabs now accept an optional
+instruction — and a model choice — before the first generation, so an imported
+multi-file project can go straight into the refinement flow.</li>
+<li><strong>Review can fix what it found.</strong> <strong>Fix selected findings</strong> sends a targeted
+update against the <strong>exact commit and option that was reviewed</strong>, rather than
+whatever happens to be on screen. Findings can be narrowed with severity
+filters and a text search, and selected in bulk with <strong>Select visible</strong> and
+<strong>Select errors + warnings</strong>.</li>
+<li><strong>An optional, bounded AI review.</strong> Beside the deterministic local audit, a
+second opinion can be requested from the <strong>model that option actually ran
+on</strong>. It runs with <strong>no tools, no MCP servers, no skills, no web search, no
+shell and no file writes</strong>, and its findings are kept separate from the local
+ones, which remain authoritative. It is a real provider request and <strong>may use
+quota</strong>.</li>
+<li><strong>A Design Inspector.</strong> Review can extract repeated colours, CSS variables,
+typography, spacing, radii, shadows, motion and semantic component counts from
+the generated source, and export them as <strong><code>DESIGN.md</code></strong>, <strong><code>SKILL.md</code></strong> and a
+<strong>palette PNG</strong>.</li>
+<li><strong>The Code tab shows what you will actually download.</strong> Beside <strong>Current
+code</strong> there is now a read-only <strong>Export project</strong> view listing the exact text
+files and assets the ZIP will contain for the selected stack, so the export
+layout is no longer a surprise at download time.</li>
+<li><strong>A sandboxed Stack preview.</strong> Preview still defaults to the composed HTML
+document. <strong>Stack preview</strong> additionally renders the controlled Vite HTML,
+React and Preact files in the same browser sandbox. <strong>No package script and
+no project configuration is executed</strong> to produce it.</li>
+<li><strong>Copilot web research, opt-in.</strong> <strong>Settings → Copilot web research → Allow
+web search</strong> lets GitHub Copilot and Copilot SDK BYOK options search the
+public web when a prompt needs current documentation. Search queries leave
+the device, which the setting says in as many words. It is off by default.</li>
+<li><strong>ScreenshotOne says what went wrong.</strong> A failed capture is now reported as a
+rejected key, a billing or credit problem, a rate limit, a timeout, an invalid
+URL or an unavailable provider — and the URL tab can test a ScreenshotOne key
+with one minimal request before you rely on it.</li>
+<li><strong>One endpoint, several selectable models.</strong> A Copilot SDK BYOK connection is
+no longer limited to a single endpoint model: every model you discover or
+type becomes its <strong>own selectable identity</strong>, so several models from the same
+endpoint can run in one generation and be compared.</li>
+</ul>
+<h3 id="changed" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Projects survive an upgrade.</strong> History lives in
+<code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>, outside the installation
+directory, and the installer is explicitly configured not to remove
+application data. Replacing the installed program therefore leaves every
+project, version and prompt in place.</li>
+<li><strong>History records the exact run identity.</strong> Each option stores and displays
+the identity it really ran as — a native model id, or the
+<code>sdk-byok/&lt;provider&gt;/&lt;base model&gt;</code> twin — so a retry replays that runtime
+rather than the provider whose model it borrowed.</li>
+<li><strong>Image tools are gated on a usable key.</strong> <code>generate_images</code> and
+<code>edit_images</code> are no longer advertised to a model unless an effective
+Replicate key exists. The preference still works when that key comes from
+<code>backend/.env</code>.</li>
+<li><strong>Skills and web search reach Copilot runtimes only.</strong> Like MCP tools, they
+are exposed to GitHub Copilot subscription options and Copilot SDK BYOK
+options. An option running on your own OpenAI, Anthropic or Gemini key never
+sees them.</li>
+<li><strong>The shipped desktop stack was updated</strong>: Electron <strong>44.4.3</strong>,
+electron-builder <strong>26.15.3</strong> and electron-updater <strong>6.8.9</strong>, with
+<code>npm audit --omit=dev</code> reporting <strong>0 vulnerabilities</strong> for what is actually
+distributed.</li>
+<li><strong>First-run browser startup has a longer budget.</strong> The bundled headless
+Chromium is allowed more time on its first launch, because that is when
+antivirus software scans a newly written tree — the previous budget could
+report the browser unavailable on a machine where it was merely slow.</li>
+</ul>
+<h3 id="fixed" tabindex="-1">Fixed</h3>
+<ul>
+<li><strong>A generation started during a cold start no longer fails.</strong> The deferred
+route loader accepts the WebSocket handshake before the frozen generation
+graph has finished importing and replays the connect event, instead of
+dropping the first run after launch.</li>
+<li><strong>Long runs no longer look dead.</strong> The backend sends a heartbeat every 15
+seconds so a long Copilot run is not mistaken for a stalled connection.</li>
+<li><strong>A completed run is no longer reported as a failure.</strong> An abnormal socket
+closure after every option has reached a terminal state is treated as
+completion, and when the selected option was cancelled or failed while another
+one finished, the usable option is selected for you.</li>
+<li><strong>&quot;Check the console&quot; is a last resort again.</strong> A failure that the backend
+actually diagnosed keeps its own message and points at the diagnostic log.</li>
+<li><strong>A root-level skill folder on GitHub imports correctly.</strong> The Contents API
+does not return file contents in a directory listing, so each file is now
+fetched individually rather than imported empty.</li>
+<li><strong>A <code>204</code> route no longer breaks the backend.</strong> A FastAPI route annotated
+<code>-&gt; None</code> for a no-content response made the whole application unimportable;
+it returns an explicit <code>Response</code> now.</li>
+</ul>
+<h3 id="security" tabindex="-1">Security</h3>
+<ul>
+<li><strong>No client secret ships in the app.</strong> The GitHub device flow uses a public
+client id only. A desktop application cannot keep a secret, so it does not
+pretend to have one, and it does not borrow another product's client id.</li>
+<li><strong>Credentials are encrypted by the operating system.</strong> GitHub tokens obtained
+in the app are written through Electron <code>safeStorage</code>. The backend receives
+the token in its process environment on a restart that is <strong>serialised</strong>, so
+two sign-in or disconnect actions cannot race a half-started backend.</li>
+<li><strong>Disconnecting never reaches outside the app.</strong> Clearing the credential
+shot2code holds does not touch a <code>gh</code> or Copilot CLI session on the same
+machine.</li>
+<li><strong>Capture-only credentials never reach a model.</strong> The Figma personal access
+token and the Google Stitch API key are used only by the code that calls those
+services — the Figma token is sent to <code>api.figma.com</code> and nowhere else, and
+the Stitch key is passed through desktop IPC to the bundled SDK. Both are
+stripped from generation requests, from project history and from exports.</li>
+<li><strong>A registry install is a draft, not a running server.</strong> An entry installed
+from the MCP Registry arrives <strong>disabled and untrusted</strong>, and only remote
+<code>https://</code> entries are listed at all. The two switches, the read-only
+default and the separate <strong>Allow write tools</strong> gate are unchanged.</li>
+<li><strong>Imported skills cannot execute.</strong> A skill may contain scripts, and those
+files are stored as resources — but shot2code exposes <strong>no shell tool and no
+unrestricted host-filesystem tool</strong>, so nothing in a skill can be run. Skills
+are bounded in file count and size, path traversal is rejected, and every
+import is disabled until you enable it.</li>
+<li><strong>Copilot's own file and shell tools stay excluded.</strong> shot2code continues to
+expose only its own <code>create_file</code> and <code>edit_file</code> tools, which act on the
+project in memory. Enabling web search adds search and nothing else.</li>
+<li><strong>The AI review runs without tools.</strong> It is given no tool surface at all — no
+MCP, no skills, no web search, no shell, no file writes — so a second opinion
+cannot become a second agent.</li>
+<li><strong>Stitch downloads are constrained.</strong> HTML and image fetches made on the
+SDK's behalf must be <code>https://</code> and are size-bounded.</li>
+</ul>
+<h3 id="notes" tabindex="-1">Notes</h3>
+<ul>
+<li>The GitHub device flow is a feature of the <strong>desktop app</strong>. Where it is not
+available, the existing delegated route is used instead and <strong>shot2code never
+receives or saves the token</strong> in that mode. The <code>gh auth login</code> / <code>copilot</code>
+ladder and the optional token field are unchanged either way.</li>
+<li><strong>Figma's remote MCP server currently admits only clients in Figma's own MCP
+catalogue.</strong> shot2code does not impersonate another editor or reuse its OAuth
+identity, so the REST import with your own personal access token is the route
+that works today for most accounts.</li>
+<li><strong><code>@google/stitch-sdk</code> is experimental.</strong> Google Labs states it is not an
+officially supported Google product. It is bundled at version <strong>0.3.5</strong>
+(Apache-2.0) and is used only when you supply a Stitch API key.</li>
+<li>The AI review, like a connection check, is a real provider request on a
+metered account. The <strong>local</strong> source audit remains free, deterministic and
+offline, and it is still an automated check of generated source — <strong>not a
+WCAG conformance assessment</strong>.</li>
+<li>Validation for this build: <strong>976 backend tests (13 skipped)</strong>, <strong>851 frontend
+tests (9 skipped)</strong> and <strong>47 desktop tests</strong>, plus <strong>15 exported projects</strong>
+checked across the <strong>12-stack browser matrix</strong>. The packaged <code>file://</code> app,
+history retention across an install-directory replacement, a root-level
+GitHub skill import and the bundled Chromium were all verified on the
+packaged build.</li>
+</ul>
 <h2 id="040--2026-09-20" tabindex="-1">[0.4.0] — 2026-09-20</h2>
 <p><a href="../../releases/">Download</a> ·
 <a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.4.0" rel="noopener noreferrer">hub release</a> ·
 <a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.4.0" rel="noopener noreferrer">upstream notes</a></p>
-<p>The current release. It adds a second, optional way to reach a model — your own
+<p>It adds a second, optional way to reach a model — your own
 endpoint through the GitHub Copilot SDK — lets Copilot runs call MCP servers you
 configure, turns the preview into a side-by-side responsive <strong>Review</strong> with a
 local source audit, and puts a real Windows menu bar on the app.</p>
+<p>Superseded by 0.5.0, which adds CLI-free GitHub sign-in, the MCP Registry,
+Agent Skills, Figma and Google Stitch.</p>
 <p>Everything here is <strong>additive</strong>. If you do not configure any of it, the app
 behaves exactly as it did in 0.3.3.</p>
-<h3 id="added" tabindex="-1">Added</h3>
+<h3 id="added-1" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Copilot SDK BYOK: bring your own endpoint.</strong> A single, separate connection
 in <strong>Settings</strong> with its own credential — <strong>OpenAI-compatible</strong>, <strong>Azure
@@ -180,7 +394,7 @@ panel</strong> (<code>Ctrl+Alt+C</code>), Settings, zoom, the Help centre and th
 reference. Items that cannot work without a project are disabled rather than
 offered.</li>
 </ul>
-<h3 id="changed" tabindex="-1">Changed</h3>
+<h3 id="changed-1" tabindex="-1">Changed</h3>
 <ul>
 <li><strong>The model picker has a fifth group.</strong> <strong>Copilot SDK (BYOK)</strong> sits beside
 GitHub Copilot, OpenAI, Anthropic and Google Gemini. The four native groups
@@ -203,14 +417,14 @@ never sees an MCP tool. The picker says so.</li>
 version, the option, a hash of the source and the widths it ran at. Change any
 of those and the result is marked stale instead of being presented as current.</li>
 </ul>
-<h3 id="fixed" tabindex="-1">Fixed</h3>
+<h3 id="fixed-1" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>Every Settings control remains reachable.</strong> Settings now owns a
 viewport-bounded scroll area whether the app is empty or a project is open,
 so the final Screenshot by URL and capability controls no longer extend below
 the fixed desktop shell.</li>
 </ul>
-<h3 id="security" tabindex="-1">Security</h3>
+<h3 id="security-1" tabindex="-1">Security</h3>
 <ul>
 <li><strong>Sign-in is delegated, never implemented.</strong> shot2code runs the official
 CLI's own login command with a <strong>fixed argument vector</strong>, spawned directly
@@ -251,7 +465,7 @@ servers</strong> check the configuration only — no endpoint is called and no M
 server is started. <strong>Test model access</strong> and the per-provider checks are the
 opposite and say so: they contact the endpoint and may use a little quota.</li>
 </ul>
-<h3 id="notes" tabindex="-1">Notes</h3>
+<h3 id="notes-1" tabindex="-1">Notes</h3>
 <ul>
 <li>Configuring neither BYOK nor MCP changes nothing: an incomplete or switched-off
 BYOK connection, and a disabled or untrusted MCP server, are reported as
@@ -280,7 +494,7 @@ shortcuts-only dialog with a Help centre that can open the log you need to
 attach to a bug report.</p>
 <p>Superseded by 0.4.0, which adds Copilot SDK BYOK, MCP servers and the Review
 workspace.</p>
-<h3 id="fixed-1" tabindex="-1">Fixed</h3>
+<h3 id="fixed-2" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>Startup no longer waits for features you have not used yet.</strong> The frozen
 backend used to import the generation, evaluation and project-tool
@@ -302,7 +516,7 @@ from then on, rather than reporting a healthy backend that cannot generate.
 Chromium is advertised only after it has actually launched, and it is closed
 when the backend shuts down.</li>
 </ul>
-<h3 id="added-1" tabindex="-1">Added</h3>
+<h3 id="added-2" tabindex="-1">Added</h3>
 <ul>
 <li><strong>A resizable Chat and History panel.</strong> On wide windows (≥ 1280px) drag the
 divider between the conversation/History panel and Preview or Code. It is a
@@ -332,7 +546,7 @@ instead of offering a dead button.</li>
 numpad add and subtract keys work with <code>Ctrl</code>, and <code>Ctrl+0</code> resets. Zoom moves
 in deterministic 10-point steps and is bounded between 50% and 300%.</li>
 </ul>
-<h3 id="changed-1" tabindex="-1">Changed</h3>
+<h3 id="changed-2" tabindex="-1">Changed</h3>
 <ul>
 <li>Below the desktop split breakpoint nothing moves: the <strong>Preview</strong>, <strong>Chat</strong> and
 <strong>History</strong> destinations behave exactly as before and no drag handle is shown.</li>
@@ -357,11 +571,11 @@ swallowing ordinary editor input, AltGr or composition events.</li>
 <p><a href="../../releases/">Download</a> ·
 <a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.3.2" rel="noopener noreferrer">hub release</a> ·
 <a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.3.2" rel="noopener noreferrer">upstream notes</a></p>
-<p>The current release. It protects an update that starts from an older client,
+<p>It protects an update that starts from an older client,
 extends model selection to every supported code provider, and finishes the
 responsive <strong>Preview</strong> and <strong>History</strong> work.</p>
 <p>Superseded by 0.3.3, which makes the packaged app start in seconds.</p>
-<h3 id="fixed-2" tabindex="-1">Fixed</h3>
+<h3 id="fixed-3" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>An old client can no longer be replaced while its backend is running.</strong> The
 0.3.1 guard lives in the <em>app</em>, so a machine still on an older build could not
@@ -390,7 +604,7 @@ represent, including a strict cp1252 console, instead of letting box-drawing
 characters or prompt text raise <code>UnicodeEncodeError</code> mid-generation. This
 affects running from source; the packaged app logs to a file.</li>
 </ul>
-<h3 id="added-2" tabindex="-1">Added</h3>
+<h3 id="added-3" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Model selection for every code-generation provider.</strong> Settings and the
 compact picker beside the composer group the available models under <strong>GitHub
@@ -410,7 +624,7 @@ reported explicitly instead of silently dropped.</li>
 the installed process-tree shutdown, the survival of an unrelated process with
 the same executable name, the fail-closed path, and the updater lifecycle.</li>
 </ul>
-<h3 id="changed-2" tabindex="-1">Changed</h3>
+<h3 id="changed-3" tabindex="-1">Changed</h3>
 <ul>
 <li>Preview controls are grouped by purpose: a <strong>Fit / 100%</strong> segmented control and
 a labelled <strong>History <em>n</em>/<em>m</em></strong> control instead of loose buttons.</li>
@@ -429,7 +643,7 @@ reworks the workspace around the chat panel, the code editor and the provider
 status the app can honestly report.</p>
 <p>Superseded by 0.3.2, which moves the shutdown guard into the installer so it also
 protects machines updating <em>from</em> an older client.</p>
-<h3 id="fixed-3" tabindex="-1">Fixed</h3>
+<h3 id="fixed-4" tabindex="-1">Fixed</h3>
 <ul>
 <li><strong>The updater could start a second installer.</strong> Both install paths — the
 automatic one after a download, and <strong>Restart &amp; install</strong> in Settings — called
@@ -449,7 +663,7 @@ asks you to quit and try again, instead of looking stuck.</li>
 <code>files</code> array, so it ships inside the app rather than being dropped from the
 build.</li>
 </ul>
-<h3 id="added-3" tabindex="-1">Added</h3>
+<h3 id="added-4" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Collapsible chat panel</strong> on wide layouts (≥ 1280px), so the preview or the
 code editor can take the full width. The choice is remembered; <strong>Ctrl+3</strong>
@@ -476,7 +690,7 @@ banner over the code.</li>
 <li><strong>Read-only</strong> and <strong>Generated</strong> badges beside the existing <strong>Entry</strong> and
 <strong>Preview</strong> badges.</li>
 </ul>
-<h3 id="changed-3" tabindex="-1">Changed</h3>
+<h3 id="changed-4" tabindex="-1">Changed</h3>
 <ul>
 <li>The icon rail's <strong>Editor</strong> entry is now <strong>Chat</strong>, with an explicit
 collapse/expand control, <code>aria-label</code>/<code>aria-pressed</code>/<code>aria-controls</code>/
@@ -498,7 +712,7 @@ variant.</li>
 and their version history are saved on your own machine, generated output is a
 real multi-file project you can edit, and previews run in a locked-down sandbox.</p>
 <p>Superseded by 0.3.1, which fixes the updater race it shipped with.</p>
-<h3 id="added-4" tabindex="-1">Added</h3>
+<h3 id="added-5" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Local project history (SQLite).</strong> Projects, versions, variants, prompts and
 messages are stored in <code>history.sqlite3</code> in a per-user data directory
@@ -537,7 +751,7 @@ the state surfaced in Settings, silent install and relaunch, managed-install
 detection under Program Files, and NSIS/MSI/portable builds with the backend
 frozen by PyInstaller and only headless Chromium bundled.</li>
 </ul>
-<h3 id="security-1" tabindex="-1">Security</h3>
+<h3 id="security-2" tabindex="-1">Security</h3>
 <ul>
 <li>Previews run in an opaque origin under a restrictive CSP with a nonce-checked
 edit bridge.</li>

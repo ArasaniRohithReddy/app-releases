@@ -10,9 +10,10 @@ Release tags in this hub are product-prefixed: `shot2code-vX.Y.Z`.
 - **Windows 10 or Windows 11**, 64-bit (x64).
 - About **600 MB** of free disk space after unpacking. The app carries its own
   Python backend and a headless Chromium, so there is no runtime to install.
-- **One model provider**: a GitHub Copilot sign-in, or a Gemini, Anthropic or
-  OpenAI API key. Without one, generation fails fast — the rest of the app still
-  opens.
+- **One model provider**: a GitHub Copilot sign-in — which the desktop app can do
+  by itself, with no command-line tool installed — or a Gemini, Anthropic or
+  OpenAI API key, or your own endpoint through a Copilot SDK BYOK connection.
+  Without one, generation fails fast — the rest of the app still opens.
 - There are **no macOS or Linux builds**. On those platforms, run the project
   [from source](https://github.com/ArasaniRohithReddy/shot2code#running-from-source).
 
@@ -87,6 +88,11 @@ the background. A fresh portable copy, or the first launch after an update, take
 longer (around 40 seconds) while Windows scans the newly written tree. The shell
 gives up after 90 seconds rather than waiting forever.
 
+The bundled headless browser also gets a larger budget on its **first** launch,
+for the same reason: that is when antivirus software scans it. A generation
+started while the backend is still warming up is not lost — the connection is
+accepted and replayed once the generation routes have loaded.
+
 If the window stays blank or never appears, read the log — it records backend
 startup, how long readiness took, renderer load failures, crashes and console
 errors:
@@ -136,7 +142,9 @@ After verifying the checksum, either:
 - **Installer / MSI:** *Settings → Apps → Installed apps → shot2code → Uninstall*.
 - **Portable:** delete the extracted folder.
 
-Uninstalling does not delete your projects. They live in a local database:
+Uninstalling does not delete your projects, and neither does an upgrade. They
+live in a local database **outside the installation directory**, and the
+installer is explicitly configured not to remove application data:
 
 ```
 %LOCALAPPDATA%\shot2code\history.sqlite3
@@ -150,10 +158,10 @@ project removes it and its versions from the device.
 
 | Path | Contents |
 | --- | --- |
-| `%LOCALAPPDATA%\shot2code\` | `history.sqlite3` — projects, versions, prompts |
-| `%APPDATA%\shot2code-desktop\` | Desktop shell state and `shot2code-backend.log` |
+| `%LOCALAPPDATA%\shot2code\` | `history.sqlite3` — projects, versions, prompts — and any Agent Skills you imported |
+| `%APPDATA%\shot2code-desktop\` | Desktop shell state, the encrypted GitHub token from the in-app sign-in, and `shot2code-backend.log` |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped |
-| The app's own local storage | Provider API keys, your model selection, pane widths and UI preferences entered in Settings |
+| The app's own local storage | Provider API keys, the Figma and Stitch credentials, your model selection, pane widths and UI preferences entered in Settings |
 
 See [DATA-HANDLING.md](DATA-HANDLING.md) for the full list, including every
 network destination.

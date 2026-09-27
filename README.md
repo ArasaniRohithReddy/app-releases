@@ -50,14 +50,18 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 
 ### 🖼️ shot2code
 
-Turn **screenshots, mockups, URLs, written descriptions or screen recordings** into editable
-web code, on your own machine. Twelve output stacks, a multi-file project editor, local SQLite
-project **History**, a sandboxed preview, and single-HTML or Vite project export.
+Turn **screenshots, mockups, URLs, written descriptions, screen recordings, or Figma and
+Google Stitch designs** into editable web code, on your own machine. Twelve output stacks,
+a multi-file project editor, local SQLite project **History**, a sandboxed preview, and
+single-HTML or Vite project export.
 
-shot2code ships **no model**: you bring a GitHub Copilot sign-in (no API key) or a Gemini,
-Anthropic or OpenAI key. Whichever you bring, **Settings** lets you pick which of that provider's
-models run — one generated option per selected model, across GitHub Copilot, OpenAI, Anthropic
-and Google Gemini. Generated code is model output — review it before running it outside
+shot2code ships **no model**: you bring a GitHub Copilot sign-in (no API key and no
+command-line tool needed), a Gemini, Anthropic or OpenAI key, or your own endpoint through a
+Copilot SDK BYOK connection. Whichever you bring, **Settings** lets you pick which models run
+— one generated option per selected model, across GitHub Copilot, OpenAI, Anthropic, Google
+Gemini and your own endpoint. MCP servers, Agent Skills and web search are optional, off by
+default, and reach the Copilot runtimes only; there is no shell tool and no unrestricted
+host-filesystem tool. Generated code is model output — review it before running it outside
 the sandboxed preview. The Windows builds are **not code-signed**; verify the published
 SHA-256 checksums.
 

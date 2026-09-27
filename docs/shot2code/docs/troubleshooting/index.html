@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 a8d18ff3bd0580da87396a6bda9224e2fb2ee7dc0a89d5d8b8b454c49033e0f2). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 1ec16dd5bfc2df151ead820640ec25b57207342743d6b623999e13b520938393). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/TROUBLESHOOTING.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#start-here">Start here</a></li><li><a href="#where-the-logs-and-data-live">Where the logs and data live</a></li><li><a href="#the-app-will-not-start">The app will not start</a></li><li><a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a></li><li><a href="#copilot-sdk-byok">Copilot SDK BYOK</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#generation-fails-or-is-wrong">Generation fails or is wrong</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#screenshot-preview-chromium-and-screen-recording">Screenshot preview, Chromium and screen recording</a></li><li><a href="#importing-a-project">Importing a project</a></li><li><a href="#preview-export-and-codepen">Preview, export and CodePen</a></li><li><a href="#history-and-recent-projects">History and recent projects</a></li><li><a href="#the-workspace-layout">The workspace layout</a></li><li><a href="#installing-and-updating">Installing and updating</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#start-here">Start here</a></li><li><a href="#where-the-logs-and-data-live">Where the logs and data live</a></li><li><a href="#the-app-will-not-start">The app will not start</a></li><li><a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a></li><li><a href="#signing-in-to-github-copilot">Signing in to GitHub Copilot</a></li><li><a href="#copilot-sdk-byok">Copilot SDK BYOK</a></li><li><a href="#mcp-servers-the-registry-and-skills">MCP servers, the registry and skills</a></li><li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li><li><a href="#generation-fails-or-is-wrong">Generation fails or is wrong</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#screenshot-preview-chromium-and-screen-recording">Screenshot preview, Chromium and screen recording</a></li><li><a href="#importing-a-project">Importing a project</a></li><li><a href="#preview-export-and-codepen">Preview, export and CodePen</a></li><li><a href="#history-and-recent-projects">History and recent projects</a></li><li><a href="#the-workspace-layout">The workspace layout</a></li><li><a href="#installing-and-updating">Installing and updating</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav></details>
         <div class="doc-content"><p>A symptom-first runbook for the published Windows build. If you are looking for
 <em>what a feature does</em> rather than <em>why it is not working</em>, start with the
 <a href="../faq/">FAQ</a> or the <a href="../user-guide/">user guide</a>.</p>
@@ -74,8 +74,10 @@ provider credential the app can actually see, or a process that did not exit.</p
 <li><a href="#where-the-logs-and-data-live">Where the logs and data live</a></li>
 <li><a href="#the-app-will-not-start">The app will not start</a></li>
 <li><a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a></li>
+<li><a href="#signing-in-to-github-copilot">Signing in to GitHub Copilot</a></li>
 <li><a href="#copilot-sdk-byok">Copilot SDK BYOK</a></li>
-<li><a href="#mcp-servers">MCP servers</a></li>
+<li><a href="#mcp-servers-the-registry-and-skills">MCP servers, the registry and skills</a></li>
+<li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li>
 <li><a href="#generation-fails-or-is-wrong">Generation fails or is wrong</a></li>
 <li><a href="#the-review-workspace">The Review workspace</a></li>
 <li><a href="#screenshot-preview-chromium-and-screen-recording">Screenshot preview, Chromium and screen recording</a></li>
@@ -123,6 +125,14 @@ failures are in the backend log below.</li>
 <tr>
 <td>Projects, versions and prompts</td>
 <td><code>%LOCALAPPDATA%\shot2code\history.sqlite3</code></td>
+</tr>
+<tr>
+<td>Agent Skills you imported</td>
+<td><code>%LOCALAPPDATA%\shot2code\</code></td>
+</tr>
+<tr>
+<td>The encrypted GitHub token from the in-app sign-in</td>
+<td><code>%APPDATA%\shot2code-desktop\</code></td>
 </tr>
 <tr>
 <td>Everything else the app stores on this device</td>
@@ -192,23 +202,7 @@ Without one, generation fails immediately and says so.</p>
 <tbody>
 <tr>
 <td>&quot;No API key found and no GitHub Copilot credentials detected&quot;</td>
-<td>Use <strong>Settings → GitHub Copilot → Sign in with GitHub</strong>, run <code>gh auth login</code> (or <code>copilot</code>) once and restart shot2code, or paste a key into <strong>Settings</strong>.</td>
-</tr>
-<tr>
-<td><strong>Sign in with GitHub</strong> is disabled and says it is unavailable</td>
-<td>Neither the GitHub Copilot CLI nor the GitHub CLI is on <code>PATH</code>. The warning links the official install instructions. You can still sign in from a terminal or paste a token.</td>
-</tr>
-<tr>
-<td>The browser opened but Settings still says &quot;Not signed in&quot;</td>
-<td>Finish the flow in the browser — the app polls until the CLI reports a result, and only then re-probes. If you closed the window, choose <strong>Cancel</strong> and try again.</td>
-</tr>
-<tr>
-<td>Sign-in is refused with &quot;can only be started from the shot2code app on this machine&quot;</td>
-<td>Starting a sign-in spawns a process, so it is only accepted from the app itself. Use the button in Settings rather than calling the API from elsewhere.</td>
-</tr>
-<tr>
-<td>Copilot shows &quot;Not signed in&quot; although the CLI works</td>
-<td>Credentials are resolved in order: a token in <strong>Settings</strong>, then <code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code>, then a stored <code>copilot</code> login, then <code>gh auth login</code>. Sign in again and restart so the check re-runs. A fine-grained token with the <strong>Copilot Requests</strong> permission also works.</td>
+<td>Use <strong>Settings → GitHub Copilot → Sign in with GitHub</strong> — which needs no command-line tool — run <code>gh auth login</code> (or <code>copilot</code>) once and restart shot2code, or paste a key into <strong>Settings</strong>.</td>
 </tr>
 <tr>
 <td>A provider is missing from <strong>Settings → Models</strong></td>
@@ -237,6 +231,10 @@ Without one, generation fails immediately and says so.</p>
 <tr>
 <td>No models at all in video mode</td>
 <td>In video mode the list is filtered to models that can read video. Everything else would fail on the input. BYOK options are not offered for video either.</td>
+</tr>
+<tr>
+<td>The image tools are not offered</td>
+<td>Image generation, editing and background removal appear only when an effective Replicate key exists. It is read from <code>backend/.env</code>, so this applies to source runs.</td>
 </tr>
 </tbody>
 </table></div>
@@ -294,10 +292,53 @@ request. What it reports is what to do:</p>
 </table></div>
 <p>A check is a real request and may use a little quota on a metered account.
 Replicate is checked against its account endpoint, so it starts no prediction.</p>
+<h2 id="signing-in-to-github-copilot" tabindex="-1">Signing in to GitHub Copilot</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 5"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>You do not want to install a CLI</td>
+<td>You do not have to. The desktop app runs its own GitHub OAuth device flow: it shows a one-time code and opens your browser.</td>
+</tr>
+<tr>
+<td>The code appeared but nothing happened</td>
+<td>Finish the flow in the browser — the app polls until GitHub reports a result. If you closed the window, choose <strong>Cancel</strong> and start again.</td>
+</tr>
+<tr>
+<td><strong>Sign in with GitHub</strong> is disabled and says it is unavailable</td>
+<td>The device flow is a desktop-app feature. In the browser development build it delegates to the GitHub Copilot CLI or the GitHub CLI; if neither is on <code>PATH</code>, the warning links the official install instructions. You can still sign in from a terminal or paste a token.</td>
+</tr>
+<tr>
+<td>Sign-in is refused with &quot;can only be started from the shot2code app on this machine&quot;</td>
+<td>The delegated route spawns a process, so it is only accepted from the app itself. Use the button in Settings rather than calling the API from elsewhere.</td>
+</tr>
+<tr>
+<td>Copilot shows &quot;Not signed in&quot; although the CLI works</td>
+<td>Credentials are resolved in order: a token in <strong>Settings</strong>, then <code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code> — which is how the in-app sign-in reaches the backend — then a stored <code>copilot</code> login, then <code>gh auth login</code>. Sign in again and restart so the check re-runs. A fine-grained token with the <strong>Copilot Requests</strong> permission also works.</td>
+</tr>
+<tr>
+<td>You disconnected, but <code>gh</code> is still signed in</td>
+<td>That is intended. <strong>Disconnect GitHub from shot2code</strong> clears only the credential this app holds; a CLI session belongs to that tool and is signed out with it.</td>
+</tr>
+<tr>
+<td>You disconnected and Copilot models are still listed</td>
+<td>The catalogue is re-probed on the next check. If a <code>copilot</code> or <code>gh</code> session, an environment variable or a pasted token is still present, it is still a usable credential — the ladder above is what the app sees.</td>
+</tr>
+<tr>
+<td>Sign-in appeared to hang after clicking twice</td>
+<td>The backend is restarted with the new token, and that restart is serialised. Wait for it to finish rather than clicking again; the log records it.</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="copilot-sdk-byok" tabindex="-1">Copilot SDK BYOK</h2>
 <p>BYOK is optional and additive. Nothing here stops a direct generation: an
 incomplete connection is reported as a notice and skipped.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 5"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 6"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -363,8 +404,8 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 </tbody>
 </table></div>
-<h2 id="mcp-servers" tabindex="-1">MCP servers</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 6"><table>
+<h2 id="mcp-servers-the-registry-and-skills" tabindex="-1">MCP servers, the registry and skills</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 7"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -377,8 +418,16 @@ incomplete connection is reported as a notice and skipped.</p>
 <td>A server needs <strong>both</strong> switches: <strong>Enabled</strong> <em>and</em> <strong>Trusted</strong>. Until then the picker reports <em>&quot;'‹name›' is not marked trusted, so shot2code will not start it or approve its tools.&quot;</em></td>
 </tr>
 <tr>
+<td>You installed one from the <strong>MCP Registry</strong> and nothing started</td>
+<td>That is the design: a registry install is a <strong>disabled, untrusted draft</strong>. Review its URL and headers, then enable and trust it yourself.</td>
+</tr>
+<tr>
+<td>The registry list is empty, or will not load</td>
+<td>The browser queries the official registry over the network; a proxy or firewall will stop it. Only remote <code>https://</code> entries are listed, so a local-only server will never appear there — add it by hand.</td>
+</tr>
+<tr>
 <td>Tools appear for one option but not another</td>
-<td>MCP reaches the SDK runtimes only. GitHub Copilot options and Copilot SDK BYOK options get the tools; an option on your own OpenAI, Anthropic or Gemini key never does.</td>
+<td>MCP, skills and web search reach the SDK runtimes only. GitHub Copilot options and Copilot SDK BYOK options get them; an option on your own OpenAI, Anthropic or Gemini key never does.</td>
 </tr>
 <tr>
 <td>A tool that should change something does nothing</td>
@@ -408,10 +457,73 @@ incomplete connection is reported as a notice and skipped.</p>
 <td><strong>Validate servers</strong> passes but a server never starts</td>
 <td>Validation checks the configuration only; it starts nothing. Check the server's own command, URL or credentials.</td>
 </tr>
+<tr>
+<td>An imported skill has no effect</td>
+<td>Skills are <strong>disabled by default</strong> — enable it — and, like MCP tools, only a Copilot or BYOK option can use one.</td>
+</tr>
+<tr>
+<td>A skill import was rejected</td>
+<td>Front matter has to parse, paths are normalised with traversal rejected, and the file count and sizes are bounded. Point the import at the skill folder itself rather than a whole repository.</td>
+</tr>
+<tr>
+<td>A GitHub skill imported with empty files</td>
+<td>Fixed in 0.5.0: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again.</td>
+</tr>
+<tr>
+<td>A skill's script did not run</td>
+<td>It cannot. Script files are stored as inert resources; shot2code exposes no shell tool and no unrestricted host-filesystem tool to any model.</td>
+</tr>
+<tr>
+<td>Web search produced nothing</td>
+<td><strong>Allow web search</strong> is off by default, and it only applies to Copilot and BYOK options. Your search queries leave the device when it is on.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="figma-and-google-stitch" tabindex="-1">Figma and Google Stitch</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 8"><table>
+<thead>
+<tr>
+<th scope="col">Symptom</th>
+<th scope="col">Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The Figma <strong>remote</strong> MCP server will not connect</td>
+<td>Figma currently admits only clients listed in its own MCP catalogue. shot2code does not impersonate another editor to get in. Use the <strong>REST import</strong> with your own access token, or the Desktop MCP server.</td>
+</tr>
+<tr>
+<td>The Figma <strong>Desktop</strong> MCP server will not connect</td>
+<td>It is served by the Figma desktop app on <code>http://127.0.0.1:3845/mcp</code>. Start Figma, then enable <em>and</em> trust the server.</td>
+</tr>
+<tr>
+<td>A Figma REST import is rejected</td>
+<td>The token needs the <code>file_content:read</code> scope, and the URL has to be a Figma file URL — shot2code reads the file and node ids out of it.</td>
+</tr>
+<tr>
+<td>A Figma import brought in the wrong frames</td>
+<td>Without node ids in the URL, the top-level renderable frames are imported. Select the frame in Figma and copy its link so the URL carries the node id.</td>
+</tr>
+<tr>
+<td>An exported SVG looks different in the result</td>
+<td>SVGs are rasterised locally before they are sent, so the model sees a picture. Export a PNG at the size you care about if the raster is not faithful enough.</td>
+</tr>
+<tr>
+<td>Stitch actions do nothing</td>
+<td>The bundled SDK is part of the <strong>desktop app</strong> and needs a Stitch API key in Settings. It is experimental — Google Labs states it is not an officially supported Google product.</td>
+</tr>
+<tr>
+<td>A Stitch download failed</td>
+<td>Downloads made on the SDK's behalf must be <code>https://</code> and are size-bounded. An oversized or plain-<code>http://</code> asset is refused rather than fetched.</td>
+</tr>
+<tr>
+<td>Your Figma or Stitch credential appeared in a prompt</td>
+<td>It should not, and it does not: both are capture-only and are stripped before a generation payload is built. Report it privately if you can reproduce it — see <a href="../security/">SECURITY.md</a>.</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="generation-fails-or-is-wrong" tabindex="-1">Generation fails or is wrong</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 7"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 9"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -422,6 +534,26 @@ incomplete connection is reported as a notice and skipped.</p>
 <tr>
 <td>The run stops with a provider error</td>
 <td>The request reached the provider and it refused. Quota, rate limits, model availability and billing belong to your account, not to shot2code; the message is passed through unchanged.</td>
+</tr>
+<tr>
+<td>&quot;Something went wrong — check the console&quot; with no detail</td>
+<td>That wording is now a last resort. When the backend diagnosed the failure you get its message and a pointer to the diagnostic log; if you still see the generic text, attach <code>shot2code-backend.log</code> to an issue.</td>
+</tr>
+<tr>
+<td>The very first generation after launch failed</td>
+<td>Fixed in 0.5.0: the connection is accepted and replayed while the generation routes are still loading, instead of being dropped during a cold start. Update if you are on an older build.</td>
+</tr>
+<tr>
+<td>A long run looked frozen</td>
+<td>The backend sends a heartbeat every 15 seconds so a long Copilot run is not mistaken for a dead connection. Watch the activity list rather than the elapsed time.</td>
+</tr>
+<tr>
+<td>The run &quot;failed&quot; although an option finished</td>
+<td>An abnormal socket closure after every option reached a terminal state is treated as completion, and if the option you were on was cancelled or failed while another finished, the usable one is selected for you.</td>
+</tr>
+<tr>
+<td>Screenshot by URL failed</td>
+<td>The error now names the cause — a rejected key, a billing or credit problem, a rate limit, a timeout, an invalid URL, or the provider being unavailable. Test the ScreenshotOne key from the URL tab with one minimal request.</td>
 </tr>
 <tr>
 <td>The generated code is wrong, inaccessible or insecure</td>
@@ -442,7 +574,7 @@ incomplete connection is reported as a notice and skipped.</p>
 </tbody>
 </table></div>
 <h2 id="the-review-workspace" tabindex="-1">The Review workspace</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 8"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 10"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -472,7 +604,27 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>Findings were not sent to the model</td>
-<td>By design. Selected findings are written into the composer for you to read, edit and send. Nothing is sent on your behalf.</td>
+<td>By design, for the composer route. Selected findings are written into the composer for you to read, edit and send. <strong>Fix selected findings</strong> is the explicit exception: it sends immediately, against the exact version and option that was reviewed.</td>
+</tr>
+<tr>
+<td>A fix landed on the wrong version</td>
+<td>It should not: <strong>Fix selected findings</strong> targets the commit and option the review was bound to, not the current selection. If the review is <strong>stale</strong>, re-run it first.</td>
+</tr>
+<tr>
+<td><strong>AI review</strong> is unavailable for an option</td>
+<td>That option records no model identity — usually an older version. Retry it, then review the new option.</td>
+</tr>
+<tr>
+<td>The AI review cost quota</td>
+<td>It is a real request to the model that option ran on. The local audit is the free, deterministic, offline one, and its findings remain authoritative.</td>
+</tr>
+<tr>
+<td>Too many findings to work through</td>
+<td>Filter by severity, search the text, then use <strong>Select visible</strong> or <strong>Select errors + warnings</strong>.</td>
+</tr>
+<tr>
+<td>The Design Inspector missed a colour or a token</td>
+<td>It reads the composed source, so it reports what the generated code declares rather than what a browser finally computes.</td>
 </tr>
 <tr>
 <td>You want to attach the result to an issue</td>
@@ -489,7 +641,7 @@ megabytes and the app always launches headless.</p>
 <p>When Settings reports it unavailable, <strong>Check again</strong> re-probes the backend, so
 you can fix the cause and confirm it without restarting shot2code. The advice
 depends on how you are running it:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 9"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 11"><table>
 <thead>
 <tr>
 <th scope="col">Running</th>
@@ -499,7 +651,7 @@ depends on how you are running it:</p>
 <tbody>
 <tr>
 <td>The packaged desktop app</td>
-<td>The browser is bundled, so <strong>nothing needs installing</strong>. It could not start. Restart shot2code, then <strong>Check again</strong>; if it still fails, reinstall and open the diagnostic log — antivirus quarantining the bundled browser is the usual cause</td>
+<td>The browser is bundled, so <strong>nothing needs installing</strong>. It could not start. Restart shot2code, then <strong>Check again</strong>; if it still fails, reinstall and open the diagnostic log — antivirus quarantining the bundled browser is the usual cause. Its first launch is given a longer budget for exactly that reason</td>
 </tr>
 <tr>
 <td>From source</td>
@@ -514,7 +666,7 @@ recording input also need a Gemini key.</p>
 <h2 id="importing-a-project" tabindex="-1">Importing a project</h2>
 <p>Import reads a folder, a ZIP or individual source files. It parses text — it
 <strong>never</strong> executes your project's code, including <code>tailwind.config.js</code>.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 10"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 12"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -541,7 +693,7 @@ recording input also need a Gemini key.</p>
 </tbody>
 </table></div>
 <h2 id="preview-export-and-codepen" tabindex="-1">Preview, export and CodePen</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 11"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 13"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -552,6 +704,14 @@ recording input also need a Gemini key.</p>
 <tr>
 <td>The preview shows a fallback or a diagnostic</td>
 <td>The preview is derived, not the source of truth. When a framework build or a local asset cannot be represented safely it degrades deterministically, while every source file stays editable and downloadable in the <strong>Code</strong> tab.</td>
+</tr>
+<tr>
+<td><strong>Stack preview</strong> is unavailable</td>
+<td>It appears once a generation has finished. It renders the controlled Vite HTML, React and Preact files in the same sandbox and runs <strong>no package script and no project configuration</strong> — if you need a real build, export the project folder.</td>
+</tr>
+<tr>
+<td>The download contained files you did not expect</td>
+<td>Open the Code tab's read-only <strong>Export project</strong> view first: it lists the exact text files and assets the ZIP will hold for your stack, because some stacks expand a single document into a project layout at export time.</td>
 </tr>
 <tr>
 <td>The preview scrolls sideways at <strong>100%</strong></td>
@@ -575,7 +735,7 @@ recording input also need a Gemini key.</p>
 <p>Every generation becomes a version. <strong>History</strong> is the name used everywhere in
 the app — the rail entry, the <strong>History <em>n</em>/<em>m</em></strong> preview control, and the
 separate destination on narrow windows.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 12"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 14"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -601,12 +761,16 @@ separate destination on narrow windows.</p>
 </tr>
 <tr>
 <td>Recent work is missing after reinstalling</td>
-<td>Projects live in <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>. An uninstall that removed that folder removed the history with it.</td>
+<td>Projects live in <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>, outside the installation directory, and an upgrade leaves it alone. Only an uninstall that also removed that folder removes the history.</td>
+</tr>
+<tr>
+<td>Chat shows the prompts but not the answers</td>
+<td>It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before 0.5.0 and has no stored response to show.</td>
 </tr>
 </tbody>
 </table></div>
 <h2 id="the-workspace-layout" tabindex="-1">The workspace layout</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 13"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 15"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -645,7 +809,7 @@ separate destination on narrow windows.</p>
 </tbody>
 </table></div>
 <h2 id="installing-and-updating" tabindex="-1">Installing and updating</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 14"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Troubleshooting shot2code table 16"><table>
 <thead>
 <tr>
 <th scope="col">Symptom</th>
@@ -691,8 +855,11 @@ and <a href="../contributing/">CONTRIBUTING.md</a> explains where code changes g
 <li><strong>Version</strong> from <strong>Settings</strong>, and the <strong>install format</strong> (<code>.exe</code>, <code>.msi</code> or <code>.zip</code>).</li>
 <li><strong>Windows version and build</strong>, and whether the install is per-user or per-machine.</li>
 <li><strong>What you expected, what happened</strong>, and the exact wording of any error.</li>
-<li><strong>Which provider and which model</strong> were selected — Copilot, OpenAI, Anthropic
-or Gemini — and whether the failure also happens with a different one.</li>
+<li><strong>Which provider and which model</strong> were selected — Copilot, OpenAI, Anthropic,
+Gemini or a BYOK endpoint — the exact run identity History records for the
+option, and whether the failure also happens with a different one. Say too
+whether an MCP server, an Agent Skill, Copilot web search, a Figma import or
+the Google Stitch integration was involved.</li>
 <li><strong>The tail of <code>shot2code-backend.log</code></strong> — <strong>Help → Support → Open diagnostic
 logs</strong> finds it for you — and
 <code>%TEMP%\shot2code-installer-preinstall.log</code> for an install or update problem.</li>

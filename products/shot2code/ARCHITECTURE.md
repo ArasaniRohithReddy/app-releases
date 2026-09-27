@@ -10,7 +10,7 @@ who want to know what runs where. The implementation lives in the
 | --- | --- | --- |
 | Renderer | React + Vite | The whole UI: chat, preview, Code tab, History, Help, settings |
 | Backend | FastAPI (Python) | The agent loop, tools, model catalogue, project history, import scanning, export |
-| Desktop shell | Electron | Starts the backend, verifies readiness, loads the built UI, owns zoom and the log folder |
+| Desktop shell | Electron | Starts the backend, verifies readiness, loads the built UI, owns zoom, the log folder, the GitHub device sign-in and the bundled Stitch SDK |
 
 In the packaged app the shell starts the frozen backend on a **free local port**,
 waits for its `/api/health` endpoint, and only then loads the built frontend from
@@ -40,7 +40,14 @@ and applies a 90-second cold-start deadline.
 Deferred imports fail loudly. If a lazily loaded router cannot be imported, that
 request returns an error and health fails from then on, so a backend that cannot
 generate never reports itself healthy. Chromium is advertised as available only
-after it has actually launched, and it is closed during backend shutdown.
+after it has actually launched, and it is closed during backend shutdown. Its
+**first** launch is given a longer budget than later ones, because that is when
+antivirus software scans a newly written tree.
+
+A generation started during that window is not lost: the deferred-route
+middleware **accepts the WebSocket handshake before the generation graph has
+finished importing** and replays the connect event to the application once it
+is ready, rather than dropping the first run after launch.
 
 ## The agent loop
 
@@ -56,6 +63,15 @@ The backend runs an agent loop rather than a single prompt:
 Several options can run in parallel, one per selected model, which is why a
 generation can produce more than one candidate. The number is capped per run: up
 to four for a first generation, two for an update or a video.
+
+The stream carries an application-level **heartbeat every 15 seconds**, so a long
+Copilot run is not mistaken for a dead connection, and the client ignores it as
+traffic. Once every expected variant has reached a terminal state, an abnormal
+socket closure is treated as completion rather than reported as a failure; if the
+selected variant was cancelled or failed while another finished, the usable one
+is selected automatically. A failure the backend actually diagnosed keeps its own
+message and points at the diagnostic log instead of being replaced by generic
+advice.
 
 ### The model catalogue
 
@@ -99,7 +115,10 @@ GitHub Copilot is the unusual one. The Copilot SDK is an *agent runtime* that ow
 its own planning loop, while shot2code's engine also owns a loop. The provider
 bridges the two: each Copilot tool invocation is parked and handed back to the
 shot2code engine, which resolves it once the tool has actually run. Copilot's own
-file and shell tools are excluded — only shot2code's tools are exposed.
+file and shell tools are excluded — only shot2code's tools are exposed, plus the
+MCP servers, Agent Skills and opt-in web search the user has turned on. The
+image tools are advertised only when an effective Replicate key exists, so a
+model is never offered a tool the build cannot run.
 
 ### Copilot SDK BYOK
 
@@ -122,12 +141,13 @@ value is sent and always wins.
 An endpoint that serves models the catalogue does not know gets a **custom run
 identity**, `sdk-byok/<provider>/custom/<url-encoded model>`. The model name is
 URL-encoded so a slash or colon inside it cannot be mistaken for structure, and
-the identity resolves back to the exact name to send. Such a model runs under a
-neutral, *non-reasoning* compatibility template: it needs a known model to
-describe prompt shape and limits, but no thinking level is derived from it or
-sent. The catalogue publishes exactly one entry for that connection rather than
-the whole family, because listing catalogue names against someone else's model
-would be untrue.
+the identity resolves back to the exact name to send. Several such models may be
+configured on one connection, each becoming an independently selectable
+identity. Such a model runs under a neutral, *non-reasoning* compatibility
+template: it needs a known model to describe prompt shape and limits, but no
+thinking level is derived from it or sent. The catalogue publishes one entry per
+configured endpoint model rather than the whole family, because listing
+catalogue names against someone else's model would be untrue.
 
 `/api/integrations/validate` answers the same question the generate socket
 would, using the same validator, and nothing else: no endpoint is contacted, no
@@ -148,14 +168,28 @@ real ids; Azure and Anthropic have no equivalent route and say so.
 
 ### In-app sign-in
 
-`/api/copilot/login` starts, polls and cancels a sign-in that is performed
-entirely by the **official** GitHub Copilot CLI (falling back to the GitHub
-CLI). shot2code runs a fixed argument vector, never a shell, drains the CLI's
-output without storing it, and afterwards re-probes the existing credential
-ladder. No token crosses the API. The start and cancel routes are guarded to
-local and packaged-app origins because they spawn or kill a process.
+In the packaged desktop app, **Sign in with GitHub** runs a **GitHub OAuth
+device flow** owned by shot2code itself: the shell requests a device code,
+displays the one-time code, opens the browser and polls for the token. The
+application is registered with a **public client id and no client secret**,
+because a desktop application cannot keep one; shot2code neither ships a secret
+nor reuses another product's client id. The access and refresh tokens are
+persisted under the Electron user-data directory, encrypted with `safeStorage`,
+and refreshed when they expire. The backend is then restarted on the same port
+with the token in `COPILOT_GITHUB_TOKEN`, and that restart is **serialised**, so
+concurrent sign-in or disconnect actions cannot race a half-started process.
+Disconnecting clears only shot2code's own copy — an external `gh` or Copilot CLI
+session is untouched.
 
-### MCP servers
+Where that flow is unavailable — the browser development build —
+`/api/copilot/login` starts, polls and cancels a sign-in performed entirely by
+the **official** GitHub Copilot CLI (falling back to the GitHub CLI). shot2code
+runs a fixed argument vector, never a shell, drains the CLI's output without
+storing it, and afterwards re-probes the existing credential ladder. No token
+crosses the API in that mode. The start and cancel routes are guarded to local
+and packaged-app origins because they spawn or kill a process.
+
+### MCP servers, the registry and skills
 
 Configured servers are validated the same way and bounded: at most eight, with
 limits on arguments, environment entries, headers, tool names and timeout. A
@@ -164,15 +198,54 @@ limits on arguments, environment entries, headers, tool names and timeout. A
 is handed to a session only when it is both enabled and trusted, and a
 permission handler keeps it read-only unless write tools were explicitly allowed.
 
-Because MCP is exposed through the SDK, only Copilot subscription variants and
-BYOK variants receive it; a native OpenAI, Anthropic or Gemini variant runs on
-that provider's own client and is never given MCP tools. Environment values and
-request headers are excluded from every safe-metadata projection, so they cannot
-reach a log line, a diagnostic or an API response.
+`/api/mcp-registry` proxies a search of the official registry at
+`registry.modelcontextprotocol.io`, keeps only remote `https://` entries, and
+collapses several published versions of the same server to the latest active
+one. What it returns is a **draft**: installing an entry writes a server that is
+disabled and untrusted, so a registry response can never start a process or
+approve a tool. The featured Figma Desktop, Figma Remote and Google Stitch
+templates are ordinary drafts with their transport and endpoint pre-filled.
+
+`/api/skills` owns Agent Skills. An import from a local folder or a public
+GitHub folder URL is validated (front matter, normalised relative paths with
+traversal rejected, bounded file count and size), recorded with its provenance,
+and stored under the shot2code data directory **disabled**. Because the GitHub
+Contents API does not return file bodies in a directory listing, each file is
+fetched individually rather than imported empty. A skill's script files are
+stored as resources and are **never executable**: the agent is given only
+shot2code's own `create_file` and `edit_file` tools, and the SDK's built-in
+shell and host-filesystem tools are excluded. Opt-in web search adds search to
+Copilot and BYOK runtimes and nothing else.
+
+Because MCP, skills and web search are exposed through the SDK, only Copilot
+subscription variants and BYOK variants receive them; a native OpenAI, Anthropic
+or Gemini variant runs on that provider's own client and is never given them.
+Environment values and request headers are excluded from every safe-metadata
+projection, so they cannot reach a log line, a diagnostic or an API response.
 
 Nothing here is on the critical path for a direct generation: an invalid,
 incomplete or switched-off integration becomes a diagnostic that travels with
 the response, not an error that stops the run.
+
+### Design sources
+
+`/api/figma` parses a Figma URL into a file key and optional node ids, asks the
+REST API for rendered images of the top-level renderable frames, and converts
+them into local data URLs. It talks to `https://api.figma.com` and nothing else,
+authenticated only with the personal access token supplied in the request.
+Exported SVG files are rasterised in the app before they are sent, so a model
+always receives a picture rather than markup it might mis-read.
+
+Google Stitch is reached two ways: as an ordinary MCP server, or through
+`@google/stitch-sdk` bundled in the Electron package and driven over the shell's
+own IPC — key validation, prompt-to-screen generation and project or screen
+import. HTML and image downloads made on its behalf are HTTPS-only and
+size-bounded. The SDK is published by Google Labs and is explicitly not an
+officially supported Google product, so it is treated as experimental.
+
+Both credentials are **capture-only**: the settings projection that builds a
+generation payload strips them, so they cannot reach a model, project history or
+an export.
 
 ## Reviewing generated output
 
@@ -189,9 +262,25 @@ makes no network call.
 
 A result is bound to the commit, the variant index, a hash of the source it read
 and the widths it ran at. Any change to those marks the result stale rather than
-letting it be read as current. Selected findings are grouped by rule into an
-instruction that is placed in the composer for the user to send. The JSON report
-reduces file paths to a leaf name and carries no credential of any kind.
+letting it be read as current. Findings can be filtered by severity, searched and
+selected in bulk; selected findings are grouped by rule into an instruction that
+is placed in the composer for the user to send, or applied directly by **Fix
+selected findings**, which addresses the **exact commit and variant that was
+reviewed** rather than the current selection. The JSON report reduces file paths
+to a leaf name and carries no credential of any kind.
+
+An optional **AI review** runs against the model recorded on that variant, with
+`canonical_tools_override=[]` — no tools, no MCP servers, no skills, no web
+search, no shell and no file writes. Its findings are kept in a separate list;
+the deterministic local pass remains authoritative. A variant with no recorded
+model identity cannot be AI-reviewed, and the UI says so rather than guessing a
+model.
+
+The **Design Inspector** is a second local pass over the composed source. It
+counts repeated colours, CSS variables, typography, spacing, radii, shadows,
+motion and semantic components, and renders them as `DESIGN.md`, `SKILL.md` and
+a palette PNG. It reads the source the project declares rather than a browser's
+computed styles.
 
 ## Workspace layout state
 
@@ -230,7 +319,19 @@ selection, delete).
 Commits record both a parent and, for a retry, the commit they re-roll, so retry
 ancestry is explicit; ancestry walks detect and reject cycles. A retry reuses the
 provider and model choices its source generation used, and each variant stores
-the concrete model behind it. Saves are debounced.
+the concrete run identity behind it, which is what the UI displays and what a
+retry replays. Saves are debounced.
+
+The database uses WAL, foreign keys and versioned, idempotent migrations, and it
+lives **outside the installation directory**. The NSIS package sets
+`deleteAppDataOnUninstall: false` explicitly, so replacing or removing the
+installed program leaves projects, versions and prompts intact.
+
+The chat panel reconstructs the **active branch** from that store in
+chronological order: prompts, attached images or recordings, selected-element
+context, the run identity, generation state, and the persisted assistant
+responses — shown in expandable blocks rather than reduced to a ready-state
+summary. History remains the durable cross-branch timeline.
 
 ## Preview
 
@@ -255,6 +356,14 @@ Security properties of a preview document:
   list denying camera, microphone, geolocation and display capture;
 - select-and-edit uses a per-preview message bridge — messages are accepted only
   when the channel and a random per-preview nonce match, and payloads are capped.
+
+**Stack preview** is an additional view over the same sandbox: instead of the
+composed document it renders the generated project's controlled Vite HTML, React
+and Preact files. It executes **no package script and no project
+configuration** — it is a render, not a build — and becomes available once a
+generation has reached a terminal state. Fragment navigation is intercepted
+inside the sandboxed document so a `file://` fragment cannot be treated as a
+blocked navigation in the packaged app.
 
 ## Import
 
@@ -286,13 +395,23 @@ generator:
   command, export keeps every file and adds a **Safe fallback** note instead of
   inventing a scaffold.
 
+Because some stacks expand a single generated document into a project layout at
+export time, the Code tab exposes that projection as a read-only **Export
+project** view beside **Current code**, so the file set a download will contain
+is visible before the ZIP is produced.
+
 ## Packaging
 
 - The backend is frozen with **PyInstaller**.
 - Only `chromium-headless-shell` is bundled; the app always launches headless, and
   full Chromium would add several hundred megabytes.
-- **electron-builder** produces the NSIS `.exe` (plus its `.exe.blockmap` and
-  `latest.yml`), the `.msi` and the portable `.zip`.
+- **electron-builder 26.15.3** produces the NSIS `.exe` (plus its `.exe.blockmap`
+  and `latest.yml`), the `.msi` and the portable `.zip`, around **Electron
+  44.4.3** with **electron-updater 6.8.9**. `npm audit --omit=dev` reports
+  **0 vulnerabilities** for what is actually distributed.
+- The `@google/stitch-sdk` package is installed in the desktop package so the
+  Stitch integration works in the packaged app; it is reached only through the
+  shell's IPC.
 - The UI is served over `file://` in the packaged app and `http://` in development.
   That difference is the source of most desktop-only bugs, so the shell uses a
   hash router, relative asset paths, and an explicit display-media handler.

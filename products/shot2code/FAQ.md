@@ -17,8 +17,13 @@ directly.
 Only in the generation request sent to the provider you configured — including
 your own endpoint, if you configured a BYOK connection — and only when you ask
 for something. Projects and their history are stored locally. The Review audit
-runs locally. CodePen sharing is the one deliberate export, and it always asks
-first. Full detail: [DATA-HANDLING.md](DATA-HANDLING.md).
+runs locally. A few actions deliberately reach out and say so first: a Figma
+REST import contacts `api.figma.com`, the bundled Stitch SDK contacts Stitch,
+an MCP server you enabled and trusted receives the tool calls a model makes,
+Copilot web search sends your search queries when you switch it on, and an AI
+review is a normal request to your provider. CodePen sharing is the one
+deliberate export of your code, and it always asks first. Full detail:
+[DATA-HANDLING.md](DATA-HANDLING.md).
 
 **Is there a macOS or Linux build?**
 No. Those platforms are supported only by
@@ -99,7 +104,8 @@ It records backend startup, renderer load failures, crashes and console errors.
 **"No API key found and no GitHub Copilot credentials detected".**
 You need one of:
 
-- a GitHub Copilot subscription — run `gh auth login` (or `copilot`) once, then
+- a GitHub Copilot subscription — use **Settings → Sign in with GitHub**, which
+  needs no command-line tool, or run `gh auth login` (or `copilot`) once and
   restart shot2code; Settings shows which account it picked up, or
 - an API key for OpenAI, Anthropic or Gemini, entered in **Settings**.
 
@@ -144,10 +150,35 @@ as an open modal.
 It is model output. Refine it in chat, retry the version, or edit the files
 directly — and review anything before running it outside the sandboxed preview.
 
+**Why does Chat only show part of the conversation?**
+It should not. The panel reconstructs the whole branch in order — your prompts,
+the images or recording you attached, any selected-element context, the model
+identity, the generation state and the assistant's own responses. Answers from
+earlier versions sit in expandable blocks rather than collapsing to *"Option
+ready."*
+
+**Can I say what I want before the first generation?**
+Yes. Both **Upload** and **Import** take an optional first instruction (and a
+model choice) before anything is generated.
+
+**Can I see what the download will contain before I download it?**
+Yes. The Code tab has a read-only **Export project** view beside **Current
+code** listing the exact text files and assets the ZIP will hold for your stack.
+
+**Is Stack preview running a build?**
+No. Preview still defaults to the composed HTML document. **Stack preview**
+renders the controlled Vite HTML, React and Preact files in the same browser
+sandbox — **no package script and no project configuration is executed**.
+
 **"Could not start screen recording".**
 Screen capture needs the app to grant itself permission to the display. Check the
 log for a `screen capture` line; it records which source was chosen or why the
 request failed.
+
+**Screenshot by URL failed and I do not know why.**
+It now says which: a rejected key, a billing or credit problem, a rate limit, a
+timeout, an invalid URL, or the provider being unavailable. You can test the
+ScreenshotOne key from the URL tab with one minimal request before relying on it.
 
 ## Features that need extra setup
 
@@ -155,10 +186,14 @@ request failed.
 | --- | --- |
 | Video / screen-recording input | A Gemini key |
 | Asset extraction (reusing real logos from a screenshot) | A Gemini key |
-| Image generation, editing, background removal | `REPLICATE_API_KEY` in `backend/.env` — no Settings field, so source runs only |
+| Image generation, editing, background removal | `REPLICATE_API_KEY` in `backend/.env` — no Settings field, so source runs only. The tools are not offered at all without an effective key |
 | Screenshot preview (the agent checking its own output) | Chromium, which ships with the desktop app; Settings reports if it is unavailable |
+| Screenshot by URL | A ScreenshotOne key, testable from the URL tab |
 | Your own model endpoint | A Copilot SDK BYOK connection with its own credential — see below |
 | Tools from an MCP server | A server that is both enabled and trusted, and an option running on Copilot or BYOK |
+| An Agent Skill, or Copilot web search | An enabled skill (or the web-search switch) and an option running on Copilot or BYOK |
+| Figma REST import | A Figma personal access token with `file_content:read` |
+| Google Stitch generation or import | A Stitch API key, used by the bundled experimental SDK in the desktop app |
 
 ## Copilot SDK BYOK
 
@@ -266,29 +301,64 @@ point the app at a host they control and have your server's key sent there.
 
 ## Signing in to GitHub Copilot
 
-**Does shot2code see my GitHub token?**
-No. **Sign in with GitHub** runs the **official** GitHub Copilot CLI web flow
-(falling back to the GitHub CLI). That tool opens your browser and stores the
-credential itself. shot2code only learns afterwards whether a session exists.
+**Do I need the GitHub CLI or the Copilot CLI installed?**
+No. The desktop app runs **its own GitHub OAuth device flow**: it shows a
+one-time code, opens your browser, and finishes with nothing installed. The
+terminal routes and a pasted token still work if you prefer them.
 
-**What if neither CLI is installed?**
+**Does shot2code ship a client secret?**
+No. It uses a **public client id only**. A desktop application cannot keep a
+secret, so it does not pretend to, and it does not borrow another product's
+client id.
+
+**Where does the token end up?**
+Encrypted, in the app's own user-data folder, using Electron `safeStorage` —
+the operating system's key store. It is refreshed automatically when it expires
+and is handed to the backend in its process environment on restart.
+
+**Does shot2code see my GitHub token?**
+In the desktop device flow it holds one, encrypted as above, because that is
+what makes a CLI unnecessary. In the fallback used where that flow is not
+available, the **official** GitHub Copilot CLI web flow (or the GitHub CLI) does
+the login, stores the credential itself, and shot2code only learns whether a
+session exists.
+
+**Does disconnecting log me out of `gh` or the Copilot CLI?**
+No. **Disconnect GitHub from shot2code** clears only what this app holds. A CLI
+session on the same machine stays signed in — shot2code did not create it.
+
+**What if no sign-in route is available?**
 The button says so and links the official install instructions. You can still
-run `gh auth login` or `copilot` in a terminal, or paste a token into Settings —
-both routes are unchanged.
+run `gh auth login` or `copilot` in a terminal, or paste a token into Settings.
 
 **Can I stop a sign-in half way?**
-Yes. **Cancel** stops the flow and ends the CLI process. A sign-in is also
-bounded by a timeout and is killed if the backend stops.
+Yes. **Cancel** stops the flow. A sign-in is also bounded by a timeout and is
+killed if the backend stops.
 
-## MCP servers
+## MCP servers, skills and web search
 
-**Which options can use MCP tools?**
+**Which options can use MCP tools, skills or web search?**
 GitHub Copilot subscription options and Copilot SDK BYOK options. An option
 running on your own OpenAI, Anthropic or Gemini key uses that provider's own
-client and never sees an MCP tool.
+client and never sees any of them.
 
 **How many servers can I add?**
 Up to eight, over stdio, HTTP or SSE.
+
+**Can I browse servers instead of typing a URL?**
+Yes — the **MCP Registry** browser in Settings searches the official registry.
+Only remote `https://` entries are listed, and duplicates collapse to the latest
+active version.
+
+**What happens when I install one from the registry?**
+It is added as a **disabled, untrusted draft** with its URL and headers laid out
+for review. A registry listing is not an endorsement, and nothing starts until
+you turn on the same two switches as for any other server.
+
+**Are Figma and Stitch pre-configured?**
+They are offered as featured drafts — **Figma Desktop MCP**, **Figma Remote
+MCP** and **Google Stitch MCP** — with the right transport and endpoint filled
+in. They arrive disabled and untrusted like everything else.
 
 **I added a server and nothing happened.**
 A server needs **both** switches: **Enabled** and **Trusted**. Until it is
@@ -315,6 +385,58 @@ no value is written into project history or an exported review report.
 
 **Does Validate servers start anything?**
 No. It checks the configuration only.
+
+**What is an Agent Skill?**
+A reusable instruction folder — a house style, a component convention, a
+checklist — imported from a local folder or a public GitHub folder URL. Front
+matter, paths and sizes are validated and the origin is recorded.
+
+**Are skills active as soon as I import one?**
+No. **Every skill is disabled by default.** Enable, disable or remove it when
+you want to.
+
+**A skill contains scripts. Will shot2code run them?**
+No, and it cannot. The files are stored as resources, but shot2code exposes no
+shell tool and no unrestricted host-filesystem tool to any model, so there is
+nothing that could execute them.
+
+**What does Allow web search actually do?**
+It lets Copilot and BYOK options search the public web when a prompt needs
+current documentation. It is off by default, **your search queries leave the
+device**, and it adds search and nothing else — shell access and unrestricted
+computer files stay disabled.
+
+## Figma and Google Stitch
+
+**How do I start from a Figma design?**
+Four ways: exported screenshots, an exported **SVG** (rasterised locally before
+it is sent), the **Figma Desktop MCP** server on `http://127.0.0.1:3845/mcp`, or
+a **REST import** using a Figma URL and your own personal access token with
+`file_content:read`.
+
+**Why does the Figma remote MCP server not connect?**
+Figma currently admits only clients listed in its own MCP catalogue. shot2code
+does not impersonate another editor or reuse its sign-in to get around that, so
+the REST import is the route that works today for most accounts.
+
+**Where does my Figma token go?**
+To `api.figma.com` and nowhere else. It is never part of a generation request,
+project history or an export.
+
+**What can the Stitch integration do?**
+Either reach the official **Stitch MCP** endpoint like any other server, or use
+the bundled SDK in the desktop app with a Stitch API key to validate the key,
+generate a screen from a prompt, or import an existing project or screen.
+
+**Is the Stitch SDK official?**
+It is published by Google Labs, which states it is **not an officially supported
+Google product**. shot2code bundles version 0.3.5 (Apache-2.0) and treats it as
+experimental. HTML and images it downloads must be `https://` and are
+size-bounded.
+
+**Does my Stitch key reach the model?**
+No. Like the Figma token it is capture-only: stored on this device, passed to the
+bundled SDK, and excluded from generation requests, history and exports.
 
 ## Reviewing the result
 
@@ -345,6 +467,33 @@ or the widths. Re-run it to get an answer about what is on screen now.
 No. Selected findings are written into the composer as a grouped instruction.
 Read it, edit it, then send it yourself.
 
+**Then what does "Fix selected findings" do?**
+That one does send — deliberately, and immediately — as a targeted update
+against the **exact version and option that was reviewed**, not whatever is on
+screen. The result is a new version, so nothing is overwritten.
+
+**How do I narrow a long list of findings?**
+Filter by severity, search the text, then use **Select visible** or **Select
+errors + warnings** to tick them in bulk.
+
+**What is the AI review?**
+An optional second opinion from **the model that option actually ran on**. It
+runs with **no tools, no MCP servers, no skills, no web search, no shell and no
+file writes**, and its findings are kept separate from the local ones, which
+remain authoritative.
+
+**Does the AI review cost anything?**
+Yes — it is a real request to your provider and may use quota. The local audit
+is free, deterministic and offline. An option with no recorded model identity
+cannot be AI-reviewed; retry it first.
+
+**What is the Design Inspector for?**
+It extracts the design decisions in the generated source — repeated colours, CSS
+variables, typography, spacing, radii, shadows, motion and semantic component
+counts — and exports `DESIGN.md`, `SKILL.md` and a palette PNG. It reads the
+composed source, so it describes what the code declares rather than what a
+browser finally computes.
+
 **Is the JSON report safe to attach to an issue?**
 It is built to be: file paths are reduced to a leaf name and no credential of
 any kind is included. Read it before you post it, as you would any export.
@@ -367,6 +516,12 @@ decoded text. Point it at the part of the project you actually want as context.
 **An update downloaded — how do I install it?**
 Settings shows **Restart & install** when a download is ready. The install runs
 silently and relaunches.
+
+**Will an update delete my projects?**
+No. History lives in `%LOCALAPPDATA%\shot2code\history.sqlite3`, outside the
+installation directory, and the installer is configured not to remove
+application data — so replacing the installed program leaves every project,
+version and prompt in place.
 
 **Settings says the update was not started because shot2code could not shut down
 safely.**
@@ -415,9 +570,12 @@ from the device), then uninstall and delete `%LOCALAPPDATA%\shot2code\`.
 
 **Where are my API keys?**
 Stored locally by the app for the device you entered them on, and sent only to the
-provider they belong to. Your model selection is stored the same way — a
-preference on this device, not an account setting. `REPLICATE_API_KEY` lives in
-`backend/.env` instead.
+provider they belong to. A GitHub token obtained through the in-app sign-in is
+encrypted with Electron `safeStorage`. The Figma token and the Stitch API key are
+capture-only — used by the code that calls those services and excluded from
+generation requests, history and exports. Your model selection is stored the same
+way — a preference on this device, not an account setting. `REPLICATE_API_KEY`
+lives in `backend/.env` instead.
 
 ## Getting help
 

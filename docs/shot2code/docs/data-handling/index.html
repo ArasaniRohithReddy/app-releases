@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/DATA-HANDLING.md (normalized SHA-256 7e34e841b78fb499d980b0b5dcb9a10fea60bbd5826e579ff69ac56251c523a2). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/DATA-HANDLING.md (normalized SHA-256 51f578d5747b178f9537def08a3f62b99939824790c83f7d42f02678906193f2). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,14 +62,16 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/DATA-HANDLING.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-what-leaves-the-device">1. What leaves the device</a></li><li><a href="#2-what-is-stored-on-disk">2. What is stored on disk</a></li><li><a href="#3-api-keys-and-credentials">3. API keys and credentials</a></li><li><a href="#4-telemetry">4. Telemetry</a></li><li><a href="#5-imported-projects">5. Imported projects</a></li><li><a href="#6-generated-code-and-previews">6. Generated code and previews</a></li><li><a href="#7-verifying-these-claims">7. Verifying these claims</a></li><li><a href="#8-deleting-your-data">8. Deleting your data</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#1-what-leaves-the-device">1. What leaves the device</a></li><li><a href="#2-what-is-stored-on-disk">2. What is stored on disk</a></li><li><a href="#3-api-keys-and-credentials">3. API keys and credentials</a></li><li><a href="#4-telemetry">4. Telemetry</a></li><li><a href="#5-imported-projects-and-skills">5. Imported projects and skills</a></li><li><a href="#6-generated-code-and-previews">6. Generated code and previews</a></li><li><a href="#7-verifying-these-claims">7. Verifying these claims</a></li><li><a href="#8-deleting-your-data">8. Deleting your data</a></li></ul></nav></details>
         <div class="doc-content"><p>This page enumerates what shot2code stores, what it sends, and where. It describes
 the published Windows build; anything marked <em>source only</em> is unavailable in the
 packaged app. The behaviour described here can be checked against the source at
 <a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">ArasaniRohithReddy/shot2code</a>.</p>
 <p><strong>Summary:</strong> screenshots, generated code, project history and API keys stay on
 your machine. The only outbound traffic is the request to the model provider you
-configured, the update check, and anything you explicitly share.</p>
+configured, the update check, and the integrations you switch on and use — an
+MCP server you trusted, a Figma or Google Stitch import, Copilot web search, or
+anything you explicitly share.</p>
 <h2 id="1-what-leaves-the-device" tabindex="-1">1. What leaves the device</h2>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code — data handling &amp; privacy table 1"><table>
 <thead>
@@ -91,9 +93,44 @@ configured, the update check, and anything you explicitly share.</p>
 <td>The same request, sent to the base URL you configured, authenticated with that connection's own key or bearer token</td>
 </tr>
 <tr>
+<td><strong>The model an option ran on</strong></td>
+<td>You ask for an <strong>AI review</strong> of that option</td>
+<td>The generated source and a review instruction. The request carries <strong>no tools, no MCP servers, no skills and no web search</strong></td>
+</tr>
+<tr>
 <td><strong>An MCP server you enabled and trusted</strong></td>
 <td>A Copilot or BYOK option calls one of its tools</td>
 <td>The tool call the model made, plus the environment values or request headers you configured for that server</td>
+</tr>
+<tr>
+<td><strong>The public web, through Copilot</strong></td>
+<td>You switch on <strong>Allow web search</strong> <em>and</em> a Copilot or BYOK option searches</td>
+<td>The search queries the model issues. Off by default</td>
+</tr>
+<tr>
+<td><strong><code>registry.modelcontextprotocol.io</code></strong></td>
+<td>You search the <strong>MCP Registry</strong> in Settings</td>
+<td>Your search terms. Nothing about your projects, and no credential</td>
+</tr>
+<tr>
+<td><strong><code>api.figma.com</code></strong></td>
+<td>You run a Figma <strong>REST import</strong></td>
+<td>The file and node ids from the URL you pasted, authenticated with <strong>only</strong> your Figma personal access token</td>
+</tr>
+<tr>
+<td><strong>Figma, through MCP</strong></td>
+<td>A trusted Figma MCP server is running and a Copilot or BYOK option calls one of its tools</td>
+<td>The tool call the model made. The Desktop server is on <code>localhost</code>; the remote one is <code>https://mcp.figma.com/mcp</code></td>
+</tr>
+<tr>
+<td><strong>Google Stitch</strong></td>
+<td>You validate a Stitch key, generate a screen, or import a project with the bundled SDK — or a trusted Stitch MCP server is called</td>
+<td>The prompt or project reference, authenticated with <strong>only</strong> your Stitch API key. HTML and image downloads made on its behalf are <code>https://</code> and size-bounded</td>
+</tr>
+<tr>
+<td><strong><code>github.com</code> / <code>api.github.com</code></strong></td>
+<td>You choose <strong>Sign in with GitHub</strong>, or a skill is imported from a public GitHub folder</td>
+<td>For sign-in: the device-flow exchange with the app's <strong>public client id</strong> — no client secret, and nothing about your projects. Where that flow is unavailable the official CLI performs the login instead and shot2code never sees the token. For a skill: a request for the files in the folder URL you pasted</td>
 </tr>
 <tr>
 <td>GitHub Copilot</td>
@@ -109,6 +146,11 @@ configured, the update check, and anything you explicitly share.</p>
 <td>Replicate (<em>source only</em>)</td>
 <td>Image generation, editing or background removal</td>
 <td>The prompt and the image you act on</td>
+</tr>
+<tr>
+<td><strong>ScreenshotOne</strong></td>
+<td>You capture a URL, or test its key</td>
+<td>The URL to capture, authenticated with only that key</td>
 </tr>
 <tr>
 <td><code>github.com</code></td>
@@ -131,11 +173,6 @@ configured, the update check, and anything you explicitly share.</p>
 <td>A request to that endpoint's <code>/models</code> route, to list the model ids it serves</td>
 </tr>
 <tr>
-<td><strong>GitHub, via the official CLI</strong></td>
-<td>You choose <strong>Sign in with GitHub</strong></td>
-<td>Nothing from shot2code. The CLI runs its own web flow in your browser and stores the credential itself; shot2code never sees the token</td>
-</tr>
-<tr>
 <td>CodePen</td>
 <td>You confirm a share</td>
 <td>The code being shared</td>
@@ -152,6 +189,10 @@ token</strong>.</p>
 Testing Gemini never puts an OpenAI key on the wire, and a check that names its
 own OpenAI base URL must carry its own key — the key configured on the server is
 only ever used with the server's own endpoint.</p>
+<p><strong>Capture-only credentials never reach a model.</strong> The Figma personal access
+token is used for <code>api.figma.com</code> and nothing else; the Google Stitch API key is
+used by the bundled SDK and nothing else. Neither is included in a generation
+request, written into project history, or present in an export.</p>
 <p>Two things deliberately contact nothing:</p>
 <ul>
 <li><strong>Validating a BYOK connection or an MCP server</strong> checks the configuration
@@ -159,14 +200,19 @@ only. No endpoint is called, no MCP server is started. The live <strong>Test mod
 access</strong> and per-provider checks are separate actions, and the app says they
 contact the endpoint before you use them.</li>
 <li><strong>The Review source audit</strong> runs locally against the generated source. No code
-and no finding is uploaded.</li>
+and no finding is uploaded. The optional <strong>AI review</strong> is the opposite and is
+listed above; it is a real provider request.</li>
 </ul>
+<p><strong>Imported skills contact nothing after they are imported.</strong> Importing from a
+public GitHub folder makes the requests above; afterwards the skill is local
+text, and its scripts are never executed.</p>
 <p>Nothing else is contacted in normal use. Opening a link from the in-app <strong>Help</strong>
 centre hands the URL to your default browser — the app itself fetches nothing for
 Help, and every target is a public page on this hub or the source repository.
 Previews may load CDN-hosted framework assets declared by the generated page
 itself (for example a Tailwind or Bootstrap CDN); those requests come from the
-preview document, not from a background service.</p>
+preview document, not from a background service. <strong>Stack preview</strong> renders in the
+same sandbox and runs no package script or project configuration.</p>
 <h2 id="2-what-is-stored-on-disk" tabindex="-1">2. What is stored on disk</h2>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code — data handling &amp; privacy table 2"><table>
 <thead>
@@ -183,9 +229,14 @@ preview document, not from a background service.</p>
 <td>Deleting a project in <strong>Recent projects</strong>, or deleting the folder</td>
 </tr>
 <tr>
+<td><code>%LOCALAPPDATA%\shot2code\</code> (skills)</td>
+<td>Agent Skills you imported — their text and any script files they carry, stored as inert resources</td>
+<td>Removing the skill in <strong>Settings → Agent Skills</strong>, or deleting the folder</td>
+</tr>
+<tr>
 <td><code>%APPDATA%\shot2code-desktop\</code></td>
-<td>Desktop shell state and <code>shot2code-backend.log</code></td>
-<td>Deleting the folder</td>
+<td>Desktop shell state, the <strong>encrypted GitHub token</strong> from the in-app sign-in, and <code>shot2code-backend.log</code></td>
+<td><strong>Disconnect GitHub from shot2code</strong> for the token; deleting the folder for the rest</td>
 </tr>
 <tr>
 <td><code>%TEMP%\shot2code-installer-preinstall.log</code></td>
@@ -194,7 +245,7 @@ preview document, not from a background service.</p>
 </tr>
 <tr>
 <td>The app's own local storage</td>
-<td>Provider API keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), selected models, Review widths, pane widths and UI preferences</td>
+<td>Provider API keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), the Figma access token, the Stitch API key, the ScreenshotOne key, selected models, Review widths, pane widths and UI preferences</td>
 <td>Clearing them in <strong>Settings</strong></td>
 </tr>
 <tr>
@@ -206,11 +257,19 @@ preview document, not from a background service.</p>
 </table></div>
 <p>The history database is <strong>not encrypted</strong>. Treat it like any other local project
 folder: it contains your prompts and your generated code.</p>
+<p><strong>The GitHub token from the in-app sign-in is encrypted</strong> with Electron
+<code>safeStorage</code>, which uses the operating system's own key store, along with its
+refresh token. Disconnecting removes it and leaves any <code>gh</code> or Copilot CLI
+session on the machine untouched, because shot2code did not create those.</p>
 <p><strong>No credential is written into the history database.</strong> A version records the run
 identity behind each option — <code>gpt-5.6-sol (high thinking)</code>, or
 <code>sdk-byok/azure/gpt-5.6-sol (high thinking)</code> — and nothing about the key, the
-endpoint or an MCP server's environment. The same is true of an exported Review
-report.</p>
+endpoint, an MCP server, Figma or Stitch. The same is true of an exported Review
+report and of the <code>DESIGN.md</code>, <code>SKILL.md</code> and palette exports from the Design
+Inspector.</p>
+<p><strong>Project data lives outside the installation directory</strong>, and the installer is
+configured not to delete application data, so upgrading or replacing the
+installed program keeps every project, version and prompt.</p>
 <p>Layout preferences — the chat and file-explorer pane widths — and your Review
 viewport widths are view state in the app's own local storage, never in the
 history database. Resizing a pane cannot create or alter a project version, an
@@ -232,6 +291,17 @@ are masked in the server list, masked and read-only in the editor until you
 reveal them, and only their <em>names</em> appear in a diagnostic or a validation
 response. Values are excluded from logs, from project history and from the
 exported review report.</li>
+<li><strong>The GitHub token from the in-app sign-in is encrypted at rest.</strong> The desktop
+app runs a GitHub OAuth device flow with a <strong>public client id and no client
+secret</strong>, and stores the access and refresh tokens through Electron
+<code>safeStorage</code>. They are handed to the backend in its process environment on a
+serialised restart, never written into project data, and removed by
+<strong>Disconnect GitHub from shot2code</strong> — which does not end a <code>gh</code> or Copilot
+CLI session on the same machine.</li>
+<li><strong>The Figma access token and the Google Stitch API key are capture-only.</strong> The
+Figma token is sent to <code>api.figma.com</code> only; the Stitch key reaches only the
+bundled SDK. Neither is placed in a generation request, in project history or
+in an export.</li>
 <li>The local <code>/api/models</code> route uses those credentials only to decide which
 providers are usable and, for Copilot, to read the account's model list. It
 returns provider availability and model capabilities, never a key or token.
@@ -252,7 +322,7 @@ issue.</li>
 your prompts or your projects is collected by the project.</p>
 <p>The only unsolicited network call is the update check on per-user installs, which
 reads the public GitHub Releases feed.</p>
-<h2 id="5-imported-projects" tabindex="-1">5. Imported projects</h2>
+<h2 id="5-imported-projects-and-skills" tabindex="-1">5. Imported projects and skills</h2>
 <p>Imported code is treated as untrusted input:</p>
 <ul>
 <li><strong>It is never executed.</strong> The scanner parses text only; it does not import
@@ -268,21 +338,35 @@ editable-import handoff.</li>
 in the working project context can be sent to your provider on a later
 generation, exactly like the rest of the project.</li>
 </ul>
+<p><strong>Agent Skills are treated the same way.</strong> A skill imported from a local folder
+or a public GitHub folder is validated (front matter, normalised paths, bounded
+file count and size), stored under shot2code's data directory with a record of
+where it came from, and <strong>disabled until you enable it</strong>. A skill may contain
+script files; they are kept as inert resources and <strong>cannot be executed</strong>,
+because shot2code exposes no shell tool and no unrestricted host-filesystem tool
+to any model. An enabled skill's text reaches a Copilot or BYOK run as
+instructions, like the rest of the prompt.</p>
 <h2 id="6-generated-code-and-previews" tabindex="-1">6. Generated code and previews</h2>
 <ul>
 <li>Preview documents render in an <strong>opaque origin</strong> (an iframe without
 <code>allow-same-origin</code>) under a restrictive Content-Security-Policy, a
 <code>no-referrer</code> policy, and a permissions list denying camera, microphone,
 geolocation and display capture. The Review frames render the same artifact
-under the same protections, at two to four real widths.</li>
+under the same protections, at two to four real widths. <strong>Stack preview</strong> uses
+the same sandbox and executes <strong>no package script and no project
+configuration</strong>.</li>
 <li>Select-and-edit uses a per-preview message bridge with a random nonce and capped
 payloads.</li>
 <li><strong>The Review source audit is local and offline.</strong> It parses the generated
 source in the app and reports findings; nothing is uploaded, and no provider is
-contacted to produce it. An exported report contains severities, rule ids,
-messages, evidence, guidance and the binding it was produced from, with file
-paths reduced to a leaf name and no credential of any kind. It is an automated
-source check, <strong>not a WCAG conformance assessment</strong>.</li>
+contacted to produce it. The optional <strong>AI review</strong> is a separate, explicit
+action: it sends the generated source to the model that option ran on, with no
+tools, MCP servers, skills or web search attached. An exported report contains
+severities, rule ids, messages, evidence, guidance and the binding it was
+produced from, with file paths reduced to a leaf name and no credential of any
+kind. It is an automated source check, <strong>not a WCAG conformance assessment</strong>.</li>
+<li><strong>Design Inspector exports are local.</strong> <code>DESIGN.md</code>, <code>SKILL.md</code> and the palette
+PNG are produced from the generated source in the app and carry no credential.</li>
 <li>Generated code is still model output. <strong>Review it before running it outside the
 preview</strong>, especially anything touching the network, the filesystem or
 credentials.</li>
@@ -293,7 +377,10 @@ first, and public Pens may be visible to others.</li>
 <ul>
 <li>Run the app behind an HTTP proxy and watch the destinations for a generation, an
 import and an idle session. Validating a BYOK connection or an MCP server, and
-running a Review audit, should add no outbound request at all.</li>
+running a Review audit, should add no outbound request at all. Searching the
+MCP Registry, importing a skill from GitHub, a Figma REST import, a Stitch
+call, an AI review and a web search each appear only when you take that
+action, and carry only that feature's own credential.</li>
 <li>Disconnect the network: the app starts, projects open from the local database,
 and generation fails with a provider error rather than silently doing something
 else.</li>
@@ -308,9 +395,15 @@ at startup.</li>
 <li>Delete individual projects from <strong>Recent projects</strong> — that removes the project
 and all of its versions from the device.</li>
 <li>Clear provider keys in <strong>Settings</strong>, along with the BYOK connection's
-credential and any MCP server whose environment values or headers hold a
-token. Deleting a server removes its stored values with it.</li>
-<li>Uninstall the app (<a href="../install/#uninstalling">INSTALL.md</a>).</li>
+credential, the Figma access token, the Stitch API key, the ScreenshotOne key
+and any MCP server whose environment values or headers hold a token. Deleting
+a server removes its stored values with it. Choose <strong>Disconnect GitHub from
+shot2code</strong> to remove the encrypted GitHub token — a <code>gh</code> or Copilot CLI
+session on the machine is separate and is signed out with that tool.</li>
+<li>Remove any Agent Skills you imported in <strong>Settings → Agent Skills</strong>.</li>
+<li>Uninstall the app (<a href="../install/#uninstalling">INSTALL.md</a>). <strong>An uninstall
+deliberately leaves your projects in place</strong>, so that an upgrade cannot
+destroy them.</li>
 <li>Delete <code>%LOCALAPPDATA%\shot2code\</code> and <code>%APPDATA%\shot2code-desktop\</code>.</li>
 </ol>
 </div>

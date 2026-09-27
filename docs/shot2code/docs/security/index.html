@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 fd0f8aa407126107519868dd43a270908a9cfd5f255117ce7157a6f87cef30f0). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 2ef93991e1e841744a4302a015356f19ba63d6932a309ce61f6e1fa71775a1c1). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,11 +62,13 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/SECURITY.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#supported-versions">Supported versions</a></li><li><a href="#reporting-a-vulnerability">Reporting a vulnerability</a></li><li><a href="#unsigned-windows-binaries-and-smartscreen">Unsigned Windows binaries and SmartScreen</a></li><li><a href="#api-keys-and-local-data">API keys and local data</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#update-integrity">Update integrity</a></li><li><a href="#imported-and-generated-code">Imported and generated code</a></li><li><a href="#out-of-scope">Out of scope</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#supported-versions">Supported versions</a></li><li><a href="#reporting-a-vulnerability">Reporting a vulnerability</a></li><li><a href="#unsigned-windows-binaries-and-smartscreen">Unsigned Windows binaries and SmartScreen</a></li><li><a href="#api-keys-and-local-data">API keys and local data</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-and-model-tools">Agent Skills and model tools</a></li><li><a href="#update-integrity">Update integrity</a></li><li><a href="#imported-and-generated-code">Imported and generated code</a></li><li><a href="#out-of-scope">Out of scope</a></li></ul></nav></details>
         <div class="doc-content"><p>shot2code runs on your own machine. Screenshots, generated code, project history
 and API keys stay local; the only outbound traffic is to the model provider you
-configure, plus the update check and anything you explicitly share. The full
-inventory is in <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
+configure, plus the update check and the integrations you switch on and use —
+an MCP server you trusted, a Figma or Google Stitch import, Copilot web search,
+or anything you explicitly share. The full inventory is in
+<a href="../data-handling/">DATA-HANDLING.md</a>.</p>
 <p>This page covers the shot2code-specific parts. The hub-wide policy — how reports
 are handled and what to expect — is in the repository
 <a href="../../../help/security/">SECURITY.md</a>.</p>
@@ -109,7 +111,8 @@ code can also be filed in the
 <li>the shot2code version (<strong>Settings</strong>, or the installer filename);</li>
 <li>how you run it: <code>.exe</code> installer, MSI, portable ZIP, or from source;</li>
 <li>which model provider was configured — and whether a Copilot SDK BYOK
-connection or any MCP server was in play;</li>
+connection, an MCP server, an Agent Skill, Copilot web search, a Figma import
+or the Google Stitch integration was in play;</li>
 <li>reproduction steps, and a proof of concept if you have one;</li>
 <li>relevant lines from <code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code>,
 <strong>with any API keys or tokens redacted</strong>.</li>
@@ -150,14 +153,33 @@ store them on.</li>
 bearer token is used only for the endpoint you configured; the direct OpenAI
 and Anthropic keys are never substituted for it. A credential is required
 unless the endpoint is an OpenAI-compatible host on <code>localhost</code>.</li>
-<li><strong>Signing in to GitHub Copilot is delegated to the official CLI.</strong> shot2code
-never implements the OAuth flow and never impersonates a client id: it runs
-the CLI's own login command with a <strong>fixed argument vector</strong>, spawned directly
-rather than through a shell, so nothing a request sends can influence the
-command line. The CLI's output is drained but never returned, logged or
-stored, because a login flow prints one-time codes and can echo tokens. The
-run is bounded by a timeout, can be cancelled, and is killed when the backend
-stops. <strong>shot2code never receives the token</strong> — only whether a session exists.</li>
+<li><strong>Signing in to GitHub Copilot uses a public client id and no secret.</strong> The
+desktop app runs a <strong>GitHub OAuth device flow</strong> registered for shot2code: it
+shows a one-time code and opens your browser. A desktop application cannot
+keep a client secret, so none is used or shipped, and shot2code does not
+borrow another product's client id. The access and refresh tokens it receives
+are stored under the app's own user-data folder <strong>encrypted with Electron
+<code>safeStorage</code></strong>, the operating system's key store, and are handed to the
+backend in its process environment on a <strong>serialised</strong> restart, so repeated
+sign-in or disconnect actions cannot race a half-started backend.</li>
+<li><strong>Disconnecting is scoped to this app.</strong> <strong>Disconnect GitHub from shot2code</strong>
+removes only the credential shot2code holds. A <code>gh auth login</code> or <code>copilot</code>
+session on the same machine <strong>stays signed in</strong>, because shot2code did not
+create it and has no business ending it.</li>
+<li><strong>Where the device flow is unavailable, sign-in is delegated and tokenless.</strong>
+shot2code runs the official CLI's own login command with a
+<strong>fixed argument vector</strong>, spawned directly rather than through a shell, so
+nothing a request sends can influence the command line. The CLI's output is
+drained but never returned, logged or stored, because a login flow prints
+one-time codes and can echo tokens. The run is bounded by a timeout, can be
+cancelled, and is killed when the backend stops. In that mode
+<strong>shot2code never receives the token</strong> — only whether a session exists.</li>
+<li><strong>Capture-only credentials never reach a model.</strong> The Figma personal access
+token is sent to <code>api.figma.com</code> and nowhere else; the Google Stitch API key
+reaches only the bundled SDK through the desktop app's own IPC. Neither is
+placed in a generation request, written into project history, or present in an
+export. HTML and images the Stitch SDK downloads must be <code>https://</code> and are
+size-bounded.</li>
 <li><strong>Starting or cancelling a sign-in is origin-guarded.</strong> Both spawn or kill a
 process, so they are refused unless the request came from the app on this
 machine: <code>localhost</code>, <code>127.0.0.1</code>, <code>::1</code>, or the <code>null</code> origin the packaged
@@ -190,7 +212,9 @@ credential.</li>
 <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>. It is <strong>not encrypted</strong> — treat it
 like any other local project folder and delete projects you no longer want on
 disk. <strong>No credential is written into it</strong>: a version records the run identity
-behind each option and nothing about the key, the endpoint or an MCP server.</li>
+behind each option and nothing about the key, the endpoint, an MCP server,
+Figma or Stitch. It sits outside the installation directory, and an uninstall
+deliberately leaves it alone, so an upgrade cannot destroy your work.</li>
 <li>Never commit a key, a token, or a copy of <code>history.sqlite3</code>, and redact keys from
 logs and screenshots before attaching them to an issue.</li>
 <li>There is no analytics or telemetry SDK in the app.</li>
@@ -220,8 +244,36 @@ into project history or an exported review report. Only their names appear.</li>
 <li><strong>Scope is limited to the SDK runtimes.</strong> Only GitHub Copilot subscription
 options and Copilot SDK BYOK options are given MCP tools. An option running on
 your own OpenAI, Anthropic or Gemini key never receives them.</li>
+<li><strong>A registry install is a draft, not a running server.</strong> The in-app <strong>MCP
+Registry</strong> browser lists only remote <code>https://</code> entries from the official
+registry, and installing one creates a <strong>disabled, untrusted</strong> draft with its
+URL and headers laid out for review. A registry listing is not an endorsement;
+the two switches, the read-only default and the separate write gate all still
+apply. The featured Figma and Google Stitch entries are no different.</li>
 <li>A disabled, untrusted or malformed server is reported as a notice and skipped.
 It does not block a direct generation.</li>
+</ul>
+<h2 id="agent-skills-and-model-tools" tabindex="-1">Agent Skills and model tools</h2>
+<ul>
+<li><strong>Skills are inert text, and they are off by default.</strong> A skill imported from
+a local folder or a public GitHub folder is validated — front matter, path
+normalisation with traversal rejected, bounded file count and size — recorded
+with the origin it came from, and <strong>disabled until you enable it</strong>.</li>
+<li><strong>A skill's scripts can never execute.</strong> Script files are stored as resources
+because a skill may legitimately ship them, but shot2code exposes <strong>no shell
+tool and no unrestricted host-filesystem tool</strong> to any model. There is nothing
+that could run them.</li>
+<li><strong>Copilot's own file and shell tools are excluded.</strong> The agent is given
+shot2code's own <code>create_file</code> and <code>edit_file</code> tools, which act on the project
+held in memory, and nothing else from the SDK's built-in surface.</li>
+<li><strong>Web search is opt-in and adds only search.</strong> With <strong>Allow web search</strong> on,
+Copilot and BYOK options may search the public web; your search queries leave
+the device, which the setting states. Shell access and unrestricted computer
+files remain disabled.</li>
+<li><strong>The AI review runs with no tools at all</strong> — no MCP, no skills, no web
+search, no shell, no file writes — so a second opinion cannot become a second
+agent. It is a real provider request against the model that option ran on.</li>
+<li>Skills and web search follow the MCP rule: <strong>Copilot and BYOK runtimes only</strong>.</li>
 </ul>
 <h2 id="update-integrity" tabindex="-1">Update integrity</h2>
 <ul>
@@ -262,7 +314,9 @@ per-file size and total decoded text.</li>
 <code>allow-same-origin</code> (an opaque origin that cannot read app state, cookies or
 storage), under a restrictive Content-Security-Policy, a <code>no-referrer</code> policy,
 and a permissions list denying camera, microphone, geolocation and display
-capture.</li>
+capture. <strong>Stack preview</strong> renders the generated project's controlled Vite
+HTML, React and Preact files in that same sandbox and executes <strong>no package
+script and no project configuration</strong>.</li>
 <li>Select-and-edit accepts a message only when the channel and a random per-preview
 nonce match, with size-capped payloads.</li>
 <li>Generated code is still model output. <strong>Review it before running it outside the
@@ -279,9 +333,12 @@ automatic and always asks first.</li>
 binaries — known and documented above.</li>
 <li>Vulnerabilities in third-party model providers, CodePen, or CDN-hosted framework
 assets loaded by a preview.</li>
-<li>Vulnerabilities in an MCP server you chose to configure and trust, or in the
-BYOK endpoint you chose to point the app at. Report a flaw in how shot2code
-<em>gates</em> them instead.</li>
+<li>Vulnerabilities in an MCP server you chose to configure and trust, in a skill
+you chose to import and enable, or in the BYOK endpoint you chose to point the
+app at. Report a flaw in how shot2code <em>gates</em> them instead.</li>
+<li>Vulnerabilities in Figma, Google Stitch, ScreenshotOne or the experimental
+<code>@google/stitch-sdk</code>. Report a flaw in how shot2code <em>handles their
+credentials or responses</em> instead.</li>
 <li>Findings that require an attacker who already has local access to your user
 account or can modify the installation directory.</li>
 <li>Insecure code produced by a model in response to a prompt. Report a <em>systemic</em>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/README.md (normalized SHA-256 993f75c027c3bfaefdf7770164b6b2b3016a54086c10f6b09e10afb222e38d5f). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/README.md (normalized SHA-256 187dd22377871f3f39a58a410b8e325254dc10bfc84b3ba584ec661b8c39718e). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,14 +62,15 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/README.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
         <div class="doc-content"><p><strong>Turn a screenshot into working code — on your own machine.</strong></p>
 <p><a href="../releases/"><span class="image-alt">Latest release</span></a></p>
 <p>shot2code is a <strong>Windows desktop app</strong>. Give it a screenshot, several related
-screens, a URL, a written description or a screen recording, and it generates a
-working page you can edit, version and export. Generation runs from your machine
-against the model provider you configure; your screenshots, the generated code
-and your API keys are not sent anywhere else.</p>
+screens, a URL, a written description, a screen recording, or a Figma or Google
+Stitch design, and it generates a working page you can edit, version and export.
+Generation runs from your machine against the model provider you configure; your
+screenshots, the generated code and your API keys are not sent anywhere except
+the provider you chose and the integrations you switch on and use.</p>
 <p><strong><a href="../">Product site</a></strong>
 <strong><a href="../releases/">Downloads</a></strong>
 <strong><a href="install/">Install</a></strong> <strong><a href="user-guide/">User guide</a></strong> <strong><a href="faq/">FAQ</a></strong>
@@ -102,6 +103,9 @@ This hub is where the Windows builds and their documentation are published.</p>
 </table></div>
 <p>Without a provider, generation fails fast and says so. The app does not ship a
 model and cannot generate anything on its own.</p>
+<p>Signing in to GitHub Copilot needs <strong>nothing installed</strong>: the desktop app runs
+its own GitHub OAuth device flow, shows a one-time code and opens your browser.
+The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token still work.</p>
 <h2 id="what-you-can-do" tabindex="-1">What you can do</h2>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 2"><table>
 <thead>
@@ -118,6 +122,21 @@ model and cannot generate anything on its own.</p>
 <td>A working page in the stack you chose, usually as several parallel options</td>
 </tr>
 <tr>
+<td>Start from a Figma design</td>
+<td><strong>Figma</strong> — exported screenshots or SVG, the Desktop MCP server, or a REST import with your own access token</td>
+<td>Frames rendered by Figma and brought in as local images</td>
+</tr>
+<tr>
+<td>Start from a Google Stitch screen</td>
+<td><strong>Stitch</strong> — the official MCP server, or the bundled experimental SDK with your Stitch API key</td>
+<td>A generated screen, or an imported Stitch project</td>
+</tr>
+<tr>
+<td>Say what you want up front</td>
+<td>The instruction box on <strong>Upload</strong> and <strong>Import</strong></td>
+<td>The first generation follows your instruction instead of guessing</td>
+</tr>
+<tr>
 <td>Choose which models try it</td>
 <td><strong>Settings → Models</strong>, or the picker beside the composer</td>
 <td>One option per selected model, across Copilot, OpenAI, Anthropic, Gemini and your own BYOK endpoint</td>
@@ -125,12 +144,12 @@ model and cannot generate anything on its own.</p>
 <tr>
 <td>Use your own endpoint</td>
 <td><strong>Settings → GitHub Copilot SDK BYOK</strong></td>
-<td>Models served by your OpenAI-compatible, Azure OpenAI or Anthropic endpoint, selectable beside the native ones — including a model only your endpoint knows</td>
+<td>Models served by your OpenAI-compatible, Azure OpenAI or Anthropic endpoint, selectable beside the native ones — including several models only your endpoint knows</td>
 </tr>
 <tr>
 <td>Sign in to Copilot in the app</td>
 <td><strong>Settings → Sign in with GitHub</strong></td>
-<td>The official CLI's browser flow; the credential stays with that tool and shot2code never sees the token</td>
+<td>A one-time code and your browser; the token is encrypted on this device, and disconnecting never signs out <code>gh</code> or the Copilot CLI</td>
 </tr>
 <tr>
 <td>Check a provider before generating</td>
@@ -139,23 +158,33 @@ model and cannot generate anything on its own.</p>
 </tr>
 <tr>
 <td>Give Copilot runs extra tools</td>
-<td><strong>Settings → MCP servers</strong></td>
+<td><strong>Settings → MCP servers</strong>, including the official <strong>MCP Registry</strong></td>
 <td>Tools from MCP servers you enable <em>and</em> trust, offered to Copilot and BYOK options</td>
+</tr>
+<tr>
+<td>Add reusable instructions</td>
+<td><strong>Settings → Agent Skills</strong> — a local folder or a public GitHub folder</td>
+<td>Skills you can enable per run; imported disabled, and their scripts can never execute</td>
 </tr>
 <tr>
 <td>Refine it</td>
 <td>Chat panel, or select an element in the preview</td>
-<td>A new version that keeps the previous one</td>
+<td>A new version that keeps the previous one — with the whole conversation, answers included, still readable</td>
 </tr>
 <tr>
 <td>Edit the source</td>
 <td>Code tab</td>
-<td>Multi-file tree, editor, whitespace-only <strong>Format</strong>, file badges</td>
+<td>Multi-file tree, editor, whitespace-only <strong>Format</strong>, file badges — plus a read-only <strong>Export project</strong> view of what the ZIP will hold</td>
+</tr>
+<tr>
+<td>See it as a real project</td>
+<td><strong>Preview → Stack preview</strong></td>
+<td>The controlled Vite HTML/React/Preact files rendered in the same sandbox, with no build scripts run</td>
 </tr>
 <tr>
 <td>Check it at several widths</td>
 <td><strong>Review</strong></td>
-<td>Two to four real-width frames, overflow detection and a local source audit</td>
+<td>Two to four real-width frames, overflow detection, a local source audit, an optional bounded AI review and a Design Inspector</td>
 </tr>
 <tr>
 <td>Set how the width is shared</td>
@@ -165,12 +194,12 @@ model and cannot generate anything on its own.</p>
 <tr>
 <td>Step back through earlier attempts</td>
 <td><strong>History</strong></td>
-<td>Every version, the identity behind each option, and a retry that re-rolls one</td>
+<td>Every version, the exact run identity behind each option, and a retry that re-rolls one</td>
 </tr>
 <tr>
 <td>Reopen earlier work</td>
 <td><strong>Recent projects</strong></td>
-<td>Projects, versions and prompts restored from the local database</td>
+<td>Projects, versions and prompts restored from the local database — kept when the app is upgraded</td>
 </tr>
 <tr>
 <td>Reuse an existing project</td>
@@ -213,7 +242,7 @@ download builds rather than being a plausible-looking scaffold. See
 <tbody>
 <tr>
 <td><strong>GitHub Copilot</strong></td>
-<td><strong>Sign in with GitHub</strong> in Settings, or <code>gh auth login</code> / <code>copilot</code> — needs an active Copilot subscription</td>
+<td><strong>Sign in with GitHub</strong> in Settings — a one-time code and your browser, with no command-line tool required. <code>gh auth login</code> / <code>copilot</code> still work — needs an active Copilot subscription</td>
 <td>No API key to manage; reaches Claude, GPT, Gemini and Grok models. The model list is discovered from your account</td>
 </tr>
 <tr>
@@ -256,35 +285,83 @@ credential. Its models appear under <strong>Copilot SDK (BYOK)</strong> with the
 same generation and be compared. Configuring it changes nothing about how the
 native providers behave. See
 <a href="user-guide/#using-your-own-endpoint-copilot-sdk-byok">USER-GUIDE.md</a>.</p>
-<p><strong>It also reaches models the catalogue does not know.</strong> Name the id your
+<p><strong>It also reaches models the catalogue does not know.</strong> Name the ids your
 endpoint serves — discovered from its <code>/models</code> route where one exists, typed by
-hand otherwise — and it appears as a single honest option,
+hand otherwise — and each becomes a single honest option,
 <code>&lt;model&gt; via &lt;provider&gt;</code>, with the identity
-<code>sdk-byok/&lt;provider&gt;/custom/&lt;model&gt;</code> carried through History and retries. The
-wire API is chosen automatically: Chat Completions for an endpoint with its own
-base URL, Responses for a provider's own. Any such model must support <strong>image
-input and tool calling</strong>, which only the endpoint's documentation can confirm.</p>
+<code>sdk-byok/&lt;provider&gt;/custom/&lt;model&gt;</code> carried through History and retries. One
+connection can offer several such models, and they can run side by side in the
+same generation. The wire API is chosen automatically: Chat Completions for an
+endpoint with its own base URL, Responses for a provider's own. Any such model
+must support <strong>image input and tool calling</strong>, which only the endpoint's
+documentation can confirm.</p>
 <p><strong>Test before you generate.</strong> <strong>Connection checks</strong> under the API keys test
 OpenAI, Anthropic, Gemini and Replicate individually with one minimal request,
 so an unpaid account or a revoked key is reported — with the action that fixes
 it — before a generation is half-finished.</p>
-<h2 id="mcp-servers" tabindex="-1">MCP servers</h2>
+<h2 id="mcp-servers-skills-and-web-search" tabindex="-1">MCP servers, skills and web search</h2>
 <p>Up to eight Model Context Protocol servers can be configured in <strong>Settings</strong> over
-<strong>stdio</strong>, <strong>HTTP</strong> or <strong>SSE</strong>. A server must be <strong>enabled</strong> <em>and</em> explicitly
-<strong>trusted</strong> before shot2code will start it, it is <strong>read-only</strong> until you also
-allow write tools, a local server is spawned as an argument vector rather than
-through a shell, and a remote one must use <code>https://</code> unless it is on
-<code>localhost</code>. Their tools are offered to <strong>GitHub Copilot</strong> and <strong>Copilot SDK
-BYOK</strong> options only — an option running on your own OpenAI, Anthropic or Gemini
-key never sees them. See <a href="user-guide/#mcp-servers">USER-GUIDE.md</a>.</p>
+<strong>stdio</strong>, <strong>HTTP</strong> or <strong>SSE</strong>, either by hand or from the official
+<strong>MCP Registry</strong> browser built into the app. A server must be <strong>enabled</strong> <em>and</em>
+explicitly <strong>trusted</strong> before shot2code will start it, it is <strong>read-only</strong> until
+you also allow write tools, a local server is spawned as an argument vector
+rather than through a shell, and a remote one must use <code>https://</code> unless it is on
+<code>localhost</code>. <strong>A registry install is a disabled, untrusted draft</strong> — nothing the
+registry returns can start on its own. <strong>Figma Desktop MCP</strong>, <strong>Figma Remote
+MCP</strong> and <strong>Google Stitch MCP</strong> are offered as featured drafts under the same
+rules.</p>
+<p><strong>Agent Skills</strong> are reusable instruction folders imported from a local folder or
+a public GitHub folder URL. They are validated, recorded with their origin, and
+<strong>disabled by default</strong>. A skill may contain scripts and those files are stored,
+but <strong>they can never execute</strong>: shot2code exposes no shell tool and no
+unrestricted host-filesystem tool. <strong>Copilot web research</strong> is a separate opt-in
+switch that adds public web search and nothing else.</p>
+<p>MCP tools, skills and web search are offered to <strong>GitHub Copilot</strong> and <strong>Copilot
+SDK BYOK</strong> options only — an option running on your own OpenAI, Anthropic or
+Gemini key never sees them. See <a href="user-guide/#mcp-servers">USER-GUIDE.md</a>.</p>
+<h2 id="design-sources-figma-and-google-stitch" tabindex="-1">Design sources: Figma and Google Stitch</h2>
+<p>Besides screenshots, a URL, a description or a recording, shot2code can start
+from a design tool:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 4"><table>
+<thead>
+<tr>
+<th scope="col">Source</th>
+<th scope="col">How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Figma</strong></td>
+<td>Exported screenshots; exported <strong>SVG</strong> (rasterised locally); the <strong>Desktop MCP</strong> server on <code>http://127.0.0.1:3845/mcp</code>; or a <strong>REST import</strong> that takes a Figma URL and your own personal access token with <code>file_content:read</code>, and brings the rendered frames in as local images</td>
+</tr>
+<tr>
+<td><strong>Google Stitch</strong></td>
+<td>The official <strong>Stitch MCP</strong> endpoint, or the bundled <strong>experimental</strong> <code>@google/stitch-sdk</code> in the desktop app — validate a key, generate a screen from a prompt, or import an existing project or screen</td>
+</tr>
+</tbody>
+</table></div>
+<p>Both credentials are <strong>capture-only</strong>. The Figma token is sent to <code>api.figma.com</code>
+and nowhere else, the Stitch key reaches only the bundled SDK, and neither is
+included in a generation request, in project history or in an export. Figma's
+remote MCP server currently admits only clients in Figma's own catalogue, and
+shot2code does not impersonate another editor — the REST import is the route that
+works today for most accounts. <code>@google/stitch-sdk</code> is published by Google Labs
+and is explicitly not an officially supported Google product.</p>
 <h2 id="reviewing-what-was-generated" tabindex="-1">Reviewing what was generated</h2>
 <p><strong>Review</strong> renders the generated page at two to four real widths at once — 1440,
 768 and 390 by default, any whole width from 320 to 1920 if you add your own —
 measures horizontal overflow in the running frame, and runs a local,
 deterministic audit of the generated source for semantic and accessibility
-problems. Selected findings can be written into the Chat composer for you to
-read and send, and the whole result exports as JSON. It is an automated source
-check, <strong>not a WCAG conformance assessment</strong>. See
+problems. Findings can be filtered, searched and selected in bulk, written into
+the Chat composer for you to read and send, or applied directly with <strong>Fix
+selected findings</strong>, which targets the exact version and option that was
+reviewed. An optional <strong>AI review</strong> asks the model that option actually ran on
+for a second opinion, with <strong>no tools, MCP, skills, web search, shell or file
+writes</strong>; it is a real provider request and may use quota, and the local findings
+remain the authoritative ones. A <strong>Design Inspector</strong> extracts colours,
+variables, typography, spacing, radii, shadows and motion and exports
+<code>DESIGN.md</code>, <code>SKILL.md</code> and a palette PNG. The whole result exports as JSON.
+It is an automated source check, <strong>not a WCAG conformance assessment</strong>. See
 <a href="user-guide/#the-review-workspace">USER-GUIDE.md</a>.</p>
 <p>Keys entered in Settings are stored on your device and sent only to the provider
 they belong to. See <a href="data-handling/">DATA-HANDLING.md</a>.</p>
@@ -292,13 +369,15 @@ they belong to. See <a href="data-handling/">DATA-HANDLING.md</a>.</p>
 <ul>
 <li>It is <strong>not</strong> a hosted service and has no account, sync or cloud storage.</li>
 <li>It does <strong>not</strong> include a model or any free inference. You bring the provider.</li>
+<li>It does <strong>not</strong> run a shell, and it exposes no unrestricted host-filesystem
+tool. An imported skill may ship scripts; they are stored, never executed.</li>
 <li>It does <strong>not</strong> guarantee that generated code is correct, accessible or secure.
 It is model output: review it before running it outside the sandboxed preview.</li>
 <li>The published Windows binaries are <strong>not code-signed</strong>, so SmartScreen will warn
 on first run. Verify the SHA-256 checksum instead — see <a href="security/">SECURITY.md</a>.</li>
 </ul>
 <h2 id="documentation" tabindex="-1">Documentation</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 4"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 5"><table>
 <thead>
 <tr>
 <th scope="col">Guide</th>
@@ -312,7 +391,7 @@ on first run. Verify the SHA-256 checksum instead — see <a href="security/">SE
 </tr>
 <tr>
 <td><a href="user-guide/">USER-GUIDE.md</a></td>
-<td>First run, providers, BYOK, MCP, model selection, generating, editing, Review, resizing, History, import, export, the menu bar, shortcuts, Help</td>
+<td>First run, providers, sign-in, BYOK, MCP and the registry, skills, Figma and Stitch, model selection, generating, editing, Review, resizing, History, import, export, the menu bar, shortcuts, Help</td>
 </tr>
 <tr>
 <td><a href="faq/">FAQ.md</a></td>

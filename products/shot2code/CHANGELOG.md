@@ -13,16 +13,235 @@ The full engineering changelog lives with the code:
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.
 
+## [0.5.0] — 2026-09-27
+
+[Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.0) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.0)
+
+The current release. It signs you in to GitHub Copilot from the app itself with
+no command-line tool installed, opens the official **MCP Registry** and an
+**Agent Skills** library, makes **Figma** and **Google Stitch** first-class
+design sources, restores the whole conversation in Chat, shows the exact files
+an export will contain before you download them, and keeps your projects when
+the installation directory is replaced.
+
+Everything new here is **additive and off until you switch it on**. If you
+configure none of it, the app behaves as it did in 0.4.0 — the native OpenAI,
+Anthropic, Gemini and Copilot routes are untouched.
+
+### Added
+
+- **Sign in to GitHub Copilot without a CLI.** The desktop app now runs its own
+  **GitHub OAuth device flow** against an application registered for shot2code.
+  It shows a one-time code, opens your browser, and completes without the
+  GitHub Copilot CLI or the GitHub CLI being installed. The app uses a
+  **public client id and no client secret**, because a desktop application
+  cannot keep one.
+- **The token is encrypted at rest.** The access token and its refresh token
+  are stored under the app's own user-data folder, encrypted with Electron
+  **`safeStorage`** — the operating system's own key store. They are refreshed
+  automatically when they expire.
+- **Disconnecting is app-only.** **Disconnect GitHub from shot2code** clears
+  the credential this app holds and nothing else: a `gh auth login` or
+  `copilot` session on the same machine **stays signed in**, because shot2code
+  did not create it and has no business ending it. The app also says so, rather
+  than leaving you to guess what it touched.
+- **The official MCP Registry, in the app.** **Settings → MCP servers →
+  MCP Registry** searches
+  [`registry.modelcontextprotocol.io`](https://registry.modelcontextprotocol.io)
+  and installs an entry as a **disabled, untrusted draft** with its URL and
+  headers laid out for review. Nothing a registry returns can start a server:
+  the two existing switches still have to be turned on by hand. Only remote
+  `https://` entries are offered, and duplicates collapse to the latest active
+  version.
+- **Featured integrations you would otherwise have to hand-configure.**
+  **Figma Desktop MCP**, **Figma Remote MCP** and **Google Stitch MCP** are
+  offered as one-click drafts with the correct transport and endpoint
+  pre-filled — and, like every other server, arrive disabled and untrusted.
+- **An Agent Skills library.** **Settings → Agent Skills** imports a skill from
+  a **local folder** or from a **public GitHub folder URL**
+  (`https://github.com/owner/repo/tree/main/path`). Front matter, paths and
+  sizes are validated, the origin is recorded as provenance, and each skill can
+  be enabled, disabled or removed. **Every imported skill is disabled by
+  default.**
+- **Figma, four ways.** Exported **screenshots**, exported **SVG** files (which
+  are rasterised locally before they are sent), the **Figma Desktop MCP**
+  server on `http://127.0.0.1:3845/mcp`, and a **REST import** that takes a
+  Figma URL plus a personal access token with `file_content:read`, resolves the
+  file and node ids in the URL, asks Figma to render those frames, and brings
+  the images in as local data URLs.
+- **Google Stitch, two ways.** The official **Stitch MCP** endpoint at
+  `https://stitch.googleapis.com/mcp`, and a bundled **experimental**
+  `@google/stitch-sdk` in the desktop app that validates a Stitch API key,
+  generates a screen from a prompt, and imports an existing Stitch project or
+  screen. HTML and image downloads made on its behalf are **HTTPS-only and
+  size-bounded**.
+- **Chat shows the whole conversation again.** The active branch is
+  reconstructed in order — your prompts, the screenshots or recording you
+  attached, any selected-element context, the model identity, the generation
+  state **and the assistant's own responses**, in expandable, scrollable blocks.
+  Older versions no longer collapse to *"Option ready."*
+- **A first instruction on Upload and Import.** Both tabs now accept an optional
+  instruction — and a model choice — before the first generation, so an imported
+  multi-file project can go straight into the refinement flow.
+- **Review can fix what it found.** **Fix selected findings** sends a targeted
+  update against the **exact commit and option that was reviewed**, rather than
+  whatever happens to be on screen. Findings can be narrowed with severity
+  filters and a text search, and selected in bulk with **Select visible** and
+  **Select errors + warnings**.
+- **An optional, bounded AI review.** Beside the deterministic local audit, a
+  second opinion can be requested from the **model that option actually ran
+  on**. It runs with **no tools, no MCP servers, no skills, no web search, no
+  shell and no file writes**, and its findings are kept separate from the local
+  ones, which remain authoritative. It is a real provider request and **may use
+  quota**.
+- **A Design Inspector.** Review can extract repeated colours, CSS variables,
+  typography, spacing, radii, shadows, motion and semantic component counts from
+  the generated source, and export them as **`DESIGN.md`**, **`SKILL.md`** and a
+  **palette PNG**.
+- **The Code tab shows what you will actually download.** Beside **Current
+  code** there is now a read-only **Export project** view listing the exact text
+  files and assets the ZIP will contain for the selected stack, so the export
+  layout is no longer a surprise at download time.
+- **A sandboxed Stack preview.** Preview still defaults to the composed HTML
+  document. **Stack preview** additionally renders the controlled Vite HTML,
+  React and Preact files in the same browser sandbox. **No package script and
+  no project configuration is executed** to produce it.
+- **Copilot web research, opt-in.** **Settings → Copilot web research → Allow
+  web search** lets GitHub Copilot and Copilot SDK BYOK options search the
+  public web when a prompt needs current documentation. Search queries leave
+  the device, which the setting says in as many words. It is off by default.
+- **ScreenshotOne says what went wrong.** A failed capture is now reported as a
+  rejected key, a billing or credit problem, a rate limit, a timeout, an invalid
+  URL or an unavailable provider — and the URL tab can test a ScreenshotOne key
+  with one minimal request before you rely on it.
+- **One endpoint, several selectable models.** A Copilot SDK BYOK connection is
+  no longer limited to a single endpoint model: every model you discover or
+  type becomes its **own selectable identity**, so several models from the same
+  endpoint can run in one generation and be compared.
+
+### Changed
+
+- **Projects survive an upgrade.** History lives in
+  `%LOCALAPPDATA%\shot2code\history.sqlite3`, outside the installation
+  directory, and the installer is explicitly configured not to remove
+  application data. Replacing the installed program therefore leaves every
+  project, version and prompt in place.
+- **History records the exact run identity.** Each option stores and displays
+  the identity it really ran as — a native model id, or the
+  `sdk-byok/<provider>/<base model>` twin — so a retry replays that runtime
+  rather than the provider whose model it borrowed.
+- **Image tools are gated on a usable key.** `generate_images` and
+  `edit_images` are no longer advertised to a model unless an effective
+  Replicate key exists. The preference still works when that key comes from
+  `backend/.env`.
+- **Skills and web search reach Copilot runtimes only.** Like MCP tools, they
+  are exposed to GitHub Copilot subscription options and Copilot SDK BYOK
+  options. An option running on your own OpenAI, Anthropic or Gemini key never
+  sees them.
+- **The shipped desktop stack was updated**: Electron **44.4.3**,
+  electron-builder **26.15.3** and electron-updater **6.8.9**, with
+  `npm audit --omit=dev` reporting **0 vulnerabilities** for what is actually
+  distributed.
+- **First-run browser startup has a longer budget.** The bundled headless
+  Chromium is allowed more time on its first launch, because that is when
+  antivirus software scans a newly written tree — the previous budget could
+  report the browser unavailable on a machine where it was merely slow.
+
+### Fixed
+
+- **A generation started during a cold start no longer fails.** The deferred
+  route loader accepts the WebSocket handshake before the frozen generation
+  graph has finished importing and replays the connect event, instead of
+  dropping the first run after launch.
+- **Long runs no longer look dead.** The backend sends a heartbeat every 15
+  seconds so a long Copilot run is not mistaken for a stalled connection.
+- **A completed run is no longer reported as a failure.** An abnormal socket
+  closure after every option has reached a terminal state is treated as
+  completion, and when the selected option was cancelled or failed while another
+  one finished, the usable option is selected for you.
+- **"Check the console" is a last resort again.** A failure that the backend
+  actually diagnosed keeps its own message and points at the diagnostic log.
+- **A root-level skill folder on GitHub imports correctly.** The Contents API
+  does not return file contents in a directory listing, so each file is now
+  fetched individually rather than imported empty.
+- **A `204` route no longer breaks the backend.** A FastAPI route annotated
+  `-> None` for a no-content response made the whole application unimportable;
+  it returns an explicit `Response` now.
+
+### Security
+
+- **No client secret ships in the app.** The GitHub device flow uses a public
+  client id only. A desktop application cannot keep a secret, so it does not
+  pretend to have one, and it does not borrow another product's client id.
+- **Credentials are encrypted by the operating system.** GitHub tokens obtained
+  in the app are written through Electron `safeStorage`. The backend receives
+  the token in its process environment on a restart that is **serialised**, so
+  two sign-in or disconnect actions cannot race a half-started backend.
+- **Disconnecting never reaches outside the app.** Clearing the credential
+  shot2code holds does not touch a `gh` or Copilot CLI session on the same
+  machine.
+- **Capture-only credentials never reach a model.** The Figma personal access
+  token and the Google Stitch API key are used only by the code that calls those
+  services — the Figma token is sent to `api.figma.com` and nowhere else, and
+  the Stitch key is passed through desktop IPC to the bundled SDK. Both are
+  stripped from generation requests, from project history and from exports.
+- **A registry install is a draft, not a running server.** An entry installed
+  from the MCP Registry arrives **disabled and untrusted**, and only remote
+  `https://` entries are listed at all. The two switches, the read-only
+  default and the separate **Allow write tools** gate are unchanged.
+- **Imported skills cannot execute.** A skill may contain scripts, and those
+  files are stored as resources — but shot2code exposes **no shell tool and no
+  unrestricted host-filesystem tool**, so nothing in a skill can be run. Skills
+  are bounded in file count and size, path traversal is rejected, and every
+  import is disabled until you enable it.
+- **Copilot's own file and shell tools stay excluded.** shot2code continues to
+  expose only its own `create_file` and `edit_file` tools, which act on the
+  project in memory. Enabling web search adds search and nothing else.
+- **The AI review runs without tools.** It is given no tool surface at all — no
+  MCP, no skills, no web search, no shell, no file writes — so a second opinion
+  cannot become a second agent.
+- **Stitch downloads are constrained.** HTML and image fetches made on the
+  SDK's behalf must be `https://` and are size-bounded.
+
+### Notes
+
+- The GitHub device flow is a feature of the **desktop app**. Where it is not
+  available, the existing delegated route is used instead and **shot2code never
+  receives or saves the token** in that mode. The `gh auth login` / `copilot`
+  ladder and the optional token field are unchanged either way.
+- **Figma's remote MCP server currently admits only clients in Figma's own MCP
+  catalogue.** shot2code does not impersonate another editor or reuse its OAuth
+  identity, so the REST import with your own personal access token is the route
+  that works today for most accounts.
+- **`@google/stitch-sdk` is experimental.** Google Labs states it is not an
+  officially supported Google product. It is bundled at version **0.3.5**
+  (Apache-2.0) and is used only when you supply a Stitch API key.
+- The AI review, like a connection check, is a real provider request on a
+  metered account. The **local** source audit remains free, deterministic and
+  offline, and it is still an automated check of generated source — **not a
+  WCAG conformance assessment**.
+- Validation for this build: **976 backend tests (13 skipped)**, **851 frontend
+  tests (9 skipped)** and **47 desktop tests**, plus **15 exported projects**
+  checked across the **12-stack browser matrix**. The packaged `file://` app,
+  history retention across an install-directory replacement, a root-level
+  GitHub skill import and the bundled Chromium were all verified on the
+  packaged build.
+
 ## [0.4.0] — 2026-09-20
 
 [Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
 [hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.4.0) ·
 [upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.4.0)
 
-The current release. It adds a second, optional way to reach a model — your own
+It adds a second, optional way to reach a model — your own
 endpoint through the GitHub Copilot SDK — lets Copilot runs call MCP servers you
 configure, turns the preview into a side-by-side responsive **Review** with a
 local source audit, and puts a real Windows menu bar on the app.
+
+Superseded by 0.5.0, which adds CLI-free GitHub sign-in, the MCP Registry,
+Agent Skills, Figma and Google Stitch.
 
 Everything here is **additive**. If you do not configure any of it, the app
 behaves exactly as it did in 0.3.3.
@@ -307,7 +526,7 @@ workspace.
 [hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.3.2) ·
 [upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.3.2)
 
-The current release. It protects an update that starts from an older client,
+It protects an update that starts from an older client,
 extends model selection to every supported code provider, and finishes the
 responsive **Preview** and **History** work.
 

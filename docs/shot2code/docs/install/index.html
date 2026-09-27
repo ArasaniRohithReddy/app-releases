@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/INSTALL.md (normalized SHA-256 2fea509c34c5a3c222bcc10d6a404aec4855b3d05188e30c2b990d10408f4434). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/INSTALL.md (normalized SHA-256 d2b6e89ae775f5f2a8522c42ee47f140231537cdfdfa1128e3a930044d1c4b6a). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -72,9 +72,10 @@ Release tags in this hub are product-prefixed: <code>shot2code-vX.Y.Z</code>.</p
 <li><strong>Windows 10 or Windows 11</strong>, 64-bit (x64).</li>
 <li>About <strong>600 MB</strong> of free disk space after unpacking. The app carries its own
 Python backend and a headless Chromium, so there is no runtime to install.</li>
-<li><strong>One model provider</strong>: a GitHub Copilot sign-in, or a Gemini, Anthropic or
-OpenAI API key. Without one, generation fails fast — the rest of the app still
-opens.</li>
+<li><strong>One model provider</strong>: a GitHub Copilot sign-in — which the desktop app can do
+by itself, with no command-line tool installed — or a Gemini, Anthropic or
+OpenAI API key, or your own endpoint through a Copilot SDK BYOK connection.
+Without one, generation fails fast — the rest of the app still opens.</li>
 <li>There are <strong>no macOS or Linux builds</strong>. On those platforms, run the project
 <a href="https://github.com/ArasaniRohithReddy/shot2code#running-from-source" rel="noopener noreferrer">from source</a>.</li>
 </ul>
@@ -156,6 +157,10 @@ and project tooling load on first use, and the Chromium and Copilot checks run i
 the background. A fresh portable copy, or the first launch after an update, takes
 longer (around 40 seconds) while Windows scans the newly written tree. The shell
 gives up after 90 seconds rather than waiting forever.</p>
+<p>The bundled headless browser also gets a larger budget on its <strong>first</strong> launch,
+for the same reason: that is when antivirus software scans it. A generation
+started while the backend is still warming up is not lost — the connection is
+accepted and replayed once the generation routes have loaded.</p>
 <p>If the window stays blank or never appears, read the log — it records backend
 startup, how long readiness took, renderer load failures, crashes and console
 errors:</p>
@@ -199,7 +204,9 @@ diagnostics to <code>%TEMP%\shot2code-installer-preinstall.log</code>.</li>
 <li><strong>Installer / MSI:</strong> <em>Settings → Apps → Installed apps → shot2code → Uninstall</em>.</li>
 <li><strong>Portable:</strong> delete the extracted folder.</li>
 </ul>
-<p>Uninstalling does not delete your projects. They live in a local database:</p>
+<p>Uninstalling does not delete your projects, and neither does an upgrade. They
+live in a local database <strong>outside the installation directory</strong>, and the
+installer is explicitly configured not to remove application data:</p>
 <pre tabindex="0" aria-label="Text code example"><code>%LOCALAPPDATA%\shot2code\history.sqlite3
 </code></pre>
 <p>Delete that folder as well if you want the project history gone. Individual
@@ -216,11 +223,11 @@ project removes it and its versions from the device.</p>
 <tbody>
 <tr>
 <td><code>%LOCALAPPDATA%\shot2code\</code></td>
-<td><code>history.sqlite3</code> — projects, versions, prompts</td>
+<td><code>history.sqlite3</code> — projects, versions, prompts — and any Agent Skills you imported</td>
 </tr>
 <tr>
 <td><code>%APPDATA%\shot2code-desktop\</code></td>
-<td>Desktop shell state and <code>shot2code-backend.log</code></td>
+<td>Desktop shell state, the encrypted GitHub token from the in-app sign-in, and <code>shot2code-backend.log</code></td>
 </tr>
 <tr>
 <td><code>%TEMP%\shot2code-installer-preinstall.log</code></td>
@@ -228,7 +235,7 @@ project removes it and its versions from the device.</p>
 </tr>
 <tr>
 <td>The app's own local storage</td>
-<td>Provider API keys, your model selection, pane widths and UI preferences entered in Settings</td>
+<td>Provider API keys, the Figma and Stitch credentials, your model selection, pane widths and UI preferences entered in Settings</td>
 </tr>
 </tbody>
 </table></div>
