@@ -166,7 +166,9 @@ module.exports = async function releaseHubChecks({ browser, base, root, products
       'hub: a preview replaced the stable recommendation');
     check(await page.locator(`.release-row[data-tag="${draft.tag_name}"]`).count() === 0, 'hub: unpublished draft became a release');
     await page.locator('#release-channel').selectOption('preview');
-    check(await page.locator('.release-row:visible').count() === 1, 'hub: preview filtering included stable releases');
+    const existingPreviews = allReleases.filter(release => release.prerelease && !release.draft).length;
+    check(await page.locator('.release-row:visible').count() === existingPreviews + 1,
+      'hub: preview filtering included stable releases');
   } finally { await previewContext.close(); }
 
   const noScript = await context({ javaScriptEnabled: false });

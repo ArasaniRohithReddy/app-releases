@@ -439,17 +439,23 @@
 
     function render(rels) {
       if (!rels.length) { showError("No releases found for this application yet."); return; }
+      var latestStable = rels.find(function (release) { return !release.prerelease; }) || null;
       var active = document.activeElement;
       var linkedCard = list.contains(active) && active.classList.contains("rel") ? active.id : "";
       var openNotes = Array.from(list.querySelectorAll(".rel details.notes[open]")).map(function (notes) {
         return notes.closest(".rel").id;
       });
-      list.innerHTML = rels.map(function (r, i) { return renderRelease(r, i === 0); }).join("");
-      var ver = versionOf(rels[0].tag_name);
+      list.innerHTML = rels.map(function (release) {
+        return renderRelease(release, Boolean(latestStable && release.tag_name === latestStable.tag_name));
+      }).join("");
+      var headline = latestStable || rels[0];
+      var ver = versionOf(headline.tag_name);
       document.getElementById("hm-latest").textContent = "v" + ver;
       document.getElementById("hm-count").textContent = rels.length + " release" + (rels.length === 1 ? "" : "s") + " published";
-      var d = fmtDate(rels[0].published_at);
-      document.getElementById("hm-updated").textContent = d ? "Latest: " + d : "";
+      var d = fmtDate(headline.published_at);
+      document.getElementById("hm-updated").textContent = d
+        ? (latestStable ? "Latest stable: " : "Newest: ") + d
+        : "";
       updateCount();
       // Open external links from rendered notes in a new tab, safely.
       list.querySelectorAll(".notes-body a[href]").forEach(function (a) {

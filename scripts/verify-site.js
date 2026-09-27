@@ -792,8 +792,13 @@ async function main() {
       await page.goto(base + product.url + 'releases/', { waitUntil: 'networkidle' });
       const versions = await page.locator('.rel .rel-ver').allTextContents();
       check(versions.length === product.snapshot.length, `${product.name} releases: rendered ${versions.length} of ${product.snapshot.length} releases`);
-      check(versions[0]?.trim() === 'v' + product.latest.tag_name.slice(product.prefix.length),
-        `${product.name} releases: the newest card is not this product's latest release`);
+      const newest = product.snapshot.slice().sort((a, b) =>
+        new Date(b.published_at) - new Date(a.published_at))[0];
+      check(versions[0]?.trim() === 'v' + newest.tag_name.slice(product.prefix.length),
+        `${product.name} releases: the first card is not this product's newest release`);
+      check((await page.locator('.rel.latest .rel-ver').textContent())?.trim() ===
+        'v' + product.latest.tag_name.slice(product.prefix.length),
+        `${product.name} releases: the stable recommendation moved to a pre-release`);
       const links = await page.locator('.rel.latest .dl-item a.btn').evaluateAll(nodes => nodes.map(n => n.href));
       check(links.length > 0 && links.every(href => product.latest.assets.some(a => a.browser_download_url === href)),
         `${product.name} releases: a download button does not point at a real asset`);
