@@ -138,7 +138,10 @@ Two capabilities need a specific provider:
 | Capability | Needs |
 | --- | --- |
 | Video / screen-recording input, asset extraction | A Gemini key |
-| Image generation, image editing, background removal | `REPLICATE_API_KEY` in `backend/.env` — there is no Settings field, so this is only available when running from source |
+| Image generation | Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint configured in Settings |
+| Image editing | Replicate, or an OpenAI-compatible endpoint that implements `/images/edits` |
+| Background removal | Replicate only |
+| Free licensed image search | Nothing except opting in; queries go to Openverse and results are restricted to CC0/Public Domain Mark |
 
 ### Testing a provider before you generate
 
@@ -391,7 +394,7 @@ MCP is a Copilot SDK feature, so it reaches the runtimes that use the SDK:
 
 The picker states this for the current selection rather than leaving you to
 infer it from an empty activity list. [Agent Skills](#agent-skills-and-web-search)
-and Copilot web search follow exactly the same rule.
+follow exactly the same rule; canonical Tavily/Exa web search is provider-neutral.
 
 ### Installing from the official MCP Registry
 
@@ -406,19 +409,16 @@ filled in for you to review; nothing starts until you turn on the same two
 switches as any other server. A registry listing is not an endorsement, and
 shot2code treats it as untrusted input.
 
-Three integrations are offered as featured drafts with the right transport and
+Google Stitch is offered as a featured draft with the right transport and
 endpoint already set:
 
 | Featured | Endpoint |
 | --- | --- |
-| **Figma Desktop MCP** | `http://127.0.0.1:3845/mcp` — your own running Figma desktop app |
-| **Figma Remote MCP** | `https://mcp.figma.com/mcp` |
 | **Google Stitch MCP** | `https://stitch.googleapis.com/mcp` |
 
-Figma currently admits only clients listed in its own MCP catalogue to the remote
-server, and shot2code does not impersonate another editor to get in — see
-[Figma and Google Stitch](#figma-and-google-stitch) for the route that works
-today.
+Figma restricts both its desktop and hosted MCP transports to clients listed in
+the Figma MCP Catalog. shot2code therefore filters those endpoints from registry
+results, disables migrated entries, and uses the documented REST/PAT workflow.
 
 ### Adding a server
 
@@ -511,32 +511,38 @@ A skill may ship scripts. shot2code keeps those files as resources — and
 host-filesystem tool to any model. A skill is instructions and reference
 material, not a program shot2code will run on your machine.
 
-### Copilot web research
+### Web research
 
-**Settings → Copilot web research → Allow web search** lets GitHub Copilot and
-Copilot SDK BYOK options search the public web when a prompt needs current
-documentation or examples. It is **off by default**, and the setting states the
-trade-off plainly: **search queries leave this device**. It adds search and
-nothing else — shell access and unrestricted computer files stay disabled.
+**Settings → Web search** adds shot2code's bounded `search_web` tool to native
+OpenAI, Anthropic and Gemini options as well as Copilot and Copilot SDK BYOK.
+Tavily is the default and supports either its own key or an explicit keyless
+trial; Exa is optional and keyed. It is **off by default**, uses fixed HTTPS
+endpoints, returns no raw page content, limits results and snippets, and labels
+everything as untrusted external content. Search queries leave this device.
+
+Copilot's own built-in `web_search` remains available when the canonical tool is
+not configured. The two are never offered together. The built-in `web_fetch`
+remains disabled because the current SDK cannot bound or inspect a whole-page
+result before the model receives it.
 
 ## Figma and Google Stitch
 
 A screenshot is not the only starting point. shot2code can take a design
 straight from Figma or Google Stitch.
 
-### Figma, four ways
+### Figma
 
 | Route | What you need | Notes |
 | --- | --- | --- |
 | **Exported screenshots** | A PNG or JPEG exported from Figma | Works exactly like any other upload |
 | **Exported SVG** | An `.svg` exported from Figma | Rasterised **locally** before it is sent, so the model sees the same picture you do |
-| **Desktop MCP** | The Figma desktop app running on this machine | A featured MCP draft pointing at `http://127.0.0.1:3845/mcp`; it still has to be enabled and trusted |
 | **REST import** | A Figma file URL and your own personal access token with `file_content:read` | shot2code reads the file and node ids out of the URL, asks Figma to render those frames, and brings the images in as local data URLs |
 
-The **REST import** is the route that works for most accounts today, because
-Figma's remote MCP server currently admits only clients listed in its own MCP
-catalogue. shot2code does not impersonate another editor or reuse its sign-in to
-get around that.
+The **REST import** is the supported programmatic route. Figma's desktop and
+remote MCP servers admit only clients in the Figma MCP Catalog, and shot2code
+does not impersonate another editor or offer a connection Figma will reject.
+Tier-1 REST limits can be small; a 429 response preserves the retry interval,
+plan tier, limit type and Figma upgrade link.
 
 Your Figma token is **capture-only**: it is sent to `api.figma.com` and nowhere
 else, and it is never part of a generation request, project history or an export.
@@ -840,6 +846,13 @@ it was.
 Deleting a project removes it and every saved version from the device. Nothing is
 uploaded anywhere.
 
+The desktop reopens the last active saved project, selected version, option and
+file. If a saved selection points at a cancelled or failed option while a
+completed sibling exists, the completed option is selected and the repaired
+choice is persisted. Preview tab, HTML/Stack source, desktop zoom and native
+window bounds/maximized state also survive restart; credentials and transient
+generation state do not.
+
 ## Importing an existing project
 
 **Import → Folder, ZIP or source files** takes a project folder, a ZIP archive, or
@@ -872,12 +885,12 @@ If a framework build or a local asset cannot be represented safely, the preview
 shows a deterministic fallback or diagnostic while every source file stays
 editable and downloadable.
 
-The controls above it are grouped by what they do: a **Fit / 100%** segmented
-control for scale, and a labelled **History _n_/_m_** control for versions. At
-**100%** a fixed-width desktop canvas is centred inside a neutral framed
-viewport rather than pinned to the left edge; when the window is narrower than
-the canvas, the frame scrolls horizontally on purpose instead of cropping the
-start of the page.
+The controls above it are grouped by what they do. Desktop preview offers
+**−**, a live percentage, **+**, **Fit** and **100%**, ranging from 25% to 200%;
+mobile always fits. At 100% the fixed-width desktop canvas is centred inside a neutral framed
+viewport. Magnified content pans rather than clipping, and resize
+updates are coalesced so a non-maximized window does not flicker or reload the
+iframe. **History _n_/_m_** remains the version control.
 
 Preview documents run in an opaque-origin sandbox with a restrictive
 Content-Security-Policy; select-and-edit talks to the app through validated,
@@ -932,7 +945,7 @@ the two can never disagree.
 | **Edit** | The standard editing commands |
 | **View** | Preview, Code, Chat, History, **Show Chat panel**, Reload, Toggle Developer Tools, Zoom In / Zoom Out / Actual Size |
 | **Window** | The standard window commands |
-| **Help** | The Help centre, the keyboard shortcut reference, and About shot2code with the running version |
+| **Help** | The Help centre, **Send feedback**, the keyboard shortcut reference, and About shot2code with the running version |
 
 Items that need a project — export, the destinations, the chat panel — are
 **disabled** until one is open, rather than being offered and failing. The
@@ -995,6 +1008,13 @@ succeeded. That log is the first thing to attach to a bug report. The browser
 development build writes no such log and says so instead of showing a button
 that cannot work.
 
+**Help → Send feedback** opens a Bug, Feature request or Feedback form. If the
+official GitHub CLI is already authenticated, the desktop app can submit the
+issue directly. Otherwise you can copy the Markdown, download it, or open a
+prefilled browser issue. The app does **not** automatically attach logs, prompts,
+project files, screenshots, history or credentials; review anything you choose
+to paste before sending it.
+
 ## Settings
 
 Settings holds your provider keys, the
@@ -1011,9 +1031,18 @@ reaches a log line, a toast or a validation response. The Figma token and the
 Stitch API key are **capture-only**: they are used by the code that calls those
 services and are excluded from generation requests, project history and exports.
 
-Image generation, editing and background removal are offered only when an
-effective **Replicate** key exists — including one that comes from
-`backend/.env` — rather than being advertised and then failing.
+**Image generation** can use Replicate, Cloudflare Workers AI, or an
+OpenAI-compatible image endpoint. Replicate remains the default and the only
+background-removal provider; editing is available only where the selected
+provider implements it. Failures are reported per prompt, with 401/402/429 and
+timeout guidance, and a batch says “Generated X of N” rather than counting
+failed placeholders.
+
+**Free image search** is a separate opt-in tool using Openverse. It sends no API
+key, searches only CC0/Public Domain Mark results, re-checks the licence
+metadata, downloads through an SSRF/MIME/size/pixel-bounded path, and stores
+assets locally rather than hotlinking them. Openverse aggregates metadata, so
+verify the source page before commercial use.
 
 The page has its own viewport-bounded scrollbar. Even with a project open, you
 can scroll through the full settings list to the final Screenshot by URL and

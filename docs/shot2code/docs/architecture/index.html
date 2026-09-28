@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 86a41bd95569b555814781d77c8351c26bc425cdec5f23c9955f5df0b8bf17d1). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 1522c6d531830020af570d6be20d2f92531562a5498439a66c45525e9d5a65fd). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -95,10 +95,17 @@ who want to know what runs where. The implementation lives in the
 </table></div>
 <p>In the packaged app the shell starts the frozen backend on a <strong>free local port</strong>,
 waits for its <code>/api/health</code> endpoint, and only then loads the built frontend from
-disk. The port is injected into the renderer through preload, because Vite bakes
-environment variables in at build time and cannot know it.</p>
+disk. Runtime HTTP and WebSocket URLs cross from main to the sandboxed preload
+through synchronous IPC, because Vite bakes environment variables at build time
+and <code>file://</code> has no usable origin. The preload uses no unsupported Node module;
+if preload initialization fails, every desktop bridge would disappear at once.</p>
 <p>Generation streams over a <strong>WebSocket</strong> to that local backend; everything else is
 plain HTTP on the same loopback origin.</p>
+<p>The shell also owns native feedback submission and window state. <strong>Help →
+Feedback</strong> calls a startup-registered IPC handler; an authenticated GitHub CLI
+may create the issue directly, otherwise the renderer receives safe copy,
+download and browser fallbacks. Native bounds/maximized state is validated,
+written atomically and recovered onto a visible display.</p>
 <h2 id="startup" tabindex="-1">Startup</h2>
 <p>Startup is deliberately staged, because the packaged backend is a frozen Python
 tree that Windows may still be scanning:</p>
@@ -179,10 +186,12 @@ session protocol; a factory maps each run identity to its provider and runtime.<
 its own planning loop, while shot2code's engine also owns a loop. The provider
 bridges the two: each Copilot tool invocation is parked and handed back to the
 shot2code engine, which resolves it once the tool has actually run. Copilot's own
-file and shell tools are excluded — only shot2code's tools are exposed, plus the
-MCP servers, Agent Skills and opt-in web search the user has turned on. The
-image tools are advertised only when an effective Replicate key exists, so a
-model is never offered a tool the build cannot run.</p>
+file and shell tools are excluded — only shot2code's canonical tools are exposed,
+plus the MCP servers and Agent Skills the user has turned on. Canonical
+<code>search_web</code>, <code>search_free_images</code> and image tools are provider-neutral
+definitions wrapped by each runtime. Their availability is derived from the
+validated request configuration, so a model is never offered a tool the build
+cannot run.</p>
 <h3 id="copilot-sdk-byok" tabindex="-1">Copilot SDK BYOK</h3>
 <p>A BYOK identity runs on that same SDK bridge, but against the endpoint and
 credential configured in Settings rather than a Copilot sign-in. The connection
@@ -260,8 +269,10 @@ permission handler keeps it read-only unless write tools were explicitly allowed
 collapses several published versions of the same server to the latest active
 one. What it returns is a <strong>draft</strong>: installing an entry writes a server that is
 disabled and untrusted, so a registry response can never start a process or
-approve a tool. The featured Figma Desktop, Figma Remote and Google Stitch
-templates are ordinary drafts with their transport and endpoint pre-filled.</p>
+approve a tool. Google Stitch is the featured template. Figma MCP endpoints are
+filtered from registry results and migrated entries are disabled because Figma
+restricts both desktop and hosted transports to clients listed in its MCP
+Catalog.</p>
 <p><code>/api/skills</code> owns Agent Skills. An import from a local folder or a public
 GitHub folder URL is validated (front matter, normalised relative paths with
 traversal rejected, bounded file count and size), recorded with its provenance,
@@ -270,11 +281,14 @@ Contents API does not return file bodies in a directory listing, each file is
 fetched individually rather than imported empty. A skill's script files are
 stored as resources and are <strong>never executable</strong>: the agent is given only
 shot2code's own <code>create_file</code> and <code>edit_file</code> tools, and the SDK's built-in
-shell and host-filesystem tools are excluded. Opt-in web search adds search to
-Copilot and BYOK runtimes and nothing else.</p>
-<p>Because MCP, skills and web search are exposed through the SDK, only Copilot
-subscription variants and BYOK variants receive them; a native OpenAI, Anthropic
-or Gemini variant runs on that provider's own client and is never given them.
+shell and host-filesystem tools are excluded.</p>
+<p>MCP and skills are exposed through the SDK, so only Copilot subscription variants
+and BYOK variants receive them. Canonical web search is different: native
+OpenAI, Anthropic and Gemini use their existing tool serializers, while both
+Copilot runtimes receive the same definition as a custom tool. A session gets
+exactly one search route. Copilot built-in <code>web_search</code> is enabled only when the
+canonical tool is unusable; built-in <code>web_fetch</code> and URL permissions are
+rejected because their results cannot be bounded before reaching the model.
 Environment values and request headers are excluded from every safe-metadata
 projection, so they cannot reach a log line, a diagnostic or an API response.</p>
 <p>Nothing here is on the critical path for a direct generation: an invalid,
@@ -296,6 +310,26 @@ officially supported Google product, so it is treated as experimental.</p>
 <p>Both credentials are <strong>capture-only</strong>: the settings projection that builds a
 generation payload strips them, so they cannot reach a model, project history or
 an export.</p>
+<h3 id="web-and-image-tools" tabindex="-1">Web and image tools</h3>
+<p><code>backend/web_search/</code> owns one canonical <code>search_web</code> definition. Tavily and Exa
+adapters use fixed HTTPS endpoints, explicit timeouts and no redirects; domain
+filters are sent upstream and enforced again locally. Results are normalized to
+bounded snippets and prefixed with an untrusted-content warning. One
+<code>WebSearchRuntime</code> per engine tracks per-turn and per-generation budgets, and a
+failed outbound request still spends its allowance.</p>
+<p><code>backend/image_generation/</code> separates catalogue, request validation,
+provider-specific calls, response normalization and per-prompt outcomes.
+Replicate remains default-compatible; Cloudflare Workers AI and
+OpenAI-compatible endpoints are additive and use independent credentials.
+Every provider response passes <code>normalize_image_result</code>, which keeps a safe
+public URL or persists validated bytes/base64/data URLs as local assets.</p>
+<p><code>backend/free_images/</code> owns the separate <code>search_free_images</code> tool. Openverse
+results are locally restricted to CC0/Public Domain Mark and require source and
+licence URLs. The download boundary resolves and checks every DNS address,
+revalidates redirects, agrees MIME with magic bytes, limits transferred bytes
+and decoded pixels, and persists the image locally. The package intentionally
+does not import or call web search: a generic search result says nothing about
+reuse rights.</p>
 <h2 id="reviewing-generated-output" tabindex="-1">Reviewing generated output</h2>
 <p>The Review workspace renders the preview artifact into two to four frames at
 their <strong>actual</strong> CSS widths (320–1920, defaults 1440/768/390), so layout is
@@ -326,12 +360,12 @@ motion and semantic components, and renders them as <code>DESIGN.md</code>, <cod
 a palette PNG. It reads the source the project declares rather than a browser's
 computed styles.</p>
 <h2 id="workspace-layout-state" tabindex="-1">Workspace layout state</h2>
-<p>Pane widths — the chat/History divider and the multi-file explorer divider — are
-<strong>view state</strong>, held in the renderer's own local storage and clamped to the
-current viewport on every resize. They are stored apart from project data on
-purpose: the history database records commits, options, retries and prompts, and
-nothing about how wide a pane was. Dragging a divider therefore cannot create or
-mutate a version.</p>
+<p>Pane widths, active Preview/Code/Review surface, HTML/Stack preview source and
+preview zoom are <strong>view state</strong>, held in renderer local storage and clamped to
+the current viewport. Native window bounds and maximized state are stored
+atomically in the Electron user-data directory and recovered onto a visible
+display. They are separate from project data on purpose: resizing or changing
+views cannot create or mutate a version.</p>
 <p>The dividers are exposed as <code>role=&quot;separator&quot;</code> controls with orientation,
 current/minimum/maximum values, value text and the pane they control, so they are
 operable from the keyboard as well as the mouse.</p>
@@ -368,6 +402,10 @@ chronological order: prompts, attached images or recordings, selected-element
 context, the run identity, generation state, and the persisted assistant
 responses — shown in expandable blocks rather than reduced to a ready-state
 summary. History remains the durable cross-branch timeline.</p>
+<p>Restore validates the selected variant. When it points at a cancelled or failed
+option but a completed sibling exists, the first completed sibling is selected
+and the repair is persisted. The renderer also restores the active project,
+version and file instead of opening a stale cancelled option.</p>
 <h2 id="preview" tabindex="-1">Preview</h2>
 <p>The file tree is the authoritative project source. The preview is a <strong>derived</strong>,
 self-contained HTML artifact: browser-ready local CSS, JavaScript, images, SVGs
@@ -377,9 +415,12 @@ fallback or diagnostic instead of guessing, and every source file remains
 editable and downloadable.</p>
 <p>At <strong>100%</strong> the fixed-width desktop canvas is centred inside a neutral framed
 viewport rather than anchored to the left edge; a window narrower than the canvas
-scrolls the frame horizontally instead of clipping the start of the page. Scale
-(<strong>Fit / 100%</strong>) and version (<strong>History <em>n</em>/<em>m</em></strong>) are separate, labelled
-controls.</p>
+scrolls the frame horizontally instead of clipping the start of the page.
+Desktop zoom runs from 25% to 200% with −/+/Fit/100% controls and scrollable pan;
+mobile stays fitted. A single animation-frame-coalesced <code>ResizeObserver</code> rejects
+hidden/zero-size geometry and unchanged measurements, preventing narrow-window
+flicker and iframe reload churn. Scale and version (<strong>History <em>n</em>/<em>m</em></strong>) remain
+separate, labelled controls.</p>
 <p>Security properties of a preview document:</p>
 <ul>
 <li>rendered from <code>srcDoc</code> in an iframe <strong>without</strong> <code>allow-same-origin</code>, so it runs

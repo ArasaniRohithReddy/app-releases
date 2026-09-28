@@ -20,7 +20,8 @@ for something. Projects and their history are stored locally. The Review audit
 runs locally. A few actions deliberately reach out and say so first: a Figma
 REST import contacts `api.figma.com`, the bundled Stitch SDK contacts Stitch,
 an MCP server you enabled and trusted receives the tool calls a model makes,
-Copilot web search sends your search queries when you switch it on, and an AI
+Tavily, Exa or Copilot web search receives your search queries when you switch it
+on, Openverse receives free-image searches, and an AI
 review is a normal request to your provider. CodePen sharing is the one
 deliberate export of your code, and it always asks first. Full detail:
 [DATA-HANDLING.md](DATA-HANDLING.md).
@@ -186,14 +187,43 @@ ScreenshotOne key from the URL tab with one minimal request before relying on it
 | --- | --- |
 | Video / screen-recording input | A Gemini key |
 | Asset extraction (reusing real logos from a screenshot) | A Gemini key |
-| Image generation, editing, background removal | `REPLICATE_API_KEY` in `backend/.env` — no Settings field, so source runs only. The tools are not offered at all without an effective key |
+| Image generation | Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint configured in Settings |
+| Image editing | Replicate, or an OpenAI-compatible endpoint that implements `/images/edits` |
+| Background removal | Replicate only |
+| Free licensed image search | Enable Openverse search; no API key is required, and only CC0/Public Domain Mark results are returned |
 | Screenshot preview (the agent checking its own output) | Chromium, which ships with the desktop app; Settings reports if it is unavailable |
 | Screenshot by URL | A ScreenshotOne key, testable from the URL tab |
 | Your own model endpoint | A Copilot SDK BYOK connection with its own credential — see below |
 | Tools from an MCP server | A server that is both enabled and trusted, and an option running on Copilot or BYOK |
-| An Agent Skill, or Copilot web search | An enabled skill (or the web-search switch) and an option running on Copilot or BYOK |
+| An Agent Skill | An enabled skill and an option running on Copilot or BYOK |
+| Provider-neutral web search | Enable Tavily or Exa in Settings; it works with native providers and both Copilot runtimes |
 | Figma REST import | A Figma personal access token with `file_content:read` |
 | Google Stitch generation or import | A Stitch API key, used by the bundled experimental SDK in the desktop app |
+
+**Why do image tiles say failed even though the agent requested several?**
+v0.5.2 keeps one result per prompt. A rejected credential, exhausted balance,
+quota response, timeout, or provider error renders as a failed tile with the
+actual reason. Partial batches say **Generated X of N**; an all-failed batch is
+not reported as success.
+
+**Can shot2code find an image when I do not have a generation key?**
+Yes, if you explicitly enable **Free image search**. It is a separate
+`search_free_images` tool, not a hidden fallback for generation. It searches
+Openverse for CC0/Public Domain Mark images, verifies required metadata, safely
+downloads the bytes and stores a local asset. Always check the linked source
+page because Openverse aggregates third-party metadata.
+
+**Can every model use web search?**
+The canonical `search_web` tool works with native OpenAI, Anthropic and Gemini,
+GitHub Copilot, and Copilot SDK BYOK. Copilot's built-in search is used only
+when the canonical tool is not configured. Whole-page `web_fetch` is disabled
+because its output cannot currently be bounded before reaching the model.
+
+**Why is Figma MCP not listed?**
+Figma restricts its desktop and hosted MCP servers to clients in Figma's MCP
+Catalog. shot2code uses the supported Figma REST/PAT import instead and filters
+or disables Figma MCP entries rather than offering a connection that will be
+rejected.
 
 ## Copilot SDK BYOK
 
@@ -359,9 +389,10 @@ for review. A registry listing is not an endorsement, and nothing starts until
 you turn on the same two switches as for any other server.
 
 **Are Figma and Stitch pre-configured?**
-They are offered as featured drafts — **Figma Desktop MCP**, **Figma Remote
-MCP** and **Google Stitch MCP** — with the right transport and endpoint filled
-in. They arrive disabled and untrusted like everything else.
+**Google Stitch MCP** is offered as a featured draft with the right transport
+and endpoint filled in; it arrives disabled and untrusted. Figma MCP is not
+offered because Figma restricts both transports to clients in its MCP Catalog.
+Use Figma REST/PAT instead.
 
 **I added a server and nothing happened.**
 A server needs **both** switches: **Enabled** and **Trusted**. Until it is
@@ -412,10 +443,9 @@ computer files stay disabled.
 ## Figma and Google Stitch
 
 **How do I start from a Figma design?**
-Four ways: exported screenshots, an exported **SVG** (rasterised locally before
-it is sent), the **Figma Desktop MCP** server on `http://127.0.0.1:3845/mcp`, or
-a **REST import** using a Figma URL and your own personal access token with
-`file_content:read`.
+Three ways: exported screenshots, an exported **SVG** (rasterised locally before
+it is sent), or a **REST import** using a Figma URL and your own personal access
+token with `file_content:read`.
 
 **Why does the Figma remote MCP server not connect?**
 Figma currently admits only clients listed in its own MCP catalogue. shot2code

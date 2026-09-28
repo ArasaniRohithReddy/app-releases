@@ -94,11 +94,15 @@ Without one, generation fails immediately and says so.
 | Your whole selection reset itself | It should not, and it does not: if the catalogue cannot be loaded at all, the saved selection is left untouched rather than being cleared. |
 | Fewer options than models you ticked | The per-run cap applies: up to 4 options for a first generation, up to 2 for an update or a video. Only the first models up to the limit run, and the picker says so in words. |
 | No models at all in video mode | In video mode the list is filtered to models that can read video. Everything else would fail on the input. BYOK options are not offered for video either. |
-| The image tools are not offered | Image generation, editing and background removal appear only when an effective Replicate key exists. It is read from `backend/.env`, so this applies to source runs. |
+| The image-generation tool is not offered | Configure Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint in Settings. Replicate remains the only background-removal provider. |
+| Image generation says 401, 402 or 429 | 401 means the credential was rejected, 402 means billing or balance is required, and 429 means quota/rate limiting. The failed tile preserves the provider's actionable reason; fix the account or wait for the stated reset before retrying. |
+| The activity says fewer images were generated than requested | v0.5.2 counts successful images, not prompts or output tiles. Open failed tiles for each per-prompt reason. |
+| A free image was not returned | Free image search is a separate opt-in Openverse tool. It accepts only CC0/Public Domain Mark records with source and licence links, and can also reject an unsafe URL, MIME mismatch, oversized image or excessive decoded dimensions. |
 
 Keys are stored on the device you entered them on and are sent only to the
-provider they belong to. `REPLICATE_API_KEY` has no Settings field — it is read
-from `backend/.env`, so it applies to source runs only.
+provider they belong to. Desktop Settings supports Replicate, Cloudflare and
+OpenAI-compatible image credentials; source runs may also use the documented
+environment variables.
 
 ### Reading a connection check
 
@@ -165,7 +169,7 @@ incomplete connection is reported as a notice and skipped.
 | A server is configured but no tools appear | A server needs **both** switches: **Enabled** *and* **Trusted**. Until then the picker reports *"'‹name›' is not marked trusted, so shot2code will not start it or approve its tools."* |
 | You installed one from the **MCP Registry** and nothing started | That is the design: a registry install is a **disabled, untrusted draft**. Review its URL and headers, then enable and trust it yourself. |
 | The registry list is empty, or will not load | The browser queries the official registry over the network; a proxy or firewall will stop it. Only remote `https://` entries are listed, so a local-only server will never appear there — add it by hand. |
-| Tools appear for one option but not another | MCP, skills and web search reach the SDK runtimes only. GitHub Copilot options and Copilot SDK BYOK options get them; an option on your own OpenAI, Anthropic or Gemini key never does. |
+| Tools appear for one option but not another | MCP and Agent Skills reach the SDK runtimes only. The canonical Tavily/Exa `search_web` tool reaches native OpenAI, Anthropic and Gemini as well as Copilot and BYOK. |
 | A tool that should change something does nothing | Servers are read-only by default. Turn on **Allow write tools** for that server — it is the switch that permits changing files, data or remote state. |
 | "Use https:// unless the server runs on localhost" | An `http://` URL is accepted only for a loopback host. |
 | "A local server needs a command to run" | A `stdio` server needs its command. Arguments go **one per line**, because the command is spawned as an argument vector rather than through a shell. |
@@ -177,15 +181,16 @@ incomplete connection is reported as a notice and skipped.
 | A skill import was rejected | Front matter has to parse, paths are normalised with traversal rejected, and the file count and sizes are bounded. Point the import at the skill folder itself rather than a whole repository. |
 | A GitHub skill imported with empty files | Fixed in 0.5.1: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again. |
 | A skill's script did not run | It cannot. Script files are stored as inert resources; shot2code exposes no shell tool and no unrestricted host-filesystem tool to any model. |
-| Web search produced nothing | **Allow web search** is off by default, and it only applies to Copilot and BYOK options. Your search queries leave the device when it is on. |
+| Web search produced nothing | **Web search** is off by default. Select Tavily or Exa and provide the credential that provider requires; Tavily's keyless trial must be chosen explicitly. Queries leave the device, and domain/result/turn/generation limits may reject a call that exceeds the configured budget. |
+| The model tried to fetch a whole URL | `web_fetch` is intentionally blocked for both Copilot runtimes. The current SDK cannot let shot2code inspect, truncate, label or budget a full-page result before it reaches the model. Use bounded search snippets instead. |
 
 ## Figma and Google Stitch
 
 | Symptom | Cause and fix |
 | --- | --- |
-| The Figma **remote** MCP server will not connect | Figma currently admits only clients listed in its own MCP catalogue. shot2code does not impersonate another editor to get in. Use the **REST import** with your own access token, or the Desktop MCP server. |
-| The Figma **Desktop** MCP server will not connect | It is served by the Figma desktop app on `http://127.0.0.1:3845/mcp`. Start Figma, then enable *and* trust the server. |
+| A migrated Figma MCP server is disabled or missing | Expected. Figma admits only clients listed in its MCP Catalog to both desktop and hosted MCP transports. shot2code filters those endpoints and uses the supported REST/PAT import instead. |
 | A Figma REST import is rejected | The token needs the `file_content:read` scope, and the URL has to be a Figma file URL — shot2code reads the file and node ids out of it. |
+| Figma REST returns 429 | Respect the displayed retry interval. v0.5.2 preserves Figma's plan tier and limit type and links the upgrade documentation; Tier 1 endpoints can have low limits on Starter/View/Collab access. |
 | A Figma import brought in the wrong frames | Without node ids in the URL, the top-level renderable frames are imported. Select the frame in Figma and copy its link so the URL carries the node id. |
 | An exported SVG looks different in the result | SVGs are rasterised locally before they are sent, so the model sees a picture. Export a PNG at the size you care about if the raster is not faithful enough. |
 | Stitch actions do nothing | The bundled SDK is part of the **desktop app** and needs a Stitch API key in Settings. It is experimental — Google Labs states it is not an officially supported Google product. |
@@ -325,8 +330,8 @@ Include, and a fix gets much faster:
 4. **Which provider and which model** were selected — Copilot, OpenAI, Anthropic,
    Gemini or a BYOK endpoint — the exact run identity History records for the
    option, and whether the failure also happens with a different one. Say too
-   whether an MCP server, an Agent Skill, Copilot web search, a Figma import or
-   the Google Stitch integration was involved.
+   whether an MCP server, an Agent Skill, web/free-image search, an image
+   provider, a Figma import or the Google Stitch integration was involved.
 5. **The tail of `shot2code-backend.log`** — **Help → Support → Open diagnostic
    logs** finds it for you — and
    `%TEMP%\shot2code-installer-preinstall.log` for an install or update problem.

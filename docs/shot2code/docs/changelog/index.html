@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 d37ee4c24d36ac6d46c95cfd1c35ab9ab0ae495d0ba0e43641acadeba80a4c0a). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 a0395e90802d20dd24818f208cb52c3b0e3b8be76f1de0f0164b435e1aa5d4fd). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">View source on GitHub</a></p>
           <p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#051--2026-09-27">[0.5.1] — 2026-09-27</a></li><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#052--2026-09-28">[0.5.2] — 2026-09-28</a></li><li><a href="#051--2026-09-27">[0.5.1] — 2026-09-27</a></li><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
         <div class="doc-content"><p>Published Windows builds of shot2code, newest first. Tags in this hub are
 product-prefixed (<code>shot2code-vX.Y.Z</code>); the upstream project tags the same build as
 <code>vX.Y.Z</code>.</p>
@@ -73,44 +73,226 @@ which is generated from the release feed; this file summarises each one.</p>
 <a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/CHANGELOG.md" rel="noopener noreferrer">CHANGELOG.md</a>.
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.</p>
-<h2 id="051--2026-09-27" tabindex="-1">[0.5.1] — 2026-09-27</h2>
+<h2 id="052--2026-09-28" tabindex="-1">[0.5.2] — 2026-09-28</h2>
 <p><a href="../../releases/">Download</a> ·
-<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.1" rel="noopener noreferrer">hub release</a> ·
-<a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.1" rel="noopener noreferrer">upstream notes</a></p>
-<p>The current release, and the first stable build of the 0.5 line. It carries the
-whole 0.5.0 feature set — described in full below — plus one correction to
-<strong>Test model access</strong>.</p>
+<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.2" rel="noopener noreferrer">hub release</a> ·
+<a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.2" rel="noopener noreferrer">upstream notes</a></p>
+<p>The current stable release. It includes the v0.5.0 feature set plus the fixes and additions below.</p>
+<h3 id="added" tabindex="-1">Added</h3>
+<ul>
+<li>
+<p><strong>Free image search — shot2code sends no key of its own.</strong> A new canonical
+<code>search_free_images</code> tool finds real, ready-to-use photographs through
+Openverse's public image API, and is offered to every runtime. It needs no
+credential, so it works on a machine with <strong>no</strong> Replicate, Cloudflare or
+OpenAI-compatible configuration at all, and configuring one of those never
+switches it off. It is a <em>separate</em> tool from <code>generate_images</code>, never a
+silent fallback inside it: the model picks whichever the design needs, and
+the activity feed says &quot;Found 3 free images&quot; rather than &quot;Generated&quot;. Off by
+default, because the query text leaves the machine.</p>
+</li>
+<li>
+<p>Free image results are restricted to <strong>CC0 and Public Domain Mark</strong>, so an
+exported project cannot quietly inherit an attribution, share-alike or
+non-commercial obligation shot2code could not enforce on the user's behalf.
+The licence is re-checked locally rather than trusting the search server's
+filter, and a result missing its source page or licence URL is dropped
+because it could not be verified. Title, creator, source page, provider,
+licence name and licence URL travel with every image, along with an explicit
+warning that Openverse aggregates other platforms' metadata and should be
+verified before commercial use.</p>
+</li>
+<li>
+<p>Found images are downloaded and served locally, so generated and exported
+projects never hotlink somebody else's server. Every URL is checked first:
+<code>http(s)</code> only, DNS-resolved with private, loopback, link-local and cloud
+metadata addresses refused (a mixed answer is rejected outright as a
+rebinding attempt), redirects re-validated rather than followed, declared
+content type required to match the sniffed bytes within an image allowlist,
+and byte and decoded-pixel ceilings enforced. Web image search is
+deliberately not used: a picture on a web page grants no reuse right.</p>
+</li>
+<li>
+<p><strong>Optional image-generation providers.</strong> Placeholder images can now be
+generated by Cloudflare Workers AI (account ID + API token) or by any
+OpenAI-compatible image endpoint (base URL, plus an API key unless it runs on
+localhost), in addition to Replicate. The alternatives are <em>additive</em>:
+Replicate stays the default and the existing Replicate, OpenAI, Anthropic and
+Gemini keys are never read, replaced or re-routed by the choice. Cloudflare's
+daily allocation is quoted from Cloudflare's own pricing page — 10,000
+Neurons a day on <strong>both</strong> the Workers Free and Workers Paid plans, resetting
+at 00:00 UTC, $0.011 per 1,000 Neurons above it — attributed to the user's
+Cloudflare account, dated, and marked able to change, never as a guarantee.
+<code>CLOUDFLARE_ACCOUNT_ID</code> and <code>CLOUDFLARE_API_TOKEN</code> supply the same
+credentials to headless runs.</p>
+</li>
+<li>
+<p>Both validated Replicate image models are now selectable —
+<code>prunaai/z-image-turbo</code> (default) and <code>black-forest-labs/flux-2-klein-4b</code> —
+each with cost wording that names who bills, quotes the provider's own
+published figure with the date it was read, links that provider's pricing
+page, and says the terms can change. No provider is described as permanently
+free anywhere in the product.</p>
+</li>
+<li>
+<p><strong>Checked custom Replicate models.</strong> Another Replicate model can be used once
+it passes a schema check: <code>POST /api/image-models/validate</code> reads that
+model's own published OpenAPI schema and accepts it only if it really
+declares a string <code>prompt</code> input and an image output and requires nothing
+else. Replicate models do not share one input schema, so no model outside the
+curated list is claimed to be compatible without that evidence.</p>
+</li>
+<li>
+<p><code>GET /api/image-models</code> exposes the curated catalog — providers, defaults,
+capabilities and cost notes — as a pure read that carries no credential.</p>
+</li>
+<li>
+<p><strong>Provider-neutral web search.</strong> A shot2code-owned <code>search_web</code> tool is now
+offered to every runtime — native OpenAI, Anthropic and Gemini, GitHub
+Copilot and Copilot SDK BYOK — instead of only to Copilot SDK sessions.
+Tavily is the default provider (its published plan is 1,000 API credits a
+month with no credit card, plus a documented keyless trial that needs no
+account); Exa is available as an alternative and always needs a key. Those
+allowances are the providers' own and can change — shot2code links their
+pricing pages rather than promising anything. Off by default; Settings
+states exactly what leaves the device before it can be switched on, and
+offers a test-connection button.</p>
+</li>
+<li>
+<p>Web search requests go only to the provider's fixed HTTPS endpoint, with an
+explicit timeout, no redirects and no raw page content. Each search returns
+at most 5 results with bounded titles, snippets and total size, prefixed with
+an untrusted-content warning, and is capped at 3 searches per turn and 10 per
+generation. Search-provider keys are backend-only and are excluded from
+history, commit snapshots and tool arguments.</p>
+</li>
+<li>
+<p>Copilot's built-in <code>web_search</code> remains available for people who prefer it
+and have the entitlement. When the canonical search is configured and usable,
+it is enabled <em>instead of</em> the built-in, so a model can never take the
+unbounded route past the budgets and the domain allowlist.</p>
+</li>
+<li>
+<p>Google Stitch generation now reports real SDK phases — connecting, project
+creation, screen generation, output download and import — with elapsed time,
+an accessible live status and bounded error messages. The SDK client now uses
+the same ten-minute generation timeout the UI promises.</p>
+</li>
+<li>
+<p>Dedicated <strong>Figma</strong> and <strong>Stitch</strong> input destinations sit beside Upload, URL,
+Text and Import. Figma uses its documented REST/PAT frame-rendering path;
+Stitch uses the bundled experimental SDK and preserves the selected
+shot2code stack/model routing.</p>
+</li>
+<li>
+<p>The Preview toolbar now includes accessible 25%–200% desktop canvas zoom,
+Fit and 100% controls. Magnified canvases pan without blocking iframe
+interaction.</p>
+</li>
+<li>
+<p>Help now includes an in-app Bug, Feature request and Feedback form with
+authenticated <code>gh</code> submission plus copy, Markdown-download and prefilled
+browser fallbacks.</p>
+</li>
+</ul>
+<h3 id="changed" tabindex="-1">Changed</h3>
+<ul>
+<li><strong>Copilot's built-in <code>web_fetch</code> is assessed and deliberately not offered.</strong>
+It is a real runtime built-in and <code>ToolSet.add_builtin(&quot;web_fetch&quot;)</code> would
+reach it, but a built-in's result is produced inside the Copilot runtime and
+handed to the model by the runtime — the SDK only notifies the application
+afterwards. There is therefore no point at which shot2code could cap that
+text, mark it as untrusted, or count it against a budget, and <code>web_fetch</code>
+returns a whole page. The SDK also accepts no URL allowlist at session
+creation. Settings now explains this next to the Copilot web-search switch,
+as its own unconditional disclosure rather than something coupled to that
+switch, and points at the canonical <code>search_web</code> tool, whose results <em>are</em>
+capped, labelled and budgeted.</li>
+<li><strong>The deny-by-default Copilot permission handler is now installed on every
+session</strong>, subscription and BYOK, instead of only on sessions that configured
+MCP servers. Without a handler the runtime fell back to its own default
+policy, so a run using a network-capable built-in had no shot2code-owned
+answer to &quot;may this URL be fetched?&quot;. Any URL the runtime asks to open is
+denied with a reason naming the host and path — never the query string, which
+can carry a token. MCP approvals are unchanged.</li>
+<li>A <code>ToolSet</code> that names a blocked built-in — directly or through a
+<code>builtin:*</code> wildcard — now fails when the session is built, rather than
+silently granting a capability whose output cannot be bounded.</li>
+<li><strong>Image results are normalized in one place.</strong> Remote URLs, raw bytes, base64
+and <code>data:</code> payloads all pass through one adapter that either keeps a public  URL or writes the image to the served local asset directory, and refuses
+anything unsafe (<code>file:</code>, private or loopback addresses that are not our own
+assets, oversized payloads). A locally served image is handed to the model as
+bytes, because such a URL is not fetchable by Anthropic, OpenAI or Gemini.</li>
+<li>Background removal is stated as Replicate-only and behaves that way: the
+<code>remove_backgrounds</code> tool is simply not offered without a Replicate key, and
+no other provider's model is substituted. Image editing runs on Replicate, or
+on an OpenAI-compatible endpoint that actually implements <code>/images/edits</code> —
+a missing route there is reported as a capability gap, not a credential
+problem.</li>
+<li>Figma MCP is no longer advertised or activated. Figma officially limits both
+its desktop and hosted MCP servers to clients in the Figma MCP Catalog, so
+shot2code filters registry results, disables migrated entries and uses the
+supported scoped-PAT REST workflow instead. Figma 429 responses now preserve
+retry, plan, limit-type and upgrade guidance.</li>
+</ul>
 <h3 id="fixed" tabindex="-1">Fixed</h3>
 <ul>
-<li><strong>A manually configured endpoint model is tested directly.</strong> Listing models at
-<code>/models</code> is optional: plenty of OpenAI-compatible endpoints, gateways and
-self-hosted servers do not expose that route, or refuse it to the credential
-you use for inference. 0.5.0 treated a failed listing as fatal and reported
-the whole check as a failure <strong>even when you had already named the model
-yourself</strong>, which made a perfectly working endpoint look broken. When a model
-is configured by hand, the check now goes straight to that model and reports
-what the endpoint actually said about it.</li>
-<li><strong>The failures that matter are still failures.</strong> A rejected or missing
-credential is still reported as a credential problem, and a discovery failure
-with <strong>no</strong> model configured is still reported with the action that fixes it —
-name the model, or the Azure deployment, by hand. Only the case where model
-listing is unavailable <em>and</em> you have supplied the model is downgraded from an
-error to what it is: a route the endpoint does not offer.</li>
+<li><strong>Image generation no longer reports success for a batch that produced
+nothing.</strong> Every per-prompt failure used to collapse into <code>None</code>, the tool
+still returned success, and the activity feed counted the empty results as
+generated images — three blank grey tiles under &quot;Generated 3 images&quot;. Each
+prompt now keeps its own classified outcome (429 rate limit, 402 billing,
+authentication, timeout, or a generic provider error), a batch that produced
+nothing returns a failure with the reason and what to do about it, a partial
+batch truthfully reads &quot;Generated 2 of 5 images&quot;, and no success-shaped
+result ever carries an empty URL. The same counting fix applies to
+<code>remove_backgrounds</code> and <code>edit_images</code>.</li>
+<li>The activity feed replaces the unexplained grey &quot;Failed&quot; tile with an
+accessible alert carrying the classified reason and the action to take, so a
+screen reader announces the failure instead of reading an empty box.</li>
+<li>Image-provider credentials are excluded from commit snapshots, project
+history and streamed tool arguments, mirroring the existing BYOK, MCP and
+web-search secret handling.</li>
+<li>A manually configured Copilot SDK BYOK model is tested directly when an
+OpenAI-compatible gateway does not expose a working optional <code>/models</code>
+endpoint. Credential failures still fail immediately, and a connection with
+no configured model still receives an actionable discovery error.</li>
+<li>Non-maximized preview resizing is coalesced through one ResizeObserver and
+one animation-frame write. Unchanged geometry and hidden zero-sized panes no
+longer rewrite iframe dimensions or repeatedly report scale, eliminating the
+resize flicker without rebuilding the preview document.</li>
+<li>The selected preview tab, HTML/Stack source, view mode and zoom now survive
+restart through validated preferences. The desktop also restores validated
+on-screen window bounds/maximized state, while the active project, version
+and file continue to restore from SQLite rather than being duplicated in
+local storage.</li>
+<li>Restoring a saved project no longer reopens on a cancelled option when the
+same generation has a completed option. shot2code selects and persists the
+completed sibling; when every option was cancelled or failed, the sidebar
+now offers Retry instead of incorrectly telling the user to select a
+completed option that does not exist.</li>
+<li>The packaged <code>file://</code> renderer now obtains the runtime backend HTTP and
+WebSocket addresses synchronously from the Electron main process instead of
+relying on a mutable environment variable visible to preload. History and
+API calls can no longer fall back to invalid <code>file:/api/...</code> URLs.</li>
+<li>The Electron preload no longer imports Node's <code>crypto</code> module. Electron 44
+runs the preload in a sandbox where that module is unavailable; the import
+prevented every desktop bridge from loading even though the backend itself
+had started successfully.</li>
+<li>The in-app feedback IPC handler is registered during application startup
+rather than inside the Stitch import callback, so Bug, Feature request and
+Feedback submissions work before any Stitch action has run.</li>
 </ul>
-<h3 id="notes" tabindex="-1">Notes</h3>
-<ul>
-<li>Nothing else changed. Every capability, limit and guarantee in the 0.5.0 notes
-below applies unchanged to this build.</li>
-<li><strong>0.5.0 was marked a pre-release and was not published as a stable build.</strong>
-Its tag exists, and its entry is kept below because that is where the 0.5 work
-is documented, but 0.5.1 is the build to install.</li>
-</ul>
+<h2 id="051--2026-09-27" tabindex="-1">[0.5.1] — 2026-09-27</h2>
+<p>The <code>v0.5.1</code> source tag was created during release validation, but no GitHub
+Release was published. Packaged smoke testing found a cancelled-option restore
+defect and two Electron preload/IPC defects. The draft release was deleted, the
+tag was not moved or reused, and the corrected build was rolled forward to
+0.5.2.</p>
 <h2 id="050--2026-09-27" tabindex="-1">[0.5.0] — 2026-09-27</h2>
 <p><a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.0" rel="noopener noreferrer">hub release</a> ·
 <a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.0" rel="noopener noreferrer">upstream notes</a></p>
-<p><strong>Marked a pre-release and superseded by 0.5.1</strong>, which fixes a <strong>Test model
-access</strong> check that failed an otherwise working endpoint. Download 0.5.1
-instead; everything described here ships in it.</p>
+<p><strong>Marked a pre-release and superseded by 0.5.2.</strong> The final stable build includes everything described here plus the corrections documented above.</p>
 <p>It signs you in to GitHub Copilot from the app itself with
 no command-line tool installed, opens the official <strong>MCP Registry</strong> and an
 <strong>Agent Skills</strong> library, makes <strong>Figma</strong> and <strong>Google Stitch</strong> first-class
@@ -120,7 +302,7 @@ the installation directory is replaced.</p>
 <p>Everything new here is <strong>additive and off until you switch it on</strong>. If you
 configure none of it, the app behaves as it did in 0.4.0 — the native OpenAI,
 Anthropic, Gemini and Copilot routes are untouched.</p>
-<h3 id="added" tabindex="-1">Added</h3>
+<h3 id="added-1" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Sign in to GitHub Copilot without a CLI.</strong> The desktop app now runs its own
 <strong>GitHub OAuth device flow</strong> against an application registered for shot2code.
@@ -211,7 +393,7 @@ no longer limited to a single endpoint model: every model you discover or
 type becomes its <strong>own selectable identity</strong>, so several models from the same
 endpoint can run in one generation and be compared.</li>
 </ul>
-<h3 id="changed" tabindex="-1">Changed</h3>
+<h3 id="changed-1" tabindex="-1">Changed</h3>
 <ul>
 <li><strong>Projects survive an upgrade.</strong> History lives in
 <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>, outside the installation
@@ -295,7 +477,7 @@ cannot become a second agent.</li>
 <li><strong>Stitch downloads are constrained.</strong> HTML and image fetches made on the
 SDK's behalf must be <code>https://</code> and are size-bounded.</li>
 </ul>
-<h3 id="notes-1" tabindex="-1">Notes</h3>
+<h3 id="notes" tabindex="-1">Notes</h3>
 <ul>
 <li>The GitHub device flow is a feature of the <strong>desktop app</strong>. Where it is not
 available, the existing delegated route is used instead and <strong>shot2code never
@@ -327,11 +509,11 @@ packaged build.</li>
 endpoint through the GitHub Copilot SDK — lets Copilot runs call MCP servers you
 configure, turns the preview into a side-by-side responsive <strong>Review</strong> with a
 local source audit, and puts a real Windows menu bar on the app.</p>
-<p>Superseded by 0.5.1, which adds CLI-free GitHub sign-in, the MCP Registry,
+<p>Superseded by 0.5.2, which includes CLI-free GitHub sign-in, the MCP Registry,
 Agent Skills, Figma and Google Stitch.</p>
 <p>Everything here is <strong>additive</strong>. If you do not configure any of it, the app
 behaves exactly as it did in 0.3.3.</p>
-<h3 id="added-1" tabindex="-1">Added</h3>
+<h3 id="added-2" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Copilot SDK BYOK: bring your own endpoint.</strong> A single, separate connection
 in <strong>Settings</strong> with its own credential — <strong>OpenAI-compatible</strong>, <strong>Azure
@@ -428,7 +610,7 @@ panel</strong> (<code>Ctrl+Alt+C</code>), Settings, zoom, the Help centre and th
 reference. Items that cannot work without a project are disabled rather than
 offered.</li>
 </ul>
-<h3 id="changed-1" tabindex="-1">Changed</h3>
+<h3 id="changed-2" tabindex="-1">Changed</h3>
 <ul>
 <li><strong>The model picker has a fifth group.</strong> <strong>Copilot SDK (BYOK)</strong> sits beside
 GitHub Copilot, OpenAI, Anthropic and Google Gemini. The four native groups
@@ -499,7 +681,7 @@ servers</strong> check the configuration only — no endpoint is called and no M
 server is started. <strong>Test model access</strong> and the per-provider checks are the
 opposite and say so: they contact the endpoint and may use a little quota.</li>
 </ul>
-<h3 id="notes-2" tabindex="-1">Notes</h3>
+<h3 id="notes-1" tabindex="-1">Notes</h3>
 <ul>
 <li>Configuring neither BYOK nor MCP changes nothing: an incomplete or switched-off
 BYOK connection, and a disabled or untrusted MCP server, are reported as
@@ -550,7 +732,7 @@ from then on, rather than reporting a healthy backend that cannot generate.
 Chromium is advertised only after it has actually launched, and it is closed
 when the backend shuts down.</li>
 </ul>
-<h3 id="added-2" tabindex="-1">Added</h3>
+<h3 id="added-3" tabindex="-1">Added</h3>
 <ul>
 <li><strong>A resizable Chat and History panel.</strong> On wide windows (≥ 1280px) drag the
 divider between the conversation/History panel and Preview or Code. It is a
@@ -580,7 +762,7 @@ instead of offering a dead button.</li>
 numpad add and subtract keys work with <code>Ctrl</code>, and <code>Ctrl+0</code> resets. Zoom moves
 in deterministic 10-point steps and is bounded between 50% and 300%.</li>
 </ul>
-<h3 id="changed-2" tabindex="-1">Changed</h3>
+<h3 id="changed-3" tabindex="-1">Changed</h3>
 <ul>
 <li>Below the desktop split breakpoint nothing moves: the <strong>Preview</strong>, <strong>Chat</strong> and
 <strong>History</strong> destinations behave exactly as before and no drag handle is shown.</li>
@@ -638,7 +820,7 @@ represent, including a strict cp1252 console, instead of letting box-drawing
 characters or prompt text raise <code>UnicodeEncodeError</code> mid-generation. This
 affects running from source; the packaged app logs to a file.</li>
 </ul>
-<h3 id="added-3" tabindex="-1">Added</h3>
+<h3 id="added-4" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Model selection for every code-generation provider.</strong> Settings and the
 compact picker beside the composer group the available models under <strong>GitHub
@@ -658,7 +840,7 @@ reported explicitly instead of silently dropped.</li>
 the installed process-tree shutdown, the survival of an unrelated process with
 the same executable name, the fail-closed path, and the updater lifecycle.</li>
 </ul>
-<h3 id="changed-3" tabindex="-1">Changed</h3>
+<h3 id="changed-4" tabindex="-1">Changed</h3>
 <ul>
 <li>Preview controls are grouped by purpose: a <strong>Fit / 100%</strong> segmented control and
 a labelled <strong>History <em>n</em>/<em>m</em></strong> control instead of loose buttons.</li>
@@ -697,7 +879,7 @@ asks you to quit and try again, instead of looking stuck.</li>
 <code>files</code> array, so it ships inside the app rather than being dropped from the
 build.</li>
 </ul>
-<h3 id="added-4" tabindex="-1">Added</h3>
+<h3 id="added-5" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Collapsible chat panel</strong> on wide layouts (≥ 1280px), so the preview or the
 code editor can take the full width. The choice is remembered; <strong>Ctrl+3</strong>
@@ -724,7 +906,7 @@ banner over the code.</li>
 <li><strong>Read-only</strong> and <strong>Generated</strong> badges beside the existing <strong>Entry</strong> and
 <strong>Preview</strong> badges.</li>
 </ul>
-<h3 id="changed-4" tabindex="-1">Changed</h3>
+<h3 id="changed-5" tabindex="-1">Changed</h3>
 <ul>
 <li>The icon rail's <strong>Editor</strong> entry is now <strong>Chat</strong>, with an explicit
 collapse/expand control, <code>aria-label</code>/<code>aria-pressed</code>/<code>aria-controls</code>/
@@ -746,7 +928,7 @@ variant.</li>
 and their version history are saved on your own machine, generated output is a
 real multi-file project you can edit, and previews run in a locked-down sandbox.</p>
 <p>Superseded by 0.3.1, which fixes the updater race it shipped with.</p>
-<h3 id="added-5" tabindex="-1">Added</h3>
+<h3 id="added-6" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Local project history (SQLite).</strong> Projects, versions, variants, prompts and
 messages are stored in <code>history.sqlite3</code> in a per-user data directory

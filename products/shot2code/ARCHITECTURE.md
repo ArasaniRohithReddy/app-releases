@@ -14,11 +14,19 @@ who want to know what runs where. The implementation lives in the
 
 In the packaged app the shell starts the frozen backend on a **free local port**,
 waits for its `/api/health` endpoint, and only then loads the built frontend from
-disk. The port is injected into the renderer through preload, because Vite bakes
-environment variables in at build time and cannot know it.
+disk. Runtime HTTP and WebSocket URLs cross from main to the sandboxed preload
+through synchronous IPC, because Vite bakes environment variables at build time
+and `file://` has no usable origin. The preload uses no unsupported Node module;
+if preload initialization fails, every desktop bridge would disappear at once.
 
 Generation streams over a **WebSocket** to that local backend; everything else is
 plain HTTP on the same loopback origin.
+
+The shell also owns native feedback submission and window state. **Help →
+Feedback** calls a startup-registered IPC handler; an authenticated GitHub CLI
+may create the issue directly, otherwise the renderer receives safe copy,
+download and browser fallbacks. Native bounds/maximized state is validated,
+written atomically and recovered onto a visible display.
 
 ## Startup
 
@@ -115,10 +123,12 @@ GitHub Copilot is the unusual one. The Copilot SDK is an *agent runtime* that ow
 its own planning loop, while shot2code's engine also owns a loop. The provider
 bridges the two: each Copilot tool invocation is parked and handed back to the
 shot2code engine, which resolves it once the tool has actually run. Copilot's own
-file and shell tools are excluded — only shot2code's tools are exposed, plus the
-MCP servers, Agent Skills and opt-in web search the user has turned on. The
-image tools are advertised only when an effective Replicate key exists, so a
-model is never offered a tool the build cannot run.
+file and shell tools are excluded — only shot2code's canonical tools are exposed,
+plus the MCP servers and Agent Skills the user has turned on. Canonical
+`search_web`, `search_free_images` and image tools are provider-neutral
+definitions wrapped by each runtime. Their availability is derived from the
+validated request configuration, so a model is never offered a tool the build
+cannot run.
 
 ### Copilot SDK BYOK
 
@@ -210,8 +220,10 @@ permission handler keeps it read-only unless write tools were explicitly allowed
 collapses several published versions of the same server to the latest active
 one. What it returns is a **draft**: installing an entry writes a server that is
 disabled and untrusted, so a registry response can never start a process or
-approve a tool. The featured Figma Desktop, Figma Remote and Google Stitch
-templates are ordinary drafts with their transport and endpoint pre-filled.
+approve a tool. Google Stitch is the featured template. Figma MCP endpoints are
+filtered from registry results and migrated entries are disabled because Figma
+restricts both desktop and hosted transports to clients listed in its MCP
+Catalog.
 
 `/api/skills` owns Agent Skills. An import from a local folder or a public
 GitHub folder URL is validated (front matter, normalised relative paths with
@@ -221,12 +233,15 @@ Contents API does not return file bodies in a directory listing, each file is
 fetched individually rather than imported empty. A skill's script files are
 stored as resources and are **never executable**: the agent is given only
 shot2code's own `create_file` and `edit_file` tools, and the SDK's built-in
-shell and host-filesystem tools are excluded. Opt-in web search adds search to
-Copilot and BYOK runtimes and nothing else.
+shell and host-filesystem tools are excluded.
 
-Because MCP, skills and web search are exposed through the SDK, only Copilot
-subscription variants and BYOK variants receive them; a native OpenAI, Anthropic
-or Gemini variant runs on that provider's own client and is never given them.
+MCP and skills are exposed through the SDK, so only Copilot subscription variants
+and BYOK variants receive them. Canonical web search is different: native
+OpenAI, Anthropic and Gemini use their existing tool serializers, while both
+Copilot runtimes receive the same definition as a custom tool. A session gets
+exactly one search route. Copilot built-in `web_search` is enabled only when the
+canonical tool is unusable; built-in `web_fetch` and URL permissions are
+rejected because their results cannot be bounded before reaching the model.
 Environment values and request headers are excluded from every safe-metadata
 projection, so they cannot reach a log line, a diagnostic or an API response.
 
@@ -253,6 +268,30 @@ officially supported Google product, so it is treated as experimental.
 Both credentials are **capture-only**: the settings projection that builds a
 generation payload strips them, so they cannot reach a model, project history or
 an export.
+
+### Web and image tools
+
+`backend/web_search/` owns one canonical `search_web` definition. Tavily and Exa
+adapters use fixed HTTPS endpoints, explicit timeouts and no redirects; domain
+filters are sent upstream and enforced again locally. Results are normalized to
+bounded snippets and prefixed with an untrusted-content warning. One
+`WebSearchRuntime` per engine tracks per-turn and per-generation budgets, and a
+failed outbound request still spends its allowance.
+
+`backend/image_generation/` separates catalogue, request validation,
+provider-specific calls, response normalization and per-prompt outcomes.
+Replicate remains default-compatible; Cloudflare Workers AI and
+OpenAI-compatible endpoints are additive and use independent credentials.
+Every provider response passes `normalize_image_result`, which keeps a safe
+public URL or persists validated bytes/base64/data URLs as local assets.
+
+`backend/free_images/` owns the separate `search_free_images` tool. Openverse
+results are locally restricted to CC0/Public Domain Mark and require source and
+licence URLs. The download boundary resolves and checks every DNS address,
+revalidates redirects, agrees MIME with magic bytes, limits transferred bytes
+and decoded pixels, and persists the image locally. The package intentionally
+does not import or call web search: a generic search result says nothing about
+reuse rights.
 
 ## Reviewing generated output
 
@@ -291,12 +330,12 @@ computed styles.
 
 ## Workspace layout state
 
-Pane widths — the chat/History divider and the multi-file explorer divider — are
-**view state**, held in the renderer's own local storage and clamped to the
-current viewport on every resize. They are stored apart from project data on
-purpose: the history database records commits, options, retries and prompts, and
-nothing about how wide a pane was. Dragging a divider therefore cannot create or
-mutate a version.
+Pane widths, active Preview/Code/Review surface, HTML/Stack preview source and
+preview zoom are **view state**, held in renderer local storage and clamped to
+the current viewport. Native window bounds and maximized state are stored
+atomically in the Electron user-data directory and recovered onto a visible
+display. They are separate from project data on purpose: resizing or changing
+views cannot create or mutate a version.
 
 The dividers are exposed as `role="separator"` controls with orientation,
 current/minimum/maximum values, value text and the pane they control, so they are
@@ -340,6 +379,11 @@ context, the run identity, generation state, and the persisted assistant
 responses — shown in expandable blocks rather than reduced to a ready-state
 summary. History remains the durable cross-branch timeline.
 
+Restore validates the selected variant. When it points at a cancelled or failed
+option but a completed sibling exists, the first completed sibling is selected
+and the repair is persisted. The renderer also restores the active project,
+version and file instead of opening a stale cancelled option.
+
 ## Preview
 
 The file tree is the authoritative project source. The preview is a **derived**,
@@ -351,9 +395,12 @@ editable and downloadable.
 
 At **100%** the fixed-width desktop canvas is centred inside a neutral framed
 viewport rather than anchored to the left edge; a window narrower than the canvas
-scrolls the frame horizontally instead of clipping the start of the page. Scale
-(**Fit / 100%**) and version (**History _n_/_m_**) are separate, labelled
-controls.
+scrolls the frame horizontally instead of clipping the start of the page.
+Desktop zoom runs from 25% to 200% with −/+/Fit/100% controls and scrollable pan;
+mobile stays fitted. A single animation-frame-coalesced `ResizeObserver` rejects
+hidden/zero-size geometry and unchanged measurements, preventing narrow-window
+flicker and iframe reload churn. Scale and version (**History _n_/_m_**) remain
+separate, labelled controls.
 
 Security properties of a preview document:
 

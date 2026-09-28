@@ -530,6 +530,46 @@ test('the shot2code guides describe the shipped build', () => {
     assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
 });
 
+test('the shot2code guides describe the v0.5.2 release', () => {
+  const guide = read('products/shot2code/USER-GUIDE.md');
+  const changelog = read('products/shot2code/CHANGELOG.md');
+  const security = read('products/shot2code/SECURITY.md');
+  const data = read('products/shot2code/DATA-HANDLING.md');
+  const copy = visibleText(shot2code);
+
+  assert.match(changelog, /^## \[0\.5\.2\] — 2026-09-28$/m);
+  assert.match(changelog, /v0\.5\.1[\s\S]{0,160}no GitHub\s+Release was published/i);
+
+  for (const provider of ['Replicate', 'Cloudflare Workers AI', 'OpenAI-compatible'])
+    assert.ok(guide.includes(provider), `USER-GUIDE.md does not name the image provider ${provider}`);
+  assert.match(guide, /Generated X of N/);
+  assert.match(guide, /Openverse/);
+  assert.match(guide, /CC0\/Public Domain Mark/);
+  assert.match(guide, /Tavily/);
+  assert.match(guide, /Exa/);
+  assert.match(guide, /built-in `web_fetch`[\s\S]{0,80}(?:disabled|blocked)/i);
+  assert.match(guide, /Figma MCP Catalog/);
+  assert.match(guide, /cancelled or failed option[\s\S]{0,100}completed sibling/i);
+  assert.match(guide, /25% to 200%/);
+  assert.match(guide, /\*\*Help → Send feedback\*\*/);
+
+  assert.match(security, /Canonical web search is opt-in, bounded and provider-neutral/);
+  assert.match(security, /Free image search is separate and hostile-input bounded/);
+  assert.match(data, /Tavily or Exa/);
+  assert.match(data, /Openverse and the selected image host/);
+  assert.match(data, /logs, prompts, screenshots, history, project files and credentials are never attached automatically/i);
+
+  assert.match(copy, /OpenAI-compatible image endpoint/);
+  assert.match(copy, /Openverse/);
+  assert.match(copy, /whole-page web_fetch remains blocked/);
+  assert.match(copy, /Coalesced resize handling prevents narrow-window preview flicker/);
+
+  const currentDocs = ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'DATA-HANDLING.md',
+    'SECURITY.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md']
+    .map(name => read(`products/shot2code/${name}`)).join('\n');
+  assert.doesNotMatch(currentDocs, /(?:featured|use)[^.\n]*Figma (?:Desktop|Remote) MCP|Replicate[^.\n]*source runs only/i);
+});
+
 test('the shot2code changelog documents every published release it claims to cover', () => {
   // Versions come from the generated snapshot rather than being written here, so this asserts the
   // release contract in RELEASING.md without pinning a build that the next release supersedes.

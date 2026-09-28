@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/FAQ.md (normalized SHA-256 5feefb602d3bedfb64a228168eb95e8707d09024a8074282a2a85f1da3b8fb54). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/FAQ.md (normalized SHA-256 5e4d6a221db15021a3f804da474859cdd829727e25c2feb034b4e6a30b1a1d79). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -80,7 +80,8 @@ for something. Projects and their history are stored locally. The Review audit
 runs locally. A few actions deliberately reach out and say so first: a Figma
 REST import contacts <code>api.figma.com</code>, the bundled Stitch SDK contacts Stitch,
 an MCP server you enabled and trusted receives the tool calls a model makes,
-Copilot web search sends your search queries when you switch it on, and an AI
+Tavily, Exa or Copilot web search receives your search queries when you switch it
+on, Openverse receives free-image searches, and an AI
 review is a normal request to your provider. CodePen sharing is the one
 deliberate export of your code, and it always asks first. Full detail:
 <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
@@ -225,8 +226,20 @@ ScreenshotOne key from the URL tab with one minimal request before relying on it
 <td>A Gemini key</td>
 </tr>
 <tr>
-<td>Image generation, editing, background removal</td>
-<td><code>REPLICATE_API_KEY</code> in <code>backend/.env</code> — no Settings field, so source runs only. The tools are not offered at all without an effective key</td>
+<td>Image generation</td>
+<td>Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint configured in Settings</td>
+</tr>
+<tr>
+<td>Image editing</td>
+<td>Replicate, or an OpenAI-compatible endpoint that implements <code>/images/edits</code></td>
+</tr>
+<tr>
+<td>Background removal</td>
+<td>Replicate only</td>
+</tr>
+<tr>
+<td>Free licensed image search</td>
+<td>Enable Openverse search; no API key is required, and only CC0/Public Domain Mark results are returned</td>
 </tr>
 <tr>
 <td>Screenshot preview (the agent checking its own output)</td>
@@ -245,8 +258,12 @@ ScreenshotOne key from the URL tab with one minimal request before relying on it
 <td>A server that is both enabled and trusted, and an option running on Copilot or BYOK</td>
 </tr>
 <tr>
-<td>An Agent Skill, or Copilot web search</td>
-<td>An enabled skill (or the web-search switch) and an option running on Copilot or BYOK</td>
+<td>An Agent Skill</td>
+<td>An enabled skill and an option running on Copilot or BYOK</td>
+</tr>
+<tr>
+<td>Provider-neutral web search</td>
+<td>Enable Tavily or Exa in Settings; it works with native providers and both Copilot runtimes</td>
 </tr>
 <tr>
 <td>Figma REST import</td>
@@ -258,6 +275,27 @@ ScreenshotOne key from the URL tab with one minimal request before relying on it
 </tr>
 </tbody>
 </table></div>
+<p><strong>Why do image tiles say failed even though the agent requested several?</strong>
+v0.5.2 keeps one result per prompt. A rejected credential, exhausted balance,
+quota response, timeout, or provider error renders as a failed tile with the
+actual reason. Partial batches say <strong>Generated X of N</strong>; an all-failed batch is
+not reported as success.</p>
+<p><strong>Can shot2code find an image when I do not have a generation key?</strong>
+Yes, if you explicitly enable <strong>Free image search</strong>. It is a separate
+<code>search_free_images</code> tool, not a hidden fallback for generation. It searches
+Openverse for CC0/Public Domain Mark images, verifies required metadata, safely
+downloads the bytes and stores a local asset. Always check the linked source
+page because Openverse aggregates third-party metadata.</p>
+<p><strong>Can every model use web search?</strong>
+The canonical <code>search_web</code> tool works with native OpenAI, Anthropic and Gemini,
+GitHub Copilot, and Copilot SDK BYOK. Copilot's built-in search is used only
+when the canonical tool is not configured. Whole-page <code>web_fetch</code> is disabled
+because its output cannot currently be bounded before reaching the model.</p>
+<p><strong>Why is Figma MCP not listed?</strong>
+Figma restricts its desktop and hosted MCP servers to clients in Figma's MCP
+Catalog. shot2code uses the supported Figma REST/PAT import instead and filters
+or disables Figma MCP entries rather than offering a connection that will be
+rejected.</p>
 <h2 id="copilot-sdk-byok" tabindex="-1">Copilot SDK BYOK</h2>
 <p><strong>Do I need a Copilot subscription to use BYOK?</strong>
 No. It is the Copilot <em>SDK</em> — the runtime that talks to your endpoint — not your
@@ -388,9 +426,10 @@ It is added as a <strong>disabled, untrusted draft</strong> with its URL and hea
 for review. A registry listing is not an endorsement, and nothing starts until
 you turn on the same two switches as for any other server.</p>
 <p><strong>Are Figma and Stitch pre-configured?</strong>
-They are offered as featured drafts — <strong>Figma Desktop MCP</strong>, <strong>Figma Remote
-MCP</strong> and <strong>Google Stitch MCP</strong> — with the right transport and endpoint filled
-in. They arrive disabled and untrusted like everything else.</p>
+<strong>Google Stitch MCP</strong> is offered as a featured draft with the right transport
+and endpoint filled in; it arrives disabled and untrusted. Figma MCP is not
+offered because Figma restricts both transports to clients in its MCP Catalog.
+Use Figma REST/PAT instead.</p>
 <p><strong>I added a server and nothing happened.</strong>
 A server needs <strong>both</strong> switches: <strong>Enabled</strong> and <strong>Trusted</strong>. Until it is
 trusted, shot2code will not start it or approve its tools, and says so as a
@@ -429,10 +468,9 @@ device</strong>, and it adds search and nothing else — shell access and unrest
 computer files stay disabled.</p>
 <h2 id="figma-and-google-stitch" tabindex="-1">Figma and Google Stitch</h2>
 <p><strong>How do I start from a Figma design?</strong>
-Four ways: exported screenshots, an exported <strong>SVG</strong> (rasterised locally before
-it is sent), the <strong>Figma Desktop MCP</strong> server on <code>http://127.0.0.1:3845/mcp</code>, or
-a <strong>REST import</strong> using a Figma URL and your own personal access token with
-<code>file_content:read</code>.</p>
+Three ways: exported screenshots, an exported <strong>SVG</strong> (rasterised locally before
+it is sent), or a <strong>REST import</strong> using a Figma URL and your own personal access
+token with <code>file_content:read</code>.</p>
 <p><strong>Why does the Figma remote MCP server not connect?</strong>
 Figma currently admits only clients listed in its own MCP catalogue. shot2code
 does not impersonate another editor or reuse its sign-in to get around that, so

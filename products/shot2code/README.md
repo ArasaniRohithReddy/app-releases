@@ -40,7 +40,7 @@ The `gh auth login` / `copilot` ladder and a pasted token still work.
 | Task | Where | Result |
 | --- | --- | --- |
 | Generate from a reference | Upload a screenshot, paste a URL, describe a screen, or record one | A working page in the stack you chose, usually as several parallel options |
-| Start from a Figma design | **Figma** — exported screenshots or SVG, the Desktop MCP server, or a REST import with your own access token | Frames rendered by Figma and brought in as local images |
+| Start from a Figma design | **Figma** — exported screenshots or SVG, or a REST import with your own access token | Frames rendered by Figma and brought in as local images; Figma MCP is not offered because Figma restricts it to catalog-listed clients |
 | Start from a Google Stitch screen | **Stitch** — the official MCP server, or the bundled experimental SDK with your Stitch API key | A generated screen, or an imported Stitch project |
 | Say what you want up front | The instruction box on **Upload** and **Import** | The first generation follows your instruction instead of guessing |
 | Choose which models try it | **Settings → Models**, or the picker beside the composer | One option per selected model, across Copilot, OpenAI, Anthropic, Gemini and your own BYOK endpoint |
@@ -49,6 +49,8 @@ The `gh auth login` / `copilot` ladder and a pasted token still work.
 | Check a provider before generating | **Settings → Connection checks**, or **Test model access** | One tiny request per provider, answered as Ready, Out of credit, Key rejected, Rate limited, Access denied, Model unavailable, Configuration problem or unreachable |
 | Give Copilot runs extra tools | **Settings → MCP servers**, including the official **MCP Registry** | Tools from MCP servers you enable *and* trust, offered to Copilot and BYOK options |
 | Add reusable instructions | **Settings → Agent Skills** — a local folder or a public GitHub folder | Skills you can enable per run; imported disabled, and their scripts can never execute |
+| Research current APIs | **Settings → Web search** | Bounded Tavily/Exa search across native providers and both Copilot runtimes, with snippets labelled as untrusted |
+| Create or find images | **Settings → Image generation / Free image search** | Replicate, Cloudflare or OpenAI-compatible generation, plus opt-in Openverse CC0/PDM search |
 | Refine it | Chat panel, or select an element in the preview | A new version that keeps the previous one — with the whole conversation, answers included, still readable |
 | Edit the source | Code tab | Multi-file tree, editor, whitespace-only **Format**, file badges — plus a read-only **Export project** view of what the ZIP will hold |
 | See it as a real project | **Preview → Stack preview** | The controlled Vite HTML/React/Preact files rendered in the same sandbox, with no build scripts run |
@@ -59,6 +61,7 @@ The `gh auth login` / `copilot` ladder and a pasted token still work.
 | Reuse an existing project | **Import → Folder, ZIP or source files** | Design context, or a normalized editable project |
 | Drive it from the menu bar | **File · Edit · View · Window · Help** | The same commands as the keyboard, with project-only items disabled until they apply |
 | Find a guide, or the log to attach | **Help** in the rail, or **Ctrl+/** | Get started, Guides, Support, shortcuts — and **Open diagnostic logs** in the desktop app |
+| Send feedback | **Help → Feedback** | Direct submission through an authenticated GitHub CLI, or copy/download/browser fallbacks that attach no private app data |
 | Take it away | **Download** | A single self-contained HTML file, or a Vite project folder |
 
 ## Output stacks
@@ -80,7 +83,9 @@ download builds rather than being a plausible-looking scaffold. See
 | Anthropic | API key in **Settings** | |
 | OpenAI | API key in **Settings** | |
 | **Copilot SDK BYOK** | Your own endpoint and credential in **Settings** | Optional and additive. OpenAI-compatible (any `https://` endpoint, or `http://` on `localhost`), Azure OpenAI or Anthropic. **No Copilot subscription required.** No Gemini equivalent |
-| Replicate | `REPLICATE_API_KEY` in `backend/.env` | Image generation, editing and background removal; source runs only |
+| Replicate | Key in **Settings** or `REPLICATE_API_KEY` | Default-compatible image generation; editing and background removal |
+| Cloudflare Workers AI | Account id and token in **Settings** | Additive image generation with its own credential |
+| OpenAI-compatible images | Endpoint and dedicated key in **Settings** | Additive generation and capability-checked editing |
 
 All of these support **model selection**: tick as many models as you like in
 **Settings → Models** or in the picker beside the composer, and each run
@@ -122,20 +127,26 @@ explicitly **trusted** before shot2code will start it, it is **read-only** until
 you also allow write tools, a local server is spawned as an argument vector
 rather than through a shell, and a remote one must use `https://` unless it is on
 `localhost`. **A registry install is a disabled, untrusted draft** — nothing the
-registry returns can start on its own. **Figma Desktop MCP**, **Figma Remote
-MCP** and **Google Stitch MCP** are offered as featured drafts under the same
-rules.
+registry returns can start on its own. **Google Stitch MCP** is offered as a featured draft under the same rules.
+Figma MCP endpoints are filtered from the registry and migrated entries are
+disabled because Figma restricts both desktop and hosted MCP transports to
+clients listed in its MCP Catalog.
 
 **Agent Skills** are reusable instruction folders imported from a local folder or
 a public GitHub folder URL. They are validated, recorded with their origin, and
 **disabled by default**. A skill may contain scripts and those files are stored,
 but **they can never execute**: shot2code exposes no shell tool and no
-unrestricted host-filesystem tool. **Copilot web research** is a separate opt-in
-switch that adds public web search and nothing else.
+unrestricted host-filesystem tool.
 
-MCP tools, skills and web search are offered to **GitHub Copilot** and **Copilot
-SDK BYOK** options only — an option running on your own OpenAI, Anthropic or
-Gemini key never sees them. See [USER-GUIDE.md](USER-GUIDE.md#mcp-servers).
+MCP tools and skills are offered to **GitHub Copilot** and **Copilot SDK BYOK**
+options only. Web research is different: the opt-in canonical `search_web` tool
+uses Tavily or Exa and reaches native OpenAI, Anthropic and Gemini as well as
+both Copilot runtimes. It limits queries, domains, results, snippets, calls per
+turn and calls per generation, and labels every result as untrusted content.
+Copilot's built-in search is offered only when canonical search is off.
+Built-in `web_fetch` is blocked because the SDK cannot let shot2code inspect or
+bound a whole-page result before the model receives it. See
+[USER-GUIDE.md](USER-GUIDE.md#mcp-servers).
 
 ## Design sources: Figma and Google Stitch
 
@@ -144,16 +155,39 @@ from a design tool:
 
 | Source | How |
 | --- | --- |
-| **Figma** | Exported screenshots; exported **SVG** (rasterised locally); the **Desktop MCP** server on `http://127.0.0.1:3845/mcp`; or a **REST import** that takes a Figma URL and your own personal access token with `file_content:read`, and brings the rendered frames in as local images |
+| **Figma** | Exported screenshots; exported **SVG** (rasterised locally); or a **REST import** that takes a Figma URL and your own personal access token with `file_content:read`, and brings the rendered frames in as local images |
 | **Google Stitch** | The official **Stitch MCP** endpoint, or the bundled **experimental** `@google/stitch-sdk` in the desktop app — validate a key, generate a screen from a prompt, or import an existing project or screen |
 
 Both credentials are **capture-only**. The Figma token is sent to `api.figma.com`
 and nowhere else, the Stitch key reaches only the bundled SDK, and neither is
 included in a generation request, in project history or in an export. Figma's
-remote MCP server currently admits only clients in Figma's own catalogue, and
-shot2code does not impersonate another editor — the REST import is the route that
-works today for most accounts. `@google/stitch-sdk` is published by Google Labs
+desktop and hosted MCP servers admit only clients in Figma's own catalogue, and
+shot2code does not impersonate another editor — REST/PAT is the supported
+programmatic route. `@google/stitch-sdk` is published by Google Labs
 and is explicitly not an officially supported Google product.
+
+## Image generation and free images
+
+Image generation is additive and provider-specific:
+
+- **Replicate** is the default-compatible provider and the only one used for
+  background removal. Curated models declare their own input shape; a custom
+  model is accepted only after its published schema proves a string prompt and
+  image output with no extra required inputs.
+- **Cloudflare Workers AI** uses its own account id/token.
+- **OpenAI-compatible images** use a dedicated endpoint/key and expose editing
+  only when `/images/edits` actually exists.
+
+Every prompt keeps its own success or classified failure. Partial batches report
+**Generated X of N**; an all-failed batch fails instead of returning empty image
+URLs. HTTP URLs, base64, data URLs and bytes all pass the same validation and
+local-asset persistence boundary.
+
+**Free image search** is a separate, opt-in Openverse tool. It does not silently
+replace generation. Only CC0/Public Domain Mark records with a source and
+licence URL survive local checks, and selected images are downloaded through
+DNS/private-address, redirect, MIME, byte and decoded-pixel limits before being
+stored locally. Openverse aggregates third-party metadata, so verify the source.
 
 ## Reviewing what was generated
 

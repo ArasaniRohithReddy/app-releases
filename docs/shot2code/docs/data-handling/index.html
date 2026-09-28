@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/DATA-HANDLING.md (normalized SHA-256 51f578d5747b178f9537def08a3f62b99939824790c83f7d42f02678906193f2). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/DATA-HANDLING.md (normalized SHA-256 6aba85d6339247b4ef3b80ccf1e5b0ce94a7a8a0a55a88ee5930b8253364f10b). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -70,8 +70,9 @@ packaged app. The behaviour described here can be checked against the source at
 <p><strong>Summary:</strong> screenshots, generated code, project history and API keys stay on
 your machine. The only outbound traffic is the request to the model provider you
 configured, the update check, and the integrations you switch on and use — an
-MCP server you trusted, a Figma or Google Stitch import, Copilot web search, or
-anything you explicitly share.</p>
+MCP server you trusted, a Figma or Google Stitch import, web or free-image
+search, an image provider, feedback you explicitly submit, or anything you
+explicitly share.</p>
 <h2 id="1-what-leaves-the-device" tabindex="-1">1. What leaves the device</h2>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code — data handling &amp; privacy table 1"><table>
 <thead>
@@ -103,9 +104,19 @@ anything you explicitly share.</p>
 <td>The tool call the model made, plus the environment values or request headers you configured for that server</td>
 </tr>
 <tr>
+<td><strong>Tavily or Exa</strong></td>
+<td>You enable canonical <strong>Web search</strong> and a model searches</td>
+<td>The bounded query and optional domain filter. Off by default. No raw page fetch is requested</td>
+</tr>
+<tr>
 <td><strong>The public web, through Copilot</strong></td>
-<td>You switch on <strong>Allow web search</strong> <em>and</em> a Copilot or BYOK option searches</td>
-<td>The search queries the model issues. Off by default</td>
+<td>Canonical search is off, Copilot built-in search is enabled and a Copilot/BYOK option searches</td>
+<td>The search query the model issues. Built-in <code>web_fetch</code> remains blocked</td>
+</tr>
+<tr>
+<td><strong>Openverse and the selected image host</strong></td>
+<td>You enable <strong>Free image search</strong>, the model searches, and an image is selected</td>
+<td>The search query, then a bounded image download. No credential. Only locally revalidated CC0/Public Domain Mark results are accepted</td>
 </tr>
 <tr>
 <td><strong><code>registry.modelcontextprotocol.io</code></strong></td>
@@ -116,11 +127,6 @@ anything you explicitly share.</p>
 <td><strong><code>api.figma.com</code></strong></td>
 <td>You run a Figma <strong>REST import</strong></td>
 <td>The file and node ids from the URL you pasted, authenticated with <strong>only</strong> your Figma personal access token</td>
-</tr>
-<tr>
-<td><strong>Figma, through MCP</strong></td>
-<td>A trusted Figma MCP server is running and a Copilot or BYOK option calls one of its tools</td>
-<td>The tool call the model made. The Desktop server is on <code>localhost</code>; the remote one is <code>https://mcp.figma.com/mcp</code></td>
 </tr>
 <tr>
 <td><strong>Google Stitch</strong></td>
@@ -143,9 +149,19 @@ anything you explicitly share.</p>
 <td>The selected image or recording</td>
 </tr>
 <tr>
-<td>Replicate (<em>source only</em>)</td>
+<td>Replicate</td>
 <td>Image generation, editing or background removal</td>
-<td>The prompt and the image you act on</td>
+<td>The prompt and the source image, if any, authenticated with only the Replicate key</td>
+</tr>
+<tr>
+<td>Cloudflare Workers AI</td>
+<td>Image generation with Cloudflare selected</td>
+<td>The prompt, authenticated with only the Cloudflare account id/token</td>
+</tr>
+<tr>
+<td>Your OpenAI-compatible image endpoint</td>
+<td>Image generation or supported editing with that provider selected</td>
+<td>The prompt and source image, if any, sent to the configured endpoint with its dedicated credential</td>
 </tr>
 <tr>
 <td><strong>ScreenshotOne</strong></td>
@@ -176,6 +192,11 @@ anything you explicitly share.</p>
 <td>CodePen</td>
 <td>You confirm a share</td>
 <td>The code being shared</td>
+</tr>
+<tr>
+<td>GitHub Issues</td>
+<td>You explicitly submit <strong>Help → Feedback</strong> through an already authenticated <code>gh</code> CLI, or open the browser fallback</td>
+<td>The category, title and body you reviewed. Logs, prompts, screenshots, history, project files and credentials are never attached automatically</td>
 </tr>
 </tbody>
 </table></div>
@@ -235,7 +256,7 @@ same sandbox and runs no package script or project configuration.</p>
 </tr>
 <tr>
 <td><code>%APPDATA%\shot2code-desktop\</code></td>
-<td>Desktop shell state, the <strong>encrypted GitHub token</strong> from the in-app sign-in, and <code>shot2code-backend.log</code></td>
+<td>Desktop shell state, <code>window-state.json</code>, the <strong>encrypted GitHub token</strong> from the in-app sign-in, and <code>shot2code-backend.log</code></td>
 <td><strong>Disconnect GitHub from shot2code</strong> for the token; deleting the folder for the rest</td>
 </tr>
 <tr>
@@ -245,12 +266,12 @@ same sandbox and runs no package script or project configuration.</p>
 </tr>
 <tr>
 <td>The app's own local storage</td>
-<td>Provider API keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), the Figma access token, the Stitch API key, the ScreenshotOne key, selected models, Review widths, pane widths and UI preferences</td>
+<td>Provider and image-provider keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), web-search settings, the Figma access token, the Stitch API key, the ScreenshotOne key, selected models, Review widths, pane widths, preview source/zoom and UI preferences</td>
 <td>Clearing them in <strong>Settings</strong></td>
 </tr>
 <tr>
 <td><code>backend/.env</code> (<em>source only</em>)</td>
-<td><code>REPLICATE_API_KEY</code>, optional <code>OPENAI_BASE_URL</code></td>
+<td>Optional provider, image-provider and search credentials documented in the source repository</td>
 <td>Editing the file</td>
 </tr>
 </tbody>
@@ -270,10 +291,11 @@ Inspector.</p>
 <p><strong>Project data lives outside the installation directory</strong>, and the installer is
 configured not to delete application data, so upgrading or replacing the
 installed program keeps every project, version and prompt.</p>
-<p>Layout preferences — the chat and file-explorer pane widths — and your Review
-viewport widths are view state in the app's own local storage, never in the
-history database. Resizing a pane cannot create or alter a project version, an
-option or a retry.</p>
+<p>Layout preferences — pane widths, Review viewport widths, preview tab/source and
+zoom — are view state in the app's own local storage, never in the history
+database. Native window bounds/maximized state is stored separately in
+<code>window-state.json</code>. Resizing a pane or window cannot create or alter a project
+version, option or retry.</p>
 <p>The database location can be redirected with <code>SHOT2CODE_DATA_DIR</code> or
 <code>SHOT2CODE_HISTORY_DB_PATH</code>.</p>
 <h2 id="3-api-keys-and-credentials" tabindex="-1">3. API keys and credentials</h2>
@@ -307,8 +329,9 @@ providers are usable and, for Copilot, to read the account's model list. It
 returns provider availability and model capabilities, never a key or token.
 <code>/api/integrations/validate</code> answers with presence flags, a host name and
 diagnostics — never a credential.</li>
-<li><code>REPLICATE_API_KEY</code> has no Settings field by design. It must be set in
-<code>backend/.env</code>, which means it is only usable when running from source.</li>
+<li>Image-provider and web-search credentials are read from current Settings at
+send time. Closed serialization allowlists prevent any key, bearer token, MCP
+environment value or request header from reaching a project snapshot.</li>
 <li>GitHub Copilot credentials are resolved at request time: a token in Settings,
 then <code>COPILOT_GITHUB_TOKEN</code> / <code>GH_TOKEN</code> / <code>GITHUB_TOKEN</code>, then a stored
 <code>copilot</code> login, then a stored <code>gh auth login</code>. Tokens are not persisted by the

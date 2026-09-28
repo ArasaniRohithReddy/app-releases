@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 2ef93991e1e841744a4302a015356f19ba63d6932a309ce61f6e1fa71775a1c1). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 a6a4ae52f050ca1c3543eca69617b245dfb0d1638ca5b0df416a84ea7a13c0d3). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -66,8 +66,9 @@
         <div class="doc-content"><p>shot2code runs on your own machine. Screenshots, generated code, project history
 and API keys stay local; the only outbound traffic is to the model provider you
 configure, plus the update check and the integrations you switch on and use —
-an MCP server you trusted, a Figma or Google Stitch import, Copilot web search,
-or anything you explicitly share. The full inventory is in
+an MCP server you trusted, a Figma or Google Stitch import, bounded web or
+free-image search, an image provider, feedback you submit, or anything you
+explicitly share. The full inventory is in
 <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
 <p>This page covers the shot2code-specific parts. The hub-wide policy — how reports
 are handled and what to expect — is in the repository
@@ -111,8 +112,8 @@ code can also be filed in the
 <li>the shot2code version (<strong>Settings</strong>, or the installer filename);</li>
 <li>how you run it: <code>.exe</code> installer, MSI, portable ZIP, or from source;</li>
 <li>which model provider was configured — and whether a Copilot SDK BYOK
-connection, an MCP server, an Agent Skill, Copilot web search, a Figma import
-or the Google Stitch integration was in play;</li>
+connection, an MCP server, an Agent Skill, web/free-image search, an image
+provider, a Figma import or the Google Stitch integration was in play;</li>
 <li>reproduction steps, and a proof of concept if you have one;</li>
 <li>relevant lines from <code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code>,
 <strong>with any API keys or tokens redacted</strong>.</li>
@@ -203,8 +204,10 @@ diagnostics — it contacts no endpoint, starts no MCP server and returns no
 credential. <code>/api/providers/validate</code> is the deliberate exception: it makes
 one minimal request to the provider you asked about, and the app says so
 before you use it.</li>
-<li><code>REPLICATE_API_KEY</code> has no Settings field; it must be set in <code>backend/.env</code> and
-only applies when running from source.</li>
+<li>Image-provider and web-search credentials are read from current Settings only
+when their selected feature is used. Closed serialization allowlists keep
+every key, bearer token, MCP environment value and request header out of
+project history and snapshots.</li>
 <li>GitHub Copilot credentials are resolved at request time and are not persisted or
 logged by the app; the model cache is keyed by a SHA-256 fingerprint of the
 credential.</li>
@@ -249,7 +252,9 @@ Registry</strong> browser lists only remote <code>https://</code> entries from t
 registry, and installing one creates a <strong>disabled, untrusted</strong> draft with its
 URL and headers laid out for review. A registry listing is not an endorsement;
 the two switches, the read-only default and the separate write gate all still
-apply. The featured Figma and Google Stitch entries are no different.</li>
+apply. Google Stitch is a featured draft. Figma MCP endpoints are filtered and
+migrated entries are disabled because Figma restricts both transports to
+clients in its MCP Catalog.</li>
 <li>A disabled, untrusted or malformed server is reported as a notice and skipped.
 It does not block a direct generation.</li>
 </ul>
@@ -266,14 +271,24 @@ that could run them.</li>
 <li><strong>Copilot's own file and shell tools are excluded.</strong> The agent is given
 shot2code's own <code>create_file</code> and <code>edit_file</code> tools, which act on the project
 held in memory, and nothing else from the SDK's built-in surface.</li>
-<li><strong>Web search is opt-in and adds only search.</strong> With <strong>Allow web search</strong> on,
-Copilot and BYOK options may search the public web; your search queries leave
-the device, which the setting states. Shell access and unrestricted computer
-files remain disabled.</li>
+<li><strong>Canonical web search is opt-in, bounded and provider-neutral.</strong> Tavily/Exa
+queries may be issued by native OpenAI, Anthropic and Gemini options as well
+as Copilot and BYOK. Fixed endpoints, redirect refusal, local domain
+re-filtering, result/snippet bounds, per-turn/per-generation budgets and an
+untrusted-content warning limit what reaches the model.</li>
+<li><strong>Copilot built-in search never duplicates canonical search.</strong> It is enabled
+only when the canonical tool is unusable. Built-in <code>web_fetch</code> and all URL
+permission requests are denied because the current SDK cannot let shot2code
+inspect, truncate or budget a whole-page result before the model receives it.</li>
+<li><strong>Free image search is separate and hostile-input bounded.</strong> Openverse results
+must be CC0/Public Domain Mark with source and licence URLs; every resolved
+address, redirect, MIME type, byte count and decoded pixel count is checked
+before bytes are persisted locally. Generated markup never hotlinks them.</li>
 <li><strong>The AI review runs with no tools at all</strong> — no MCP, no skills, no web
 search, no shell, no file writes — so a second opinion cannot become a second
 agent. It is a real provider request against the model that option ran on.</li>
-<li>Skills and web search follow the MCP rule: <strong>Copilot and BYOK runtimes only</strong>.</li>
+<li>Skills follow the MCP rule: <strong>Copilot and BYOK runtimes only</strong>. Canonical web
+search deliberately reaches native provider runtimes too.</li>
 </ul>
 <h2 id="update-integrity" tabindex="-1">Update integrity</h2>
 <ul>

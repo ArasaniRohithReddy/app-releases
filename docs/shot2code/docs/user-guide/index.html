@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 32c8cefd5471d34b2c116b65c020fb47ff7ea324bb20c1172303b832d4fb0aa3). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 14ac1441834f2d4b4f13d7e541240f561d17c9b4ca120f392233db622fabad0d). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -191,8 +191,20 @@ Every key field is masked as you type.</p>
 <td>A Gemini key</td>
 </tr>
 <tr>
-<td>Image generation, image editing, background removal</td>
-<td><code>REPLICATE_API_KEY</code> in <code>backend/.env</code> — there is no Settings field, so this is only available when running from source</td>
+<td>Image generation</td>
+<td>Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint configured in Settings</td>
+</tr>
+<tr>
+<td>Image editing</td>
+<td>Replicate, or an OpenAI-compatible endpoint that implements <code>/images/edits</code></td>
+</tr>
+<tr>
+<td>Background removal</td>
+<td>Replicate only</td>
+</tr>
+<tr>
+<td>Free licensed image search</td>
+<td>Nothing except opting in; queries go to Openverse and results are restricted to CC0/Public Domain Mark</td>
 </tr>
 </tbody>
 </table></div>
@@ -533,7 +545,7 @@ service, an internal documentation index. Up to <strong>eight</strong> can be co
 </table></div>
 <p>The picker states this for the current selection rather than leaving you to
 infer it from an empty activity list. <a href="#agent-skills-and-web-search">Agent Skills</a>
-and Copilot web search follow exactly the same rule.</p>
+follow exactly the same rule; canonical Tavily/Exa web search is provider-neutral.</p>
 <h3 id="installing-from-the-official-mcp-registry" tabindex="-1">Installing from the official MCP Registry</h3>
 <p><strong>MCP Registry</strong> searches
 <a href="https://registry.modelcontextprotocol.io" rel="noopener noreferrer"><code>registry.modelcontextprotocol.io</code></a>
@@ -544,7 +556,7 @@ server collapse to the latest active one.</p>
 filled in for you to review; nothing starts until you turn on the same two
 switches as any other server. A registry listing is not an endorsement, and
 shot2code treats it as untrusted input.</p>
-<p>Three integrations are offered as featured drafts with the right transport and
+<p>Google Stitch is offered as a featured draft with the right transport and
 endpoint already set:</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 8"><table>
 <thead>
@@ -555,23 +567,14 @@ endpoint already set:</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>Figma Desktop MCP</strong></td>
-<td><code>http://127.0.0.1:3845/mcp</code> — your own running Figma desktop app</td>
-</tr>
-<tr>
-<td><strong>Figma Remote MCP</strong></td>
-<td><code>https://mcp.figma.com/mcp</code></td>
-</tr>
-<tr>
 <td><strong>Google Stitch MCP</strong></td>
 <td><code>https://stitch.googleapis.com/mcp</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>Figma currently admits only clients listed in its own MCP catalogue to the remote
-server, and shot2code does not impersonate another editor to get in — see
-<a href="#figma-and-google-stitch">Figma and Google Stitch</a> for the route that works
-today.</p>
+<p>Figma restricts both its desktop and hosted MCP transports to clients listed in
+the Figma MCP Catalog. shot2code therefore filters those endpoints from registry
+results, disables migrated entries, and uses the documented REST/PAT workflow.</p>
 <h3 id="adding-a-server" tabindex="-1">Adding a server</h3>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 9"><table>
 <thead>
@@ -701,16 +704,21 @@ the same reason MCP tools are limited to those runtimes.</p>
 <strong>cannot execute them</strong>, because it exposes no shell tool and no unrestricted
 host-filesystem tool to any model. A skill is instructions and reference
 material, not a program shot2code will run on your machine.</p>
-<h3 id="copilot-web-research" tabindex="-1">Copilot web research</h3>
-<p><strong>Settings → Copilot web research → Allow web search</strong> lets GitHub Copilot and
-Copilot SDK BYOK options search the public web when a prompt needs current
-documentation or examples. It is <strong>off by default</strong>, and the setting states the
-trade-off plainly: <strong>search queries leave this device</strong>. It adds search and
-nothing else — shell access and unrestricted computer files stay disabled.</p>
+<h3 id="web-research" tabindex="-1">Web research</h3>
+<p><strong>Settings → Web search</strong> adds shot2code's bounded <code>search_web</code> tool to native
+OpenAI, Anthropic and Gemini options as well as Copilot and Copilot SDK BYOK.
+Tavily is the default and supports either its own key or an explicit keyless
+trial; Exa is optional and keyed. It is <strong>off by default</strong>, uses fixed HTTPS
+endpoints, returns no raw page content, limits results and snippets, and labels
+everything as untrusted external content. Search queries leave this device.</p>
+<p>Copilot's own built-in <code>web_search</code> remains available when the canonical tool is
+not configured. The two are never offered together. The built-in <code>web_fetch</code>
+remains disabled because the current SDK cannot bound or inspect a whole-page
+result before the model receives it.</p>
 <h2 id="figma-and-google-stitch" tabindex="-1">Figma and Google Stitch</h2>
 <p>A screenshot is not the only starting point. shot2code can take a design
 straight from Figma or Google Stitch.</p>
-<h3 id="figma-four-ways" tabindex="-1">Figma, four ways</h3>
+<h3 id="figma" tabindex="-1">Figma</h3>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 11"><table>
 <thead>
 <tr>
@@ -731,21 +739,17 @@ straight from Figma or Google Stitch.</p>
 <td>Rasterised <strong>locally</strong> before it is sent, so the model sees the same picture you do</td>
 </tr>
 <tr>
-<td><strong>Desktop MCP</strong></td>
-<td>The Figma desktop app running on this machine</td>
-<td>A featured MCP draft pointing at <code>http://127.0.0.1:3845/mcp</code>; it still has to be enabled and trusted</td>
-</tr>
-<tr>
 <td><strong>REST import</strong></td>
 <td>A Figma file URL and your own personal access token with <code>file_content:read</code></td>
 <td>shot2code reads the file and node ids out of the URL, asks Figma to render those frames, and brings the images in as local data URLs</td>
 </tr>
 </tbody>
 </table></div>
-<p>The <strong>REST import</strong> is the route that works for most accounts today, because
-Figma's remote MCP server currently admits only clients listed in its own MCP
-catalogue. shot2code does not impersonate another editor or reuse its sign-in to
-get around that.</p>
+<p>The <strong>REST import</strong> is the supported programmatic route. Figma's desktop and
+remote MCP servers admit only clients in the Figma MCP Catalog, and shot2code
+does not impersonate another editor or offer a connection Figma will reject.
+Tier-1 REST limits can be small; a 429 response preserves the retry interval,
+plan tier, limit type and Figma upgrade link.</p>
 <p>Your Figma token is <strong>capture-only</strong>: it is sent to <code>api.figma.com</code> and nowhere
 else, and it is never part of a generation request, project history or an export.</p>
 <h3 id="google-stitch-two-ways" tabindex="-1">Google Stitch, two ways</h3>
@@ -1131,6 +1135,12 @@ the installed program entirely — leaves every project, version and prompt wher
 it was.</p>
 <p>Deleting a project removes it and every saved version from the device. Nothing is
 uploaded anywhere.</p>
+<p>The desktop reopens the last active saved project, selected version, option and
+file. If a saved selection points at a cancelled or failed option while a
+completed sibling exists, the completed option is selected and the repaired
+choice is persisted. Preview tab, HTML/Stack source, desktop zoom and native
+window bounds/maximized state also survive restart; credentials and transient
+generation state do not.</p>
 <h2 id="importing-an-existing-project" tabindex="-1">Importing an existing project</h2>
 <p><strong>Import → Folder, ZIP or source files</strong> takes a project folder, a ZIP archive, or
 individual source files.</p>
@@ -1156,12 +1166,12 @@ local CSS, JavaScript, images, SVGs and encoded fonts are inlined where possible
 If a framework build or a local asset cannot be represented safely, the preview
 shows a deterministic fallback or diagnostic while every source file stays
 editable and downloadable.</p>
-<p>The controls above it are grouped by what they do: a <strong>Fit / 100%</strong> segmented
-control for scale, and a labelled <strong>History <em>n</em>/<em>m</em></strong> control for versions. At
-<strong>100%</strong> a fixed-width desktop canvas is centred inside a neutral framed
-viewport rather than pinned to the left edge; when the window is narrower than
-the canvas, the frame scrolls horizontally on purpose instead of cropping the
-start of the page.</p>
+<p>The controls above it are grouped by what they do. Desktop preview offers
+<strong>−</strong>, a live percentage, <strong>+</strong>, <strong>Fit</strong> and <strong>100%</strong>, ranging from 25% to 200%;
+mobile always fits. At 100% the fixed-width desktop canvas is centred inside a neutral framed
+viewport. Magnified content pans rather than clipping, and resize
+updates are coalesced so a non-maximized window does not flicker or reload the
+iframe. <strong>History <em>n</em>/<em>m</em></strong> remains the version control.</p>
 <p>Preview documents run in an opaque-origin sandbox with a restrictive
 Content-Security-Policy; select-and-edit talks to the app through validated,
 per-preview messages rather than direct parent-window access.</p>
@@ -1227,7 +1237,7 @@ the two can never disagree.</p>
 </tr>
 <tr>
 <td><strong>Help</strong></td>
-<td>The Help centre, the keyboard shortcut reference, and About shot2code with the running version</td>
+<td>The Help centre, <strong>Send feedback</strong>, the keyboard shortcut reference, and About shot2code with the running version</td>
 </tr>
 </tbody>
 </table></div>
@@ -1360,6 +1370,12 @@ which opens the folder holding
 succeeded. That log is the first thing to attach to a bug report. The browser
 development build writes no such log and says so instead of showing a button
 that cannot work.</p>
+<p><strong>Help → Send feedback</strong> opens a Bug, Feature request or Feedback form. If the
+official GitHub CLI is already authenticated, the desktop app can submit the
+issue directly. Otherwise you can copy the Markdown, download it, or open a
+prefilled browser issue. The app does <strong>not</strong> automatically attach logs, prompts,
+project files, screenshots, history or credentials; review anything you choose
+to paste before sending it.</p>
 <h2 id="settings" tabindex="-1">Settings</h2>
 <p>Settings holds your provider keys, the
 <a href="#choosing-which-models-run">model selection</a> across every group, the
@@ -1373,9 +1389,17 @@ install</strong>), and it reports whether the screenshot-preview browser is avai
 reaches a log line, a toast or a validation response. The Figma token and the
 Stitch API key are <strong>capture-only</strong>: they are used by the code that calls those
 services and are excluded from generation requests, project history and exports.</p>
-<p>Image generation, editing and background removal are offered only when an
-effective <strong>Replicate</strong> key exists — including one that comes from
-<code>backend/.env</code> — rather than being advertised and then failing.</p>
+<p><strong>Image generation</strong> can use Replicate, Cloudflare Workers AI, or an
+OpenAI-compatible image endpoint. Replicate remains the default and the only
+background-removal provider; editing is available only where the selected
+provider implements it. Failures are reported per prompt, with 401/402/429 and
+timeout guidance, and a batch says “Generated X of N” rather than counting
+failed placeholders.</p>
+<p><strong>Free image search</strong> is a separate opt-in tool using Openverse. It sends no API
+key, searches only CC0/Public Domain Mark results, re-checks the licence
+metadata, downloads through an SSRF/MIME/size/pixel-bounded path, and stores
+assets locally rather than hotlinking them. Openverse aggregates metadata, so
+verify the source page before commercial use.</p>
 <p>The page has its own viewport-bounded scrollbar. Even with a project open, you
 can scroll through the full settings list to the final Screenshot by URL and
 capability controls without changing browser zoom.</p>

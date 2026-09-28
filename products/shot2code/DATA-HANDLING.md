@@ -8,8 +8,9 @@ packaged app. The behaviour described here can be checked against the source at
 **Summary:** screenshots, generated code, project history and API keys stay on
 your machine. The only outbound traffic is the request to the model provider you
 configured, the update check, and the integrations you switch on and use — an
-MCP server you trusted, a Figma or Google Stitch import, Copilot web search, or
-anything you explicitly share.
+MCP server you trusted, a Figma or Google Stitch import, web or free-image
+search, an image provider, feedback you explicitly submit, or anything you
+explicitly share.
 
 ## 1. What leaves the device
 
@@ -19,21 +20,25 @@ anything you explicitly share.
 | **Your own endpoint** (Copilot SDK BYOK) | You start or refine a generation with a `sdk-byok/…` option selected | The same request, sent to the base URL you configured, authenticated with that connection's own key or bearer token |
 | **The model an option ran on** | You ask for an **AI review** of that option | The generated source and a review instruction. The request carries **no tools, no MCP servers, no skills and no web search** |
 | **An MCP server you enabled and trusted** | A Copilot or BYOK option calls one of its tools | The tool call the model made, plus the environment values or request headers you configured for that server |
-| **The public web, through Copilot** | You switch on **Allow web search** *and* a Copilot or BYOK option searches | The search queries the model issues. Off by default |
+| **Tavily or Exa** | You enable canonical **Web search** and a model searches | The bounded query and optional domain filter. Off by default. No raw page fetch is requested |
+| **The public web, through Copilot** | Canonical search is off, Copilot built-in search is enabled and a Copilot/BYOK option searches | The search query the model issues. Built-in `web_fetch` remains blocked |
+| **Openverse and the selected image host** | You enable **Free image search**, the model searches, and an image is selected | The search query, then a bounded image download. No credential. Only locally revalidated CC0/Public Domain Mark results are accepted |
 | **`registry.modelcontextprotocol.io`** | You search the **MCP Registry** in Settings | Your search terms. Nothing about your projects, and no credential |
 | **`api.figma.com`** | You run a Figma **REST import** | The file and node ids from the URL you pasted, authenticated with **only** your Figma personal access token |
-| **Figma, through MCP** | A trusted Figma MCP server is running and a Copilot or BYOK option calls one of its tools | The tool call the model made. The Desktop server is on `localhost`; the remote one is `https://mcp.figma.com/mcp` |
 | **Google Stitch** | You validate a Stitch key, generate a screen, or import a project with the bundled SDK — or a trusted Stitch MCP server is called | The prompt or project reference, authenticated with **only** your Stitch API key. HTML and image downloads made on its behalf are `https://` and size-bounded |
 | **`github.com` / `api.github.com`** | You choose **Sign in with GitHub**, or a skill is imported from a public GitHub folder | For sign-in: the device-flow exchange with the app's **public client id** — no client secret, and nothing about your projects. Where that flow is unavailable the official CLI performs the login instead and shot2code never sees the token. For a skill: a request for the files in the folder URL you pasted |
 | GitHub Copilot | Listing the models your account can use | The Copilot credential, to ask which models the signed-in plan offers. No prompt, project or screenshot is sent |
 | Gemini | Asset extraction, or video/screen-recording input | The selected image or recording |
-| Replicate (*source only*) | Image generation, editing or background removal | The prompt and the image you act on |
+| Replicate | Image generation, editing or background removal | The prompt and the source image, if any, authenticated with only the Replicate key |
+| Cloudflare Workers AI | Image generation with Cloudflare selected | The prompt, authenticated with only the Cloudflare account id/token |
+| Your OpenAI-compatible image endpoint | Image generation or supported editing with that provider selected | The prompt and source image, if any, sent to the configured endpoint with its dedicated credential |
 | **ScreenshotOne** | You capture a URL, or test its key | The URL to capture, authenticated with only that key |
 | `github.com` | Update check on per-user NSIS installs | Nothing about you: a request for the release feed |
 | A URL you paste | You generate from a URL | A request to that URL to capture it |
 | **A provider you test** | You choose **Test** in **Settings → Connection checks**, or **Test model access** | One minimal request — a single-word prompt capped at 16 tokens — authenticated with **only** that provider's credential. Replicate is checked against its account endpoint instead, so no prediction is started |
 | **Your own endpoint** (model discovery) | You choose **Test model access** on an OpenAI-compatible connection | A request to that endpoint's `/models` route, to list the model ids it serves |
 | CodePen | You confirm a share | The code being shared |
+| GitHub Issues | You explicitly submit **Help → Feedback** through an already authenticated `gh` CLI, or open the browser fallback | The category, title and body you reviewed. Logs, prompts, screenshots, history, project files and credentials are never attached automatically |
 
 The model lists for OpenAI, Anthropic and Gemini are **maintained catalogues
 inside the app**, so choosing models for those providers contacts nobody. The
@@ -80,10 +85,10 @@ same sandbox and runs no package script or project configuration.
 | --- | --- | --- |
 | `%LOCALAPPDATA%\shot2code\history.sqlite3` | Projects, versions, variants, prompts and variant messages | Deleting a project in **Recent projects**, or deleting the folder |
 | `%LOCALAPPDATA%\shot2code\` (skills) | Agent Skills you imported — their text and any script files they carry, stored as inert resources | Removing the skill in **Settings → Agent Skills**, or deleting the folder |
-| `%APPDATA%\shot2code-desktop\` | Desktop shell state, the **encrypted GitHub token** from the in-app sign-in, and `shot2code-backend.log` | **Disconnect GitHub from shot2code** for the token; deleting the folder for the rest |
+| `%APPDATA%\shot2code-desktop\` | Desktop shell state, `window-state.json`, the **encrypted GitHub token** from the in-app sign-in, and `shot2code-backend.log` | **Disconnect GitHub from shot2code** for the token; deleting the folder for the rest |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped — process paths and outcome, no project data | Deleting the file |
-| The app's own local storage | Provider API keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), the Figma access token, the Stitch API key, the ScreenshotOne key, selected models, Review widths, pane widths and UI preferences | Clearing them in **Settings** |
-| `backend/.env` (*source only*) | `REPLICATE_API_KEY`, optional `OPENAI_BASE_URL` | Editing the file |
+| The app's own local storage | Provider and image-provider keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), web-search settings, the Figma access token, the Stitch API key, the ScreenshotOne key, selected models, Review widths, pane widths, preview source/zoom and UI preferences | Clearing them in **Settings** |
+| `backend/.env` (*source only*) | Optional provider, image-provider and search credentials documented in the source repository | Editing the file |
 
 The history database is **not encrypted**. Treat it like any other local project
 folder: it contains your prompts and your generated code.
@@ -104,10 +109,11 @@ Inspector.
 configured not to delete application data, so upgrading or replacing the
 installed program keeps every project, version and prompt.
 
-Layout preferences — the chat and file-explorer pane widths — and your Review
-viewport widths are view state in the app's own local storage, never in the
-history database. Resizing a pane cannot create or alter a project version, an
-option or a retry.
+Layout preferences — pane widths, Review viewport widths, preview tab/source and
+zoom — are view state in the app's own local storage, never in the history
+database. Native window bounds/maximized state is stored separately in
+`window-state.json`. Resizing a pane or window cannot create or alter a project
+version, option or retry.
 
 The database location can be redirected with `SHOT2CODE_DATA_DIR` or
 `SHOT2CODE_HISTORY_DB_PATH`.
@@ -143,8 +149,9 @@ The database location can be redirected with `SHOT2CODE_DATA_DIR` or
   returns provider availability and model capabilities, never a key or token.
   `/api/integrations/validate` answers with presence flags, a host name and
   diagnostics — never a credential.
-- `REPLICATE_API_KEY` has no Settings field by design. It must be set in
-  `backend/.env`, which means it is only usable when running from source.
+- Image-provider and web-search credentials are read from current Settings at
+  send time. Closed serialization allowlists prevent any key, bearer token, MCP
+  environment value or request header from reaching a project snapshot.
 - GitHub Copilot credentials are resolved at request time: a token in Settings,
   then `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`, then a stored
   `copilot` login, then a stored `gh auth login`. Tokens are not persisted by the

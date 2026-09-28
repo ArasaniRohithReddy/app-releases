@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/README.md (normalized SHA-256 187dd22377871f3f39a58a410b8e325254dc10bfc84b3ba584ec661b8c39718e). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/README.md (normalized SHA-256 799f4c0846bda6a4f0a2cf612d487d778c1ec819c6e1ced8b473b830fb11bf42). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/README.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#image-generation-and-free-images">Image generation and free images</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
         <div class="doc-content"><p><strong>Turn a screenshot into working code — on your own machine.</strong></p>
 <p><a href="../releases/"><span class="image-alt">Latest release</span></a></p>
 <p>shot2code is a <strong>Windows desktop app</strong>. Give it a screenshot, several related
@@ -123,8 +123,8 @@ The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token 
 </tr>
 <tr>
 <td>Start from a Figma design</td>
-<td><strong>Figma</strong> — exported screenshots or SVG, the Desktop MCP server, or a REST import with your own access token</td>
-<td>Frames rendered by Figma and brought in as local images</td>
+<td><strong>Figma</strong> — exported screenshots or SVG, or a REST import with your own access token</td>
+<td>Frames rendered by Figma and brought in as local images; Figma MCP is not offered because Figma restricts it to catalog-listed clients</td>
 </tr>
 <tr>
 <td>Start from a Google Stitch screen</td>
@@ -165,6 +165,16 @@ The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token 
 <td>Add reusable instructions</td>
 <td><strong>Settings → Agent Skills</strong> — a local folder or a public GitHub folder</td>
 <td>Skills you can enable per run; imported disabled, and their scripts can never execute</td>
+</tr>
+<tr>
+<td>Research current APIs</td>
+<td><strong>Settings → Web search</strong></td>
+<td>Bounded Tavily/Exa search across native providers and both Copilot runtimes, with snippets labelled as untrusted</td>
+</tr>
+<tr>
+<td>Create or find images</td>
+<td><strong>Settings → Image generation / Free image search</strong></td>
+<td>Replicate, Cloudflare or OpenAI-compatible generation, plus opt-in Openverse CC0/PDM search</td>
 </tr>
 <tr>
 <td>Refine it</td>
@@ -217,6 +227,11 @@ The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token 
 <td>Get started, Guides, Support, shortcuts — and <strong>Open diagnostic logs</strong> in the desktop app</td>
 </tr>
 <tr>
+<td>Send feedback</td>
+<td><strong>Help → Feedback</strong></td>
+<td>Direct submission through an authenticated GitHub CLI, or copy/download/browser fallbacks that attach no private app data</td>
+</tr>
+<tr>
 <td>Take it away</td>
 <td><strong>Download</strong></td>
 <td>A single self-contained HTML file, or a Vite project folder</td>
@@ -267,8 +282,18 @@ download builds rather than being a plausible-looking scaffold. See
 </tr>
 <tr>
 <td>Replicate</td>
-<td><code>REPLICATE_API_KEY</code> in <code>backend/.env</code></td>
-<td>Image generation, editing and background removal; source runs only</td>
+<td>Key in <strong>Settings</strong> or <code>REPLICATE_API_KEY</code></td>
+<td>Default-compatible image generation; editing and background removal</td>
+</tr>
+<tr>
+<td>Cloudflare Workers AI</td>
+<td>Account id and token in <strong>Settings</strong></td>
+<td>Additive image generation with its own credential</td>
+</tr>
+<tr>
+<td>OpenAI-compatible images</td>
+<td>Endpoint and dedicated key in <strong>Settings</strong></td>
+<td>Additive generation and capability-checked editing</td>
 </tr>
 </tbody>
 </table></div>
@@ -307,18 +332,24 @@ explicitly <strong>trusted</strong> before shot2code will start it, it is <stron
 you also allow write tools, a local server is spawned as an argument vector
 rather than through a shell, and a remote one must use <code>https://</code> unless it is on
 <code>localhost</code>. <strong>A registry install is a disabled, untrusted draft</strong> — nothing the
-registry returns can start on its own. <strong>Figma Desktop MCP</strong>, <strong>Figma Remote
-MCP</strong> and <strong>Google Stitch MCP</strong> are offered as featured drafts under the same
-rules.</p>
+registry returns can start on its own. <strong>Google Stitch MCP</strong> is offered as a featured draft under the same rules.
+Figma MCP endpoints are filtered from the registry and migrated entries are
+disabled because Figma restricts both desktop and hosted MCP transports to
+clients listed in its MCP Catalog.</p>
 <p><strong>Agent Skills</strong> are reusable instruction folders imported from a local folder or
 a public GitHub folder URL. They are validated, recorded with their origin, and
 <strong>disabled by default</strong>. A skill may contain scripts and those files are stored,
 but <strong>they can never execute</strong>: shot2code exposes no shell tool and no
-unrestricted host-filesystem tool. <strong>Copilot web research</strong> is a separate opt-in
-switch that adds public web search and nothing else.</p>
-<p>MCP tools, skills and web search are offered to <strong>GitHub Copilot</strong> and <strong>Copilot
-SDK BYOK</strong> options only — an option running on your own OpenAI, Anthropic or
-Gemini key never sees them. See <a href="user-guide/#mcp-servers">USER-GUIDE.md</a>.</p>
+unrestricted host-filesystem tool.</p>
+<p>MCP tools and skills are offered to <strong>GitHub Copilot</strong> and <strong>Copilot SDK BYOK</strong>
+options only. Web research is different: the opt-in canonical <code>search_web</code> tool
+uses Tavily or Exa and reaches native OpenAI, Anthropic and Gemini as well as
+both Copilot runtimes. It limits queries, domains, results, snippets, calls per
+turn and calls per generation, and labels every result as untrusted content.
+Copilot's built-in search is offered only when canonical search is off.
+Built-in <code>web_fetch</code> is blocked because the SDK cannot let shot2code inspect or
+bound a whole-page result before the model receives it. See
+<a href="user-guide/#mcp-servers">USER-GUIDE.md</a>.</p>
 <h2 id="design-sources-figma-and-google-stitch" tabindex="-1">Design sources: Figma and Google Stitch</h2>
 <p>Besides screenshots, a URL, a description or a recording, shot2code can start
 from a design tool:</p>
@@ -332,7 +363,7 @@ from a design tool:</p>
 <tbody>
 <tr>
 <td><strong>Figma</strong></td>
-<td>Exported screenshots; exported <strong>SVG</strong> (rasterised locally); the <strong>Desktop MCP</strong> server on <code>http://127.0.0.1:3845/mcp</code>; or a <strong>REST import</strong> that takes a Figma URL and your own personal access token with <code>file_content:read</code>, and brings the rendered frames in as local images</td>
+<td>Exported screenshots; exported <strong>SVG</strong> (rasterised locally); or a <strong>REST import</strong> that takes a Figma URL and your own personal access token with <code>file_content:read</code>, and brings the rendered frames in as local images</td>
 </tr>
 <tr>
 <td><strong>Google Stitch</strong></td>
@@ -343,10 +374,30 @@ from a design tool:</p>
 <p>Both credentials are <strong>capture-only</strong>. The Figma token is sent to <code>api.figma.com</code>
 and nowhere else, the Stitch key reaches only the bundled SDK, and neither is
 included in a generation request, in project history or in an export. Figma's
-remote MCP server currently admits only clients in Figma's own catalogue, and
-shot2code does not impersonate another editor — the REST import is the route that
-works today for most accounts. <code>@google/stitch-sdk</code> is published by Google Labs
+desktop and hosted MCP servers admit only clients in Figma's own catalogue, and
+shot2code does not impersonate another editor — REST/PAT is the supported
+programmatic route. <code>@google/stitch-sdk</code> is published by Google Labs
 and is explicitly not an officially supported Google product.</p>
+<h2 id="image-generation-and-free-images" tabindex="-1">Image generation and free images</h2>
+<p>Image generation is additive and provider-specific:</p>
+<ul>
+<li><strong>Replicate</strong> is the default-compatible provider and the only one used for
+background removal. Curated models declare their own input shape; a custom
+model is accepted only after its published schema proves a string prompt and
+image output with no extra required inputs.</li>
+<li><strong>Cloudflare Workers AI</strong> uses its own account id/token.</li>
+<li><strong>OpenAI-compatible images</strong> use a dedicated endpoint/key and expose editing
+only when <code>/images/edits</code> actually exists.</li>
+</ul>
+<p>Every prompt keeps its own success or classified failure. Partial batches report
+<strong>Generated X of N</strong>; an all-failed batch fails instead of returning empty image
+URLs. HTTP URLs, base64, data URLs and bytes all pass the same validation and
+local-asset persistence boundary.</p>
+<p><strong>Free image search</strong> is a separate, opt-in Openverse tool. It does not silently
+replace generation. Only CC0/Public Domain Mark records with a source and
+licence URL survive local checks, and selected images are downloaded through
+DNS/private-address, redirect, MIME, byte and decoded-pixel limits before being
+stored locally. Openverse aggregates third-party metadata, so verify the source.</p>
 <h2 id="reviewing-what-was-generated" tabindex="-1">Reviewing what was generated</h2>
 <p><strong>Review</strong> renders the generated page at two to four real widths at once — 1440,
 768 and 390 by default, any whole width from 320 to 1920 if you add your own —
