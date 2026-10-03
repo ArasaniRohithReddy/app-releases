@@ -162,6 +162,11 @@ ready."*
 Yes. Both **Upload** and **Import** take an optional first instruction (and a
 model choice) before anything is generated.
 
+**Can I paste screenshots into Chat?**
+Yes. Paste PNG, JPEG or WebP images with Ctrl+V/Cmd+V. The limit is 10 MB per
+image and five images per turn; duplicates are ignored, and normal text paste
+continues to work.
+
 **Can I see what the download will contain before I download it?**
 Yes. The Code tab has a read-only **Export project** view beside **Current
 code** listing the exact text files and assets the ZIP will hold for your stack.
@@ -445,7 +450,9 @@ computer files stay disabled.
 **How do I start from a Figma design?**
 Three ways: exported screenshots, an exported **SVG** (rasterised locally before
 it is sent), or a **REST import** using a Figma URL and your own personal access
-token with `file_content:read`.
+token with `file_content:read`. REST import preserves rendered frames, original
+image fills and export-marked nodes as local assets. It does not recover
+production application source because Figma's REST API does not expose that.
 
 **Why does the Figma remote MCP server not connect?**
 Figma currently admits only clients listed in its own MCP catalogue. shot2code
@@ -460,12 +467,15 @@ project history or an export.
 Either reach the official **Stitch MCP** endpoint like any other server, or use
 the bundled SDK in the desktop app with a Stitch API key to validate the key,
 generate a screen from a prompt, or import an existing project or screen.
+**Stitch only** opens localized HTML, screenshot, images, stylesheets, fonts and
+available `DESIGN.md` without a second model request. **Convert to selected
+stack** is a separate explicit option.
 
 **Is the Stitch SDK official?**
 It is published by Google Labs, which states it is **not an officially supported
 Google product**. shot2code bundles version 0.3.5 (Apache-2.0) and treats it as
-experimental. HTML and images it downloads must be `https://` and are
-size-bounded.
+experimental. Referenced resources are downloaded through public-address,
+redirect, MIME and byte limits and rewritten to restart-safe local assets.
 
 **Does my Stitch key reach the model?**
 No. Like the Figma token it is capture-only: stored on this device, passed to the
@@ -527,6 +537,13 @@ counts — and exports `DESIGN.md`, `SKILL.md` and a palette PNG. It reads the
 composed source, so it describes what the code declares rather than what a
 browser finally computes.
 
+**Can it inspect a public website before generation?**
+Yes. In the **URL** tab choose **Inspect design**. A bounded local Chromium
+session captures computed design evidence plus desktop, tablet and mobile
+screenshots, and produces copy/downloadable `DESIGN.md`. It does not recover
+original source, establish asset reuse rights or certify accessibility, and it
+refuses private/loopback/metadata destinations.
+
 **Is the JSON report safe to attach to an issue?**
 It is built to be: file paths are reduced to a leaf name and no credential of
 any kind is included. Read it before you post it, as you would any export.
@@ -543,6 +560,13 @@ variables and reusable CSS classes become design tokens.
 **Can it import my whole repository?**
 There are limits on archive size, entry count, file count, per-file size and total
 decoded text. Point it at the part of the project you actually want as context.
+
+**Can I paste a GitHub repository URL instead of downloading a ZIP?**
+Yes, use the dedicated **GitHub** tab. Public repositories need no token. A
+private repository needs a separate fine-grained token limited to that
+repository with **Contents: read**; the app's Copilot OAuth token is deliberately
+not broadened or reused. Source is scanned but never executed, and bounded
+PNG/JPEG/GIF/WebP assets remain available to Preview, export and later chat.
 
 ## Updating
 
@@ -605,10 +629,11 @@ from the device), then uninstall and delete `%LOCALAPPDATA%\shot2code\`.
 Stored locally by the app for the device you entered them on, and sent only to the
 provider they belong to. A GitHub token obtained through the in-app sign-in is
 encrypted with Electron `safeStorage`. The Figma token and the Stitch API key are
-capture-only — used by the code that calls those services and excluded from
-generation requests, history and exports. Your model selection is stored the same
-way — a preference on this device, not an account setting. `REPLICATE_API_KEY`
-lives in `backend/.env` instead.
+capture-only, and a private-repository token is a separate fine-grained
+`Contents: read` credential — each is used only by its own integration and
+excluded from generation requests, AI review, history and exports. Your model
+selection is stored the same way — a preference on this device, not an account
+setting. `REPLICATE_API_KEY` lives in `backend/.env` instead.
 
 ## Getting help
 

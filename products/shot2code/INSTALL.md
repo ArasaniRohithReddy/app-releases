@@ -158,10 +158,10 @@ project removes it and its versions from the device.
 
 | Path | Contents |
 | --- | --- |
-| `%LOCALAPPDATA%\shot2code\` | `history.sqlite3` — projects, versions, prompts — and any Agent Skills you imported |
+| `%LOCALAPPDATA%\shot2code\` | `history.sqlite3` — projects, versions, prompts and restart-safe imported-asset references — plus normalized local assets and any Agent Skills you imported |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state, `window-state.json`, the encrypted GitHub token from the in-app sign-in, and `shot2code-backend.log` |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped |
-| The app's own local storage | Model/image/search provider keys, the Figma and Stitch credentials, your model selection, pane widths, preview source/zoom and UI preferences entered in Settings |
+| The app's own local storage | Model/image/search provider keys, Figma/Stitch credentials, the separate GitHub repository token, your model selection, pane widths, preview source/zoom and UI preferences entered in Settings |
 
 See [DATA-HANDLING.md](DATA-HANDLING.md) for the full list, including every
 network destination.

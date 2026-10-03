@@ -13,13 +13,55 @@ The full engineering changelog lives with the code:
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.
 
+## [0.6.0] — 2026-10-04
+
+[Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.6.0) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.6.0)
+
+The current stable release expands shot2code from screenshot generation into a
+local-first design-source workspace.
+
+### Added
+
+- Figma REST import now preserves original image fills and export-marked nodes
+  beside rendered frames as bounded, reusable local assets.
+- Google Stitch defaults to **Stitch only**: localized HTML, screenshot, images,
+  stylesheets, nested CSS assets/fonts, `srcset` and available `DESIGN.md` open
+  directly without a second model request. Conversion is explicit.
+- The URL tab can inspect a public website through a bounded public-only
+  Chromium proxy, produce desktop/tablet/mobile screenshots and export a
+  browser-computed `DESIGN.md`.
+- A dedicated GitHub tab opens public repositories without a token or private
+  repositories with a separate repository-limited `Contents: read` token,
+  preserving bounded image assets without executing repository code.
+- PNG, JPEG and WebP screenshots can be pasted directly into refinement Chat,
+  with duplicate, count and size controls.
+- A new capture-to-code application identity ships across the EXE, NSIS, MSI,
+  portable build, shortcuts, sidebar and browser favicons.
+
+### Changed
+
+- Imported Figma, Stitch and GitHub assets now use restart-safe local references
+  across History, retries and later chat, and binary project files export as
+  decoded bytes.
+- Preview and CodePen unwrap real brace-wrapped public URLs and replace
+  unresolved `IMG.*` pseudo references with a safe placeholder; generation
+  prompts explicitly forbid those malformed forms.
+- Public-site, design-tool and repository text is labelled untrusted evidence.
+  Stitch and website networking uses pinned public-address validation, bounded
+  redirects/downloads and fail-closed behavior.
+- MCP and Agent Skills retain enabled-plus-trusted, read-only-by-default and
+  disabled-by-default safety rules and were reverified across backend,
+  renderer and packaged-app surfaces.
+
 ## [0.5.2] — 2026-09-28
 
 [Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
 [hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.2) ·
 [upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.2)
 
-The current stable release. It includes the v0.5.0 feature set plus the fixes and additions below.
+The previous stable release. It includes the v0.5.0 feature set plus the fixes and additions below.
 
 ### Added
 

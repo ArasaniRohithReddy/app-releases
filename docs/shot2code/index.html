@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>shot2code — turn screenshots into working code on your own machine</title>
-  <meta name="description" content="A local-first Windows desktop app that turns screenshots, mockups, URLs, descriptions, screen recordings or Figma and Google Stitch designs into editable web code. Sign in to GitHub Copilot from the app itself, or bring your own API key or endpoint through the Copilot SDK. An MCP Registry marketplace, disabled-by-default Agent Skills, a responsive Review workspace with a Design Inspector, 12 output stacks and local SQLite project history." />
+  <meta name="description" content="A local-first Windows app that turns screenshots, public-site design evidence, Figma and direct Google Stitch projects, GitHub frontends, descriptions and recordings into editable web code. Includes GitHub Copilot or BYOK models, MCP and Agent Skills, responsive Review, DESIGN.md inspection, 12 output stacks and local history." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -15,7 +15,7 @@
   <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="shot2code" />
-  <meta property="og:description" content="Screenshots, mockups, URLs, descriptions, screen recordings and Figma or Google Stitch designs become editable web code — generated locally on your Windows machine, with your own model provider or your own endpoint." />
+  <meta property="og:description" content="Screenshots, public websites, Figma/Stitch designs and GitHub frontends become editable web projects on your Windows machine, with direct Stitch delivery or your selected model provider." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
   <meta property="og:image:width" content="1920" />
@@ -39,9 +39,9 @@
     "url": "https://arasanirohithreddy.github.io/app-releases/shot2code/",
     "downloadUrl": "https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&expanded=true",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "A Windows desktop app that turns screenshots, mockups, URLs, text descriptions, screen recordings and Figma or Google Stitch designs into editable web code. Generation runs from your machine against the model provider you configure — GitHub Copilot, your own API key, or your own endpoint through the Copilot SDK — and projects, versions, conversations and prompts are stored in a local SQLite database. The published Windows binaries are not code-signed. The running version is resolved from the newest published shot2code release.",
+    "description": "A Windows desktop app that turns screenshots, public-site design evidence, Figma and direct Google Stitch projects, GitHub frontends, text descriptions and recordings into editable web code. Generation runs from your machine against GitHub Copilot, your own API key or your own Copilot SDK endpoint, while projects, conversations and restart-safe imported assets stay in local history. The published Windows binaries are not code-signed.",
     "featureList": [
-      "Generates a working page from screenshots, a URL, a description, a screen recording, or a Figma or Google Stitch design",
+      "Generates or opens an editable project from screenshots, public-site evidence, a description, a recording, Figma, direct Google Stitch output or a GitHub frontend",
       "Twelve output stacks, including HTML + Tailwind, React, Vue, Preact, Bootstrap and Material 3",
       "Model selection across GitHub Copilot, OpenAI, Anthropic and Google Gemini, with one option generated per selected model",
       "Optional Copilot SDK BYOK connection to any OpenAI-compatible, Azure OpenAI or Anthropic endpoint with its own credential, requiring no Copilot subscription",
@@ -52,11 +52,13 @@
       "A model and its BYOK counterpart can be selected together, producing one option per runtime for comparison",
       "Optional MCP servers over stdio, HTTP or SSE, offered to GitHub Copilot and Copilot SDK BYOK options only",
       "An in-app browser for the official MCP Registry, where installing an entry creates a disabled, untrusted draft to review",
-      "Featured Google Stitch MCP server plus Figma REST/PAT import; unsupported Figma MCP endpoints are filtered because Figma restricts them to catalog-listed clients",
+      "Featured Google Stitch MCP server plus Figma REST/PAT import with rendered frames, original image fills and export-marked local assets; unsupported Figma MCP endpoints are filtered",
       "Agent Skills imported from a local folder or a public GitHub folder, disabled by default, with stored scripts that can never execute",
-      "Figma import through exported screenshots, exported SVG rasterised locally, or REST with your own scoped access token",
-      "Experimental Google Stitch integration through the official MCP endpoint or a bundled SDK, used only when you supply a Stitch key",
-      "Figma and Google Stitch credentials are capture-only and are excluded from model requests, project history and exports",
+      "Figma import through exported screenshots, exported SVG rasterised locally, or REST with your own scoped access token; it does not claim to recover application source",
+      "Experimental Google Stitch integration with direct Stitch-only HTML, screenshot, images, stylesheets, fonts and DESIGN.md, or an explicit conversion through selected models",
+      "Public website design inspection with bounded local Chromium, computed design evidence, DESIGN.md and desktop, tablet and mobile screenshots",
+      "Public or private GitHub repository import through the never-execute scanner, with a separate fine-grained Contents: read token only when needed",
+      "Figma, Stitch and repository credentials are capture-only and are excluded from model requests, AI review, project history and exports",
       "Opt-in bounded Tavily or Exa web search for native providers and both Copilot runtimes, with Copilot built-in search used only when canonical search is off",
       "Multiple optional image-generation providers with per-prompt outcomes, plus separate Openverse CC0/Public Domain Mark image search",
       "Review workspace rendering the result at two to four real widths with horizontal-overflow measurement",
@@ -73,6 +75,7 @@
       "In-app Help centre linking the published guides, an action that opens the backend log folder, and private-by-default feedback submission fallbacks",
       "Local SQLite project history stored under %LOCALAPPDATA%\\shot2code, kept when the application is upgraded",
       "The full branch conversation, including assistant responses and the exact run identity behind each option, is restored from that history",
+      "PNG, JPEG and WebP screenshots can be pasted directly into refinement Chat with bounded size, count and duplicate handling",
       "Imports an existing folder, ZIP or source files as design context without executing them",
       "Sandboxed preview with a restrictive Content-Security-Policy and opaque origin",
       "Exports a single HTML file or a Vite project folder"
@@ -727,7 +730,7 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="whats-new-h">Recently improved</h2>
-          <p>The latest stable release makes search and image workflows provider-neutral, fixes failed-image reporting and scrolling, hardens Figma/Stitch behavior, removes narrow-window preview flicker, restores the correct saved option, and closes packaged preload/history bridge defects.</p>
+          <p>The latest stable release expands shot2code into a design-source workspace: reusable Figma assets, direct Stitch projects, public-site <code>DESIGN.md</code> inspection, safe GitHub import, pasted chat screenshots, restart-safe assets and a new Windows identity.</p>
         </div>
         <div class="features">
           <div class="feature">
@@ -739,20 +742,20 @@
             <p>Native and Copilot runtimes share one Tavily/Exa search tool with strict query, domain, result and call budgets. Image generation supports Replicate, Cloudflare and OpenAI-compatible endpoints with truthful per-prompt outcomes, while separate Openverse search safely downloads CC0/Public Domain Mark assets with no key.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Supported Figma and Stitch paths</h3>
-            <p>Figma uses exported images/SVG or scoped REST/PAT frame import; unsupported MCP entries are removed instead of promising a blocked connection. Stitch uses its MCP endpoint or the bundled experimental SDK, reports real phases with a ten-minute budget, and routes non-HTML output through the selected stack and model lineup.</p>
+            <h3><span class="tick">✓</span> Figma and direct Stitch projects</h3>
+            <p>Figma REST now keeps rendered frames, original image fills and export-marked nodes as reusable local assets. Stitch-only mode opens localized HTML, screenshots, images, stylesheets, fonts and <code>DESIGN.md</code> directly; conversion through the selected stack and models is a separate explicit action.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Review that can fix what it finds</h3>
-            <p><strong>Review</strong> renders the result at two to four actual widths at once — 1440, 768 and 390 by default, 320–1920 for a custom one — measures horizontal overflow in the running frame, and runs a local source audit for semantic and accessibility problems. Filter by severity, search the findings, select them in bulk, and apply <strong>targeted fixes against the exact version and option that was reviewed</strong>. An optional <strong>AI review</strong> asks the model that option actually ran on for a second opinion, with no tools, MCP servers, skills or web search attached — a real request that may use quota. A <strong>Design Inspector</strong> exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a palette image. It is an automated source check, not a WCAG conformance assessment.</p>
+            <h3><span class="tick">✓</span> Inspect generated code or a public site</h3>
+            <p><strong>Review</strong> keeps its local source audit and exact-version fixes. Its Design Inspector exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a palette image from generated source, while the URL tab can inspect a public site's browser-computed design and capture desktop, tablet and mobile evidence. Neither route is a WCAG certification or a claim to recover original source.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> See the project, not just the page</h3>
-            <p>The Code tab keeps <strong>Current code</strong> and adds a read-only <strong>Export project</strong> view listing the exact files and assets a download will contain. Preview still defaults to the composed HTML document and adds a sandboxed <strong>Stack preview</strong> of the controlled Vite HTML, React and Preact files — rendered in the existing sandbox, with <strong>no package script and no project configuration executed</strong>.</p>
+            <h3><span class="tick">✓</span> GitHub import and chat screenshots</h3>
+            <p>A dedicated GitHub tab opens public repositories without a token or private repositories with a separate least-privilege token. Source and bounded image assets enter the editable project without executing repository code. PNG, JPEG and WebP screenshots can also be pasted directly into refinement Chat.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Persistent, flicker-free desktop state</h3>
-            <p>Chat and local SQLite still restore the whole branch, while a cancelled selected option now repairs itself to a completed sibling. Preview source and zoom plus native window bounds survive restart, resize work is coalesced to stop non-maximized flicker, and sandbox-safe preload IPC keeps runtime backend URLs and feedback available in the packaged app.</p>
+            <h3><span class="tick">✓</span> Assets that survive restart and export</h3>
+            <p>Imported design and repository assets use restart-safe local references across History, retries and later chat. Binary files remain previewable and export as real bytes, malformed pseudo-image tokens degrade safely, and the refreshed app icon is synchronized across the Windows packages and web UI.</p>
           </div>
         </div>
         <p class="dl-note">Every version, its notes and all its files are on the <a href="./releases/">releases page</a>. The full history lives in the <a href="./docs/changelog/">changelog</a>.</p>
@@ -822,7 +825,7 @@
         <div class="callouts">
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Local by default</h3>
-            <p>Screenshots, generated code and project history stay on the device. The generation request goes to the provider you configured — your own endpoint included, if you set one up. Keys are stored locally and sent only to the service they belong to: a Figma access token reaches Figma and nothing else, a Google Stitch key reaches only the bundled SDK, and neither is ever placed in a model request, project history or an export. A GitHub token from the in-app sign-in is encrypted by the operating system key store. Validating a BYOK connection or an MCP server, and running the Review audit, contact nothing at all.</p>
+            <p>Screenshots, generated code and project history stay on the device. The generation request goes to the provider you configured. Figma and Stitch credentials are capture-only; private repository import uses a separate fine-grained token rather than broadening Copilot sign-in. None enters a model request, AI review, project history or export. Validating a BYOK connection or MCP server and running the local Review audit contact nothing.</p>
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg> No telemetry</h3>
@@ -830,7 +833,7 @@
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Untrusted input, treated as such</h3>
-            <p>Imported projects are parsed, never executed. Previews run in an opaque origin with a restrictive CSP, a <code>no-referrer</code> policy, and camera, microphone, geolocation and display capture denied. An MCP server runs only once you enable <em>and</em> trust it — including one installed from the registry, which arrives disabled and untrusted — stays read-only until you allow write tools, and never has its tokens written into a log, project history or an exported report. An imported skill is disabled until you enable it, and its scripts cannot run: there is no shell tool and no unrestricted host-filesystem tool.</p>
+            <p>Imported projects and GitHub archives are parsed, never executed. Stitch and public-site resources pass pinned public-address and bounded-download checks, and all imported design text remains untrusted evidence. Previews run in an opaque origin with a restrictive CSP. MCP servers require enablement plus trust and remain read-only until writes are allowed; imported skills start disabled and their scripts cannot run.</p>
           </div>
         </div>
         <div class="docs-grid" style="margin-top:1.4rem">

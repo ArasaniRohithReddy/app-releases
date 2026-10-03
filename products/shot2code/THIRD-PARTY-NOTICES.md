@@ -6,7 +6,7 @@ license-compliance review. shot2code itself is licensed under the
 documentation and release assets in this hub are published under the
 [MIT License](../../LICENSE).
 
-*Principal direct dependencies, aligned with the public source on 27 September 2026. This is
+*Principal direct dependencies, aligned with the public source on 4 October 2026. This is
 **not** a complete list and not a transitive SBOM: each component brings dependencies of its own,
 and the bundled runtimes below aggregate hundreds of separately licensed projects. For a
 deployment or compliance decision, resolve the manifests and lockfiles named in
@@ -86,6 +86,7 @@ Declared in [`desktop/package.json`](https://github.com/ArasaniRohithReddy/shot2
 | **electron** | The application shell (see [Bundled runtimes](#bundled-runtimes)) | MIT | <https://github.com/electron/electron> |
 | **electron-updater** | Per-user NSIS update flow against the public GitHub Releases feed | MIT | <https://github.com/electron-userland/electron-builder> |
 | **`@google/stitch-sdk`** | The bundled **experimental** Google Stitch integration — key validation, prompt-to-screen generation and project import. Published by Google Labs, which states it is **not an officially supported Google product** | Apache-2.0 | <https://www.npmjs.com/package/@google/stitch-sdk> |
+| **cheerio** | Parses and rewrites Stitch HTML so accepted resources become bounded local assets | MIT | <https://github.com/cheeriojs/cheerio> |
 
 The shipped shell is built on **Electron 44.4.3** with **electron-updater 6.8.9**, packaged by
 **electron-builder 26.15.3**. `npm audit --omit=dev` reports **0 vulnerabilities** for the

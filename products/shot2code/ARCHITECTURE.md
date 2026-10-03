@@ -252,22 +252,45 @@ the response, not an error that stops the run.
 ### Design sources
 
 `/api/figma` parses a Figma URL into a file key and optional node ids, asks the
-REST API for rendered images of the top-level renderable frames, and converts
-them into local data URLs. It talks to `https://api.figma.com` and nothing else,
-authenticated only with the personal access token supplied in the request.
-Exported SVG files are rasterised in the app before they are sent, so a model
-always receives a picture rather than markup it might mis-read.
+REST API for rendered images, original image-fill URLs and explicitly
+export-marked nodes. Downloads stream under per-file and aggregate budgets and
+become durable local assets. Optional asset failures remain partial-success so
+they do not discard frames already imported. It talks to
+`https://api.figma.com` and nothing else, authenticated only with the personal
+access token supplied in the request. Exported SVG files are rasterised in the
+app before they are sent, so a model always receives a picture rather than
+markup it might mis-read.
 
 Google Stitch is reached two ways: as an ordinary MCP server, or through
 `@google/stitch-sdk` bundled in the Electron package and driven over the shell's
 own IPC — key validation, prompt-to-screen generation and project or screen
-import. HTML and image downloads made on its behalf are HTTPS-only and
-size-bounded. The SDK is published by Google Labs and is explicitly not an
+import. The default Stitch-only route directly opens localized HTML, screenshot,
+images, stylesheets, nested CSS assets/fonts, `srcset` and available
+`DESIGN.md`; conversion through an LLM is a separate explicit action.
+`desktop/stitch-assets.js` pins public DNS answers, revalidates redirects,
+enforces file/aggregate budgets and MIME/magic agreement, and rewrites accepted
+resources to local assets. Rejected resources fail closed instead of remaining
+as live URLs. The SDK is published by Google Labs and is explicitly not an
 officially supported Google product, so it is treated as experimental.
 
-Both credentials are **capture-only**: the settings projection that builds a
-generation payload strips them, so they cannot reach a model, project history or
-an export.
+`/api/github-repository` downloads public archives without a token or private
+archives with a separate fine-grained repository token. The archive enters the
+existing never-execute text scanner, while bounded PNG/JPEG/GIF/WebP files take
+a separate validated binary path into the editable project. Copilot OAuth is
+not broadened or reused.
+
+`/api/url-design-inspector` runs a fresh local Chromium context but does not let
+Chromium fetch the network directly. Every HTTP(S) request is fulfilled through
+an aiohttp connector with a public-only pinned resolver; unsafe schemes and
+addresses, WebSocket/EventSource/service workers, media and non-GET/HEAD
+requests are blocked, and request/resource/total/deadline/element budgets apply.
+It emits computed design evidence plus 1440×900, 768×1024 and 390×844
+screenshots — rendered evidence, not recovered original source.
+
+All capture credentials are stripped from generation/history/export payloads.
+All design text is wrapped as untrusted evidence, and imported binary references
+are canonicalized as `shot2code-local:/local-assets/...` for persistence then
+rebound to the current backend origin on restore.
 
 ### Web and image tools
 
@@ -326,7 +349,8 @@ The **Design Inspector** is a second local pass over the composed source. It
 counts repeated colours, CSS variables, typography, spacing, radii, shadows,
 motion and semantic components, and renders them as `DESIGN.md`, `SKILL.md` and
 a palette PNG. It reads the source the project declares rather than a browser's
-computed styles.
+computed styles. The URL inspector described above is the complementary
+browser-computed path for a public site before generation.
 
 ## Workspace layout state
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 a6a4ae52f050ca1c3543eca69617b245dfb0d1638ca5b0df416a84ea7a13c0d3). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 e9f38579d1b04c19496095e41fb758674cab43da65ac610a6bda4c13a1e591c7). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -66,9 +66,9 @@
         <div class="doc-content"><p>shot2code runs on your own machine. Screenshots, generated code, project history
 and API keys stay local; the only outbound traffic is to the model provider you
 configure, plus the update check and the integrations you switch on and use —
-an MCP server you trusted, a Figma or Google Stitch import, bounded web or
-free-image search, an image provider, feedback you submit, or anything you
-explicitly share. The full inventory is in
+an MCP server you trusted, a Figma/Stitch/GitHub import, public-site inspection,
+bounded web or free-image search, an image provider, feedback you submit, or
+anything you explicitly share. The full inventory is in
 <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
 <p>This page covers the shot2code-specific parts. The hub-wide policy — how reports
 are handled and what to expect — is in the repository
@@ -177,10 +177,21 @@ cancelled, and is killed when the backend stops. In that mode
 <strong>shot2code never receives the token</strong> — only whether a session exists.</li>
 <li><strong>Capture-only credentials never reach a model.</strong> The Figma personal access
 token is sent to <code>api.figma.com</code> and nowhere else; the Google Stitch API key
-reaches only the bundled SDK through the desktop app's own IPC. Neither is
-placed in a generation request, written into project history, or present in an
-export. HTML and images the Stitch SDK downloads must be <code>https://</code> and are
-size-bounded.</li>
+reaches only the bundled SDK through the desktop app's own IPC; a separate
+fine-grained GitHub repository token reaches only GitHub for the selected
+private repository. None is placed in a generation request, AI review,
+project history, snapshot or export.</li>
+<li><strong>Imported design assets are fetched defensively.</strong> Stitch resources use
+pinned public DNS resolution, manual redirect validation, byte/file ceilings
+and MIME/magic-byte checks before local persistence. Rejected assets fail
+closed instead of remaining as live external URLs. Figma downloads stream
+under per-file and aggregate budgets.</li>
+<li><strong>Public website inspection never lets Chromium fetch directly.</strong> Each
+HTTP(S) request is fulfilled through a public-only pinned resolver; cookies
+and authorization are not forwarded, redirects re-enter the same guard, and
+private/loopback/link-local/metadata targets, WebSockets, EventSource,
+service workers, media and non-GET/HEAD requests are blocked. Request,
+resource-byte, total-byte, element and global-time limits apply.</li>
 <li><strong>Starting or cancelling a sign-in is origin-guarded.</strong> Both spawn or kill a
 process, so they are refused unless the request came from the app on this
 machine: <code>localhost</code>, <code>127.0.0.1</code>, <code>::1</code>, or the <code>null</code> origin the packaged
@@ -324,7 +335,12 @@ and it runs no install or build commands.</li>
 <li>The scanner rejects path traversal, ignores dependency and build-output
 directories, and enforces limits on archive size, entry count, file count,
 per-file size and total decoded text.</li>
+<li>GitHub repository ZIPs use the same scanner, and bounded PNG/JPEG/GIF/WebP
+files cross a separate validated binary path into the local asset store.</li>
 <li>Raw imported source is not written into persisted project context.</li>
+<li>Figma, Stitch, website and repository text is wrapped as <strong>untrusted
+evidence</strong>. It cannot redefine the task, request credentials, or instruct the
+model to call a tool.</li>
 <li><strong>Previews are sandboxed:</strong> rendered from <code>srcDoc</code> in an iframe without
 <code>allow-same-origin</code> (an opaque origin that cannot read app state, cookies or
 storage), under a restrictive Content-Security-Policy, a <code>no-referrer</code> policy,
@@ -339,6 +355,8 @@ preview</strong>, especially anything touching the network, the filesystem or
 credentials. The Review source audit is a local, deterministic check of that
 source — it reports semantic and accessibility problems with evidence, and it
 is <strong>not a WCAG conformance assessment</strong> or a security review.</li>
+<li>Website <code>DESIGN.md</code> inspection is rendered evidence, not original source, an
+assertion of asset rights, or security/WCAG certification.</li>
 <li>Sharing to CodePen sends code off your device to a third party. It is never
 automatic and always asks first.</li>
 </ul>

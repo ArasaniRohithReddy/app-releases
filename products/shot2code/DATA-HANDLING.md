@@ -8,9 +8,9 @@ packaged app. The behaviour described here can be checked against the source at
 **Summary:** screenshots, generated code, project history and API keys stay on
 your machine. The only outbound traffic is the request to the model provider you
 configured, the update check, and the integrations you switch on and use — an
-MCP server you trusted, a Figma or Google Stitch import, web or free-image
-search, an image provider, feedback you explicitly submit, or anything you
-explicitly share.
+MCP server you trusted, a Figma/Stitch/GitHub import, public-site inspection,
+web or free-image search, an image provider, feedback you explicitly submit, or
+anything you explicitly share.
 
 ## 1. What leaves the device
 
@@ -25,8 +25,9 @@ explicitly share.
 | **Openverse and the selected image host** | You enable **Free image search**, the model searches, and an image is selected | The search query, then a bounded image download. No credential. Only locally revalidated CC0/Public Domain Mark results are accepted |
 | **`registry.modelcontextprotocol.io`** | You search the **MCP Registry** in Settings | Your search terms. Nothing about your projects, and no credential |
 | **`api.figma.com`** | You run a Figma **REST import** | The file and node ids from the URL you pasted, authenticated with **only** your Figma personal access token |
-| **Google Stitch** | You validate a Stitch key, generate a screen, or import a project with the bundled SDK — or a trusted Stitch MCP server is called | The prompt or project reference, authenticated with **only** your Stitch API key. HTML and image downloads made on its behalf are `https://` and size-bounded |
-| **`github.com` / `api.github.com`** | You choose **Sign in with GitHub**, or a skill is imported from a public GitHub folder | For sign-in: the device-flow exchange with the app's **public client id** — no client secret, and nothing about your projects. Where that flow is unavailable the official CLI performs the login instead and shot2code never sees the token. For a skill: a request for the files in the folder URL you pasted |
+| **Google Stitch and referenced public asset hosts** | You validate a Stitch key, generate/import a screen with the bundled SDK, or a trusted Stitch MCP server is called | The prompt/project reference goes to Stitch with only the Stitch key. Stitch-only assets are fetched through public-address, redirect, MIME and byte limits, persisted locally and never hotlinked |
+| **`github.com` / `api.github.com`** | You choose **Sign in with GitHub**, import a skill, or open a repository | Sign-in uses the app's public OAuth client id and no secret; where device flow is unavailable the official CLI performs login and shot2code never sees the token. Public skills/repos need no token. A private repo uses only the separate fine-grained repository token you supplied |
+| **A public website and its public resource hosts** | You choose **URL → Inspect design** | Public-only GET/HEAD requests needed to render bounded design evidence and desktop/tablet/mobile screenshots. Cookies and authorization headers are not forwarded |
 | GitHub Copilot | Listing the models your account can use | The Copilot credential, to ask which models the signed-in plan offers. No prompt, project or screenshot is sent |
 | Gemini | Asset extraction, or video/screen-recording input | The selected image or recording |
 | Replicate | Image generation, editing or background removal | The prompt and the source image, if any, authenticated with only the Replicate key |
@@ -54,8 +55,9 @@ only ever used with the server's own endpoint.
 
 **Capture-only credentials never reach a model.** The Figma personal access
 token is used for `api.figma.com` and nothing else; the Google Stitch API key is
-used by the bundled SDK and nothing else. Neither is included in a generation
-request, written into project history, or present in an export.
+used by the bundled SDK and nothing else; the private-repository token is used
+only for that GitHub archive request. None is included in a generation request,
+AI review, project history, snapshot or export.
 
 Two things deliberately contact nothing:
 
@@ -83,11 +85,12 @@ same sandbox and runs no package script or project configuration.
 
 | Path | Contents | Removed by |
 | --- | --- | --- |
-| `%LOCALAPPDATA%\shot2code\history.sqlite3` | Projects, versions, variants, prompts and variant messages | Deleting a project in **Recent projects**, or deleting the folder |
+| `%LOCALAPPDATA%\shot2code\history.sqlite3` | Projects, versions, variants, prompts, variant messages and restart-safe references to imported local assets | Deleting a project in **Recent projects**, or deleting the folder |
 | `%LOCALAPPDATA%\shot2code\` (skills) | Agent Skills you imported — their text and any script files they carry, stored as inert resources | Removing the skill in **Settings → Agent Skills**, or deleting the folder |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state, `window-state.json`, the **encrypted GitHub token** from the in-app sign-in, and `shot2code-backend.log` | **Disconnect GitHub from shot2code** for the token; deleting the folder for the rest |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped — process paths and outcome, no project data | Deleting the file |
-| The app's own local storage | Provider and image-provider keys, the BYOK connection (including its key or bearer token), MCP server definitions (including their environment values and request headers), web-search settings, the Figma access token, the Stitch API key, the ScreenshotOne key, selected models, Review widths, pane widths, preview source/zoom and UI preferences | Clearing them in **Settings** |
+| The app's own local storage | Provider and image-provider keys, the BYOK connection, MCP definitions/secrets, web-search settings, Figma/Stitch credentials, the separate GitHub repository token, the ScreenshotOne key, selected models, Review widths, pane widths, preview source/zoom and UI preferences | Clearing them in **Settings** |
+| shot2code's served local-asset directory | Imported Figma/Stitch/GitHub images, website-inspector screenshots and other normalized binary assets | Deleting the project/assets or the shot2code data directory |
 | `backend/.env` (*source only*) | Optional provider, image-provider and search credentials documented in the source repository | Editing the file |
 
 The history database is **not encrypted**. Treat it like any other local project
@@ -144,6 +147,10 @@ The database location can be redirected with `SHOT2CODE_DATA_DIR` or
   Figma token is sent to `api.figma.com` only; the Stitch key reaches only the
   bundled SDK. Neither is placed in a generation request, in project history or
   in an export.
+- **The GitHub repository token is separate from Copilot sign-in.** Use a
+  fine-grained token limited to one repository with `Contents: read`. It is used
+  only to download that private repository and is excluded from generation,
+  review, history and snapshots.
 - The local `/api/models` route uses those credentials only to decide which
   providers are usable and, for Copilot, to read the account's model list. It
   returns provider availability and model capabilities, never a key or token.
@@ -184,6 +191,12 @@ Imported code is treated as untrusted input:
 - Imported files are not uploaded anywhere by the import itself. Whatever ends up
   in the working project context can be sent to your provider on a later
   generation, exactly like the rest of the project.
+- Figma, Stitch and GitHub image assets are normalized into local files and use
+  restart-safe references in History. Binary files are decoded back to their
+  original bytes during export rather than being written as base64 text.
+- Website inspection does not recover original source. It records bounded
+  browser-computed evidence and screenshots after proxying every request through
+  public-address checks; page text remains untrusted input.
 
 **Agent Skills are treated the same way.** A skill imported from a local folder
 or a public GitHub folder is validated (front matter, normalised paths, bounded
@@ -227,8 +240,9 @@ instructions, like the rest of the prompt.
   import and an idle session. Validating a BYOK connection or an MCP server, and
   running a Review audit, should add no outbound request at all. Searching the
   MCP Registry, importing a skill from GitHub, a Figma REST import, a Stitch
-  call, an AI review and a web search each appear only when you take that
-  action, and carry only that feature's own credential.
+  call, website inspection, repository import, an AI review and a web search
+  each appear only when you take that action, and carry only that feature's own
+  credential.
 - Disconnect the network: the app starts, projects open from the local database,
   and generation fails with a provider error rather than silently doing something
   else.
@@ -244,10 +258,11 @@ instructions, like the rest of the prompt.
    and all of its versions from the device.
 2. Clear provider keys in **Settings**, along with the BYOK connection's
    credential, the Figma access token, the Stitch API key, the ScreenshotOne key
-   and any MCP server whose environment values or headers hold a token. Deleting
-   a server removes its stored values with it. Choose **Disconnect GitHub from
-   shot2code** to remove the encrypted GitHub token — a `gh` or Copilot CLI
-   session on the machine is separate and is signed out with that tool.
+   the separate GitHub repository token and any MCP server whose environment
+   values or headers hold a token. Deleting a server removes its stored values
+   with it. Choose **Disconnect GitHub from shot2code** to remove the encrypted
+   Copilot sign-in token — a `gh` or Copilot CLI session on the machine is
+   separate and is signed out with that tool.
 3. Remove any Agent Skills you imported in **Settings → Agent Skills**.
 4. Uninstall the app ([INSTALL.md](INSTALL.md#uninstalling)). **An uninstall
    deliberately leaves your projects in place**, so that an upgrade cannot

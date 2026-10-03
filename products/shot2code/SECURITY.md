@@ -3,9 +3,9 @@
 shot2code runs on your own machine. Screenshots, generated code, project history
 and API keys stay local; the only outbound traffic is to the model provider you
 configure, plus the update check and the integrations you switch on and use —
-an MCP server you trusted, a Figma or Google Stitch import, bounded web or
-free-image search, an image provider, feedback you submit, or anything you
-explicitly share. The full inventory is in
+an MCP server you trusted, a Figma/Stitch/GitHub import, public-site inspection,
+bounded web or free-image search, an image provider, feedback you submit, or
+anything you explicitly share. The full inventory is in
 [DATA-HANDLING.md](DATA-HANDLING.md).
 
 This page covers the shot2code-specific parts. The hub-wide policy — how reports
@@ -110,10 +110,21 @@ If a hash does not match, stop and report it.
   **shot2code never receives the token** — only whether a session exists.
 - **Capture-only credentials never reach a model.** The Figma personal access
   token is sent to `api.figma.com` and nowhere else; the Google Stitch API key
-  reaches only the bundled SDK through the desktop app's own IPC. Neither is
-  placed in a generation request, written into project history, or present in an
-  export. HTML and images the Stitch SDK downloads must be `https://` and are
-  size-bounded.
+  reaches only the bundled SDK through the desktop app's own IPC; a separate
+  fine-grained GitHub repository token reaches only GitHub for the selected
+  private repository. None is placed in a generation request, AI review,
+  project history, snapshot or export.
+- **Imported design assets are fetched defensively.** Stitch resources use
+  pinned public DNS resolution, manual redirect validation, byte/file ceilings
+  and MIME/magic-byte checks before local persistence. Rejected assets fail
+  closed instead of remaining as live external URLs. Figma downloads stream
+  under per-file and aggregate budgets.
+- **Public website inspection never lets Chromium fetch directly.** Each
+  HTTP(S) request is fulfilled through a public-only pinned resolver; cookies
+  and authorization are not forwarded, redirects re-enter the same guard, and
+  private/loopback/link-local/metadata targets, WebSockets, EventSource,
+  service workers, media and non-GET/HEAD requests are blocked. Request,
+  resource-byte, total-byte, element and global-time limits apply.
 - **Starting or cancelling a sign-in is origin-guarded.** Both spawn or kill a
   process, so they are refused unless the request came from the app on this
   machine: `localhost`, `127.0.0.1`, `::1`, or the `null` origin the packaged
@@ -259,7 +270,12 @@ input.
 - The scanner rejects path traversal, ignores dependency and build-output
   directories, and enforces limits on archive size, entry count, file count,
   per-file size and total decoded text.
+- GitHub repository ZIPs use the same scanner, and bounded PNG/JPEG/GIF/WebP
+  files cross a separate validated binary path into the local asset store.
 - Raw imported source is not written into persisted project context.
+- Figma, Stitch, website and repository text is wrapped as **untrusted
+  evidence**. It cannot redefine the task, request credentials, or instruct the
+  model to call a tool.
 - **Previews are sandboxed:** rendered from `srcDoc` in an iframe without
   `allow-same-origin` (an opaque origin that cannot read app state, cookies or
   storage), under a restrictive Content-Security-Policy, a `no-referrer` policy,
@@ -274,6 +290,8 @@ input.
   credentials. The Review source audit is a local, deterministic check of that
   source — it reports semantic and accessibility problems with evidence, and it
   is **not a WCAG conformance assessment** or a security review.
+- Website `DESIGN.md` inspection is rendered evidence, not original source, an
+  assertion of asset rights, or security/WCAG certification.
 - Sharing to CodePen sends code off your device to a third party. It is never
   automatic and always asks first.
 

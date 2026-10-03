@@ -192,10 +192,15 @@ incomplete connection is reported as a notice and skipped.
 | A Figma REST import is rejected | The token needs the `file_content:read` scope, and the URL has to be a Figma file URL — shot2code reads the file and node ids out of it. |
 | Figma REST returns 429 | Respect the displayed retry interval. v0.5.2 preserves Figma's plan tier and limit type and links the upgrade documentation; Tier 1 endpoints can have low limits on Starter/View/Collab access. |
 | A Figma import brought in the wrong frames | Without node ids in the URL, the top-level renderable frames are imported. Select the frame in Figma and copy its link so the URL carries the node id. |
+| A Figma frame imported but some assets did not | Optional image fills/export-marked nodes are partial-success. A rate-limited or invalid optional asset is reported without discarding usable rendered frames. |
+| You expected Figma application source code | Figma REST exposes file structure, rendered nodes and original image fills, not the production source of an application. Import the repository separately if you own and need its code. |
 | An exported SVG looks different in the result | SVGs are rasterised locally before they are sent, so the model sees a picture. Export a PNG at the size you care about if the raster is not faithful enough. |
 | Stitch actions do nothing | The bundled SDK is part of the **desktop app** and needs a Stitch API key in Settings. It is experimental — Google Labs states it is not an officially supported Google product. |
-| A Stitch download failed | Downloads made on the SDK's behalf must be `https://` and are size-bounded. An oversized or plain-`http://` asset is refused rather than fetched. |
+| A Stitch download failed | Assets must resolve to public HTTPS resources and pass redirect, MIME, magic-byte, file and aggregate limits. Rejected references fail closed instead of being left as live URLs. |
+| Stitch unexpectedly called a model | Use **Stitch only**, the default, to open localized Stitch HTML/assets/`DESIGN.md` directly. **Convert to selected stack** is the explicit mode that makes a second provider request. |
 | Your Figma or Stitch credential appeared in a prompt | It should not, and it does not: both are capture-only and are stripped before a generation payload is built. Report it privately if you can reproduce it — see [SECURITY.md](SECURITY.md). |
+| Website inspection refuses a URL | Only public HTTP(S) destinations are accepted. Loopback, private, link-local, metadata and mixed-public/private DNS answers are blocked; use an exported screenshot for an internal site. |
+| Website inspection looks different from the original | It is a bounded render with media, WebSockets, EventSource and service workers disabled. It captures design evidence, not a pixel-identical archival copy or original source. |
 
 ## Generation fails or is wrong
 
@@ -211,6 +216,7 @@ incomplete connection is reported as a notice and skipped.
 | Only one of several screenshots appears | Upload them together and choose **Separate pages**. That mode requires one navigable view per screenshot. **Responsive views** is for the same page at different widths, **UI states** for before/after states. |
 | A refinement replaced work you wanted to keep | Nothing is overwritten — each refinement is a new version. Step back through **History**. |
 | The result ignores an imported component | Imported component paths are naming and API context. A generated preview is self-contained, so it cannot resolve imports from your local project. |
+| A screenshot would not paste into Chat | Paste PNG, JPEG or WebP and keep each image under 10 MB. A turn accepts at most five unique images; duplicate data is ignored before the remaining-slot limit is applied. |
 
 ## The Review workspace
 
@@ -262,12 +268,15 @@ Import reads a folder, a ZIP or individual source files. It parses text — it
 | Part of the project is missing | Deliberate. There are limits on archive size, entry count, file count, per-file size and total decoded text. Point it at the part of the project you actually want as context. |
 | The import was rejected outright | Unsafe or malformed input — traversal paths in an archive, for example — is refused rather than sanitised. |
 | You wanted the files, not a summary | **Use as design context** keeps only a compact summary. Choose **Open editable project** to hand the normalized files to the editor instead. |
+| A private GitHub repository returns 404/401 | Add a separate fine-grained token restricted to that repository with **Contents: read**. The Copilot sign-in token is deliberately not reused for repository access. |
+| A public repository says no supported source files were found | The scanner recognises supported frontend/source extensions and ignores extensionless or unsupported files. Point it at a repository that contains supported source, or download only the relevant folder/files. |
 
 ## Preview, export and CodePen
 
 | Symptom | Cause and fix |
 | --- | --- |
 | The preview shows a fallback or a diagnostic | The preview is derived, not the source of truth. When a framework build or a local asset cannot be represented safely it degrades deterministically, while every source file stays editable and downloadable in the **Code** tab. |
+| Preview reports `{IMG.site}`, `{IMG.dashboard}` or a brace-wrapped URL as missing | Those are malformed model-generated references, not service errors. Current prompts forbid them; the derived Preview/CodePen artifact unwraps real public URLs and replaces unresolved pseudo-image tokens with a safe placeholder. Refine the source if you want a specific asset. |
 | **Stack preview** is unavailable | It appears once a generation has finished. It renders the controlled Vite HTML, React and Preact files in the same sandbox and runs **no package script and no project configuration** — if you need a real build, export the project folder. |
 | The download contained files you did not expect | Open the Code tab's read-only **Export project** view first: it lists the exact text files and assets the ZIP will hold for your stack, because some stacks expand a single document into a project layout at export time. |
 | The preview scrolls sideways at **100%** | Intended. A fixed-width desktop canvas is centred in a neutral frame; when the window is narrower than the canvas the frame scrolls rather than cropping the start of the page. Use **Fit** to scale it down. |

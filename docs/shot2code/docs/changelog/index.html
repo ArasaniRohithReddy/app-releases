@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 a0395e90802d20dd24818f208cb52c3b0e3b8be76f1de0f0164b435e1aa5d4fd). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 24ac7b58cc3afa1b9a9c9f2b0ec5995a860e246987441349b1bbd128fcd80942). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/CHANGELOG.md">View source on GitHub</a></p>
           <p class="history-note">This public changelog preserves historical entries and explicitly labelled unreleased notes. Unreleased items are not claims about the stable binary.</p>
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#052--2026-09-28">[0.5.2] — 2026-09-28</a></li><li><a href="#051--2026-09-27">[0.5.1] — 2026-09-27</a></li><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#060--2026-10-04">[0.6.0] — 2026-10-04</a></li><li><a href="#052--2026-09-28">[0.5.2] — 2026-09-28</a></li><li><a href="#051--2026-09-27">[0.5.1] — 2026-09-27</a></li><li><a href="#050--2026-09-27">[0.5.0] — 2026-09-27</a></li><li><a href="#040--2026-09-20">[0.4.0] — 2026-09-20</a></li><li><a href="#033--2026-09-14">[0.3.3] — 2026-09-14</a></li><li><a href="#032--2026-09-14">[0.3.2] — 2026-09-14</a></li><li><a href="#031--2026-09-13">[0.3.1] — 2026-09-13</a></li><li><a href="#030--2026-09-13">[0.3.0] — 2026-09-13</a></li></ul></nav></details>
         <div class="doc-content"><p>Published Windows builds of shot2code, newest first. Tags in this hub are
 product-prefixed (<code>shot2code-vX.Y.Z</code>); the upstream project tags the same build as
 <code>vX.Y.Z</code>.</p>
@@ -73,12 +73,51 @@ which is generated from the release feed; this file summarises each one.</p>
 <a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/CHANGELOG.md" rel="noopener noreferrer">CHANGELOG.md</a>.
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.</p>
+<h2 id="060--2026-10-04" tabindex="-1">[0.6.0] — 2026-10-04</h2>
+<p><a href="../../releases/">Download</a> ·
+<a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.6.0" rel="noopener noreferrer">hub release</a> ·
+<a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.6.0" rel="noopener noreferrer">upstream notes</a></p>
+<p>The current stable release expands shot2code from screenshot generation into a
+local-first design-source workspace.</p>
+<h3 id="added" tabindex="-1">Added</h3>
+<ul>
+<li>Figma REST import now preserves original image fills and export-marked nodes
+beside rendered frames as bounded, reusable local assets.</li>
+<li>Google Stitch defaults to <strong>Stitch only</strong>: localized HTML, screenshot, images,
+stylesheets, nested CSS assets/fonts, <code>srcset</code> and available <code>DESIGN.md</code> open
+directly without a second model request. Conversion is explicit.</li>
+<li>The URL tab can inspect a public website through a bounded public-only
+Chromium proxy, produce desktop/tablet/mobile screenshots and export a
+browser-computed <code>DESIGN.md</code>.</li>
+<li>A dedicated GitHub tab opens public repositories without a token or private
+repositories with a separate repository-limited <code>Contents: read</code> token,
+preserving bounded image assets without executing repository code.</li>
+<li>PNG, JPEG and WebP screenshots can be pasted directly into refinement Chat,
+with duplicate, count and size controls.</li>
+<li>A new capture-to-code application identity ships across the EXE, NSIS, MSI,
+portable build, shortcuts, sidebar and browser favicons.</li>
+</ul>
+<h3 id="changed" tabindex="-1">Changed</h3>
+<ul>
+<li>Imported Figma, Stitch and GitHub assets now use restart-safe local references
+across History, retries and later chat, and binary project files export as
+decoded bytes.</li>
+<li>Preview and CodePen unwrap real brace-wrapped public URLs and replace
+unresolved <code>IMG.*</code> pseudo references with a safe placeholder; generation
+prompts explicitly forbid those malformed forms.</li>
+<li>Public-site, design-tool and repository text is labelled untrusted evidence.
+Stitch and website networking uses pinned public-address validation, bounded
+redirects/downloads and fail-closed behavior.</li>
+<li>MCP and Agent Skills retain enabled-plus-trusted, read-only-by-default and
+disabled-by-default safety rules and were reverified across backend,
+renderer and packaged-app surfaces.</li>
+</ul>
 <h2 id="052--2026-09-28" tabindex="-1">[0.5.2] — 2026-09-28</h2>
 <p><a href="../../releases/">Download</a> ·
 <a href="https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.5.2" rel="noopener noreferrer">hub release</a> ·
 <a href="https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.5.2" rel="noopener noreferrer">upstream notes</a></p>
-<p>The current stable release. It includes the v0.5.0 feature set plus the fixes and additions below.</p>
-<h3 id="added" tabindex="-1">Added</h3>
+<p>The previous stable release. It includes the v0.5.0 feature set plus the fixes and additions below.</p>
+<h3 id="added-1" tabindex="-1">Added</h3>
 <ul>
 <li>
 <p><strong>Free image search — shot2code sends no key of its own.</strong> A new canonical
@@ -195,7 +234,7 @@ authenticated <code>gh</code> submission plus copy, Markdown-download and prefil
 browser fallbacks.</p>
 </li>
 </ul>
-<h3 id="changed" tabindex="-1">Changed</h3>
+<h3 id="changed-1" tabindex="-1">Changed</h3>
 <ul>
 <li><strong>Copilot's built-in <code>web_fetch</code> is assessed and deliberately not offered.</strong>
 It is a real runtime built-in and <code>ToolSet.add_builtin(&quot;web_fetch&quot;)</code> would
@@ -302,7 +341,7 @@ the installation directory is replaced.</p>
 <p>Everything new here is <strong>additive and off until you switch it on</strong>. If you
 configure none of it, the app behaves as it did in 0.4.0 — the native OpenAI,
 Anthropic, Gemini and Copilot routes are untouched.</p>
-<h3 id="added-1" tabindex="-1">Added</h3>
+<h3 id="added-2" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Sign in to GitHub Copilot without a CLI.</strong> The desktop app now runs its own
 <strong>GitHub OAuth device flow</strong> against an application registered for shot2code.
@@ -393,7 +432,7 @@ no longer limited to a single endpoint model: every model you discover or
 type becomes its <strong>own selectable identity</strong>, so several models from the same
 endpoint can run in one generation and be compared.</li>
 </ul>
-<h3 id="changed-1" tabindex="-1">Changed</h3>
+<h3 id="changed-2" tabindex="-1">Changed</h3>
 <ul>
 <li><strong>Projects survive an upgrade.</strong> History lives in
 <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>, outside the installation
@@ -513,7 +552,7 @@ local source audit, and puts a real Windows menu bar on the app.</p>
 Agent Skills, Figma and Google Stitch.</p>
 <p>Everything here is <strong>additive</strong>. If you do not configure any of it, the app
 behaves exactly as it did in 0.3.3.</p>
-<h3 id="added-2" tabindex="-1">Added</h3>
+<h3 id="added-3" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Copilot SDK BYOK: bring your own endpoint.</strong> A single, separate connection
 in <strong>Settings</strong> with its own credential — <strong>OpenAI-compatible</strong>, <strong>Azure
@@ -610,7 +649,7 @@ panel</strong> (<code>Ctrl+Alt+C</code>), Settings, zoom, the Help centre and th
 reference. Items that cannot work without a project are disabled rather than
 offered.</li>
 </ul>
-<h3 id="changed-2" tabindex="-1">Changed</h3>
+<h3 id="changed-3" tabindex="-1">Changed</h3>
 <ul>
 <li><strong>The model picker has a fifth group.</strong> <strong>Copilot SDK (BYOK)</strong> sits beside
 GitHub Copilot, OpenAI, Anthropic and Google Gemini. The four native groups
@@ -732,7 +771,7 @@ from then on, rather than reporting a healthy backend that cannot generate.
 Chromium is advertised only after it has actually launched, and it is closed
 when the backend shuts down.</li>
 </ul>
-<h3 id="added-3" tabindex="-1">Added</h3>
+<h3 id="added-4" tabindex="-1">Added</h3>
 <ul>
 <li><strong>A resizable Chat and History panel.</strong> On wide windows (≥ 1280px) drag the
 divider between the conversation/History panel and Preview or Code. It is a
@@ -762,7 +801,7 @@ instead of offering a dead button.</li>
 numpad add and subtract keys work with <code>Ctrl</code>, and <code>Ctrl+0</code> resets. Zoom moves
 in deterministic 10-point steps and is bounded between 50% and 300%.</li>
 </ul>
-<h3 id="changed-3" tabindex="-1">Changed</h3>
+<h3 id="changed-4" tabindex="-1">Changed</h3>
 <ul>
 <li>Below the desktop split breakpoint nothing moves: the <strong>Preview</strong>, <strong>Chat</strong> and
 <strong>History</strong> destinations behave exactly as before and no drag handle is shown.</li>
@@ -820,7 +859,7 @@ represent, including a strict cp1252 console, instead of letting box-drawing
 characters or prompt text raise <code>UnicodeEncodeError</code> mid-generation. This
 affects running from source; the packaged app logs to a file.</li>
 </ul>
-<h3 id="added-4" tabindex="-1">Added</h3>
+<h3 id="added-5" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Model selection for every code-generation provider.</strong> Settings and the
 compact picker beside the composer group the available models under <strong>GitHub
@@ -840,7 +879,7 @@ reported explicitly instead of silently dropped.</li>
 the installed process-tree shutdown, the survival of an unrelated process with
 the same executable name, the fail-closed path, and the updater lifecycle.</li>
 </ul>
-<h3 id="changed-4" tabindex="-1">Changed</h3>
+<h3 id="changed-5" tabindex="-1">Changed</h3>
 <ul>
 <li>Preview controls are grouped by purpose: a <strong>Fit / 100%</strong> segmented control and
 a labelled <strong>History <em>n</em>/<em>m</em></strong> control instead of loose buttons.</li>
@@ -879,7 +918,7 @@ asks you to quit and try again, instead of looking stuck.</li>
 <code>files</code> array, so it ships inside the app rather than being dropped from the
 build.</li>
 </ul>
-<h3 id="added-5" tabindex="-1">Added</h3>
+<h3 id="added-6" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Collapsible chat panel</strong> on wide layouts (≥ 1280px), so the preview or the
 code editor can take the full width. The choice is remembered; <strong>Ctrl+3</strong>
@@ -906,7 +945,7 @@ banner over the code.</li>
 <li><strong>Read-only</strong> and <strong>Generated</strong> badges beside the existing <strong>Entry</strong> and
 <strong>Preview</strong> badges.</li>
 </ul>
-<h3 id="changed-5" tabindex="-1">Changed</h3>
+<h3 id="changed-6" tabindex="-1">Changed</h3>
 <ul>
 <li>The icon rail's <strong>Editor</strong> entry is now <strong>Chat</strong>, with an explicit
 collapse/expand control, <code>aria-label</code>/<code>aria-pressed</code>/<code>aria-controls</code>/
@@ -928,7 +967,7 @@ variant.</li>
 and their version history are saved on your own machine, generated output is a
 real multi-file project you can edit, and previews run in a locked-down sandbox.</p>
 <p>Superseded by 0.3.1, which fixes the updater race it shipped with.</p>
-<h3 id="added-6" tabindex="-1">Added</h3>
+<h3 id="added-7" tabindex="-1">Added</h3>
 <ul>
 <li><strong>Local project history (SQLite).</strong> Projects, versions, variants, prompts and
 messages are stored in <code>history.sqlite3</code> in a per-user data directory

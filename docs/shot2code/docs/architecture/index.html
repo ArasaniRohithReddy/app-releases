@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 1522c6d531830020af570d6be20d2f92531562a5498439a66c45525e9d5a65fd). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 e265704ba616db8b8eaad7013e425ad13060f42f95db940454fcf8e089f27f29). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -296,20 +296,41 @@ incomplete or switched-off integration becomes a diagnostic that travels with
 the response, not an error that stops the run.</p>
 <h3 id="design-sources" tabindex="-1">Design sources</h3>
 <p><code>/api/figma</code> parses a Figma URL into a file key and optional node ids, asks the
-REST API for rendered images of the top-level renderable frames, and converts
-them into local data URLs. It talks to <code>https://api.figma.com</code> and nothing else,
-authenticated only with the personal access token supplied in the request.
-Exported SVG files are rasterised in the app before they are sent, so a model
-always receives a picture rather than markup it might mis-read.</p>
+REST API for rendered images, original image-fill URLs and explicitly
+export-marked nodes. Downloads stream under per-file and aggregate budgets and
+become durable local assets. Optional asset failures remain partial-success so
+they do not discard frames already imported. It talks to
+<code>https://api.figma.com</code> and nothing else, authenticated only with the personal
+access token supplied in the request. Exported SVG files are rasterised in the
+app before they are sent, so a model always receives a picture rather than
+markup it might mis-read.</p>
 <p>Google Stitch is reached two ways: as an ordinary MCP server, or through
 <code>@google/stitch-sdk</code> bundled in the Electron package and driven over the shell's
 own IPC — key validation, prompt-to-screen generation and project or screen
-import. HTML and image downloads made on its behalf are HTTPS-only and
-size-bounded. The SDK is published by Google Labs and is explicitly not an
+import. The default Stitch-only route directly opens localized HTML, screenshot,
+images, stylesheets, nested CSS assets/fonts, <code>srcset</code> and available
+<code>DESIGN.md</code>; conversion through an LLM is a separate explicit action.
+<code>desktop/stitch-assets.js</code> pins public DNS answers, revalidates redirects,
+enforces file/aggregate budgets and MIME/magic agreement, and rewrites accepted
+resources to local assets. Rejected resources fail closed instead of remaining
+as live URLs. The SDK is published by Google Labs and is explicitly not an
 officially supported Google product, so it is treated as experimental.</p>
-<p>Both credentials are <strong>capture-only</strong>: the settings projection that builds a
-generation payload strips them, so they cannot reach a model, project history or
-an export.</p>
+<p><code>/api/github-repository</code> downloads public archives without a token or private
+archives with a separate fine-grained repository token. The archive enters the
+existing never-execute text scanner, while bounded PNG/JPEG/GIF/WebP files take
+a separate validated binary path into the editable project. Copilot OAuth is
+not broadened or reused.</p>
+<p><code>/api/url-design-inspector</code> runs a fresh local Chromium context but does not let
+Chromium fetch the network directly. Every HTTP(S) request is fulfilled through
+an aiohttp connector with a public-only pinned resolver; unsafe schemes and
+addresses, WebSocket/EventSource/service workers, media and non-GET/HEAD
+requests are blocked, and request/resource/total/deadline/element budgets apply.
+It emits computed design evidence plus 1440×900, 768×1024 and 390×844
+screenshots — rendered evidence, not recovered original source.</p>
+<p>All capture credentials are stripped from generation/history/export payloads.
+All design text is wrapped as untrusted evidence, and imported binary references
+are canonicalized as <code>shot2code-local:/local-assets/...</code> for persistence then
+rebound to the current backend origin on restore.</p>
 <h3 id="web-and-image-tools" tabindex="-1">Web and image tools</h3>
 <p><code>backend/web_search/</code> owns one canonical <code>search_web</code> definition. Tavily and Exa
 adapters use fixed HTTPS endpoints, explicit timeouts and no redirects; domain
@@ -358,7 +379,8 @@ model.</p>
 counts repeated colours, CSS variables, typography, spacing, radii, shadows,
 motion and semantic components, and renders them as <code>DESIGN.md</code>, <code>SKILL.md</code> and
 a palette PNG. It reads the source the project declares rather than a browser's
-computed styles.</p>
+computed styles. The URL inspector described above is the complementary
+browser-computed path for a public site before generation.</p>
 <h2 id="workspace-layout-state" tabindex="-1">Workspace layout state</h2>
 <p>Pane widths, active Preview/Code/Review surface, HTML/Stack preview source and
 preview zoom are <strong>view state</strong>, held in renderer local storage and clamped to

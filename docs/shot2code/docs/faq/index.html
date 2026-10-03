@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/FAQ.md (normalized SHA-256 5e4d6a221db15021a3f804da474859cdd829727e25c2feb034b4e6a30b1a1d79). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/FAQ.md (normalized SHA-256 6ac23cca045d7ef7bcb194a721ddb603c8ec88acb1a599b9ae04555ee48f2dc0). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -193,6 +193,10 @@ ready.&quot;</em></p>
 <p><strong>Can I say what I want before the first generation?</strong>
 Yes. Both <strong>Upload</strong> and <strong>Import</strong> take an optional first instruction (and a
 model choice) before anything is generated.</p>
+<p><strong>Can I paste screenshots into Chat?</strong>
+Yes. Paste PNG, JPEG or WebP images with Ctrl+V/Cmd+V. The limit is 10 MB per
+image and five images per turn; duplicates are ignored, and normal text paste
+continues to work.</p>
 <p><strong>Can I see what the download will contain before I download it?</strong>
 Yes. The Code tab has a read-only <strong>Export project</strong> view beside <strong>Current
 code</strong> listing the exact text files and assets the ZIP will hold for your stack.</p>
@@ -470,7 +474,9 @@ computer files stay disabled.</p>
 <p><strong>How do I start from a Figma design?</strong>
 Three ways: exported screenshots, an exported <strong>SVG</strong> (rasterised locally before
 it is sent), or a <strong>REST import</strong> using a Figma URL and your own personal access
-token with <code>file_content:read</code>.</p>
+token with <code>file_content:read</code>. REST import preserves rendered frames, original
+image fills and export-marked nodes as local assets. It does not recover
+production application source because Figma's REST API does not expose that.</p>
 <p><strong>Why does the Figma remote MCP server not connect?</strong>
 Figma currently admits only clients listed in its own MCP catalogue. shot2code
 does not impersonate another editor or reuse its sign-in to get around that, so
@@ -481,12 +487,15 @@ project history or an export.</p>
 <p><strong>What can the Stitch integration do?</strong>
 Either reach the official <strong>Stitch MCP</strong> endpoint like any other server, or use
 the bundled SDK in the desktop app with a Stitch API key to validate the key,
-generate a screen from a prompt, or import an existing project or screen.</p>
+generate a screen from a prompt, or import an existing project or screen.
+<strong>Stitch only</strong> opens localized HTML, screenshot, images, stylesheets, fonts and
+available <code>DESIGN.md</code> without a second model request. <strong>Convert to selected
+stack</strong> is a separate explicit option.</p>
 <p><strong>Is the Stitch SDK official?</strong>
 It is published by Google Labs, which states it is <strong>not an officially supported
 Google product</strong>. shot2code bundles version 0.3.5 (Apache-2.0) and treats it as
-experimental. HTML and images it downloads must be <code>https://</code> and are
-size-bounded.</p>
+experimental. Referenced resources are downloaded through public-address,
+redirect, MIME and byte limits and rewritten to restart-safe local assets.</p>
 <p><strong>Does my Stitch key reach the model?</strong>
 No. Like the Figma token it is capture-only: stored on this device, passed to the
 bundled SDK, and excluded from generation requests, history and exports.</p>
@@ -534,6 +543,12 @@ variables, typography, spacing, radii, shadows, motion and semantic component
 counts — and exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a palette PNG. It reads the
 composed source, so it describes what the code declares rather than what a
 browser finally computes.</p>
+<p><strong>Can it inspect a public website before generation?</strong>
+Yes. In the <strong>URL</strong> tab choose <strong>Inspect design</strong>. A bounded local Chromium
+session captures computed design evidence plus desktop, tablet and mobile
+screenshots, and produces copy/downloadable <code>DESIGN.md</code>. It does not recover
+original source, establish asset reuse rights or certify accessibility, and it
+refuses private/loopback/metadata destinations.</p>
 <p><strong>Is the JSON report safe to attach to an issue?</strong>
 It is built to be: file paths are reduced to a leaf name and no credential of
 any kind is included. Read it before you post it, as you would any export.</p>
@@ -547,6 +562,12 @@ variables and reusable CSS classes become design tokens.</p>
 <p><strong>Can it import my whole repository?</strong>
 There are limits on archive size, entry count, file count, per-file size and total
 decoded text. Point it at the part of the project you actually want as context.</p>
+<p><strong>Can I paste a GitHub repository URL instead of downloading a ZIP?</strong>
+Yes, use the dedicated <strong>GitHub</strong> tab. Public repositories need no token. A
+private repository needs a separate fine-grained token limited to that
+repository with <strong>Contents: read</strong>; the app's Copilot OAuth token is deliberately
+not broadened or reused. Source is scanned but never executed, and bounded
+PNG/JPEG/GIF/WebP assets remain available to Preview, export and later chat.</p>
 <h2 id="updating" tabindex="-1">Updating</h2>
 <p><strong>An update downloaded — how do I install it?</strong>
 Settings shows <strong>Restart &amp; install</strong> when a download is ready. The install runs
@@ -596,10 +617,11 @@ from the device), then uninstall and delete <code>%LOCALAPPDATA%\shot2code\</cod
 Stored locally by the app for the device you entered them on, and sent only to the
 provider they belong to. A GitHub token obtained through the in-app sign-in is
 encrypted with Electron <code>safeStorage</code>. The Figma token and the Stitch API key are
-capture-only — used by the code that calls those services and excluded from
-generation requests, history and exports. Your model selection is stored the same
-way — a preference on this device, not an account setting. <code>REPLICATE_API_KEY</code>
-lives in <code>backend/.env</code> instead.</p>
+capture-only, and a private-repository token is a separate fine-grained
+<code>Contents: read</code> credential — each is used only by its own integration and
+excluded from generation requests, AI review, history and exports. Your model
+selection is stored the same way — a preference on this device, not an account
+setting. <code>REPLICATE_API_KEY</code> lives in <code>backend/.env</code> instead.</p>
 <h2 id="getting-help" tabindex="-1">Getting help</h2>
 <ul>
 <li>Something is broken: work through

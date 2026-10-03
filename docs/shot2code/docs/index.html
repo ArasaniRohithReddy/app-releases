@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/README.md (normalized SHA-256 799f4c0846bda6a4f0a2cf612d487d778c1ec819c6e1ced8b473b830fb11bf42). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/README.md (normalized SHA-256 361fc0ddd9105c1bbca956bd3ca59e2fa19284f7765577f1572e2fd59a1d6296). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -65,12 +65,13 @@
         <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#image-generation-and-free-images">Image generation and free images</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
         <div class="doc-content"><p><strong>Turn a screenshot into working code — on your own machine.</strong></p>
 <p><a href="../releases/"><span class="image-alt">Latest release</span></a></p>
-<p>shot2code is a <strong>Windows desktop app</strong>. Give it a screenshot, several related
-screens, a URL, a written description, a screen recording, or a Figma or Google
-Stitch design, and it generates a working page you can edit, version and export.
-Generation runs from your machine against the model provider you configure; your
-screenshots, the generated code and your API keys are not sent anywhere except
-the provider you chose and the integrations you switch on and use.</p>
+<p>shot2code is a <strong>Windows desktop app</strong>. Start with screenshots, a public
+website's computed design, Figma assets, a direct Google Stitch project, a
+GitHub frontend, a description or a recording, then edit, version, refine and
+export the result. Stitch can open directly without a second model call;
+generation runs from your machine against the provider you configure. Project
+history and normalized imported assets stay local, while credentials go only
+to the integration they belong to.</p>
 <p><strong><a href="../">Product site</a></strong>
 <strong><a href="../releases/">Downloads</a></strong>
 <strong><a href="install/">Install</a></strong> <strong><a href="user-guide/">User guide</a></strong> <strong><a href="faq/">FAQ</a></strong>
@@ -124,12 +125,22 @@ The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token 
 <tr>
 <td>Start from a Figma design</td>
 <td><strong>Figma</strong> — exported screenshots or SVG, or a REST import with your own access token</td>
-<td>Frames rendered by Figma and brought in as local images; Figma MCP is not offered because Figma restricts it to catalog-listed clients</td>
+<td>Rendered frames plus original image fills and export-marked nodes as reusable local assets; Figma REST does not provide application source code</td>
 </tr>
 <tr>
 <td>Start from a Google Stitch screen</td>
 <td><strong>Stitch</strong> — the official MCP server, or the bundled experimental SDK with your Stitch API key</td>
-<td>A generated screen, or an imported Stitch project</td>
+<td><strong>Stitch only</strong> opens localized HTML, screenshot, images, stylesheets, fonts and <code>DESIGN.md</code> directly; conversion to another stack is optional</td>
+</tr>
+<tr>
+<td>Inspect a public website</td>
+<td><strong>URL → Inspect design</strong></td>
+<td>Bounded local-Chromium evidence, desktop/tablet/mobile screenshots and an editable/exportable <code>DESIGN.md</code>; no claim to recover original source</td>
+</tr>
+<tr>
+<td>Open a GitHub frontend</td>
+<td><strong>GitHub</strong> tab</td>
+<td>A never-executed editable project with safe text source and bounded image assets; public repos need no token</td>
 </tr>
 <tr>
 <td>Say what you want up front</td>
@@ -178,8 +189,8 @@ The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token 
 </tr>
 <tr>
 <td>Refine it</td>
-<td>Chat panel, or select an element in the preview</td>
-<td>A new version that keeps the previous one — with the whole conversation, answers included, still readable</td>
+<td>Chat panel, paste screenshots, or select an element in the preview</td>
+<td>A new version that keeps the previous one — with the whole conversation, answers and pasted PNG/JPEG/WebP references still readable</td>
 </tr>
 <tr>
 <td>Edit the source</td>
@@ -363,11 +374,19 @@ from a design tool:</p>
 <tbody>
 <tr>
 <td><strong>Figma</strong></td>
-<td>Exported screenshots; exported <strong>SVG</strong> (rasterised locally); or a <strong>REST import</strong> that takes a Figma URL and your own personal access token with <code>file_content:read</code>, and brings the rendered frames in as local images</td>
+<td>Exported screenshots/SVG, or a REST import that renders selected frames and preserves original image fills plus export-marked nodes as reusable local assets</td>
 </tr>
 <tr>
 <td><strong>Google Stitch</strong></td>
-<td>The official <strong>Stitch MCP</strong> endpoint, or the bundled <strong>experimental</strong> <code>@google/stitch-sdk</code> in the desktop app — validate a key, generate a screen from a prompt, or import an existing project or screen</td>
+<td>The official Stitch MCP, or the bundled experimental SDK. Stitch-only mode directly opens the localized HTML/assets/<code>DESIGN.md</code>; conversion through selected models is explicit</td>
+</tr>
+<tr>
+<td><strong>Public website</strong></td>
+<td>The URL inspector proxies public-only resources through pinned-address checks and captures computed design evidence at desktop/tablet/mobile sizes</td>
+</tr>
+<tr>
+<td><strong>GitHub repository</strong></td>
+<td>Public URL with no token, or a separate repository-limited fine-grained token with <code>Contents: read</code> for a private repo. Copilot sign-in is never broadened or reused</td>
 </tr>
 </tbody>
 </table></div>
@@ -378,6 +397,11 @@ desktop and hosted MCP servers admit only clients in Figma's own catalogue, and
 shot2code does not impersonate another editor — REST/PAT is the supported
 programmatic route. <code>@google/stitch-sdk</code> is published by Google Labs
 and is explicitly not an officially supported Google product.</p>
+<p>Imported design/repository images are persisted under shot2code's local asset
+store and referenced through restart-safe identifiers. Binary project files
+remain previewable and export as decoded bytes rather than base64 text. Every
+external design document, website string and repository file is untrusted data,
+never an instruction source.</p>
 <h2 id="image-generation-and-free-images" tabindex="-1">Image generation and free images</h2>
 <p>Image generation is additive and provider-specific:</p>
 <ul>
@@ -442,7 +466,7 @@ on first run. Verify the SHA-256 checksum instead — see <a href="security/">SE
 </tr>
 <tr>
 <td><a href="user-guide/">USER-GUIDE.md</a></td>
-<td>First run, providers, sign-in, BYOK, MCP and the registry, skills, Figma and Stitch, model selection, generating, editing, Review, resizing, History, import, export, the menu bar, shortcuts, Help</td>
+<td>First run, providers, sign-in, BYOK, MCP/skills, Figma/Stitch, public-site inspection, GitHub import, pasted chat screenshots, Review, History and export</td>
 </tr>
 <tr>
 <td><a href="faq/">FAQ.md</a></td>
@@ -450,7 +474,7 @@ on first run. Verify the SHA-256 checksum instead — see <a href="security/">SE
 </tr>
 <tr>
 <td><a href="troubleshooting/">TROUBLESHOOTING.md</a></td>
-<td>Symptom-first runbook: startup, providers, Chromium, import, export, updates, where the logs live</td>
+<td>Symptom-first runbook: startup, providers, Figma/Stitch, website/GitHub import, Chromium, Preview/export, updates and logs</td>
 </tr>
 <tr>
 <td><a href="architecture/">ARCHITECTURE.md</a></td>

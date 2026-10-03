@@ -4,12 +4,13 @@
 
 [![Latest release](https://img.shields.io/github/v/release/ArasaniRohithReddy/app-releases?filter=shot2code-*&label=latest&color=4F46E5)](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)
 
-shot2code is a **Windows desktop app**. Give it a screenshot, several related
-screens, a URL, a written description, a screen recording, or a Figma or Google
-Stitch design, and it generates a working page you can edit, version and export.
-Generation runs from your machine against the model provider you configure; your
-screenshots, the generated code and your API keys are not sent anywhere except
-the provider you chose and the integrations you switch on and use.
+shot2code is a **Windows desktop app**. Start with screenshots, a public
+website's computed design, Figma assets, a direct Google Stitch project, a
+GitHub frontend, a description or a recording, then edit, version, refine and
+export the result. Stitch can open directly without a second model call;
+generation runs from your machine against the provider you configure. Project
+history and normalized imported assets stay local, while credentials go only
+to the integration they belong to.
 
 **[Product site](https://arasanirohithreddy.github.io/app-releases/shot2code/)**
 **[Downloads](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)**
@@ -40,8 +41,10 @@ The `gh auth login` / `copilot` ladder and a pasted token still work.
 | Task | Where | Result |
 | --- | --- | --- |
 | Generate from a reference | Upload a screenshot, paste a URL, describe a screen, or record one | A working page in the stack you chose, usually as several parallel options |
-| Start from a Figma design | **Figma** — exported screenshots or SVG, or a REST import with your own access token | Frames rendered by Figma and brought in as local images; Figma MCP is not offered because Figma restricts it to catalog-listed clients |
-| Start from a Google Stitch screen | **Stitch** — the official MCP server, or the bundled experimental SDK with your Stitch API key | A generated screen, or an imported Stitch project |
+| Start from a Figma design | **Figma** — exported screenshots or SVG, or a REST import with your own access token | Rendered frames plus original image fills and export-marked nodes as reusable local assets; Figma REST does not provide application source code |
+| Start from a Google Stitch screen | **Stitch** — the official MCP server, or the bundled experimental SDK with your Stitch API key | **Stitch only** opens localized HTML, screenshot, images, stylesheets, fonts and `DESIGN.md` directly; conversion to another stack is optional |
+| Inspect a public website | **URL → Inspect design** | Bounded local-Chromium evidence, desktop/tablet/mobile screenshots and an editable/exportable `DESIGN.md`; no claim to recover original source |
+| Open a GitHub frontend | **GitHub** tab | A never-executed editable project with safe text source and bounded image assets; public repos need no token |
 | Say what you want up front | The instruction box on **Upload** and **Import** | The first generation follows your instruction instead of guessing |
 | Choose which models try it | **Settings → Models**, or the picker beside the composer | One option per selected model, across Copilot, OpenAI, Anthropic, Gemini and your own BYOK endpoint |
 | Use your own endpoint | **Settings → GitHub Copilot SDK BYOK** | Models served by your OpenAI-compatible, Azure OpenAI or Anthropic endpoint, selectable beside the native ones — including several models only your endpoint knows |
@@ -51,7 +54,7 @@ The `gh auth login` / `copilot` ladder and a pasted token still work.
 | Add reusable instructions | **Settings → Agent Skills** — a local folder or a public GitHub folder | Skills you can enable per run; imported disabled, and their scripts can never execute |
 | Research current APIs | **Settings → Web search** | Bounded Tavily/Exa search across native providers and both Copilot runtimes, with snippets labelled as untrusted |
 | Create or find images | **Settings → Image generation / Free image search** | Replicate, Cloudflare or OpenAI-compatible generation, plus opt-in Openverse CC0/PDM search |
-| Refine it | Chat panel, or select an element in the preview | A new version that keeps the previous one — with the whole conversation, answers included, still readable |
+| Refine it | Chat panel, paste screenshots, or select an element in the preview | A new version that keeps the previous one — with the whole conversation, answers and pasted PNG/JPEG/WebP references still readable |
 | Edit the source | Code tab | Multi-file tree, editor, whitespace-only **Format**, file badges — plus a read-only **Export project** view of what the ZIP will hold |
 | See it as a real project | **Preview → Stack preview** | The controlled Vite HTML/React/Preact files rendered in the same sandbox, with no build scripts run |
 | Check it at several widths | **Review** | Two to four real-width frames, overflow detection, a local source audit, an optional bounded AI review and a Design Inspector |
@@ -155,8 +158,10 @@ from a design tool:
 
 | Source | How |
 | --- | --- |
-| **Figma** | Exported screenshots; exported **SVG** (rasterised locally); or a **REST import** that takes a Figma URL and your own personal access token with `file_content:read`, and brings the rendered frames in as local images |
-| **Google Stitch** | The official **Stitch MCP** endpoint, or the bundled **experimental** `@google/stitch-sdk` in the desktop app — validate a key, generate a screen from a prompt, or import an existing project or screen |
+| **Figma** | Exported screenshots/SVG, or a REST import that renders selected frames and preserves original image fills plus export-marked nodes as reusable local assets |
+| **Google Stitch** | The official Stitch MCP, or the bundled experimental SDK. Stitch-only mode directly opens the localized HTML/assets/`DESIGN.md`; conversion through selected models is explicit |
+| **Public website** | The URL inspector proxies public-only resources through pinned-address checks and captures computed design evidence at desktop/tablet/mobile sizes |
+| **GitHub repository** | Public URL with no token, or a separate repository-limited fine-grained token with `Contents: read` for a private repo. Copilot sign-in is never broadened or reused |
 
 Both credentials are **capture-only**. The Figma token is sent to `api.figma.com`
 and nowhere else, the Stitch key reaches only the bundled SDK, and neither is
@@ -165,6 +170,12 @@ desktop and hosted MCP servers admit only clients in Figma's own catalogue, and
 shot2code does not impersonate another editor — REST/PAT is the supported
 programmatic route. `@google/stitch-sdk` is published by Google Labs
 and is explicitly not an officially supported Google product.
+
+Imported design/repository images are persisted under shot2code's local asset
+store and referenced through restart-safe identifiers. Binary project files
+remain previewable and export as decoded bytes rather than base64 text. Every
+external design document, website string and repository file is untrusted data,
+never an instruction source.
 
 ## Image generation and free images
 
@@ -226,9 +237,9 @@ they belong to. See [DATA-HANDLING.md](DATA-HANDLING.md).
 | Guide | What it covers |
 | --- | --- |
 | [INSTALL.md](INSTALL.md) | Downloads, checksum verification, SmartScreen, updates, uninstall |
-| [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, sign-in, BYOK, MCP and the registry, skills, Figma and Stitch, model selection, generating, editing, Review, resizing, History, import, export, the menu bar, shortcuts, Help |
+| [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, sign-in, BYOK, MCP/skills, Figma/Stitch, public-site inspection, GitHub import, pasted chat screenshots, Review, History and export |
 | [FAQ.md](FAQ.md) | Common questions, in the order people ask them |
-| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Symptom-first runbook: startup, providers, Chromium, import, export, updates, where the logs live |
+| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Symptom-first runbook: startup, providers, Figma/Stitch, website/GitHub import, Chromium, Preview/export, updates and logs |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the app, backend, agent loop and packaging fit together |
 | [DATA-HANDLING.md](DATA-HANDLING.md) | Every network destination and on-disk path |
 | [SECURITY.md](SECURITY.md) | Reporting a vulnerability, unsigned builds, update integrity |

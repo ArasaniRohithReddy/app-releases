@@ -536,13 +536,18 @@ straight from Figma or Google Stitch.
 | --- | --- | --- |
 | **Exported screenshots** | A PNG or JPEG exported from Figma | Works exactly like any other upload |
 | **Exported SVG** | An `.svg` exported from Figma | Rasterised **locally** before it is sent, so the model sees the same picture you do |
-| **REST import** | A Figma file URL and your own personal access token with `file_content:read` | shot2code reads the file and node ids out of the URL, asks Figma to render those frames, and brings the images in as local data URLs |
+| **REST import** | A Figma file URL and your own personal access token with `file_content:read` | shot2code renders selected frames and separately preserves original image fills plus export-marked nodes as reusable local assets |
 
 The **REST import** is the supported programmatic route. Figma's desktop and
 remote MCP servers admit only clients in the Figma MCP Catalog, and shot2code
 does not impersonate another editor or offer a connection Figma will reject.
 Tier-1 REST limits can be small; a 429 response preserves the retry interval,
 plan tier, limit type and Figma upgrade link.
+
+Figma's REST API provides file structure, rendered nodes and original image
+fills; it does **not** provide the production source code of an application.
+Optional asset extraction is partial-success, so a rate-limited image fill does
+not discard frames that were already imported.
 
 Your Figma token is **capture-only**: it is sent to `api.figma.com` and nowhere
 else, and it is never part of a generation request, project history or an export.
@@ -553,6 +558,18 @@ else, and it is never part of a generation request, project history or an export
 | --- | --- |
 | **Stitch MCP** | The featured draft pointing at `https://stitch.googleapis.com/mcp`, enabled and trusted like any other server |
 | **The bundled SDK** | A Stitch API key in **Settings**. The desktop app ships `@google/stitch-sdk`, which can validate the key, generate a screen from a prompt, or import an existing Stitch project or screen |
+
+The SDK route has two explicit output modes:
+
+- **Stitch only** (the default) opens the localized Stitch result directly. No
+  second model request is made.
+- **Convert to selected stack** sends the imported design evidence through the
+  model lineup you selected.
+
+Stitch-only projects preserve the HTML, screenshot, images, stylesheets, nested
+CSS images/fonts, `srcset` candidates and an available `DESIGN.md`. Remote
+assets are downloaded through public-address, redirect, MIME and byte limits and
+rewritten to shot2code's restart-safe local asset store rather than hotlinked.
 
 `@google/stitch-sdk` is **experimental**: it is published by Google Labs, which
 states that it is not an officially supported Google product. It is bundled at
@@ -565,8 +582,9 @@ model requests, from history and from exports.
 
 ## Generating your first page
 
-1. Choose an input: upload a screenshot, paste a URL, write a description, record
-   the screen, or bring a [Figma or Stitch design](#figma-and-google-stitch).
+1. Choose an input: upload a screenshot, inspect a public URL, write a
+   description, record the screen, open a GitHub repository, or bring a
+   [Figma or Stitch design](#figma-and-google-stitch).
 2. Pick the output stack (see the [stack list](README.md#output-stacks)).
 3. Optionally pick the models — see
    [Choosing which models run](#choosing-which-models-run).
@@ -599,6 +617,9 @@ and pick **Separate pages** — that mode makes the model account for every view
 
 - **Say what to change** in the chat panel. A new version is created; the previous
   one is kept.
+- **Paste screenshots** directly into the chat composer with Ctrl+V/Cmd+V.
+  PNG, JPEG and WebP are accepted, up to 10 MB each and five images per turn.
+  Duplicate images are ignored and ordinary text paste still works.
 - **Select an element** in the preview and describe the change to scope an edit to
   that element.
 - A new project offers three starter suggestions (for example *Make the layout
@@ -754,6 +775,18 @@ motion, and counts of the semantic components it found. It exports:
 It analyses the composed source, so it describes what the generated code
 declares rather than what a browser finally computes.
 
+The **URL** tab has a separate public-site inspector. It uses a bounded local
+Chromium session to collect computed colours, variables, typography, spacing,
+radii, shadows, motion, semantic structure, accessible-name signals and public
+asset references, plus screenshots at 1440×900, 768×1024 and 390×844. The
+result can be copied/downloaded as `DESIGN.md` or used with those screenshots as
+generation evidence.
+
+This is rendered evidence, **not** the site's original HTML/CSS/JS source, a
+licence to reuse its assets, or a WCAG conformance result. Private, loopback,
+link-local, metadata and other unsafe destinations are refused, and imported
+page text remains untrusted data rather than model instructions.
+
 ### Results are bound to what produced them
 
 A review records the version, the option, a hash of the source it audited and
@@ -876,6 +909,23 @@ can be cleared.
 Note that imported component paths are naming and API context. A generated
 preview is self-contained, so it will not resolve imports from your local
 project.
+
+### Importing from GitHub
+
+The dedicated **GitHub** tab accepts a repository URL and uses the same
+never-execute scanner:
+
+- Public repositories require no token.
+- Private repositories require a separate fine-grained token restricted to the
+  selected repository with **Contents: read**.
+- The application's Copilot sign-in is not broadened or silently reused.
+- Traversal paths are rejected, dependency/build directories are ignored, and
+  archive, file-count, text and image limits apply.
+- Bounded PNG, JPEG, GIF and WebP assets are preserved in the editable project
+  and survive Preview, export, History and later chat refinements.
+
+The token is capture-only and is excluded from model prompts, AI review,
+project history, snapshots and exported projects.
 
 ## Preview, CodePen and sharing
 
