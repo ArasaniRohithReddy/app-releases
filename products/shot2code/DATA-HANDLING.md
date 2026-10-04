@@ -8,26 +8,30 @@ packaged app. The behaviour described here can be checked against the source at
 **Summary:** screenshots, generated code, project history and API keys stay on
 your machine. The only outbound traffic is the request to the model provider you
 configured, the update check, and the integrations you switch on and use — an
-MCP server you trusted, a Figma/Stitch/GitHub import, public-site inspection,
-web or free-image search, an image provider, feedback you explicitly submit, or
-anything you explicitly share.
+MCP server you trusted, a Figma/Stitch/GitHub/Storybook import, public-site
+inspection, separately enabled web search/page reading/public-domain photo/icon
+search, an image provider, feedback you explicitly submit, or anything you
+explicitly share.
 
 ## 1. What leaves the device
 
 | Destination | When | What is sent |
 | --- | --- | --- |
 | The model provider you configured (GitHub Copilot, Gemini, Anthropic or OpenAI) | You start or refine a generation | Your prompt, the screenshots/URL/description you supplied, and the working project context the agent needs |
-| **Your own endpoint** (Copilot SDK BYOK) | You start or refine a generation with a `sdk-byok/…` option selected | The same request, sent to the base URL you configured, authenticated with that connection's own key or bearer token |
+| **Your own endpoint** (Copilot SDK BYOK) | You start or refine a generation with a `sdk-byok/…` option selected | The same request, sent to the base URL you configured, authenticated with that connection's own key or bearer token. The local Ollama preset uses `http://localhost:11434/v1` without a paid inference API, but Ollama/model installation, hardware and licences remain separate |
 | **The model an option ran on** | You ask for an **AI review** of that option | The generated source and a review instruction. The request carries **no tools, no MCP servers, no skills and no web search** |
 | **An MCP server you enabled and trusted** | A Copilot or BYOK option calls one of its tools | The tool call the model made, plus the environment values or request headers you configured for that server |
 | **Tavily or Exa** | You enable canonical **Web search** and a model searches | The bounded query and optional domain filter. Off by default. No raw page fetch is requested |
+| **A public page selected by a model** | You separately enable bounded page reading and the model calls `read_web_page` | A public query-free HTTP(S) URL. No cookies/auth/browser state; at most 512 KB is read and 16,000 untrusted characters are returned. Two reads/turn and five/generation |
+| **`api.iconify.design`** | You enable Iconify and a model searches/selects an icon | The icon query and selected fixed-origin SVG request. No account, cookie, authorization or shot2code credential. Public keyless access has no fixed quota/SLA and can change |
 | **The public web, through Copilot** | Canonical search is off, Copilot built-in search is enabled and a Copilot/BYOK option searches | The search query the model issues. Built-in `web_fetch` remains blocked |
-| **Openverse and the selected image host** | You enable **Free image search**, the model searches, and an image is selected | The search query, then a bounded image download. No credential. Only locally revalidated CC0/Public Domain Mark results are accepted |
+| **Openverse and the selected image host** | You enable **Free image search**, the model searches, and an image is selected | The search query, then a bounded image download. No credential. Only locally revalidated CC0/Public Domain Mark results are accepted; ordinary web-image search is not used because it supplies no reuse right |
 | **`registry.modelcontextprotocol.io`** | You search the **MCP Registry** in Settings | Your search terms. Nothing about your projects, and no credential |
 | **`api.figma.com`** | You run a Figma **REST import** | The file and node ids from the URL you pasted, authenticated with **only** your Figma personal access token |
 | **Google Stitch and referenced public asset hosts** | You validate a Stitch key, generate/import a screen with the bundled SDK, or a trusted Stitch MCP server is called | The prompt/project reference goes to Stitch with only the Stitch key. Stitch-only assets are fetched through public-address, redirect, MIME and byte limits, persisted locally and never hotlinked |
 | **`github.com` / `api.github.com`** | You choose **Sign in with GitHub**, import a skill, or open a repository | Sign-in uses the app's public OAuth client id and no secret; where device flow is unavailable the official CLI performs login and shot2code never sees the token. Public skills/repos need no token. A private repo uses only the separate fine-grained repository token you supplied |
-| **A public website and its public resource hosts** | You choose **URL → Inspect design** | Public-only GET/HEAD requests needed to render bounded design evidence and desktop/tablet/mobile screenshots. Cookies and authorization headers are not forwarded |
+| **A public website and its public resource hosts** | You choose **URL → Inspect design** | Public-only GET/HEAD requests needed to scroll bounded lazy content and render full-page desktop/tablet/mobile evidence. Cookies/auth are not forwarded; captures report actual dimensions and blank/truncation state and stop at 40,000px/36 million pixels |
+| **A public built Storybook root** | You choose Built Storybook URL import | Only fixed public-HTTPS `index.json`, `manifests/components.json` and `manifests/docs.json` requests. `iframe.html`, stories, bundles and arbitrary paths are never requested |
 | GitHub Copilot | Listing the models your account can use | The Copilot credential, to ask which models the signed-in plan offers. No prompt, project or screenshot is sent |
 | Gemini | Asset extraction, or video/screen-recording input | The selected image or recording |
 | Replicate | Image generation, editing or background removal | The prompt and the source image, if any, authenticated with only the Replicate key |
@@ -65,9 +69,11 @@ Two things deliberately contact nothing:
   only. No endpoint is called, no MCP server is started. The live **Test model
   access** and per-provider checks are separate actions, and the app says they
   contact the endpoint before you use them.
-- **The Review source audit** runs locally against the generated source. No code
-  and no finding is uploaded. The optional **AI review** is the opposite and is
-  listed above; it is a real provider request.
+- **The Review source/runtime audit** runs locally against the generated source
+  and sandboxed frames. No code/finding is uploaded. The optional **AI review**
+  is the opposite and is listed above; it is a real provider request.
+- Opening **Chat Tools** contacts only the local capability/Skills APIs. The menu
+  reports current consent, cost/readiness and write scope; it enables nothing.
 
 **Imported skills contact nothing after they are imported.** Importing from a
 public GitHub folder makes the requests above; afterwards the skill is local
@@ -89,8 +95,8 @@ same sandbox and runs no package script or project configuration.
 | `%LOCALAPPDATA%\shot2code\` (skills) | Agent Skills you imported — their text and any script files they carry, stored as inert resources | Removing the skill in **Settings → Agent Skills**, or deleting the folder |
 | `%APPDATA%\shot2code-desktop\` | Desktop shell state, `window-state.json`, the **encrypted GitHub token** from the in-app sign-in, and `shot2code-backend.log` | **Disconnect GitHub from shot2code** for the token; deleting the folder for the rest |
 | `%TEMP%\shot2code-installer-preinstall.log` | What the installer's pre-install safeguard found and stopped — process paths and outcome, no project data | Deleting the file |
-| The app's own local storage | Provider and image-provider keys, the BYOK connection, MCP definitions/secrets, web-search settings, Figma/Stitch credentials, the separate GitHub repository token, the ScreenshotOne key, selected models, Review widths, pane widths, preview source/zoom and UI preferences | Clearing them in **Settings** |
-| shot2code's served local-asset directory | Imported Figma/Stitch/GitHub images, website-inspector screenshots and other normalized binary assets | Deleting the project/assets or the shot2code data directory |
+| The app's own local storage | Provider and image-provider keys, the BYOK connection, MCP definitions/secrets, web-search/page-reading/Iconify settings, Figma/Stitch credentials, the separate GitHub repository token, the ScreenshotOne key, selected models, Review widths, pane widths, preview source/zoom and UI preferences | Clearing them in **Settings** |
+| shot2code's served local-asset directory | Imported Figma/Stitch/GitHub/Openverse images, sanitized Iconify SVGs, website-inspector screenshots and other normalized binary assets | Deleting the project/assets or the shot2code data directory |
 | `backend/.env` (*source only*) | Optional provider, image-provider and search credentials documented in the source repository | Editing the file |
 
 The history database is **not encrypted**. Treat it like any other local project
@@ -104,9 +110,11 @@ session on the machine untouched, because shot2code did not create those.
 **No credential is written into the history database.** A version records the run
 identity behind each option — `gpt-5.6-sol (high thinking)`, or
 `sdk-byok/azure/gpt-5.6-sol (high thinking)` — and nothing about the key, the
-endpoint, an MCP server, Figma or Stitch. The same is true of an exported Review
-report and of the `DESIGN.md`, `SKILL.md` and palette exports from the Design
-Inspector.
+endpoint, an MCP server, Figma or Stitch. Expanded/Full history reads the same
+stored versions, requested models, options, prompts, messages, attachment
+counts, activity/status/timing/error records and retry/branch links; it creates
+no cloud copy. The same credential exclusion applies to schema-v2 Review reports
+and Design Inspector exports.
 
 **Project data lives outside the installation directory**, and the installer is
 configured not to delete application data, so upgrading or replacing the
@@ -130,7 +138,9 @@ The database location can be redirected with `SHOT2CODE_DATA_DIR` or
 - **The Copilot SDK BYOK connection carries its own credential.** The key or
   bearer token you enter for it is used only for that endpoint; the direct
   OpenAI and Anthropic keys are never substituted for it. An OpenAI-compatible
-  endpoint on `localhost` may be configured without one.
+  endpoint on `localhost` may be configured without one. **Configure local
+  Ollama** uses this existing exception; it does not install Ollama or a model,
+  and local hardware/model licensing/capability remains the user's responsibility.
 - **MCP environment values and request headers are treated as secrets.** They
   are masked in the server list, masked and read-only in the editor until you
   reveal them, and only their *names* appear in a diagnostic or a validation
@@ -157,8 +167,10 @@ The database location can be redirected with `SHOT2CODE_DATA_DIR` or
   `/api/integrations/validate` answers with presence flags, a host name and
   diagnostics — never a credential.
 - Image-provider and web-search credentials are read from current Settings at
-  send time. Closed serialization allowlists prevent any key, bearer token, MCP
-  environment value or request header from reaching a project snapshot.
+  send time. Page reading and Iconify need no credential and use fixed guarded
+  network boundaries. Closed serialization allowlists prevent any key, bearer
+  token, MCP environment value or request header from reaching a project
+  snapshot or safe activity summary.
 - GitHub Copilot credentials are resolved at request time: a token in Settings,
   then `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`, then a stored
   `copilot` login, then a stored `gh auth login`. Tokens are not persisted by the
@@ -194,9 +206,14 @@ Imported code is treated as untrusted input:
 - Figma, Stitch and GitHub image assets are normalized into local files and use
   restart-safe references in History. Binary files are decoded back to their
   original bytes during export rather than being written as base64 text.
+- Built Storybook accepts local files/folders/ZIPs or a public HTTPS root, but
+  parses only fixed metadata JSON. Story/CSF code, bundles, addons, loaders, play
+  functions, `iframe.html` and arbitrary remote paths are never executed or
+  requested. Only the compact untrusted component context is retained.
 - Website inspection does not recover original source. It records bounded
-  browser-computed evidence and screenshots after proxying every request through
-  public-address checks; page text remains untrusted input.
+  browser-computed evidence and full-page responsive screenshots after proxying
+  every request through public-address checks and bounded lazy scrolling. Actual
+  dimensions plus blank/truncation state are stored; page text remains untrusted.
 
 **Agent Skills are treated the same way.** A skill imported from a local folder
 or a public GitHub folder is validated (front matter, normalised paths, bounded
@@ -218,14 +235,14 @@ instructions, like the rest of the prompt.
   configuration**.
 - Select-and-edit uses a per-preview message bridge with a random nonce and capped
   payloads.
-- **The Review source audit is local and offline.** It parses the generated
-  source in the app and reports findings; nothing is uploaded, and no provider is
-  contacted to produce it. The optional **AI review** is a separate, explicit
-  action: it sends the generated source to the model that option ran on, with no
-  tools, MCP servers, skills or web search attached. An exported report contains
-  severities, rule ids, messages, evidence, guidance and the binding it was
-  produced from, with file paths reduced to a leaf name and no credential of any
-  kind. It is an automated source check, **not a WCAG conformance assessment**.
+- **The Review source/runtime audit is local and offline.** It parses the
+  generated source and gathers bounded evidence independently from each
+  sandboxed viewport; a failed frame is isolated and health reports stale or
+  partial coverage. Nothing is uploaded. The optional **AI review** is a
+  separate provider request with no tools, MCP, Skills, web search or writes.
+  Schema-v2 exports include categories, runtime coverage, per-viewport state and
+  safe relative labels, no credential. This is automated evidence, **not WCAG
+  certification**.
 - **Design Inspector exports are local.** `DESIGN.md`, `SKILL.md` and the palette
   PNG are produced from the generated source in the app and carry no credential.
 - Generated code is still model output. **Review it before running it outside the
@@ -240,9 +257,9 @@ instructions, like the rest of the prompt.
   import and an idle session. Validating a BYOK connection or an MCP server, and
   running a Review audit, should add no outbound request at all. Searching the
   MCP Registry, importing a skill from GitHub, a Figma REST import, a Stitch
-  call, website inspection, repository import, an AI review and a web search
-  each appear only when you take that action, and carry only that feature's own
-  credential.
+  call, website inspection, Storybook URL import, repository import, an AI
+  review, web/page/photo/icon research each appear only when you take that
+  action, and carry only that feature's own credential (if it needs one).
 - Disconnect the network: the app starts, projects open from the local database,
   and generation fails with a provider error rather than silently doing something
   else.
@@ -257,8 +274,9 @@ instructions, like the rest of the prompt.
 1. Delete individual projects from **Recent projects** — that removes the project
    and all of its versions from the device.
 2. Clear provider keys in **Settings**, along with the BYOK connection's
-   credential, the Figma access token, the Stitch API key, the ScreenshotOne key
-   the separate GitHub repository token and any MCP server whose environment
+   credential, the Figma access token, the Stitch API key, the ScreenshotOne key,
+   web/page/photo/icon settings, the separate GitHub repository token and any
+   MCP server whose environment
    values or headers hold a token. Deleting a server removes its stored values
    with it. Choose **Disconnect GitHub from shot2code** to remove the encrypted
    Copilot sign-in token — a `gh` or Copilot CLI session on the machine is

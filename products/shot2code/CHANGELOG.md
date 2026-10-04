@@ -13,13 +13,91 @@ The full engineering changelog lives with the code:
 Versions before 0.3.0 were not tracked in a changelog, so the earlier builds
 mirrored on the releases page have downloads and notes but no entry here.
 
+## [0.6.1] — 2026-10-05
+
+[Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
+[hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.6.1) ·
+[upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.6.1)
+
+The current stable release adds bounded research/design inputs, clearer tool
+consent and a complete local-history browser while keeping imported code and
+third-party content behind the existing never-execute boundaries.
+
+### Added
+
+- **Local Ollama quick setup.** The existing Copilot SDK BYOK card can configure
+  `http://localhost:11434/v1` as a credential-free OpenAI-compatible localhost
+  endpoint. Local inference needs no paid API, but shot2code does not install
+  Ollama or a model: users supply hardware and choose a model whose own licence
+  and capabilities include image input and tool calling.
+- **Separately consented bounded page reading.** The provider-neutral
+  `read_web_page` tool accepts public HTML, text, Markdown and JSON through
+  public-only DNS pinning, redirect, MIME, byte, text, timeout and call budgets.
+  Copilot's runtime-owned built-in `web_fetch` remains blocked because its full
+  result reaches the model before shot2code can inspect or bound it.
+- **Full history across local projects.** A searchable browser can load every
+  saved project and expand its complete version, option, prompt, model, message,
+  attachment, activity, status, timing, error and retry/branch ancestry.
+- **Built Storybook context.** Import a built folder, selected JSON files, ZIP
+  or public HTTPS root. Only fixed `index.json`,
+  `manifests/components.json` and `manifests/docs.json` metadata is parsed;
+  stories, bundles, addons, loaders, play functions and `iframe.html` are never
+  loaded or executed.
+- **Opt-in Iconify search.** The canonical `search_icons` tool uses only
+  `https://api.iconify.design`, accepts the service's currently keyless public
+  access without promising a permanent quota, filters automatic results to a
+  permissive SPDX allowlist, sanitizes SVG, stores it locally and embeds source,
+  licence and retrieval provenance plus a trademark warning.
+- **Chat Tools inventory.** The composer reports project editing, preview
+  verification, web search, page reading, public-domain photos, generated
+  images, icons, MCP write scope and enabled Skills without silently enabling a
+  paid, external, trusted or write-capable feature.
+- **Full-page design evidence.** URL inspection scrolls bounded lazy content and
+  reports full-page desktop/tablet/mobile dimensions plus explicit blank and
+  truncation state. Figma can preview rendered frames before a model call and
+  reuse the same evidence for generation.
+
+### Changed
+
+- The GitHub tab now distinguishes a fully local open from an optional
+  model-assisted first refinement, exposes the edit-model lineup and design
+  system for that refinement, and preserves the detected repository stack.
+- Review now combines deterministic source findings with bounded per-frame
+  runtime evidence, categories, filtered select-all, per-frame failure
+  isolation, explicit healthy/stale/partial coverage and schema-v2 JSON reports.
+  It remains an automated aid, not WCAG certification.
+- A non-retryable image-provider failure trips a per-generation circuit breaker
+  for credential, billing, quota, permission, model or configuration problems,
+  preventing repeated provider calls and directing the run to licensed photos,
+  localized icons, extracted assets, CSS or SVG instead.
+
+### Fixed
+
+- Screenshot preview now returns bounded console/page diagnostics and nearly
+  blank-render metadata so a model can repair a mount failure rather than
+  treating an empty screenshot as success.
+- The Electron shell inspects a top-level renderer after load, reloads one blank
+  window once, then shows a static recovery screen while preserving local
+  projects if the renderer remains empty.
+- Optional Chromium/Copilot discovery waits five seconds after core startup, so
+  first-run antivirus scanning cannot starve `/api/health` and create a false
+  90-second backend timeout.
+
+### Documentation
+
+- Public guides, product copy and generated native documentation now describe
+  the same v0.6.1 feature, consent, licensing and safety boundaries.
+- The existing screenshot presentation work keeps current captures full-width,
+  centered and uncropped; planned new captures remain versionless and are not
+  referenced publicly until their PNG files exist.
+
 ## [0.6.0] — 2026-10-04
 
 [Download](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) ·
 [hub release](https://github.com/ArasaniRohithReddy/app-releases/releases/tag/shot2code-v0.6.0) ·
 [upstream notes](https://github.com/ArasaniRohithReddy/shot2code/releases/tag/v0.6.0)
 
-The current stable release expands shot2code from screenshot generation into a
+This release expanded shot2code from screenshot generation into a
 local-first design-source workspace.
 
 ### Added

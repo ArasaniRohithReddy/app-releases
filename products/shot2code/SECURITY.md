@@ -4,7 +4,7 @@ shot2code runs on your own machine. Screenshots, generated code, project history
 and API keys stay local; the only outbound traffic is to the model provider you
 configure, plus the update check and the integrations you switch on and use —
 an MCP server you trusted, a Figma/Stitch/GitHub import, public-site inspection,
-bounded web or free-image search, an image provider, feedback you submit, or
+bounded web search, page reading, public-domain photo/icon search, an image provider, feedback you submit, or
 anything you explicitly share. The full inventory is in
 [DATA-HANDLING.md](DATA-HANDLING.md).
 
@@ -44,8 +44,9 @@ Useful details to include:
 - the shot2code version (**Settings**, or the installer filename);
 - how you run it: `.exe` installer, MSI, portable ZIP, or from source;
 - which model provider was configured — and whether a Copilot SDK BYOK
-  connection, an MCP server, an Agent Skill, web/free-image search, an image
-  provider, a Figma import or the Google Stitch integration was in play;
+  connection, an MCP server, an Agent Skill, web/page/photo/icon search, an
+  image provider, Built Storybook, a Figma import or the Google Stitch
+  integration was in play;
 - reproduction steps, and a proof of concept if you have one;
 - relevant lines from `%APPDATA%\shot2code-desktop\shot2code-backend.log`,
   **with any API keys or tokens redacted**.
@@ -86,7 +87,11 @@ If a hash does not match, stop and report it.
 - **The Copilot SDK BYOK connection carries its own credential.** Its API key or
   bearer token is used only for the endpoint you configured; the direct OpenAI
   and Anthropic keys are never substituted for it. A credential is required
-  unless the endpoint is an OpenAI-compatible host on `localhost`.
+  unless the endpoint is an OpenAI-compatible host on `localhost`. The local
+  Ollama preset uses that existing exception at `http://localhost:11434/v1`.
+  shot2code does not install Ollama or a model; local inference needs no paid
+  API but uses user-supplied hardware, model licences and model-specific image/
+  tool capabilities. Ollama cloud services remain separate.
 - **Signing in to GitHub Copilot uses a public client id and no secret.** The
   desktop app runs a **GitHub OAuth device flow** registered for shot2code: it
   shows a one-time code and opens your browser. A desktop application cannot
@@ -124,7 +129,9 @@ If a hash does not match, stop and report it.
   and authorization are not forwarded, redirects re-enter the same guard, and
   private/loopback/link-local/metadata targets, WebSockets, EventSource,
   service workers, media and non-GET/HEAD requests are blocked. Request,
-  resource-byte, total-byte, element and global-time limits apply.
+  resource-byte, total-byte, element and global-time limits apply. Lazy-content
+  scrolling is bounded; screenshots stop at 40,000px or 36 million pixels and
+  carry actual dimension plus blank/truncation metadata.
 - **Starting or cancelling a sign-in is origin-guarded.** Both spawn or kill a
   process, so they are refused unless the request came from the app on this
   machine: `localhost`, `127.0.0.1`, `::1`, or the `null` origin the packaged
@@ -229,11 +236,54 @@ behalf. It is gated accordingly.
   must be CC0/Public Domain Mark with source and licence URLs; every resolved
   address, redirect, MIME type, byte count and decoded pixel count is checked
   before bytes are persisted locally. Generated markup never hotlinks them.
+  General web-image results are not substituted because discoverability does
+  not establish reuse rights.
+- **Image-provider failures fail closed for the rest of a run.** Credential,
+  billing, quota, permission, model and configuration failures trip a
+  per-generation circuit breaker so the agent cannot repeat calls that are not
+  going to succeed or keep consuming provider quota.
+- **Chat Tools is disclosure, not authority.** Its rows report consent, image
+  billing/readiness, MCP write scope and enabled Skills; opening the inventory
+  cannot enable an external, paid, trusted or write-capable feature.
 - **The AI review runs with no tools at all** — no MCP, no skills, no web
   search, no shell, no file writes — so a second opinion cannot become a second
   agent. It is a real provider request against the model that option ran on.
 - Skills follow the MCP rule: **Copilot and BYOK runtimes only**. Canonical web
   search deliberately reaches native provider runtimes too.
+
+## Localized icon search
+
+- Icon search is off by default and uses only the fixed
+  `https://api.iconify.design` origin. It sends no cookie, authorization header,
+  environment proxy credential or shot2code secret, accepts no custom provider
+  and follows no redirect.
+- Automatic results are restricted to a fixed permissive SPDX allowlist;
+  unknown, copyleft, share-alike, attribution-only and non-commercial
+  collections are skipped. Search JSON and SVG downloads have timeout, byte,
+  result and call ceilings.
+- SVG is parsed as hostile XML. Documents/entities, scripts, handlers, styles,
+  `foreignObject`, animation, media and external URL references are removed or
+  refused before local persistence.
+- Saved assets embed icon id, collection, author, source, licence and retrieval
+  date. Iconify metadata comes from upstream projects and can be wrong; a
+  permissive copyright licence does not grant trademark rights. Its public API
+  currently accepts keyless requests (checked 2026-10-04) but has no fixed
+  public quota or SLA, so availability can change.
+
+## Bounded public-page reading
+
+- Page reading is off by default and has a separate consent from web search.
+  `read_web_page` is offered to every runtime only when that switch is on.
+- URLs must be public `http`/`https` on standard ports, contain no credentials or
+  query string, and pass public-only pinned DNS plus redirect revalidation. No
+  cookies, authorization, browser state, JavaScript or subresources are used.
+- Responses are restricted to HTML/XHTML, text, Markdown or JSON, 512 KB of
+  bytes and 16,000 extracted characters after active HTML is removed. Results
+  are labelled untrusted and capped at two reads per turn and five per
+  generation; failed requests spend budget.
+- Copilot's built-in `web_fetch` remains blocked. The runtime gives its full
+  result to the model before the application can truncate, label, URL-scope or
+  count it, so it is never a fallback for the canonical bounded reader.
 
 ## Update integrity
 
@@ -272,6 +322,11 @@ input.
   per-file size and total decoded text.
 - GitHub repository ZIPs use the same scanner, and bounded PNG/JPEG/GIF/WebP
   files cross a separate validated binary path into the local asset store.
+- Built Storybook import reads only root `index.json` plus optional
+  `manifests/components.json` and `manifests/docs.json`. Local files, folders,
+  ZIPs and public HTTPS roots pass path/schema/size checks; stories, CSF,
+  bundles, addons, loaders, play functions, arbitrary JSON and `iframe.html`
+  are never loaded or executed.
 - Raw imported source is not written into persisted project context.
 - Figma, Stitch, website and repository text is wrapped as **untrusted
   evidence**. It cannot redefine the task, request credentials, or instruct the
@@ -288,8 +343,10 @@ input.
 - Generated code is still model output. **Review it before running it outside the
   preview**, especially anything touching the network, the filesystem or
   credentials. The Review source audit is a local, deterministic check of that
-  source — it reports semantic and accessibility problems with evidence, and it
-  is **not a WCAG conformance assessment** or a security review.
+  source plus bounded per-frame runtime evidence. Findings carry categories and
+  viewport provenance; frame failures are isolated, health reports stale/partial
+  coverage, and schema-v2 exports use safe relative labels. It is **not WCAG
+  certification** or a security review.
 - Website `DESIGN.md` inspection is rendered evidence, not original source, an
   assertion of asset rights, or security/WCAG certification.
 - Sharing to CodePen sends code off your device to a third party. It is never
@@ -304,9 +361,9 @@ input.
 - Vulnerabilities in an MCP server you chose to configure and trust, in a skill
   you chose to import and enable, or in the BYOK endpoint you chose to point the
   app at. Report a flaw in how shot2code *gates* them instead.
-- Vulnerabilities in Figma, Google Stitch, ScreenshotOne or the experimental
-  `@google/stitch-sdk`. Report a flaw in how shot2code *handles their
-  credentials or responses* instead.
+- Vulnerabilities in Figma, Google Stitch, ScreenshotOne, Openverse, Iconify,
+  Ollama or the experimental `@google/stitch-sdk`. Report a flaw in how
+  shot2code *handles their credentials, metadata or responses* instead.
 - Findings that require an attacker who already has local access to your user
   account or can modify the installation directory.
 - Insecure code produced by a model in response to a prompt. Report a *systemic*

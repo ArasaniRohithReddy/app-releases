@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 e9f38579d1b04c19496095e41fb758674cab43da65ac610a6bda4c13a1e591c7). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/SECURITY.md (normalized SHA-256 cac769cce8abd240fd03c1f6e1114d93eb0485f7b5da9bb9741bef9dc3744ed8). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,12 +62,12 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/SECURITY.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#supported-versions">Supported versions</a></li><li><a href="#reporting-a-vulnerability">Reporting a vulnerability</a></li><li><a href="#unsigned-windows-binaries-and-smartscreen">Unsigned Windows binaries and SmartScreen</a></li><li><a href="#api-keys-and-local-data">API keys and local data</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-and-model-tools">Agent Skills and model tools</a></li><li><a href="#update-integrity">Update integrity</a></li><li><a href="#imported-and-generated-code">Imported and generated code</a></li><li><a href="#out-of-scope">Out of scope</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#supported-versions">Supported versions</a></li><li><a href="#reporting-a-vulnerability">Reporting a vulnerability</a></li><li><a href="#unsigned-windows-binaries-and-smartscreen">Unsigned Windows binaries and SmartScreen</a></li><li><a href="#api-keys-and-local-data">API keys and local data</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-and-model-tools">Agent Skills and model tools</a></li><li><a href="#localized-icon-search">Localized icon search</a></li><li><a href="#bounded-public-page-reading">Bounded public-page reading</a></li><li><a href="#update-integrity">Update integrity</a></li><li><a href="#imported-and-generated-code">Imported and generated code</a></li><li><a href="#out-of-scope">Out of scope</a></li></ul></nav></details>
         <div class="doc-content"><p>shot2code runs on your own machine. Screenshots, generated code, project history
 and API keys stay local; the only outbound traffic is to the model provider you
 configure, plus the update check and the integrations you switch on and use —
 an MCP server you trusted, a Figma/Stitch/GitHub import, public-site inspection,
-bounded web or free-image search, an image provider, feedback you submit, or
+bounded web search, page reading, public-domain photo/icon search, an image provider, feedback you submit, or
 anything you explicitly share. The full inventory is in
 <a href="../data-handling/">DATA-HANDLING.md</a>.</p>
 <p>This page covers the shot2code-specific parts. The hub-wide policy — how reports
@@ -112,8 +112,9 @@ code can also be filed in the
 <li>the shot2code version (<strong>Settings</strong>, or the installer filename);</li>
 <li>how you run it: <code>.exe</code> installer, MSI, portable ZIP, or from source;</li>
 <li>which model provider was configured — and whether a Copilot SDK BYOK
-connection, an MCP server, an Agent Skill, web/free-image search, an image
-provider, a Figma import or the Google Stitch integration was in play;</li>
+connection, an MCP server, an Agent Skill, web/page/photo/icon search, an
+image provider, Built Storybook, a Figma import or the Google Stitch
+integration was in play;</li>
 <li>reproduction steps, and a proof of concept if you have one;</li>
 <li>relevant lines from <code>%APPDATA%\shot2code-desktop\shot2code-backend.log</code>,
 <strong>with any API keys or tokens redacted</strong>.</li>
@@ -153,7 +154,11 @@ store them on.</li>
 <li><strong>The Copilot SDK BYOK connection carries its own credential.</strong> Its API key or
 bearer token is used only for the endpoint you configured; the direct OpenAI
 and Anthropic keys are never substituted for it. A credential is required
-unless the endpoint is an OpenAI-compatible host on <code>localhost</code>.</li>
+unless the endpoint is an OpenAI-compatible host on <code>localhost</code>. The local
+Ollama preset uses that existing exception at <code>http://localhost:11434/v1</code>.
+shot2code does not install Ollama or a model; local inference needs no paid
+API but uses user-supplied hardware, model licences and model-specific image/
+tool capabilities. Ollama cloud services remain separate.</li>
 <li><strong>Signing in to GitHub Copilot uses a public client id and no secret.</strong> The
 desktop app runs a <strong>GitHub OAuth device flow</strong> registered for shot2code: it
 shows a one-time code and opens your browser. A desktop application cannot
@@ -191,7 +196,9 @@ HTTP(S) request is fulfilled through a public-only pinned resolver; cookies
 and authorization are not forwarded, redirects re-enter the same guard, and
 private/loopback/link-local/metadata targets, WebSockets, EventSource,
 service workers, media and non-GET/HEAD requests are blocked. Request,
-resource-byte, total-byte, element and global-time limits apply.</li>
+resource-byte, total-byte, element and global-time limits apply. Lazy-content
+scrolling is bounded; screenshots stop at 40,000px or 36 million pixels and
+carry actual dimension plus blank/truncation metadata.</li>
 <li><strong>Starting or cancelling a sign-in is origin-guarded.</strong> Both spawn or kill a
 process, so they are refused unless the request came from the app on this
 machine: <code>localhost</code>, <code>127.0.0.1</code>, <code>::1</code>, or the <code>null</code> origin the packaged
@@ -294,12 +301,55 @@ inspect, truncate or budget a whole-page result before the model receives it.</l
 <li><strong>Free image search is separate and hostile-input bounded.</strong> Openverse results
 must be CC0/Public Domain Mark with source and licence URLs; every resolved
 address, redirect, MIME type, byte count and decoded pixel count is checked
-before bytes are persisted locally. Generated markup never hotlinks them.</li>
+before bytes are persisted locally. Generated markup never hotlinks them.
+General web-image results are not substituted because discoverability does
+not establish reuse rights.</li>
+<li><strong>Image-provider failures fail closed for the rest of a run.</strong> Credential,
+billing, quota, permission, model and configuration failures trip a
+per-generation circuit breaker so the agent cannot repeat calls that are not
+going to succeed or keep consuming provider quota.</li>
+<li><strong>Chat Tools is disclosure, not authority.</strong> Its rows report consent, image
+billing/readiness, MCP write scope and enabled Skills; opening the inventory
+cannot enable an external, paid, trusted or write-capable feature.</li>
 <li><strong>The AI review runs with no tools at all</strong> — no MCP, no skills, no web
 search, no shell, no file writes — so a second opinion cannot become a second
 agent. It is a real provider request against the model that option ran on.</li>
 <li>Skills follow the MCP rule: <strong>Copilot and BYOK runtimes only</strong>. Canonical web
 search deliberately reaches native provider runtimes too.</li>
+</ul>
+<h2 id="localized-icon-search" tabindex="-1">Localized icon search</h2>
+<ul>
+<li>Icon search is off by default and uses only the fixed
+<code>https://api.iconify.design</code> origin. It sends no cookie, authorization header,
+environment proxy credential or shot2code secret, accepts no custom provider
+and follows no redirect.</li>
+<li>Automatic results are restricted to a fixed permissive SPDX allowlist;
+unknown, copyleft, share-alike, attribution-only and non-commercial
+collections are skipped. Search JSON and SVG downloads have timeout, byte,
+result and call ceilings.</li>
+<li>SVG is parsed as hostile XML. Documents/entities, scripts, handlers, styles,
+<code>foreignObject</code>, animation, media and external URL references are removed or
+refused before local persistence.</li>
+<li>Saved assets embed icon id, collection, author, source, licence and retrieval
+date. Iconify metadata comes from upstream projects and can be wrong; a
+permissive copyright licence does not grant trademark rights. Its public API
+currently accepts keyless requests (checked 2026-10-04) but has no fixed
+public quota or SLA, so availability can change.</li>
+</ul>
+<h2 id="bounded-public-page-reading" tabindex="-1">Bounded public-page reading</h2>
+<ul>
+<li>Page reading is off by default and has a separate consent from web search.
+<code>read_web_page</code> is offered to every runtime only when that switch is on.</li>
+<li>URLs must be public <code>http</code>/<code>https</code> on standard ports, contain no credentials or
+query string, and pass public-only pinned DNS plus redirect revalidation. No
+cookies, authorization, browser state, JavaScript or subresources are used.</li>
+<li>Responses are restricted to HTML/XHTML, text, Markdown or JSON, 512 KB of
+bytes and 16,000 extracted characters after active HTML is removed. Results
+are labelled untrusted and capped at two reads per turn and five per
+generation; failed requests spend budget.</li>
+<li>Copilot's built-in <code>web_fetch</code> remains blocked. The runtime gives its full
+result to the model before the application can truncate, label, URL-scope or
+count it, so it is never a fallback for the canonical bounded reader.</li>
 </ul>
 <h2 id="update-integrity" tabindex="-1">Update integrity</h2>
 <ul>
@@ -337,6 +387,11 @@ directories, and enforces limits on archive size, entry count, file count,
 per-file size and total decoded text.</li>
 <li>GitHub repository ZIPs use the same scanner, and bounded PNG/JPEG/GIF/WebP
 files cross a separate validated binary path into the local asset store.</li>
+<li>Built Storybook import reads only root <code>index.json</code> plus optional
+<code>manifests/components.json</code> and <code>manifests/docs.json</code>. Local files, folders,
+ZIPs and public HTTPS roots pass path/schema/size checks; stories, CSF,
+bundles, addons, loaders, play functions, arbitrary JSON and <code>iframe.html</code>
+are never loaded or executed.</li>
 <li>Raw imported source is not written into persisted project context.</li>
 <li>Figma, Stitch, website and repository text is wrapped as <strong>untrusted
 evidence</strong>. It cannot redefine the task, request credentials, or instruct the
@@ -353,8 +408,10 @@ nonce match, with size-capped payloads.</li>
 <li>Generated code is still model output. <strong>Review it before running it outside the
 preview</strong>, especially anything touching the network, the filesystem or
 credentials. The Review source audit is a local, deterministic check of that
-source — it reports semantic and accessibility problems with evidence, and it
-is <strong>not a WCAG conformance assessment</strong> or a security review.</li>
+source plus bounded per-frame runtime evidence. Findings carry categories and
+viewport provenance; frame failures are isolated, health reports stale/partial
+coverage, and schema-v2 exports use safe relative labels. It is <strong>not WCAG
+certification</strong> or a security review.</li>
 <li>Website <code>DESIGN.md</code> inspection is rendered evidence, not original source, an
 assertion of asset rights, or security/WCAG certification.</li>
 <li>Sharing to CodePen sends code off your device to a third party. It is never
@@ -369,9 +426,9 @@ assets loaded by a preview.</li>
 <li>Vulnerabilities in an MCP server you chose to configure and trust, in a skill
 you chose to import and enable, or in the BYOK endpoint you chose to point the
 app at. Report a flaw in how shot2code <em>gates</em> them instead.</li>
-<li>Vulnerabilities in Figma, Google Stitch, ScreenshotOne or the experimental
-<code>@google/stitch-sdk</code>. Report a flaw in how shot2code <em>handles their
-credentials or responses</em> instead.</li>
+<li>Vulnerabilities in Figma, Google Stitch, ScreenshotOne, Openverse, Iconify,
+Ollama or the experimental <code>@google/stitch-sdk</code>. Report a flaw in how
+shot2code <em>handles their credentials, metadata or responses</em> instead.</li>
 <li>Findings that require an attacker who already has local access to your user
 account or can modify the installation directory.</li>
 <li>Insecure code produced by a model in response to a prompt. Report a <em>systemic</em>

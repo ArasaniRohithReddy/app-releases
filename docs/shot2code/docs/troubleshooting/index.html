@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 e66ba977a5060515d44971d4dc56923839c1d171b1d95775dc65cd0ab144671b). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 c33ec4cc6d36d6b87a3fb75c9f2c204296ffbfa43f5f7263a010a1aa5cf519ff). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -165,11 +165,11 @@ lists every path and every network destination.</p>
 </tr>
 <tr>
 <td>The splash screen never clears</td>
-<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Startup no longer waits on Chromium or Copilot, so a missing optional capability is not the cause.</td>
+<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Optional Chromium/Copilot discovery starts five seconds after core startup, so first-run scanning cannot race the initial health response.</td>
 </tr>
 <tr>
 <td>The window is blank, or never appears at all</td>
-<td>Read <code>shot2code-backend.log</code>. It records backend startup, <code>did-fail-load</code>, renderer crashes and console errors, which is the difference between &quot;the backend never came up&quot; and &quot;the UI failed to load&quot;. In the packaged app, <strong>Help → Support → Open diagnostic logs</strong> opens that folder for you.</td>
+<td>Read <code>shot2code-backend.log</code>. The shell checks for a completely loaded but empty renderer, reloads it once, then shows a static recovery screen if it stays blank; projects remain local. The log records that recovery plus startup, <code>did-fail-load</code>, crashes and console errors.</td>
 </tr>
 <tr>
 <td>&quot;Backend did not become ready in time&quot;</td>
@@ -243,11 +243,19 @@ Without one, generation fails immediately and says so.</p>
 </tr>
 <tr>
 <td>The activity says fewer images were generated than requested</td>
-<td>v0.5.2 counts successful images, not prompts or output tiles. Open failed tiles for each per-prompt reason.</td>
+<td>It counts successful images, not prompts or output tiles. Open failed tiles for each per-prompt reason.</td>
+</tr>
+<tr>
+<td>More image calls are blocked for this generation</td>
+<td>A credential, billing, quota, permission, model or configuration failure tripped the per-generation circuit breaker. Fix Settings and start a new run, or use Openverse photos, Iconify icons, extracted assets, CSS or SVG.</td>
 </tr>
 <tr>
 <td>A free image was not returned</td>
-<td>Free image search is a separate opt-in Openverse tool. It accepts only CC0/Public Domain Mark records with source and licence links, and can also reject an unsafe URL, MIME mismatch, oversized image or excessive decoded dimensions.</td>
+<td>Free image search is a separate opt-in Openverse tool. It accepts only CC0/Public Domain Mark records with source and licence links, and can also reject an unsafe URL, MIME mismatch, oversized image or excessive decoded dimensions. Ordinary Google/Bing/web image results are not inserted because search visibility grants no reuse right.</td>
+</tr>
+<tr>
+<td>Iconify returned no icon</td>
+<td>The query may match only excluded/unknown licences, the currently-keyless public API may be rate-limiting, or SVG sanitization may reject candidates. Try a broader query; verify upstream licence metadata and trademark rights.</td>
 </tr>
 </tbody>
 </table></div>
@@ -369,6 +377,10 @@ incomplete connection is reported as a notice and skipped.</p>
 <td>That is intended. BYOK carries its own credential; the direct OpenAI and Anthropic keys are never borrowed for it. Only an <strong>OpenAI-compatible</strong> endpoint on <code>localhost</code> may run without one.</td>
 </tr>
 <tr>
+<td>The local Ollama preset is configured but no model appears</td>
+<td>The preset only fills <code>http://localhost:11434/v1</code>; shot2code does not install Ollama or pull a model. Start Ollama, download a model, then use <strong>Test model access</strong>. Local inference needs no paid API but uses your hardware, the model licence applies, and the model must support image input plus tool calling.</td>
+</tr>
+<tr>
 <td>&quot;must use https:// unless it points at localhost&quot;</td>
 <td>Plain <code>http://</code> is only accepted for a loopback host. Use <code>https://</code>, or point the base URL at <code>localhost</code>/<code>127.0.0.1</code>.</td>
 </tr>
@@ -453,7 +465,7 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>Tools appear for one option but not another</td>
-<td>MCP and Agent Skills reach the SDK runtimes only. The canonical Tavily/Exa <code>search_web</code> tool reaches native OpenAI, Anthropic and Gemini as well as Copilot and BYOK.</td>
+<td>MCP and Agent Skills reach Copilot subscription/BYOK runtimes only. Canonical web search, bounded page reading, Openverse and Iconify reach every runtime when their separate switches are enabled.</td>
 </tr>
 <tr>
 <td>A tool that should change something does nothing</td>
@@ -505,7 +517,11 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>The model tried to fetch a whole URL</td>
-<td><code>web_fetch</code> is intentionally blocked for both Copilot runtimes. The current SDK cannot let shot2code inspect, truncate, label or budget a full-page result before it reaches the model. Use bounded search snippets instead.</td>
+<td>Turn on <strong>Read public pages (all models)</strong> if the page is public HTTP(S), on a standard port and has no credentials/query string. The canonical <code>read_web_page</code> tool is capped at 512 KB, 16,000 characters, two reads/turn and five/generation. Built-in <code>web_fetch</code> stays blocked because its whole result reaches the model before shot2code can inspect or budget it.</td>
+</tr>
+<tr>
+<td>Chat Tools says a feature is off</td>
+<td>The menu is an inventory, not a switch. Use <strong>Manage tools</strong> and grant that feature's own consent. Generated images may cost provider quota; MCP write access and enabled Skills are reported separately.</td>
 </tr>
 </tbody>
 </table></div>
@@ -536,7 +552,7 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>A Figma frame imported but some assets did not</td>
-<td>Optional image fills/export-marked nodes are partial-success. A rate-limited or invalid optional asset is reported without discarding usable rendered frames.</td>
+<td>Optional image fills/export-marked nodes are partial-success. A rate-limited or invalid optional asset is reported without discarding usable rendered frames. Use <strong>Preview Figma frames</strong> before a model call; generation reuses the rendered evidence.</td>
 </tr>
 <tr>
 <td>You expected Figma application source code</td>
@@ -568,7 +584,7 @@ incomplete connection is reported as a notice and skipped.</p>
 </tr>
 <tr>
 <td>Website inspection looks different from the original</td>
-<td>It is a bounded render with media, WebSockets, EventSource and service workers disabled. It captures design evidence, not a pixel-identical archival copy or original source.</td>
+<td>It is a bounded render with media, WebSockets, EventSource and service workers disabled. It scrolls lazy content within a fixed budget and captures full-page responsive evidence, not a pixel-identical archive or original source. Actual document/capture dimensions plus blank/truncation state are shown; each image is capped at 40,000px and 36 million pixels.</td>
 </tr>
 </tbody>
 </table></div>
@@ -692,6 +708,10 @@ check its work. Chromium ships with the desktop app; <strong>Settings</strong> r
 it is available, and if it is not, the app skips that tool instead of failing the
 run. Only the headless shell is bundled — full Chromium would add several hundred
 megabytes and the app always launches headless.</p>
+<p>Each run returns full-page desktop/mobile images plus bounded rendered-element
+and body-text counts, sanitized console/page errors and a <code>nearly_blank</code> flag.
+When a render is blank or errors, the model is told to fix those diagnostics
+before treating the preview as complete.</p>
 <p>When Settings reports it unavailable, <strong>Check again</strong> re-probes the backend, so
 you can fix the cause and confirm it without restarting shot2code. The advice
 depends on how you are running it:</p>
@@ -749,8 +769,16 @@ recording input also need a Gemini key.</p>
 <td>Add a separate fine-grained token restricted to that repository with <strong>Contents: read</strong>. The Copilot sign-in token is deliberately not reused for repository access.</td>
 </tr>
 <tr>
+<td>Importing GitHub unexpectedly called a model</td>
+<td>Leave <strong>First refinement instruction</strong> blank for a local open. A non-empty instruction intentionally reveals the update-model picker and design-system choice, then edits after opening while preserving the detected repository stack.</td>
+</tr>
+<tr>
 <td>A public repository says no supported source files were found</td>
 <td>The scanner recognises supported frontend/source extensions and ignores extensionless or unsupported files. Point it at a repository that contains supported source, or download only the relevant folder/files.</td>
+</tr>
+<tr>
+<td>Built Storybook metadata is refused</td>
+<td>Select a built root containing <code>index.json</code>, optionally <code>manifests/components.json</code> and <code>manifests/docs.json</code>. Only those fixed JSON files are accepted from local files/folder/ZIP/public HTTPS. Stories, bundles, <code>iframe.html</code>, traversal, links, encryption, duplicate paths and unsupported/oversized schemas are refused.</td>
 </tr>
 </tbody>
 </table></div>
@@ -832,6 +860,10 @@ separate destination on narrow windows.</p>
 <tr>
 <td>Chat shows the prompts but not the answers</td>
 <td>It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before the 0.5 line and has no stored response to show.</td>
+</tr>
+<tr>
+<td>Recent projects does not show enough history</td>
+<td>Choose <strong>Full history</strong> from Recent projects or project History. Search every local project and expand versions for requested models, options/statuses, prompts/responses, attachments, saved activity, errors and retry/branch ancestry before opening one.</td>
 </tr>
 </tbody>
 </table></div>
@@ -924,8 +956,9 @@ and <a href="../contributing/">CONTRIBUTING.md</a> explains where code changes g
 <li><strong>Which provider and which model</strong> were selected — Copilot, OpenAI, Anthropic,
 Gemini or a BYOK endpoint — the exact run identity History records for the
 option, and whether the failure also happens with a different one. Say too
-whether an MCP server, an Agent Skill, web/free-image search, an image
-provider, a Figma import or the Google Stitch integration was involved.</li>
+whether an MCP server, an Agent Skill, web/page/free-image/icon search, an
+image provider, Built Storybook, a Figma import or the Google Stitch
+integration was involved.</li>
 <li><strong>The tail of <code>shot2code-backend.log</code></strong> — <strong>Help → Support → Open diagnostic
 logs</strong> finds it for you — and
 <code>%TEMP%\shot2code-installer-preinstall.log</code> for an install or update problem.</li>

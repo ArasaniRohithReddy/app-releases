@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/README.md (normalized SHA-256 bbc8856ad1395e6914f6ba98638fcb05d7380ba000d3d930145ad3a35a337c86). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/README.md (normalized SHA-256 fe3e1c56bfaba8d75d22139f3724b9388ddd3afb40196a9bd0442e42f1bfc904). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/README.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#the-seven-input-tabs">The seven input tabs</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#image-generation-and-free-images">Image generation and free images</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#the-seven-input-tabs">The seven input tabs</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-research">MCP servers, skills and web research</a></li><li><a href="#design-sources-figma-storybook-and-google-stitch">Design sources: Figma, Storybook and Google Stitch</a></li><li><a href="#image-generation-public-domain-photos-and-icons">Image generation, public-domain photos and icons</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
         <div class="doc-content"><p><strong>Turn the reference you have into an editable web project — on your own machine.</strong></p>
 <p><a href="../releases/"><span class="image-alt">Latest release</span></a></p>
 <p>shot2code is a <strong>Windows desktop app</strong>. Start with screenshots, a public
@@ -99,7 +99,7 @@ This hub is where the Windows builds and their documentation are published.</p>
 </tr>
 <tr>
 <td>A model provider</td>
-<td><strong>One</strong> of: a GitHub Copilot sign-in (no API key), a Gemini, Anthropic or OpenAI API key, or a <strong>Copilot SDK BYOK</strong> connection to your own endpoint (no Copilot subscription needed).</td>
+<td><strong>One</strong> of: a GitHub Copilot sign-in (no API key), a Gemini, Anthropic or OpenAI API key, or a <strong>Copilot SDK BYOK</strong> connection to your own endpoint (no Copilot subscription needed). The existing BYOK localhost path includes a local Ollama preset.</td>
 </tr>
 </tbody>
 </table></div>
@@ -109,7 +109,7 @@ model and cannot generate anything on its own.</p>
 its own GitHub OAuth device flow, shows a one-time code and opens your browser.
 The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token still work.</p>
 <h2 id="the-seven-input-tabs" tabindex="-1">The seven input tabs</h2>
-<p>Every screenshot below comes from the packaged v0.6.0 app. The
+<p>Every screenshot below comes from the current packaged app. The
 <a href="input-tabs/">input-tab guide</a> explains prerequisites, limits, privacy and
 output for each path.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 2"><table>
@@ -194,12 +194,12 @@ output for each path.</p>
 <tr>
 <td>Inspect a public website</td>
 <td><strong>URL → Inspect design</strong></td>
-<td>Bounded local-Chromium evidence, desktop/tablet/mobile screenshots and an editable/exportable <code>DESIGN.md</code>; no claim to recover original source</td>
+<td>Bounded local-Chromium evidence, lazy-content scrolling, full-page responsive previews with actual blank/truncation metadata, and an editable/exportable <code>DESIGN.md</code>; screenshots stop at 40,000px or 36 million pixels</td>
 </tr>
 <tr>
 <td>Open a GitHub frontend</td>
 <td><strong>GitHub</strong> tab</td>
-<td>A never-executed editable project with safe text source and bounded image assets; public repos need no token</td>
+<td>Leave the first instruction blank for a local open, or choose edit models plus a design system for an immediate refinement; the detected repository stack is preserved</td>
 </tr>
 <tr>
 <td>Say what you want up front</td>
@@ -214,7 +214,7 @@ output for each path.</p>
 <tr>
 <td>Use your own endpoint</td>
 <td><strong>Settings → GitHub Copilot SDK BYOK</strong></td>
-<td>Models served by your OpenAI-compatible, Azure OpenAI or Anthropic endpoint, selectable beside the native ones — including several models only your endpoint knows</td>
+<td>Models served by your OpenAI-compatible, Azure OpenAI or Anthropic endpoint, including a one-action local Ollama preset over the existing localhost path</td>
 </tr>
 <tr>
 <td>Sign in to Copilot in the app</td>
@@ -237,14 +237,14 @@ output for each path.</p>
 <td>Skills you can enable per run; imported disabled, and their scripts can never execute</td>
 </tr>
 <tr>
-<td>Research current APIs</td>
-<td><strong>Settings → Web search</strong></td>
-<td>Bounded Tavily/Exa search across native providers and both Copilot runtimes, with snippets labelled as untrusted</td>
+<td>Research current APIs or read one page</td>
+<td><strong>Settings → Web research</strong></td>
+<td>Bounded Tavily/Exa snippets, plus a separately opted-in <code>read_web_page</code> tool with public-only URL, byte, text and call budgets; built-in <code>web_fetch</code> stays blocked</td>
 </tr>
 <tr>
-<td>Create or find images</td>
-<td><strong>Settings → Image generation / Free image search</strong></td>
-<td>Replicate, Cloudflare or OpenAI-compatible generation, plus opt-in Openverse CC0/PDM search</td>
+<td>Create or find visual assets</td>
+<td><strong>Settings → Image generation / Free image search / Iconify design add-on</strong></td>
+<td>Provider-billed generation, keyless Openverse CC0/PDM photography, and currently-keyless sanitized/localized Iconify SVGs with provenance</td>
 </tr>
 <tr>
 <td>Refine it</td>
@@ -264,7 +264,7 @@ output for each path.</p>
 <tr>
 <td>Check it at several widths</td>
 <td><strong>Review</strong></td>
-<td>Two to four real-width frames, overflow detection, a local source audit, an optional bounded AI review and a Design Inspector</td>
+<td>Source plus bounded per-frame runtime checks, categories, filtered select-all, frame isolation, explicit healthy/stale/partial coverage, schema-v2 JSON, optional no-tools AI review and Design Inspector</td>
 </tr>
 <tr>
 <td>Set how the width is shared</td>
@@ -274,17 +274,17 @@ output for each path.</p>
 <tr>
 <td>Step back through earlier attempts</td>
 <td><strong>History</strong></td>
-<td>Every version, the exact run identity behind each option, and a retry that re-rolls one</td>
+<td>Expand every version for requested models, options, prompts, responses, activity, status and retry/branch ancestry</td>
 </tr>
 <tr>
 <td>Reopen earlier work</td>
-<td><strong>Recent projects</strong></td>
-<td>Projects, versions and prompts restored from the local database — kept when the app is upgraded</td>
+<td><strong>Recent projects → Full history</strong></td>
+<td>Search every local project and inspect its complete version/option/model/prompt/activity ancestry before opening it; upgrades keep the database</td>
 </tr>
 <tr>
-<td>Reuse an existing project</td>
-<td><strong>Import → Folder, ZIP or source files</strong></td>
-<td>Design context, or a normalized editable project</td>
+<td>Reuse an existing project or component library</td>
+<td><strong>Import → Folder, ZIP or source files / Built Storybook</strong></td>
+<td>Normalized editable source, compact design context, or fixed JSON-only Storybook metadata without executing stories, bundles or iframes</td>
 </tr>
 <tr>
 <td>Drive it from the menu bar</td>
@@ -351,6 +351,11 @@ download builds rather than being a plausible-looking scaffold. See
 <td>Optional and additive. OpenAI-compatible (any <code>https://</code> endpoint, or <code>http://</code> on <code>localhost</code>), Azure OpenAI or Anthropic. <strong>No Copilot subscription required.</strong> No Gemini equivalent</td>
 </tr>
 <tr>
+<td><strong>Ollama (local preset)</strong></td>
+<td>Install Ollama and a compatible model, then choose <strong>Configure local Ollama</strong> in the BYOK card</td>
+<td>Uses <code>http://localhost:11434/v1</code>; no paid API is required for local inference, but you supply hardware and a separately licensed model with image input and tool calling</td>
+</tr>
+<tr>
 <td>Replicate</td>
 <td>Key in <strong>Settings</strong> or <code>REPLICATE_API_KEY</code></td>
 <td>Default-compatible image generation; editing and background removal</td>
@@ -378,7 +383,11 @@ it — and only an OpenAI-compatible endpoint on <code>localhost</code> may run 
 credential. Its models appear under <strong>Copilot SDK (BYOK)</strong> with the run identity
 <code>sdk-byok/&lt;provider&gt;/&lt;base model&gt;</code>, so a model and its BYOK twin can run in the
 same generation and be compared. Configuring it changes nothing about how the
-native providers behave. See
+native providers behave. The <strong>Configure local Ollama</strong> action fills
+<code>http://localhost:11434/v1</code> on this same connection. shot2code does not bundle
+Ollama or a model; local inference uses your hardware, model licences and
+capabilities vary, and Ollama cloud services are separate. See
+<a href="https://docs.ollama.com/api/openai-compatibility" rel="noopener noreferrer">Ollama's OpenAI-compatibility documentation</a> and
 <a href="user-guide/#using-your-own-endpoint-copilot-sdk-byok">USER-GUIDE.md</a>.</p>
 <p><strong>It also reaches models the catalogue does not know.</strong> Name the ids your
 endpoint serves — discovered from its <code>/models</code> route where one exists, typed by
@@ -394,33 +403,51 @@ documentation can confirm.</p>
 OpenAI, Anthropic, Gemini and Replicate individually with one minimal request,
 so an unpaid account or a revoked key is reported — with the action that fixes
 it — before a generation is half-finished.</p>
-<h2 id="mcp-servers-skills-and-web-search" tabindex="-1">MCP servers, skills and web search</h2>
+<h2 id="mcp-servers-skills-and-web-research" tabindex="-1">MCP servers, skills and web research</h2>
 <p>Up to eight Model Context Protocol servers can be configured in <strong>Settings</strong> over
 <strong>stdio</strong>, <strong>HTTP</strong> or <strong>SSE</strong>, either by hand or from the official
-<strong>MCP Registry</strong> browser built into the app. A server must be <strong>enabled</strong> <em>and</em>
-explicitly <strong>trusted</strong> before shot2code will start it, it is <strong>read-only</strong> until
-you also allow write tools, a local server is spawned as an argument vector
-rather than through a shell, and a remote one must use <code>https://</code> unless it is on
-<code>localhost</code>. <strong>A registry install is a disabled, untrusted draft</strong> — nothing the
-registry returns can start on its own. <strong>Google Stitch MCP</strong> is offered as a featured draft under the same rules.
-Figma MCP endpoints are filtered from the registry and migrated entries are
-disabled because Figma restricts both desktop and hosted MCP transports to
-clients listed in its MCP Catalog.</p>
-<p><strong>Agent Skills</strong> are reusable instruction folders imported from a local folder or
-a public GitHub folder URL. They are validated, recorded with their origin, and
-<strong>disabled by default</strong>. A skill may contain scripts and those files are stored,
-but <strong>they can never execute</strong>: shot2code exposes no shell tool and no
-unrestricted host-filesystem tool.</p>
-<p>MCP tools and skills are offered to <strong>GitHub Copilot</strong> and <strong>Copilot SDK BYOK</strong>
-options only. Web research is different: the opt-in canonical <code>search_web</code> tool
-uses Tavily or Exa and reaches native OpenAI, Anthropic and Gemini as well as
-both Copilot runtimes. It limits queries, domains, results, snippets, calls per
-turn and calls per generation, and labels every result as untrusted content.
-Copilot's built-in search is offered only when canonical search is off.
-Built-in <code>web_fetch</code> is blocked because the SDK cannot let shot2code inspect or
-bound a whole-page result before the model receives it. See
-<a href="user-guide/#mcp-servers">USER-GUIDE.md</a>.</p>
-<h2 id="design-sources-figma-and-google-stitch" tabindex="-1">Design sources: Figma and Google Stitch</h2>
+<strong>MCP Registry</strong> browser. A server must be <strong>enabled</strong> and explicitly
+<strong>trusted</strong> before shot2code starts it, remains read-only until <strong>Allow write
+tools</strong> is enabled, and is launched without a shell. Registry and featured
+Google Stitch entries arrive as disabled, untrusted drafts. Figma MCP endpoints
+are filtered because Figma accepts only clients listed in its MCP Catalog.</p>
+<p><strong>Agent Skills</strong> are local/public-GitHub instruction folders. They are validated,
+stored with provenance and disabled by default. Their script files remain inert
+resources because shot2code exposes no shell or unrestricted host-filesystem
+tool.</p>
+<p>MCP tools and Agent Skills are available only to <strong>GitHub Copilot</strong> subscription
+and <strong>Copilot SDK BYOK</strong> variants. Native OpenAI, Anthropic and Gemini variants
+never receive them. MCP write access is separately visible and consented.</p>
+<p>The <strong>Tools</strong> control beside Chat is an inventory, not a bypass. It reports
+project editing, Chromium preview verification, web search, bounded page
+reading, public-domain photos, generated-image readiness and provider billing,
+localized icons, valid enabled+trusted MCP servers (including write scope), and
+enabled Skills. Merely appearing in the list enables nothing; <strong>Manage tools</strong>
+opens the relevant Settings consent.</p>
+<p>Provider-neutral research tools are different from MCP/Skills:</p>
+<ul>
+<li><code>search_web</code> sends bounded queries to Tavily or Exa from every runtime and
+returns capped untrusted snippets. Provider allowances belong to those
+services and can change; the app links their official pricing pages.</li>
+<li><code>read_web_page</code> has a <strong>separate off-by-default switch</strong>. It accepts one public
+HTTP(S) URL on a standard port, no credentials or query string, sends no
+cookies/auth, downloads at most 512 KB, strips active HTML, returns at most
+16,000 untrusted characters, and allows two reads per turn and five per
+generation. Turning on search never turns on page reading.</li>
+<li><code>search_icons</code> is another separate opt-in available to every runtime. It uses
+only <code>https://api.iconify.design</code>, sanitizes and locally persists selected SVG,
+restricts automatic results to a permissive SPDX allowlist, and embeds source,
+author, licence and retrieval provenance. Iconify's public API currently
+accepts keyless requests (checked 2026-10-04), but publishes no fixed public
+quota or SLA, so access can change. Verify upstream metadata and brand/trademark
+rights. See the <a href="https://iconify.design/docs/api/" rel="noopener noreferrer">Iconify API docs</a>.</li>
+</ul>
+<p>Copilot's built-in search is used only when canonical search is unavailable.
+The runtime-owned built-in <code>web_fetch</code> remains blocked: its whole-page result
+reaches the model before shot2code can truncate, label or budget it, so it is
+never a fallback for <code>read_web_page</code>. See the
+<a href="user-guide/#agent-skills-web-research-and-chat-tools">tool-safety guide</a>.</p>
+<h2 id="design-sources-figma-storybook-and-google-stitch" tabindex="-1">Design sources: Figma, Storybook and Google Stitch</h2>
 <p>Besides screenshots, a URL, a description or a recording, shot2code can start
 from a design tool:</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 8"><table>
@@ -433,7 +460,7 @@ from a design tool:</p>
 <tbody>
 <tr>
 <td><strong>Figma</strong></td>
-<td>Exported screenshots/SVG, or a REST import that renders selected frames and preserves original image fills plus export-marked nodes as reusable local assets</td>
+<td>Exported screenshots/SVG, or a REST import that can preview rendered frames before a model call, reuse them for generation, and preserve image fills plus export-marked local assets</td>
 </tr>
 <tr>
 <td><strong>Google Stitch</strong></td>
@@ -441,11 +468,15 @@ from a design tool:</p>
 </tr>
 <tr>
 <td><strong>Public website</strong></td>
-<td>The URL inspector proxies public-only resources through pinned-address checks and captures computed design evidence at desktop/tablet/mobile sizes</td>
+<td>The URL inspector proxies public-only resources, scrolls bounded lazy content and captures bounded full-page desktop/tablet/mobile evidence with actual dimensions and blank/truncation metadata</td>
+</tr>
+<tr>
+<td><strong>Built Storybook</strong></td>
+<td>A built folder, selected JSON files, ZIP or public HTTPS root; only fixed metadata JSON is parsed, never story code, bundles or <code>iframe.html</code></td>
 </tr>
 <tr>
 <td><strong>GitHub repository</strong></td>
-<td>Public URL with no token, or a separate repository-limited fine-grained token with <code>Contents: read</code> for a private repo. Copilot sign-in is never broadened or reused</td>
+<td>Public URL with no token, or a separate repository-limited fine-grained token with <code>Contents: read</code> for a private repo. Blank first refinement opens locally; a non-empty one exposes edit models and design system while preserving the detected stack</td>
 </tr>
 </tbody>
 </table></div>
@@ -461,7 +492,7 @@ store and referenced through restart-safe identifiers. Binary project files
 remain previewable and export as decoded bytes rather than base64 text. Every
 external design document, website string and repository file is untrusted data,
 never an instruction source.</p>
-<h2 id="image-generation-and-free-images" tabindex="-1">Image generation and free images</h2>
+<h2 id="image-generation-public-domain-photos-and-icons" tabindex="-1">Image generation, public-domain photos and icons</h2>
 <p>Image generation is additive and provider-specific:</p>
 <ul>
 <li><strong>Replicate</strong> is the default-compatible provider and the only one used for
@@ -474,35 +505,49 @@ only when <code>/images/edits</code> actually exists.</li>
 </ul>
 <p>Every prompt keeps its own success or classified failure. Partial batches report
 <strong>Generated X of N</strong>; an all-failed batch fails instead of returning empty image
-URLs. HTTP URLs, base64, data URLs and bytes all pass the same validation and
-local-asset persistence boundary.</p>
+URLs. After a credential, billing, quota, permission, model or configuration
+failure, a per-generation circuit breaker blocks repeated paid/provider calls.
+The run is directed to another honest asset path — public-domain photos,
+localized icons, extracted assets, CSS or SVG — or the user fixes Settings and
+starts a new generation.</p>
 <p><strong>Free image search</strong> is a separate, opt-in Openverse tool. It does not silently
 replace generation. Only CC0/Public Domain Mark records with a source and
 licence URL survive local checks, and selected images are downloaded through
 DNS/private-address, redirect, MIME, byte and decoded-pixel limits before being
-stored locally. Openverse aggregates third-party metadata, so verify the source.</p>
+stored locally. Openverse aggregates third-party metadata, so verify the source.
+The public API currently works without a shot2code credential, but provider
+access and limits can change.</p>
+<p>Arbitrary Google, Bing or general web-image results are deliberately not inserted
+into exported projects: appearing in a search result grants no reuse right. Use
+Openverse for conservatively licensed photography and the opt-in Iconify path for
+interface icons. Iconify SVG is sanitized and localized rather than hotlinked;
+its embedded provenance does not grant trademark rights for a brand icon.</p>
 <h2 id="reviewing-what-was-generated" tabindex="-1">Reviewing what was generated</h2>
-<p><strong>Review</strong> renders the generated page at two to four real widths at once — 1440,
-768 and 390 by default, any whole width from 320 to 1920 if you add your own —
-measures horizontal overflow in the running frame, and runs a local,
-deterministic audit of the generated source for semantic and accessibility
-problems. Findings can be filtered, searched and selected in bulk, written into
-the Chat composer for you to read and send, or applied directly with <strong>Fix
-selected findings</strong>, which targets the exact version and option that was
-reviewed. An optional <strong>AI review</strong> asks the model that option actually ran on
-for a second opinion, with <strong>no tools, MCP, skills, web search, shell or file
-writes</strong>; it is a real provider request and may use quota, and the local findings
-remain the authoritative ones. A <strong>Design Inspector</strong> extracts colours,
-variables, typography, spacing, radii, shadows and motion and exports
-<code>DESIGN.md</code>, <code>SKILL.md</code> and a palette PNG. The whole result exports as JSON.
-It is an automated source check, <strong>not a WCAG conformance assessment</strong>. See
-<a href="user-guide/#the-review-workspace">USER-GUIDE.md</a>.</p>
-<p>Keys entered in Settings are stored on your device and sent only to the provider
-they belong to. See <a href="data-handling/">DATA-HANDLING.md</a>.</p>
+<p><strong>Review</strong> renders the generated page at two to four real CSS widths — 1440,
+768 and 390 by default, any whole width from 320 to 1920 — and combines a local
+source audit with bounded runtime evidence from each sandboxed frame. Runtime
+checks cover horizontal overflow, accessible names, custom keyboard focus,
+target-size advisories, image alternatives/load failures, headings and main
+landmarks; a failed frame is isolated so source and other viewport results stay
+usable.</p>
+<p>Findings carry <strong>Accessibility, Structure, Responsive or Document</strong> categories,
+source/runtime provenance and viewport evidence. Severity/category/query
+filters plus filtered select-all preserve hidden selections. The health summary
+states whether coverage is healthy, needs attention, partial or stale and binds
+the result to the exact version, option, source hash and viewport set.</p>
+<p>Selected fixes target that exact reviewed option. The optional AI review uses
+the recorded model with <strong>no tools, MCP, Skills, web search or writes</strong> and may
+consume provider quota; local findings remain authoritative. Schema-v2 JSON
+reports include findings, coverage and safe relative file labels, never source
+credentials. The Design Inspector still exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a
+palette PNG.</p>
+<p>These are automated source and bounded runtime signals, <strong>not WCAG
+certification</strong>. Manual keyboard, screen-reader, zoom and interaction testing is
+still required. See <a href="user-guide/#the-review-workspace">USER-GUIDE.md</a>.</p>
 <h2 id="what-it-does-not-do" tabindex="-1">What it does not do</h2>
 <ul>
 <li>It is <strong>not</strong> a hosted service and has no account, sync or cloud storage.</li>
-<li>It does <strong>not</strong> include a model or any free inference. You bring the provider.</li>
+<li>It does <strong>not</strong> include a model or a provider allowance. A local Ollama run can avoid a paid inference API, but Ollama, hardware and a suitably licensed/capable model remain yours to install and operate.</li>
 <li>It does <strong>not</strong> run a shell, and it exposes no unrestricted host-filesystem
 tool. An imported skill may ship scripts; they are stored, never executed.</li>
 <li>It does <strong>not</strong> guarantee that generated code is correct, accessible or secure.
@@ -525,7 +570,7 @@ on first run. Verify the SHA-256 checksum instead — see <a href="security/">SE
 </tr>
 <tr>
 <td><a href="user-guide/">USER-GUIDE.md</a></td>
-<td>First run, providers, sign-in, BYOK, MCP/skills, Figma/Stitch, public-site inspection, GitHub import, pasted chat screenshots, Review, History and export</td>
+<td>First run, providers and local Ollama, Chat Tools, bounded research, Storybook/Figma/Stitch/GitHub inputs, Review, Full history and export</td>
 </tr>
 <tr>
 <td><a href="input-tabs/">INPUT-TABS.md</a></td>

@@ -8,10 +8,12 @@ logs live.
 ## General
 
 **Is it free?**
-The app is free and MIT-licensed. The model provider is not: you need either an
-active GitHub Copilot subscription, your own API key, or your own endpoint
-reached through a Copilot SDK BYOK connection — and you pay that provider
-directly.
+The app is free and MIT-licensed. Most hosted model providers bill your account.
+The existing BYOK localhost path can point at a separately installed Ollama
+server, so local inference needs no paid API, but shot2code does not provide the
+model, compute or electricity: you supply compatible hardware, install Ollama
+and a vision-plus-tool-calling model, and follow that model's licence. Ollama
+cloud services are separate.
 
 **Does my code or my screenshots leave the machine?**
 Only in the generation request sent to the provider you configured — including
@@ -21,8 +23,10 @@ runs locally. A few actions deliberately reach out and say so first: a Figma
 REST import contacts `api.figma.com`, the bundled Stitch SDK contacts Stitch,
 an MCP server you enabled and trusted receives the tool calls a model makes,
 Tavily, Exa or Copilot web search receives your search queries when you switch it
-on, Openverse receives free-image searches, and an AI
-review is a normal request to your provider. CodePen sharing is the one
+on; the separately consented page reader contacts the public URL a model asks to
+read; Openverse receives public-domain photo searches; Iconify receives icon
+queries and selected SVG requests; and an AI review is a normal request to your
+provider. CodePen sharing is the one
 deliberate export of your code, and it always asks first. Full detail:
 [DATA-HANDLING.md](DATA-HANDLING.md).
 
@@ -99,6 +103,8 @@ Read the log and include its tail in an issue:
 ```
 
 It records backend startup, renderer load failures, crashes and console errors.
+The packaged shell checks for a genuinely empty renderer, reloads it once, and
+shows a static recovery screen if it stays blank; local projects remain stored.
 
 ## Generating
 
@@ -193,6 +199,12 @@ It now says which: a rejected key, a billing or credit problem, a rate limit, a
 timeout, an invalid URL, or the provider being unavailable. You can test the
 ScreenshotOne key from the URL tab with one minimal request before relying on it.
 
+**Screenshot preview is nearly blank. What does the agent see?**
+The preview tool returns full-page desktop/mobile images plus bounded body-text
+and rendered-element counts, sanitized console errors, page errors and a
+`nearly_blank` flag. A blank/erroring render is explicitly called out so the
+model repairs a mount/runtime failure instead of accepting an empty screenshot.
+
 ## Features that need extra setup
 
 | Feature | Requirement |
@@ -202,21 +214,26 @@ ScreenshotOne key from the URL tab with one minimal request before relying on it
 | Image generation | Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint configured in Settings |
 | Image editing | Replicate, or an OpenAI-compatible endpoint that implements `/images/edits` |
 | Background removal | Replicate only |
-| Free licensed image search | Enable Openverse search; no API key is required, and only CC0/Public Domain Mark results are returned |
+| Free licensed image search | Enable Openverse search; no shot2code API key is sent, only CC0/Public Domain Mark results are returned, and provider access/limits can change |
+| Bounded public-page reading | Enable it separately from web search; public query-free HTTP(S) only, with byte/text/redirect/call budgets |
+| Localized icon search | Enable Iconify; its public API is currently keyless but has no fixed public quota/SLA, and SVG/licence metadata is sanitized and localized |
 | Screenshot preview (the agent checking its own output) | Chromium, which ships with the desktop app; Settings reports if it is unavailable |
 | Screenshot by URL | A ScreenshotOne key, testable from the URL tab |
-| Your own model endpoint | A Copilot SDK BYOK connection with its own credential — see below |
+| Your own model endpoint | A Copilot SDK BYOK connection with its own credential — except the existing OpenAI-compatible localhost path, which includes the Ollama preset |
 | Tools from an MCP server | A server that is both enabled and trusted, and an option running on Copilot or BYOK |
 | An Agent Skill | An enabled skill and an option running on Copilot or BYOK |
 | Provider-neutral web search | Enable Tavily or Exa in Settings; it works with native providers and both Copilot runtimes |
 | Figma REST import | A Figma personal access token with `file_content:read` |
 | Google Stitch generation or import | A Stitch API key, used by the bundled experimental SDK in the desktop app |
+| Built Storybook context | A built folder, selected JSON files, ZIP or public HTTPS root; no Storybook runtime/provider is contacted or executed |
 
 **Why do image tiles say failed even though the agent requested several?**
-v0.5.2 keeps one result per prompt. A rejected credential, exhausted balance,
+shot2code keeps one result per prompt. A rejected credential, exhausted balance,
 quota response, timeout, or provider error renders as a failed tile with the
 actual reason. Partial batches say **Generated X of N**; an all-failed batch is
-not reported as success.
+not reported as success. Credential, billing, quota, permission, model and
+configuration failures also trip a per-generation circuit breaker so the agent
+does not repeat provider calls that cannot succeed.
 
 **Can shot2code find an image when I do not have a generation key?**
 Yes, if you explicitly enable **Free image search**. It is a separate
@@ -225,11 +242,24 @@ Openverse for CC0/Public Domain Mark images, verifies required metadata, safely
 downloads the bytes and stores a local asset. Always check the linked source
 page because Openverse aggregates third-party metadata.
 
-**Can every model use web search?**
-The canonical `search_web` tool works with native OpenAI, Anthropic and Gemini,
-GitHub Copilot, and Copilot SDK BYOK. Copilot's built-in search is used only
-when the canonical tool is not configured. Whole-page `web_fetch` is disabled
-because its output cannot currently be bounded before reaching the model.
+**Why not insert images from Google Images, Bing Images or ordinary web search?**
+A search result does not grant reuse rights. shot2code therefore does not put an
+arbitrary web image into an exported project. Use Openverse for conservatively
+licensed CC0/Public Domain Mark photography, or the separate Iconify tool for
+sanitized/localized SVG icons with provenance. Brand/trademark rights still need
+their own review.
+
+**Can every model use web research tools?**
+The canonical `search_web`, separately consented `read_web_page`, Openverse
+photo search and Iconify icon search work with native OpenAI, Anthropic and
+Gemini plus both Copilot runtimes. Search snippets never enable page reading
+automatically. MCP servers and Agent Skills are different: they are SDK-runtime
+features and reach Copilot subscription/BYOK options only.
+
+Copilot's built-in search is used only when canonical search is unavailable.
+Whole-page built-in `web_fetch` remains blocked because its output reaches the
+model before shot2code can inspect, truncate, label or budget it; the bounded
+canonical reader is the replacement.
 
 **Why is Figma MCP not listed?**
 Figma restricts its desktop and hosted MCP servers to clients in Figma's MCP
@@ -286,6 +316,15 @@ untouched.
 Only for an **OpenAI-compatible endpoint on `localhost`** — a local Ollama, LM
 Studio or vLLM server. Everything else, including Azure and Anthropic, must have
 its own credential.
+
+**What does Configure local Ollama do?**
+It fills the same BYOK connection with `http://localhost:11434/v1`; it is a
+preset, not a new native provider. shot2code does not install Ollama or download
+a model. Start Ollama, pull a model, then use **Test model access**. Local
+inference needs no paid API but consumes your hardware, the model's own licence
+applies, and the model must support image input plus tool calling. Ollama cloud
+services are separate. See
+[Ollama's OpenAI-compatibility documentation](https://docs.ollama.com/api/openai-compatibility).
 
 **Does switching BYOK on change how my existing models run?**
 No. A native selection always runs on its native provider. Nothing is re-routed,
@@ -380,12 +419,17 @@ run `gh auth login` or `copilot` in a terminal, or paste a token into Settings.
 Yes. **Cancel** stops the flow. A sign-in is also bounded by a timeout and is
 killed if the backend stops.
 
-## MCP servers, skills and web search
+## MCP servers, Skills and web research
 
-**Which options can use MCP tools, skills or web search?**
+**Which options can use MCP tools and Agent Skills?**
 GitHub Copilot subscription options and Copilot SDK BYOK options. An option
 running on your own OpenAI, Anthropic or Gemini key uses that provider's own
-client and never sees any of them.
+client and never sees MCP or Skills.
+
+**Which options can search, read pages, find public-domain photos or localize icons?**
+All five runtimes can receive those shot2code-owned canonical tools when each
+separate setting is enabled. They do not imply MCP access, Skill access or write
+permission.
 
 **How many servers can I add?**
 Up to eight, over stdio, HTTP or SSE.
@@ -446,6 +490,13 @@ No, and it cannot. The files are stored as resources, but shot2code exposes no
 shell tool and no unrestricted host-filesystem tool to any model, so there is
 nothing that could execute them.
 
+**What does the Chat Tools button enable?**
+Nothing by itself. It inventories project editing, Chromium preview health, web
+search, page reading, Openverse photos, generated-image readiness/cost,
+localized icons, active MCP servers and write scope, and enabled Skills.
+**Manage tools** opens Settings; every external, paid, trusted or write-capable
+feature still needs its own permission.
+
 **What does Allow web search actually do?**
 It lets Copilot and BYOK options search the public web when a prompt needs
 current documentation. It is off by default, **your search queries leave the
@@ -458,8 +509,9 @@ computer files stay disabled.
 Three ways: exported screenshots, an exported **SVG** (rasterised locally before
 it is sent), or a **REST import** using a Figma URL and your own personal access
 token with `file_content:read`. REST import preserves rendered frames, original
-image fills and export-marked nodes as local assets. It does not recover
-production application source because Figma's REST API does not expose that.
+image fills and export-marked nodes as local assets. **Preview Figma frames**
+shows that rendered evidence before a model call, and generation reuses it. The
+REST API does not recover production application source.
 
 **Why does the Figma remote MCP server not connect?**
 Figma currently admits only clients listed in its own MCP catalogue. shot2code
@@ -490,70 +542,51 @@ bundled SDK, and excluded from generation requests, history and exports.
 
 ## Reviewing the result
 
-**What does Review actually render?**
-The generated page at two to four real widths at once — 1440, 768 and 390 by
-default. Each frame is that actual width, not a scaled screenshot, so a layout
-that breaks at 390px breaks visibly.
+**What does Review actually combine?**
+The generated page at two to four real CSS widths — 1440, 768 and 390 by default
+— plus a deterministic source audit and bounded runtime checks from every
+sandboxed frame. Runtime evidence covers horizontal overflow, accessible names,
+custom keyboard focus, target size, image alternatives/load failures, headings
+and main landmarks.
 
-**Can I use my own widths?**
-Yes: any whole number from 320 to 1920, keeping between two and four frames.
-Your set is remembered on this device.
+**What happens if one frame fails?**
+It is isolated. Source findings and successful frames remain available, and the
+health summary reports partial coverage rather than treating missing runtime
+evidence as a clean result.
 
-**Is the audit a WCAG check?**
-**No.** It is a deterministic, local pass over the generated source that reports
-semantic and accessibility problems with evidence and guidance. It is **not a
-WCAG conformance assessment** and does not replace testing with real assistive
-technology. A framework project's runtime DOM can also differ from the source
-that was audited.
-
-**Does it send my code anywhere?**
-No. The audit runs locally on the generated source.
+**How do filtering and select-all work?**
+Findings have Accessibility, Structure, Responsive or Document categories plus
+severity, provenance and viewport evidence. Filter by severity/category/text;
+**Select filtered** changes the visible set without discarding selections hidden
+by another filter.
 
 **Why is my result marked stale?**
-Because something it was bound to changed — the version, the option, the source,
-or the widths. Re-run it to get an answer about what is on screen now.
+The run is bound to the version, option, source hash and viewport set. Change any
+of those and Review says the results are stale. Its health state otherwise
+separates healthy, advisory/warning/error and partial runtime coverage.
 
-**Do the findings get sent to the model automatically?**
-No. Selected findings are written into the composer as a grouped instruction.
-Read it, edit it, then send it yourself.
+**Is the audit a WCAG check?**
+**No.** It is automated source and bounded runtime evidence, not WCAG
+certification. Continue with keyboard, screen-reader, zoom and interaction
+testing.
 
-**Then what does "Fix selected findings" do?**
-That one does send — deliberately, and immediately — as a targeted update
-against the **exact version and option that was reviewed**, not whatever is on
-screen. The result is a new version, so nothing is overwritten.
-
-**How do I narrow a long list of findings?**
-Filter by severity, search the text, then use **Select visible** or **Select
-errors + warnings** to tick them in bulk.
-
-**What is the AI review?**
-An optional second opinion from **the model that option actually ran on**. It
-runs with **no tools, no MCP servers, no skills, no web search, no shell and no
-file writes**, and its findings are kept separate from the local ones, which
-remain authoritative.
-
-**Does the AI review cost anything?**
-Yes — it is a real request to your provider and may use quota. The local audit
-is free, deterministic and offline. An option with no recorded model identity
-cannot be AI-reviewed; retry it first.
-
-**What is the Design Inspector for?**
-It extracts the design decisions in the generated source — repeated colours, CSS
-variables, typography, spacing, radii, shadows, motion and semantic component
-counts — and exports `DESIGN.md`, `SKILL.md` and a palette PNG. It reads the
-composed source, so it describes what the code declares rather than what a
-browser finally computes.
+**Does it send my code anywhere?**
+The source/runtime checks are local. **Fix selected findings** is the explicit
+model update against the exact reviewed version/option. The optional AI review
+is a real provider request and may consume quota; it runs with no tools, MCP,
+Skills, web search or writes and stays separate from the deterministic findings.
 
 **Can it inspect a public website before generation?**
-Yes. In the **URL** tab choose **Inspect design**. A bounded local Chromium
-session captures computed design evidence plus desktop, tablet and mobile
-screenshots, and produces copy/downloadable `DESIGN.md`. It does not recover
-original source, establish asset reuse rights or certify accessibility, and it
-refuses private/loopback/metadata destinations.
+Yes. **URL → Inspect design** scrolls bounded lazy content and captures
+full-page desktop/tablet/mobile evidence with actual document/capture dimensions
+and explicit blank/truncation state. Each screenshot is capped at 40,000px and
+36 million pixels. It remains rendered evidence, not original source, asset
+rights or accessibility certification.
 
 **Is the JSON report safe to attach to an issue?**
-It is built to be: file paths are reduced to a leaf name and no credential of
-any kind is included. Read it before you post it, as you would any export.
+The schema-v2 export uses safe relative file labels and includes findings,
+categories, runtime coverage, viewport state and the exact binding; credentials
+are excluded. Read any export before posting it.
 
 ## Importing
 
@@ -568,12 +601,28 @@ variables and reusable CSS classes become design tokens.
 There are limits on archive size, entry count, file count, per-file size and total
 decoded text. Point it at the part of the project you actually want as context.
 
+**Can it import a built Storybook?**
+Yes: choose a built folder, selected JSON files, ZIP or public HTTPS root. Only
+`index.json` and optional `manifests/components.json` /
+`manifests/docs.json` are parsed as untrusted metadata. Stories, bundles, CSF,
+addons, loaders, play functions, `iframe.html` and arbitrary JSON are never
+loaded or executed.
+
 **Can I paste a GitHub repository URL instead of downloading a ZIP?**
 Yes, use the dedicated **GitHub** tab. Public repositories need no token. A
 private repository needs a separate fine-grained token limited to that
 repository with **Contents: read**; the app's Copilot OAuth token is deliberately
 not broadened or reused. Source is scanned but never executed, and bounded
 PNG/JPEG/GIF/WebP assets remain available to Preview, export and later chat.
+Leave the first refinement blank for a local open with no model request. Add one
+to expose the update-model picker and design-system choice; the detected
+repository stack is preserved rather than silently converted.
+
+**Where do I see every saved project and all its ancestry?**
+Choose **Full history** from Recent projects or project History. Search all local
+projects, then inspect every version, requested model, option/status, prompt,
+response, attachment count, activity record and retry/branch relationship before
+opening a project.
 
 ## Updating
 

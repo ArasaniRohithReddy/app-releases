@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/INPUT-TABS.md (normalized SHA-256 41c5b943a5d3d02fa7332c49366bbf626408428486ed700e2d9d3430ac3899f3). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/INPUT-TABS.md (normalized SHA-256 15bc0fe22902bee5937e2e28648d08509efefdf7273ae72fe86d0719933625d9). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -148,12 +148,15 @@ For a public HTTP(S) page it captures:</p>
 <li>font families, type scale, spacing, radii, shadows, and motion;</li>
 <li>component/landmark counts and basic accessible-name signals;</li>
 <li>public asset references;</li>
-<li>desktop 1440x900, tablet 768x1024, and mobile 390x844 screenshots;</li>
+<li>scrollable full-page desktop, tablet, and mobile screenshots with actual
+document/capture dimensions and explicit blank/truncation state;</li>
 <li>an editable, copyable, downloadable <code>DESIGN.md</code>.</li>
 </ul>
 <p>The result is rendered evidence, not the original source code, a claim of asset
 ownership, or a WCAG conformance report. Private, loopback, link-local,
-metadata, and mixed public/private DNS destinations are refused.</p>
+metadata, and mixed public/private DNS destinations are refused. Lazy-content
+scrolling is bounded; extreme pages are capped at 40,000px and 36 million
+pixels per screenshot rather than silently cut off.</p>
 <p><img src="../../img/url-design-inspection.png" alt="Completed design inspection for example.com showing extracted colors, summary metrics, and DESIGN.md actions." loading="lazy" decoding="async"></p>
 <p>Choose <strong>Use screenshots + DESIGN.md</strong> to send the three responsive screenshots
 and the untrusted design report into generation.</p>
@@ -186,6 +189,11 @@ selected shot2code models convert it.</p>
 <li>choose a ZIP archive;</li>
 <li>choose individual source files.</li>
 </ul>
+<p>The third import mode, <strong>Built Storybook</strong>, accepts a built folder, selected
+JSON files, ZIP, or public HTTPS build. It parses only <code>index.json</code> plus
+optional <code>manifests/components.json</code> and <code>manifests/docs.json</code> into compact
+component-library context. Story files, bundles, CSF, addons, decorators,
+loaders, play functions and <code>iframe.html</code> are never loaded or executed.</p>
 <p>The scanner parses text only. It rejects traversal paths, ignores dependency
 and build-output directories, enforces file/archive/text limits, and never
 loads configuration modules or runs install/build/application code.</p>
@@ -204,7 +212,10 @@ does not need a model provider.</p>
 <li>In Settings, add a Figma personal access token with <code>file_content:read</code>.</li>
 <li>Paste the Figma design URL. A frame-specific link is best because it carries
 the selected node ID.</li>
-<li>Choose stack/models and select <strong>Render Figma &amp; Generate</strong>.</li>
+<li>Optionally select <strong>Preview Figma frames</strong> to inspect rendered evidence
+without a model call.</li>
+<li>Choose stack/models and select <strong>Render Figma &amp; Generate</strong>. Previewed frames
+are reused rather than downloaded again.</li>
 </ol>
 <p>shot2code uses Figma's official REST endpoints to render frames. It also
 preserves original image fills and export-marked nodes as bounded local assets.
@@ -229,6 +240,17 @@ that repository with <code>Contents: read</code>.</li>
 Supported text source is normalized into project files; bounded PNG, JPEG, GIF,
 and WebP assets are persisted locally and remain available in Preview, History,
 chat refinements, and exports.</p>
+<p>The tab explains the two paths before opening:</p>
+<ul>
+<li>Leave <strong>First refinement instruction</strong> blank to inspect and open locally with
+no model request.</li>
+<li>Add an instruction to run an immediate first edit after opening. The tab
+shows the model selector for that edit, with update-run limits and the same
+provider choices used by Chat, plus the selected design system.</li>
+</ul>
+<p>The repository's detected frontend stack is preserved. The current default
+stack is used only if inspection cannot detect one; the model picker does not
+silently convert the repository to another framework.</p>
 <p><img src="../../img/github-imported-project.png" alt="Imported Spoon-Knife project open in shot2code with editing suggestions and a desktop preview." loading="lazy" decoding="async"></p>
 <p>The repository token is capture-only. It is excluded from model requests, AI
 review, History, snapshots, logs, and exported projects.</p>

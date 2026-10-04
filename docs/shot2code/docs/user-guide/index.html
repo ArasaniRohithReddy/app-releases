@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 92f842c4428de89cef10f54252b4136e1040849d48d6f810e88cdd4fc5a1f2e6). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 766cdb27d804f0302076597e2891c51b7fbe478b96103a9eb9fc8fe68e67be6a). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#first-run">First run</a></li><li><a href="#the-seven-input-tabs">The seven input tabs</a></li><li><a href="#choosing-a-model-provider">Choosing a model provider</a></li><li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li><li><a href="#choosing-which-models-run">Choosing which models run</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-and-web-search">Agent Skills and web search</a></li><li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li><li><a href="#generating-your-first-page">Generating your first page</a></li><li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li><li><a href="#refining-the-result">Refining the result</a></li><li><a href="#the-code-tab">The Code tab</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#sizing-the-workspace">Sizing the workspace</a></li><li><a href="#history-and-retries">History and retries</a></li><li><a href="#recent-projects">Recent projects</a></li><li><a href="#importing-an-existing-project">Importing an existing project</a></li><li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li><li><a href="#exporting-a-project">Exporting a project</a></li><li><a href="#the-menu-bar">The menu bar</a></li><li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li><li><a href="#the-help-centre">The Help centre</a></li><li><a href="#settings">Settings</a></li><li><a href="#when-something-goes-wrong">When something goes wrong</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#first-run">First run</a></li><li><a href="#the-seven-input-tabs">The seven input tabs</a></li><li><a href="#choosing-a-model-provider">Choosing a model provider</a></li><li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li><li><a href="#choosing-which-models-run">Choosing which models run</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-web-research-and-chat-tools">Agent Skills, web research and Chat Tools</a></li><li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li><li><a href="#generating-your-first-page">Generating your first page</a></li><li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li><li><a href="#refining-the-result">Refining the result</a></li><li><a href="#the-code-tab">The Code tab</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#sizing-the-workspace">Sizing the workspace</a></li><li><a href="#history-and-retries">History and retries</a></li><li><a href="#recent-projects-and-full-history">Recent projects and Full history</a></li><li><a href="#importing-an-existing-project">Importing an existing project</a></li><li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li><li><a href="#exporting-a-project">Exporting a project</a></li><li><a href="#the-menu-bar">The menu bar</a></li><li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li><li><a href="#the-help-centre">The Help centre</a></li><li><a href="#settings">Settings</a></li><li><a href="#when-something-goes-wrong">When something goes wrong</a></li></ul></nav></details>
         <div class="doc-content"><p>Everything below describes the published Windows build. If something here does
 not match what you see, check the version in <strong>Settings</strong> against
 <a href="../changelog/">CHANGELOG.md</a>. If something is failing rather than merely
@@ -76,7 +76,7 @@ runbook. The application itself is developed at
 <li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li>
 <li><a href="#choosing-which-models-run">Choosing which models run</a></li>
 <li><a href="#mcp-servers">MCP servers</a></li>
-<li><a href="#agent-skills-and-web-search">Agent Skills and web search</a></li>
+<li><a href="#agent-skills-web-research-and-chat-tools">Agent Skills, web research and Chat Tools</a></li>
 <li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li>
 <li><a href="#generating-your-first-page">Generating your first page</a></li>
 <li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li>
@@ -85,7 +85,7 @@ runbook. The application itself is developed at
 <li><a href="#the-review-workspace">The Review workspace</a></li>
 <li><a href="#sizing-the-workspace">Sizing the workspace</a></li>
 <li><a href="#history-and-retries">History and retries</a></li>
-<li><a href="#recent-projects">Recent projects</a></li>
+<li><a href="#recent-projects-and-full-history">Recent projects and Full history</a></li>
 <li><a href="#importing-an-existing-project">Importing an existing project</a></li>
 <li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li>
 <li><a href="#exporting-a-project">Exporting a project</a></li>
@@ -105,7 +105,11 @@ that, see <a href="../troubleshooting/#the-app-will-not-start">TROUBLESHOOTING.m
 <p>Only the core routes have to be ready for the window to open. Generation,
 evaluation and project tooling are loaded the first time you use them, and the
 Chromium and Copilot checks run in the background — so an optional capability
-that is slow or missing no longer holds up the app.</p>
+that is slow or missing no longer holds up the app. After the renderer loads,
+the Electron shell also checks for a genuinely empty top-level document. It
+reloads one blank window once and, if it remains empty, shows a static recovery
+screen that says local projects are still stored instead of leaving an
+unexplained white window.</p>
 <p>The chat panel shows a <strong>provider status callout</strong>. It only states what the app
 can actually see from the window:</p>
 <ul>
@@ -145,8 +149,8 @@ by a real request. The callout's actions are <strong>Add a key in Settings</stro
 </tr>
 <tr>
 <td><strong>Import</strong></td>
-<td>HTML, folder, ZIP, or source files</td>
-<td>Design context or an editable imported project</td>
+<td>HTML, folder, ZIP, selected source files, or built Storybook metadata</td>
+<td>Design context or an editable imported project; Storybook stays fixed JSON-only</td>
 </tr>
 <tr>
 <td><strong>Figma</strong></td>
@@ -156,7 +160,7 @@ by a real request. The callout's actions are <strong>Add a key in Settings</stro
 <tr>
 <td><strong>GitHub</strong></td>
 <td>A public/private frontend repository</td>
-<td>A safely scanned editable project</td>
+<td>A local editable open, or an optional first refinement with selected models and design system while preserving the detected stack</td>
 </tr>
 <tr>
 <td><strong>Stitch</strong></td>
@@ -434,6 +438,19 @@ vLLM server, typically.</p>
 <p><strong>There is no Gemini BYOK.</strong> The Copilot SDK has no Gemini provider, so Gemini
 models always use the Gemini API key directly. The app says so as a notice
 rather than leaving you to work it out.</p>
+<h3 id="local-ollama-quick-setup" tabindex="-1">Local Ollama quick setup</h3>
+<p><strong>Configure local Ollama</strong> fills this existing OpenAI-compatible BYOK connection
+with <code>http://localhost:11434/v1</code>, clears stale remote credentials/model choices,
+and leaves the native OpenAI, Anthropic, Gemini and Copilot routes untouched.
+Ollama's local server ignores API-key authentication, so no paid API is required
+for local inference.</p>
+<p>That does <strong>not</strong> mean the app includes free compute or a model. Install and run
+Ollama separately, download a model, supply the RAM/VRAM/CPU/GPU it needs, and
+choose one that supports both <strong>image input and tool calling</strong>. Model licences
+and availability vary; Ollama cloud services are separate from local inference.
+Use <strong>Test model access</strong> to read <code>/models</code>, but confirm capabilities and licence
+with the model publisher. See
+<a href="https://docs.ollama.com/api/openai-compatibility" rel="noopener noreferrer">Ollama's OpenAI-compatibility documentation</a>.</p>
 <h3 id="byok-models-are-separate-selections" tabindex="-1">BYOK models are separate selections</h3>
 <p>Every model the connection can serve appears in <strong>Settings → Models</strong> under
 <strong>Copilot SDK (BYOK)</strong> as its own entry, with the run identity:</p>
@@ -584,7 +601,7 @@ service, an internal documentation index. Up to <strong>eight</strong> can be co
 </tbody>
 </table></div>
 <p>The picker states this for the current selection rather than leaving you to
-infer it from an empty activity list. <a href="#agent-skills-and-web-search">Agent Skills</a>
+infer it from an empty activity list. <a href="#agent-skills-web-research-and-chat-tools">Agent Skills</a>
 follow exactly the same rule; canonical Tavily/Exa web search is provider-neutral.</p>
 <h3 id="installing-from-the-official-mcp-registry" tabindex="-1">Installing from the official MCP Registry</h3>
 <p><strong>MCP Registry</strong> searches
@@ -709,57 +726,87 @@ tools.&quot;</em> — and the generation proceeds without it. An incomplete MCP 
 <h3 id="seeing-the-tools-run" tabindex="-1">Seeing the tools run</h3>
 <p>MCP tool calls appear in the option's activity list as
 <code>MCP · &lt;server&gt; · &lt;tool&gt;</code>, alongside shot2code's own tools.</p>
-<h2 id="agent-skills-and-web-search" tabindex="-1">Agent Skills and web search</h2>
-<p><strong>Settings → Agent Skills</strong> holds reusable instruction folders — a house style
-guide, a component convention, a checklist — that a Copilot run can follow.</p>
-<h3 id="importing-a-skill" tabindex="-1">Importing a skill</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 11"><table>
-<thead>
-<tr>
-<th scope="col">From</th>
-<th scope="col">How</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>A local folder</strong></td>
-<td>Pick the folder on this device. Its files are copied into shot2code's own data directory</td>
-</tr>
-<tr>
-<td><strong>A public GitHub folder</strong></td>
-<td>Paste a URL of the form <code>https://github.com/owner/repo/tree/main/path/to/skill</code></td>
-</tr>
-</tbody>
-</table></div>
-<p>Each import is validated before it is kept: the front matter has to parse, paths
-are normalised and traversal is rejected, and the file count and sizes are
-bounded. Where the skill came from is recorded as provenance, so you can see
-later what you installed and from where.</p>
-<h3 id="skills-are-off-until-you-switch-them-on" tabindex="-1">Skills are off until you switch them on</h3>
-<p><strong>Every imported skill arrives disabled.</strong> Enable, disable or remove one at any
-time. Only <strong>GitHub Copilot</strong> and <strong>Copilot SDK BYOK</strong> options can use them, for
-the same reason MCP tools are limited to those runtimes.</p>
-<h3 id="scripts-are-stored-never-run" tabindex="-1">Scripts are stored, never run</h3>
-<p>A skill may ship scripts. shot2code keeps those files as resources — and
-<strong>cannot execute them</strong>, because it exposes no shell tool and no unrestricted
-host-filesystem tool to any model. A skill is instructions and reference
-material, not a program shot2code will run on your machine.</p>
-<h3 id="web-research" tabindex="-1">Web research</h3>
-<p><strong>Settings → Web search</strong> adds shot2code's bounded <code>search_web</code> tool to native
-OpenAI, Anthropic and Gemini options as well as Copilot and Copilot SDK BYOK.
-Tavily is the default and supports either its own key or an explicit keyless
-trial; Exa is optional and keyed. It is <strong>off by default</strong>, uses fixed HTTPS
-endpoints, returns no raw page content, limits results and snippets, and labels
-everything as untrusted external content. Search queries leave this device.</p>
-<p>Copilot's own built-in <code>web_search</code> remains available when the canonical tool is
-not configured. The two are never offered together. The built-in <code>web_fetch</code>
-remains disabled because the current SDK cannot bound or inspect a whole-page
-result before the model receives it.</p>
+<h2 id="agent-skills-web-research-and-chat-tools" tabindex="-1">Agent Skills, web research and Chat Tools</h2>
+<p><strong>Settings → Agent Skills</strong> holds reusable instruction folders — a house style,
+component convention or checklist — that a Copilot run can follow.</p>
+<h3 id="importing-and-enabling-a-skill" tabindex="-1">Importing and enabling a skill</h3>
+<p>Import a local folder or a public GitHub folder URL. Front matter, normalized
+relative paths, file count and sizes are validated, provenance is recorded, and
+every skill arrives <strong>disabled</strong>. Only GitHub Copilot subscription and Copilot
+SDK BYOK variants receive enabled Skills. Script files are stored as resources
+and can never run because shot2code exposes no shell or unrestricted
+host-filesystem tool.</p>
+<h3 id="provider-neutral-web-search" tabindex="-1">Provider-neutral web search</h3>
+<p><strong>Settings → Web research</strong> can add the canonical <code>search_web</code> tool to native
+OpenAI, Anthropic and Gemini plus both Copilot runtimes. Tavily is the default;
+Exa is optional. It is off by default, uses fixed HTTPS endpoints, sends only
+the model's bounded query/domain filter, returns capped snippets rather than raw
+pages, and labels every result as untrusted third-party reference material.
+Provider plans and allowances belong to Tavily/Exa and can change; Settings
+links their official pricing pages. A connection test is one real search and
+spends one provider credit.</p>
+<p>Copilot's built-in <code>web_search</code> remains available when canonical search is not
+usable. The two are never offered together.</p>
+<h3 id="separately-consented-bounded-page-reading" tabindex="-1">Separately consented bounded page reading</h3>
+<p><strong>Allow bounded page reading</strong> is a different switch. Enabling search does not
+enable it. When on, every runtime receives shot2code's canonical
+<code>read_web_page</code> tool:</p>
+<ul>
+<li>public HTTP(S) only, standard ports, no embedded credentials or query string;</li>
+<li>every DNS answer must be public and is pinned; up to three redirects are
+revalidated from scratch;</li>
+<li>no cookies, authorization, browser state, JavaScript or subresources;</li>
+<li>HTML/XHTML, text, Markdown or JSON only, 512 KB download, 16,000 extracted
+characters, explicit untrusted-content warning;</li>
+<li>two reads per turn and five per generation; failed attempts still spend a
+call because the network request may already have left the device.</li>
+</ul>
+<p>Copilot's runtime-owned built-in <code>web_fetch</code> remains blocked. Its whole-page
+result reaches the model before the SDK lets shot2code inspect it, so it cannot
+be truncated, labelled untrusted, URL-scoped or counted against these budgets.
+It is never a fallback for <code>read_web_page</code>.</p>
+<h3 id="public-domain-photos-and-localized-icons" tabindex="-1">Public-domain photos and localized icons</h3>
+<p><strong>Free image search</strong> is a separate opt-in <code>search_free_images</code> tool using
+Openverse. No shot2code credential is sent. Results are restricted and locally
+rechecked to <strong>CC0 or Public Domain Mark</strong>, require source/licence links, and are
+downloaded through private-address, redirect, MIME, byte and pixel limits into
+local assets. Openverse aggregates third-party metadata, so verify the source
+before commercial use. Arbitrary Google, Bing or web-image results are not
+inserted because a search result grants no reuse right.</p>
+<p><strong>Iconify design add-on</strong> enables <code>search_icons</code> for every runtime. Queries and
+selected SVG downloads use only <code>https://api.iconify.design</code>, without cookies,
+authorization or a shot2code credential. Automatic results are restricted to a
+fixed permissive SPDX allowlist; unknown, copyleft, share-alike,
+attribution-only and non-commercial collections are skipped. SVG scripts,
+handlers, <code>foreignObject</code>, animation and external references are removed before
+a deterministic local asset is saved with icon, collection, author, source,
+licence and retrieval-date provenance.</p>
+<p>Iconify's public API currently accepts requests without an account or API key
+(checked 2026-10-04), but it publishes no fixed public quota or SLA, so limits
+and availability can change. Metadata is supplied by upstream projects, and a
+permissive copyright licence does not grant trademark rights for brand icons.
+See the <a href="https://iconify.design/docs/api/" rel="noopener noreferrer">Iconify API documentation</a> and
+<a href="https://icon-sets.iconify.design/" rel="noopener noreferrer">browse its icon sets</a>.</p>
+<h3 id="tools-available-to-this-chat" tabindex="-1">Tools available to this Chat</h3>
+<p>The <strong>Tools</strong> control beside the composer is an inventory, not a master switch.
+It shows:</p>
+<ul>
+<li>project editing (always on) and whether Chromium preview verification is ready;</li>
+<li>web search, bounded page reading, public-domain photos and localized icons;</li>
+<li>whether generated images are configured, with the reminder that provider
+billing applies;</li>
+<li>valid enabled+trusted MCP servers, including how many may use explicitly
+allowed write tools;</li>
+<li>enabled Agent Skills.</li>
+</ul>
+<p>Nothing paid, external, trusted or write-capable is activated merely because its
+row is visible. <strong>Manage tools</strong> opens Settings. MCP and Skills remain Copilot
+SDK-only; search, page reading, Openverse and Iconify are provider-neutral.</p>
 <h2 id="figma-and-google-stitch" tabindex="-1">Figma and Google Stitch</h2>
 <p>A screenshot is not the only starting point. shot2code can take a design
 straight from Figma or Google Stitch.</p>
 <h3 id="figma" tabindex="-1">Figma</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 12"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 11"><table>
 <thead>
 <tr>
 <th scope="col">Route</th>
@@ -793,11 +840,13 @@ plan tier, limit type and Figma upgrade link.</p>
 <p>Figma's REST API provides file structure, rendered nodes and original image
 fills; it does <strong>not</strong> provide the production source code of an application.
 Optional asset extraction is partial-success, so a rate-limited image fill does
-not discard frames that were already imported.</p>
+not discard frames that were already imported. <strong>Preview Figma frames</strong> renders
+the selected evidence before any model call; when you generate, shot2code reuses
+those already-rendered frames instead of downloading them again.</p>
 <p>Your Figma token is <strong>capture-only</strong>: it is sent to <code>api.figma.com</code> and nowhere
 else, and it is never part of a generation request, project history or an export.</p>
 <h3 id="google-stitch-two-ways" tabindex="-1">Google Stitch, two ways</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 13"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 12"><table>
 <thead>
 <tr>
 <th scope="col">Route</th>
@@ -853,7 +902,7 @@ the results back. See <a href="../architecture/">ARCHITECTURE.md</a>.</p>
 <h2 id="using-more-than-one-screenshot" tabindex="-1">Using more than one screenshot</h2>
 <p>When you upload more than one screenshot, shot2code asks how they relate. The
 answer changes what the model is required to produce:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 14"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 13"><table>
 <thead>
 <tr>
 <th scope="col">Mode</th>
@@ -923,7 +972,7 @@ also drag the divider between the tree and the editor — see
 </ul>
 <h3 id="current-code-and-export-project" tabindex="-1">Current code and Export project</h3>
 <p>Two views sit side by side:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 15"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 14"><table>
 <thead>
 <tr>
 <th scope="col">View</th>
@@ -947,168 +996,56 @@ is no longer the first place you find out what it contains. It is a view of the
 export, not a second copy you can edit — see
 <a href="#exporting-a-project">Exporting a project</a>.</p>
 <h2 id="the-review-workspace" tabindex="-1">The Review workspace</h2>
-<p><strong>Review</strong> sits beside Preview and Code. It answers two questions about the
-generated page at once: <em>does it hold together at the widths I care about</em>, and
-<em>is the source it produced sound</em>.</p>
-<h3 id="real-width-frames" tabindex="-1">Real-width frames</h3>
-<p>The page is rendered at <strong>two to four widths simultaneously</strong>, each in a frame
-of that actual width — not a scaled-down screenshot, so a layout that breaks at
-390px breaks visibly in the 390px frame.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 16"><table>
-<thead>
-<tr>
-<th scope="col">Default</th>
-<th scope="col">Width</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Desktop</td>
-<td>1440</td>
-</tr>
-<tr>
-<td>Tablet</td>
-<td>768</td>
-</tr>
-<tr>
-<td>Mobile</td>
-<td>390</td>
-</tr>
-</tbody>
-</table></div>
-<p>Add, remove or edit them. A custom width is any whole number from <strong>320</strong> to
-<strong>1920</strong>; anything else is refused with <em>&quot;Width must be between 320px and
-1920px.&quot;</em> rather than silently clamped. Keep between two and four — the point is
-comparison, so one frame is not a review and five is not readable. Your set is
-remembered on this device.</p>
-<h3 id="horizontal-overflow" tabindex="-1">Horizontal overflow</h3>
-<p>Overflow is <strong>measured in the running frame</strong>, not guessed from the source: each
-frame reports whether its content is wider than the viewport, and by how much.
-That catches a fixed-width element, an unwrapped table or a long unbroken string
-that only misbehaves once it is actually laid out.</p>
-<h3 id="the-local-source-audit" tabindex="-1">The local source audit</h3>
-<p>Alongside the frames, shot2code runs a <strong>deterministic, local pass over the
-generated source</strong> and reports semantic and accessibility problems by severity:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 17"><table>
-<thead>
-<tr>
-<th scope="col">Checks include</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Missing <code>lang</code> on <code>&lt;html&gt;</code>, a missing or empty <code>&lt;title&gt;</code>, a missing viewport meta</td>
-</tr>
-<tr>
-<td>Heading order that skips levels, or a document with no first-level heading</td>
-</tr>
-<tr>
-<td>No <code>main</code> landmark, or more than one</td>
-</tr>
-<tr>
-<td>Images without alternative text</td>
-</tr>
-<tr>
-<td>Form controls and interactive elements with no accessible name</td>
-</tr>
-<tr>
-<td>Duplicate <code>id</code> values, positive <code>tabindex</code>, interactive elements nested inside each other</td>
-</tr>
-<tr>
-<td>Tables without a caption or header cells</td>
-</tr>
-<tr>
-<td>Fixed widths that will overflow your narrowest frame</td>
-</tr>
-</tbody>
-</table></div>
-<p>Each finding carries the <strong>evidence</strong> from the source, the <strong>affected file</strong> and
-<strong>what to do about it</strong>.</p>
-<p><strong>This is an automated check of generated source. It is not a WCAG conformance
-assessment, and it does not replace testing with real assistive technology.</strong>
-A framework project's runtime DOM can also differ from the source that was
-audited; the report says so.</p>
-<h3 id="sending-findings-to-chat" tabindex="-1">Sending findings to Chat</h3>
-<p>Tick the findings you want addressed and send them to the conversation. They are
-grouped by rule and <strong>written into the composer</strong> — shot2code does <strong>not</strong> send
-them for you. Read the instruction, edit it, then send it like any other
-request.</p>
-<h3 id="finding-what-matters-and-fixing-it" tabindex="-1">Finding what matters, and fixing it</h3>
-<p>A long audit is only useful if you can narrow it:</p>
-<ul>
-<li><strong>Filter by severity</strong> and <strong>search the text</strong> of the findings.</li>
-<li><strong>Select visible</strong> ticks everything the current filter shows.</li>
-<li><strong>Select errors + warnings</strong> ticks the two severities that usually matter.</li>
-</ul>
-<p><strong>Fix selected findings</strong> goes one step further than the composer: it sends a
-targeted update immediately, against the <strong>exact version and option that was
-reviewed</strong> rather than whatever is on screen when you click. The result is a new
-version, like any other refinement, so nothing is overwritten.</p>
-<h3 id="an-optional-ai-review" tabindex="-1">An optional AI review</h3>
-<p>Beside the deterministic audit you can ask for a <strong>second opinion from the model
-that option actually ran on</strong> — the exact identity is shown, so you know what you
-are asking. It is deliberately bounded: the review runs with <strong>no tools, no MCP
-servers, no skills, no web search, no shell and no file writes</strong>. It reads the
-source and answers.</p>
-<p>Its findings are kept <strong>separate</strong> from the local ones, which remain the
-authoritative set, and they can be selected and fixed in the same way. An option
-that does not record a model identity cannot be AI-reviewed; retry it first.</p>
-<p><strong>An AI review is a real request to your provider and may use quota.</strong> The local
-audit is free, deterministic and offline.</p>
-<h3 id="the-design-inspector" tabindex="-1">The Design Inspector</h3>
-<p>The Design Inspector reads the generated source and reports the design decisions
-inside it: repeated colours, CSS variables, typography, spacing, radii, shadows,
-motion, and counts of the semantic components it found. It exports:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 18"><table>
-<thead>
-<tr>
-<th scope="col">Artifact</th>
-<th scope="col">What it is</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong><code>DESIGN.md</code></strong></td>
-<td>The design system it extracted, in Markdown — also available as a single copy action</td>
-</tr>
-<tr>
-<td><strong><code>SKILL.md</code></strong></td>
-<td>The same system written as reusable instructions</td>
-</tr>
-<tr>
-<td><strong>A palette PNG</strong></td>
-<td>The colours it found, as an image you can share</td>
-</tr>
-</tbody>
-</table></div>
-<p>It analyses the composed source, so it describes what the generated code
-declares rather than what a browser finally computes.</p>
-<p>The <strong>URL</strong> tab has a separate public-site inspector. It uses a bounded local
-Chromium session to collect computed colours, variables, typography, spacing,
-radii, shadows, motion, semantic structure, accessible-name signals and public
-asset references, plus screenshots at 1440×900, 768×1024 and 390×844. The
-result can be copied/downloaded as <code>DESIGN.md</code> or used with those screenshots as
-generation evidence.</p>
-<p>This is rendered evidence, <strong>not</strong> the site's original HTML/CSS/JS source, a
-licence to reuse its assets, or a WCAG conformance result. Private, loopback,
-link-local, metadata and other unsafe destinations are refused, and imported
-page text remains untrusted data rather than model instructions.</p>
-<h3 id="results-are-bound-to-what-produced-them" tabindex="-1">Results are bound to what produced them</h3>
-<p>A review records the version, the option, a hash of the source it audited and
-the widths it ran at. Edit the code, switch option, generate a new version or
-change the widths, and the result is marked <strong>stale</strong> instead of being presented
-as if it were current. Re-run it to get an answer about what is on screen now.</p>
-<h3 id="the-json-report" tabindex="-1">The JSON report</h3>
-<p>Export the review as JSON for an issue or a pull request. It contains the
-severities, rule ids, messages, evidence, guidance and a summary count, plus the
-version, option, source hash and widths it was bound to. File paths are reduced
-to a leaf name, and <strong>no credential of any kind — provider key, BYOK key, MCP
-environment value or request header — is included</strong>. The report carries its own
-notice that it is an automated source audit rather than certification.</p>
+<p><strong>Review</strong> sits beside Preview and Code. It combines deterministic source checks
+with bounded runtime evidence from two to four sandboxed frames at their actual
+CSS widths. Defaults are 1440, 768 and 390; custom widths are whole numbers from
+320 to 1920.</p>
+<h3 id="source-and-runtime-evidence" tabindex="-1">Source and runtime evidence</h3>
+<p>The source pass reports semantic/accessibility patterns with evidence, file and
+guidance. Each runtime frame independently checks horizontal overflow,
+accessible names, visible custom keyboard focus, 24px target-size advisories,
+image alternatives/load failures, headings and main landmarks. Inspection is
+bounded to 2,500 elements and 32 findings per viewport. A timed-out or failed
+frame is isolated: source findings and successful viewports remain available.</p>
+<p>Findings carry one of four categories — <strong>Accessibility, Structure, Responsive
+or Document</strong> — plus source/runtime provenance and viewport evidence. Filter by
+severity, category or text. <strong>Select filtered</strong> changes only the visible set and
+preserves selections hidden by another filter, so narrowing a list does not
+silently discard work.</p>
+<h3 id="health-staleness-and-partial-coverage" tabindex="-1">Health, staleness and partial coverage</h3>
+<p>The health summary says whether Review has not run, needs attention, contains
+warnings/advisories, has partial runtime coverage, is healthy, or is stale. A
+run is bound to the version, option, source hash and viewport set. If any of
+those changes, rerun before fixing or exporting. Partial coverage names ready,
+failed and still-checking viewports instead of presenting missing evidence as a
+clean result.</p>
+<p>Selected findings can be written into the composer for review, or <strong>Fix selected
+findings</strong> can send an immediate targeted update against the exact version and
+option that produced them. Nothing is overwritten; the fix becomes a new
+version.</p>
+<h3 id="optional-ai-review-and-design-inspector" tabindex="-1">Optional AI review and Design Inspector</h3>
+<p>The optional AI review calls the model identity recorded on that option with
+<strong>no tools, MCP servers, Skills, web search or writes</strong>. It is a real provider
+request and may consume quota; its findings remain separate from the
+source/runtime checks. The Design Inspector still extracts repeated colours,
+CSS variables, typography, spacing, radii, shadows, motion and semantic
+components and exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a palette PNG.</p>
+<p>The URL tab's separate public-site inspector uses bounded local Chromium,
+scrolls lazy content within a fixed budget and creates full-page desktop,
+tablet and mobile previews. Each viewport records actual document/capture
+height and explicit blank/truncation state. A screenshot stops at 40,000px or
+36 million pixels instead of silently overflowing. <strong>Preview Figma frames</strong> is
+the equivalent pre-model evidence check for Figma and is reused by generation.</p>
+<h3 id="schema-v2-report-and-limits" tabindex="-1">Schema-v2 report and limits</h3>
+<p>The JSON export has <code>schemaVersion: 2</code>, safe relative file labels, category
+counts, runtime coverage, per-viewport state and the exact binding. It excludes
+source credentials. These are automated source and bounded runtime checks,
+<strong>not WCAG certification</strong>; manual keyboard, screen-reader, zoom and interaction
+testing remains required.</p>
 <h2 id="sizing-the-workspace" tabindex="-1">Sizing the workspace</h2>
 <p>On wide windows (≥ 1280px) you decide how the width is shared. Two dividers do
 this:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 19"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 15"><table>
 <thead>
 <tr>
 <th scope="col">Divider</th>
@@ -1127,7 +1064,7 @@ this:</p>
 </tbody>
 </table></div>
 <p>Drag either one, or focus it and use the keyboard:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 20"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 16"><table>
 <thead>
 <tr>
 <th scope="col">Key</th>
@@ -1174,42 +1111,28 @@ version, an option, a retry or anything in History.</li>
 <p>Below that breakpoint nothing changes: <strong>Preview</strong>, <strong>Chat</strong> and <strong>History</strong>
 remain three separate destinations and no divider is shown.</p>
 <h2 id="history-and-retries" tabindex="-1">History and retries</h2>
-<p>Every generation becomes a version you can step back through. <strong>History</strong> is what
-this is called everywhere in the app — the rail entry, the preview control that
-reads <strong>History <em>n</em>/<em>m</em></strong>, and the narrow-window destination.</p>
-<ul>
-<li>On a wide window, open it from the rail or from the preview toolbar.</li>
-<li>On a narrow window, <strong>Preview</strong>, <strong>Chat</strong> and <strong>History</strong> are three separate,
-labelled destinations in the top bar, so History never hides behind the
-Preview/Chat switch.</li>
-<li>History rows are real buttons: reachable by keyboard, with visible focus and
-touch-sized targets.</li>
-</ul>
-<p>Retrying a version reuses the provider and model choices that produced the
-original options, and the retry keeps a link to the version it re-rolls, so it
-does not look like an unrelated branch. History records the concrete <strong>run
-identity</strong> behind each option — <code>gpt-5.6-sol (high thinking)</code> for a native
-option, <code>sdk-byok/azure/gpt-5.6-sol (high thinking)</code> for one that ran on your
-own endpoint — so you can tell which one you kept, and a retry re-runs it on the
-same runtime rather than on the provider whose model it borrowed.</p>
-<p>The options strip appears only when a version actually has more than one option.</p>
-<h2 id="recent-projects" tabindex="-1">Recent projects</h2>
-<p>Projects, versions and prompts are saved in a local SQLite database
-(<code>history.sqlite3</code> under <code>%LOCALAPPDATA%\shot2code\</code>), so <strong>Recent projects</strong> can
-reopen earlier work. Saves are debounced, so ordinary typing does not thrash the
-disk.</p>
-<p><strong>That folder is outside the installation directory</strong>, and the installer is
-configured not to remove application data, so upgrading the app — or replacing
-the installed program entirely — leaves every project, version and prompt where
-it was.</p>
-<p>Deleting a project removes it and every saved version from the device. Nothing is
-uploaded anywhere.</p>
-<p>The desktop reopens the last active saved project, selected version, option and
-file. If a saved selection points at a cancelled or failed option while a
-completed sibling exists, the completed option is selected and the repaired
-choice is persisted. Preview tab, HTML/Stack source, desktop zoom and native
-window bounds/maximized state also survive restart; credentials and transient
-generation state do not.</p>
+<p>Every generation becomes a version. Expanded History now shows the requested
+models, every saved option and status, selected-option conversation, prompt,
+assistant response, attachment count, saved agent activity, timing/error details
+and parent/retry ancestry. A retry reuses the run identities that produced its
+source and links back to the version it re-rolls; branch and retry links are
+keyboard-operable.</p>
+<p>On wide windows History opens from the rail or preview toolbar. On narrow
+windows Preview, Chat and History remain separate labelled destinations. The
+options strip appears only when a version has more than one option.</p>
+<h2 id="recent-projects-and-full-history" tabindex="-1">Recent projects and Full history</h2>
+<p>Projects, versions and prompts live in the local SQLite database at
+<code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>, outside the installation directory.
+Recent projects stays compact; <strong>Full history</strong> from Recent projects or project
+History pages through every locally stored project and lets you search by title,
+stack or input mode. Select a project to inspect its complete version, option,
+model, prompt, response, attachment, activity, status, timing, error and
+retry/branch history before choosing <strong>Open project</strong>.</p>
+<p>The dialog is read-only until you open a project. Updating/replacing the app
+keeps the database. Deleting a project removes it and all versions from this
+device; there is no cloud copy. The desktop also restores the last active saved
+project/version/option/file and repairs a failed selected option to a completed
+sibling when possible.</p>
 <h2 id="importing-an-existing-project" tabindex="-1">Importing an existing project</h2>
 <p><strong>Import → Folder, ZIP or source files</strong> takes a project folder, a ZIP archive, or
 individual source files.</p>
@@ -1223,6 +1146,13 @@ the project's configuration or application code.</p>
 design-system context for later prompts, or</li>
 <li><strong>Open editable project</strong> — the normalized file payload is handed to the editor.</li>
 </ul>
+<p><strong>Built Storybook</strong> is a third import mode. It accepts a built folder, selected
+JSON files, ZIP or public HTTPS build, but reads only fixed metadata paths:
+<code>index.json</code> plus optional <code>manifests/components.json</code> and
+<code>manifests/docs.json</code>. Every field is untrusted reference data. Source stories,
+CSF, JavaScript bundles, addons, decorators, loaders, play functions,
+<code>iframe.html</code> and arbitrary JSON are never loaded or executed. Remote imports
+must stay on public HTTPS and redirects must preserve the fixed JSON path.</p>
 <p>Raw source is held only for that active handoff; it is never written into
 persisted project context. The active context is shown above every input tab and
 can be cleared.</p>
@@ -1244,6 +1174,13 @@ and survive Preview, export, History and later chat refinements.</li>
 </ul>
 <p>The token is capture-only and is excluded from model prompts, AI review,
 project history, snapshots and exported projects.</p>
+<p>Leave <strong>First refinement instruction</strong> blank to inspect and open the repository
+locally with no model request. Add an instruction to apply an immediate first
+edit after opening: the tab exposes <strong>Models for the first refinement</strong> with the
+normal update-run limits and a <strong>Design system for the first refinement</strong>. The
+repository's detected frontend stack is preserved; the current default is used
+only when no frontend stack can be detected, and selecting an edit model never
+silently converts frameworks.</p>
 <h2 id="preview-codepen-and-sharing" tabindex="-1">Preview, CodePen and sharing</h2>
 <p>The preview is a <strong>derived</strong> artifact, not the source of truth: browser-ready
 local CSS, JavaScript, images, SVGs and encoded fonts are inlined where possible.
@@ -1295,7 +1232,7 @@ broken scaffold.</p>
 <p>The desktop app has a native Windows menu bar — <strong>File</strong>, <strong>Edit</strong>, <strong>View</strong>,
 <strong>Window</strong> and <strong>Help</strong> — driving exactly the same commands as the keyboard, so
 the two can never disagree.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 21"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 17"><table>
 <thead>
 <tr>
 <th scope="col">Menu</th>
@@ -1331,7 +1268,7 @@ accelerators shown in the menu are the shortcuts documented below.</p>
 <h2 id="keyboard-shortcuts" tabindex="-1">Keyboard shortcuts</h2>
 <p>Press <strong>Ctrl+/</strong> (or <strong>Help</strong> in the rail) to open the <a href="#the-help-centre">Help centre</a>,
 which carries the complete reference.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 22"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 18"><table>
 <thead>
 <tr>
 <th scope="col">Shortcut</th>
@@ -1390,7 +1327,7 @@ which carries the complete reference.</p>
 </tbody>
 </table></div>
 <p>In the <strong>desktop app</strong> only, zoom is explicit:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 23"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 19"><table>
 <thead>
 <tr>
 <th scope="col">Shortcut</th>
@@ -1418,7 +1355,7 @@ editor input, AltGr and IME composition alone.</p>
 <p>Navigation shortcuts pause while you are typing or while a dialog is open.</p>
 <h2 id="the-help-centre" tabindex="-1">The Help centre</h2>
 <p><strong>Ctrl+/</strong>, or <strong>Help</strong> in the rail, opens four sections:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 24"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 20"><table>
 <thead>
 <tr>
 <th scope="col">Section</th>
@@ -1465,7 +1402,7 @@ to paste before sending it.</p>
 <a href="#choosing-which-models-run">model selection</a> across every group, the
 <a href="#using-your-own-endpoint-copilot-sdk-byok">Copilot SDK BYOK connection</a>, your
 <a href="#mcp-servers">MCP servers</a> and the registry browser,
-<a href="#agent-skills-and-web-search">Agent Skills and web search</a>, the
+<a href="#agent-skills-web-research-and-chat-tools">Agent Skills, web research and Chat Tools</a>, the
 <a href="#figma-and-google-stitch">Figma and Google Stitch</a> credentials, the running
 version and the update state (<strong>Check now</strong>, download progress, <strong>Restart &amp;
 install</strong>), and it reports whether the screenshot-preview browser is available.</p>
@@ -1478,12 +1415,21 @@ OpenAI-compatible image endpoint. Replicate remains the default and the only
 background-removal provider; editing is available only where the selected
 provider implements it. Failures are reported per prompt, with 401/402/429 and
 timeout guidance, and a batch says “Generated X of N” rather than counting
-failed placeholders.</p>
+failed placeholders. A credential, billing, quota, permission, model or
+configuration failure trips a per-generation circuit breaker so the agent does
+not repeat provider calls that cannot succeed; fix Settings/start a new run, or
+use public-domain photos, localized icons, extracted assets, CSS or SVG.</p>
 <p><strong>Free image search</strong> is a separate opt-in tool using Openverse. It sends no API
 key, searches only CC0/Public Domain Mark results, re-checks the licence
 metadata, downloads through an SSRF/MIME/size/pixel-bounded path, and stores
 assets locally rather than hotlinking them. Openverse aggregates metadata, so
-verify the source page before commercial use.</p>
+verify the source page before commercial use. shot2code deliberately does not
+insert arbitrary Google, Bing or web-image results: search visibility does not
+grant reuse rights.</p>
+<p><strong>Iconify design add-on</strong> is another opt-in. Its fixed-origin, currently-keyless
+<code>search_icons</code> path filters automatic results by permissive SPDX metadata,
+sanitizes SVG, persists it locally and embeds provenance plus a trademark
+warning. Iconify publishes no fixed public quota or SLA, so access can change.</p>
 <p>The page has its own viewport-bounded scrollbar. Even with a project open, you
 can scroll through the full settings list to the final Screenshot by URL and
 capability controls without changing browser zoom.</p>
@@ -1491,11 +1437,15 @@ capability controls without changing browser zoom.</p>
 with one minimal request, and a failed capture is reported for what it is — a
 rejected key, a billing or credit problem, a rate limit, a timeout, an invalid
 URL, or the provider being unavailable — instead of a single generic error.</p>
-<p>Screenshot preview lets the agent render its own output in a headless browser and
-check its work. Chromium ships with the desktop app; if it is unavailable,
-Settings says so and the app skips that tool. Its <strong>first</strong> launch is given a
-longer budget than later ones, because that is when antivirus software scans the
-newly written tree.</p>
+<p>Screenshot preview lets the agent render full-page desktop and mobile output in
+a headless browser and check its work. Alongside each image it now returns
+bounded body-text/element counts, sanitized console errors, page errors and a
+<code>nearly_blank</code> flag. A nearly blank or erroring render is explicitly called out
+so the model fixes a mount/runtime failure instead of treating an empty image as
+success. Chromium ships with the desktop app; if it is unavailable, Settings
+says so and the app skips that tool. Its <strong>first</strong> launch is given a longer
+budget than later ones, because that is when antivirus software scans the newly
+written tree.</p>
 <p>If Settings reports that the update was <strong>not</strong> started because shot2code could
 not shut down safely, that is the guard working: quit the app completely and try
 again. From 0.3.2 the installer runs the same check itself, so an update that

@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>shot2code — seven ways into an editable web project</title>
-  <meta name="description" content="A local-first Windows app that turns screenshots, public-site design evidence, Figma and direct Google Stitch projects, GitHub frontends, descriptions and recordings into editable web code. Includes GitHub Copilot or BYOK models, MCP and Agent Skills, responsive Review, DESIGN.md inspection, 12 output stacks and local history." />
+  <meta name="description" content="A local-first Windows app that turns screenshots, public-site design evidence, Figma, built Storybook metadata, direct Google Stitch projects, GitHub frontends, descriptions and recordings into editable web code. Includes GitHub Copilot, BYOK or local Ollama models, bounded research tools, responsive Review, Full history, 12 output stacks and local storage." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -46,6 +46,7 @@
       "Twelve output stacks, including HTML + Tailwind, React, Vue, Preact, Bootstrap and Material 3",
       "Model selection across GitHub Copilot, OpenAI, Anthropic and Google Gemini, with one option generated per selected model",
       "Optional Copilot SDK BYOK connection to any OpenAI-compatible, Azure OpenAI or Anthropic endpoint with its own credential, requiring no Copilot subscription",
+      "Local Ollama quick setup over the existing OpenAI-compatible localhost BYOK path, with user-supplied hardware and separately installed/licensed models",
       "Endpoint models the catalogue does not know, discovered from the endpoint or typed by hand, each selectable as its own honest option",
       "In-app GitHub sign-in through the application's own GitHub OAuth device flow, using a public client id and no client secret, with the token encrypted by the operating system key store",
       "Disconnecting GitHub affects this application only and leaves a gh or Copilot CLI session on the machine signed in",
@@ -57,13 +58,17 @@
       "Agent Skills imported from a local folder or a public GitHub folder, disabled by default, with stored scripts that can never execute",
       "Figma import through exported screenshots, exported SVG rasterised locally, or REST with your own scoped access token; it does not claim to recover application source",
       "Experimental Google Stitch integration with direct Stitch-only HTML, screenshot, images, stylesheets, fonts and DESIGN.md, or an explicit conversion through selected models",
-      "Public website design inspection with bounded local Chromium, computed design evidence, DESIGN.md and desktop, tablet and mobile screenshots",
-      "Public or private GitHub repository import through the never-execute scanner, with a separate fine-grained Contents: read token only when needed",
+      "Public website design inspection with bounded lazy scrolling, computed DESIGN.md evidence and full-page desktop, tablet and mobile screenshots carrying actual blank and truncation metadata",
+      "Built Storybook metadata import from local JSON files, a built folder, ZIP or public HTTPS root without executing stories, bundles or iframe code",
+      "Public or private GitHub repository import through the never-execute scanner, with a local-open path or selected-model/design-system first refinement that preserves the detected stack",
       "Figma, Stitch and repository credentials are capture-only and are excluded from model requests, AI review, project history and exports",
       "Opt-in bounded Tavily or Exa web search for native providers and both Copilot runtimes, with Copilot built-in search used only when canonical search is off",
-      "Multiple optional image-generation providers with per-prompt outcomes, plus separate Openverse CC0/Public Domain Mark image search",
+      "Separately consented read_web_page for public query-free pages with DNS, redirect, byte, text and call budgets while built-in web_fetch remains blocked",
+      "Opt-in fixed-origin Iconify search with permissive SPDX filtering, hostile SVG sanitization, local persistence, provenance and trademark warnings",
+      "Chat Tools inventory that reports consent, generated-image cost/readiness, MCP write scope and enabled Skills without enabling them",
+      "Multiple optional image-generation providers with per-prompt outcomes and a per-generation circuit breaker, plus separate Openverse CC0/Public Domain Mark image search",
       "Review workspace rendering the result at two to four real widths with horizontal-overflow measurement",
-      "Local, deterministic source audit for semantic and accessibility problems, with severity filters, search and bulk selection, exported as JSON — not a WCAG conformance assessment",
+      "Local source plus bounded per-frame runtime Review with categories, filtered select-all, isolated frame failures, explicit healthy/stale/partial coverage and schema-v2 JSON — not WCAG certification",
       "Targeted fixes applied against the exact version and option that was reviewed",
       "Optional bounded AI review on the model an option actually ran on, with no tools, MCP servers, skills or web search attached",
       "Design Inspector that extracts colours, variables, typography, spacing, radii, shadows and motion and exports DESIGN.md, SKILL.md and a palette image",
@@ -75,9 +80,12 @@
       "Resizable chat and file-explorer panes with keyboard-operable separators and remembered widths",
       "In-app Help centre linking the published guides, an action that opens the backend log folder, and private-by-default feedback submission fallbacks",
       "Local SQLite project history stored under %LOCALAPPDATA%\\shot2code, kept when the application is upgraded",
+      "Searchable Full history across every local project with expanded versions, options, prompts, models, activity and retry/branch ancestry",
       "The full branch conversation, including assistant responses and the exact run identity behind each option, is restored from that history",
       "PNG, JPEG and WebP screenshots can be pasted directly into refinement Chat with bounded size, count and duplicate handling",
-      "Imports an existing folder, ZIP or source files as design context without executing them",
+      "Imports an existing folder, ZIP, source files or fixed built Storybook JSON metadata as design context without executing them",
+      "Screenshot preview reports bounded console/page diagnostics and nearly blank generated renders",
+      "Electron reloads one blank top-level renderer once, then shows a static recovery screen while keeping local projects",
       "Sandboxed preview with a restrictive Content-Security-Policy and opaque origin",
       "Exports a single HTML file or a Vite project folder"
     ]
@@ -327,13 +335,17 @@
     .input-jump a:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
     .input-gallery {
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 2rem 1.6rem; align-items: start;
+      gap: 2rem 1.6rem; align-items: stretch;
     }
-    .input-shot { min-width: 0; padding-top: 1rem; border-top: 1px solid var(--line); }
+    .input-shot {
+      display: grid; grid-template-rows: auto 1fr; min-width: 0;
+      padding-top: 1rem; border-top: 1px solid var(--line);
+    }
     .input-shot--wide { grid-column: 1 / -1; }
-    .input-shot--wide .shot-frame { width: min(100%, 920px); }
+    .input-shot--wide .shot-frame { width: 100%; }
     .input-shot .shot-frame { aspect-ratio: 16 / 10; }
-    .input-shot figcaption { max-width: 62ch; }
+    .input-shot figcaption { width: 100%; max-width: 62ch; }
+    .input-shot--wide figcaption { max-width: 78ch; }
     .input-shot .input-name {
       display: inline-block; margin-right: .4rem; color: var(--ink);
       font-weight: 720; letter-spacing: -.01em;
@@ -533,7 +545,7 @@
         <div class="pillars">
           <article class="pillar">
             <h3>Seven focused ways in</h3>
-            <p><strong>Upload, URL, Text, Import, Figma, GitHub and Stitch</strong> each expose the controls and safety boundaries that input needs. Multiple screenshots can become separate pages, responsive views, UI states or supporting references; website inspection creates <code>DESIGN.md</code>; imports and repositories can open without a model call.</p>
+            <p><strong>Upload, URL, Text, Import, Figma, GitHub and Stitch</strong> each expose the controls and safety boundaries that input needs. Multiple screenshots can become separate pages, responsive views, UI states or references; website inspection creates full-page evidence plus <code>DESIGN.md</code>; Import accepts fixed built Storybook metadata; repositories can open locally or run a selected-model first refinement.</p>
           </article>
           <article class="pillar">
             <h3>Edit it like a project</h3>
@@ -545,14 +557,14 @@
           </article>
           <article class="pillar">
             <h3>Keep your history on the device</h3>
-            <p>Projects, versions, prompts and the conversation behind them live in a local SQLite database under <code>%LOCALAPPDATA%\shot2code\</code> — outside the installation folder, so upgrading the app keeps your work. <strong>History</strong> steps back through every version and records the exact run identity each option used, <strong>Recent projects</strong> picks up where you left off, and deleting a project removes it and its versions from the device.</p>
+            <p>Projects, versions, prompts and conversations live in local SQLite under <code>%LOCALAPPDATA%\shot2code\</code> — outside the installation folder. <strong>History</strong> expands every version's models, options, prompts, activity and ancestry; <strong>Full history</strong> searches every saved project before opening it. Upgrades keep the database, and deleting a project removes it from this device.</p>
           </article>
           <article class="pillar">
             <h3>Take the result with you</h3>
             <p>Export a self-contained single HTML file, or a Vite project folder for the stack you chose. Multi-file source projects are exported as they are rather than wrapped in an invented scaffold.</p>
           </article>
         </div>
-        <p class="scope-note"><strong>You still need a model provider.</strong> shot2code does not ship a model. A GitHub Copilot sign-in — which the desktop app can complete on its own, with no command-line tool installed — a Gemini, Anthropic or OpenAI key, or a Copilot SDK BYOK connection to your own endpoint makes generation work; without one, the app tells you so instead of pretending to be connected.</p>
+        <p class="scope-note"><strong>You still need a model provider.</strong> shot2code does not ship a model. Use Copilot, a Gemini/Anthropic/OpenAI key, or Copilot SDK BYOK. Its local Ollama preset needs no paid inference API, but Ollama, hardware and a vision-plus-tool-calling model with its own licence remain yours to install and operate.</p>
       </div>
     </section>
 
@@ -588,7 +600,7 @@
               <img src="img/input-url.png" width="1426" height="893" loading="lazy" decoding="async"
                    alt="shot2code URL tab at 1426 by 893 with example.com entered, bundled Chromium design-inspection guidance, and ScreenshotOne capture controls." />
             </a>
-            <figcaption><span class="input-name">URL.</span> Inspect a public site's computed design locally with no capture key, or use ScreenshotOne to capture the page before generation.</figcaption>
+            <figcaption><span class="input-name">URL.</span> Inspect a public site's computed design, scroll bounded lazy content and preview full-page responsive evidence with actual blank/truncation metadata, or use ScreenshotOne for hosted capture.</figcaption>
           </figure>
 
           <figure class="shot input-shot" id="input-text">
@@ -604,7 +616,7 @@
               <img src="img/input-import.png" width="1426" height="893" loading="lazy" decoding="async"
                    alt="shot2code Import tab at 1426 by 893 showing HTML paste mode, project-file import, stack selection, a first-edit instruction, and model controls." />
             </a>
-            <figcaption><span class="input-name">Import.</span> Paste HTML or safely inspect a folder, ZIP or selected source files. Open normalized code directly, or keep only compact design context.</figcaption>
+            <figcaption><span class="input-name">Import.</span> Paste HTML, inspect source, or read a built Storybook from fixed JSON metadata. Story, bundle and iframe code is never executed.</figcaption>
           </figure>
 
           <figure class="shot input-shot" id="input-figma">
@@ -612,7 +624,7 @@
               <img src="img/input-figma.png" width="1426" height="893" loading="lazy" decoding="async"
                    alt="shot2code Figma tab at 1426 by 893 explaining scoped REST frame import, reusable assets, and Figma MCP catalog restrictions." />
             </a>
-            <figcaption><span class="input-name">Figma.</span> Render selected frames through scoped REST access, preserve image fills and export-marked nodes, then implement the design in the selected stack.</figcaption>
+            <figcaption><span class="input-name">Figma.</span> Preview REST-rendered frames before a model call, reuse them for generation, preserve bounded assets, then implement the design in the selected stack.</figcaption>
           </figure>
 
           <figure class="shot input-shot" id="input-github">
@@ -620,7 +632,7 @@
               <img src="img/input-github.png" width="1426" height="893" loading="lazy" decoding="async"
                    alt="shot2code GitHub tab at 1426 by 893 with the public Spoon-Knife repository URL, permission guidance, and the Inspect and Open Repository action." />
             </a>
-            <figcaption><span class="input-name">GitHub.</span> Open public repositories with no token, or use a separate repository-limited <code>Contents: read</code> token for private source. Nothing is executed.</figcaption>
+            <figcaption><span class="input-name">GitHub.</span> Leave the instruction blank for a local open, or choose first-edit models and a design system. Public repos need no token; the detected stack is preserved and nothing executes.</figcaption>
           </figure>
 
           <figure class="shot input-shot" id="input-stitch">
@@ -638,7 +650,7 @@
               <img src="img/url-design-inspection.png" width="1426" height="893" loading="lazy" decoding="async"
                    alt="Completed example.com design inspection at 1426 by 893 showing extracted colors, summary metrics, and actions to use screenshots plus DESIGN.md, download, or copy." />
             </a>
-            <figcaption><strong>Website inspection result.</strong> Browser-computed evidence and three responsive screenshots can be copied, downloaded, or used for generation without ScreenshotOne.</figcaption>
+            <figcaption><strong>Website inspection result.</strong> Browser-computed <code>DESIGN.md</code> and bounded full-page responsive evidence carry actual dimensions and explicit blank/truncation state before generation.</figcaption>
           </figure>
 
           <figure class="shot">
@@ -746,23 +758,24 @@
         </div>
         <dl class="coverage-list">
           <div><dt>Input tabs</dt><dd>Seven dedicated paths: Upload, URL, Text, Import, Figma, GitHub and Stitch. Video/recording lives under Upload; the <a href="./docs/input-tabs/">input-tab guide</a> documents each path's requirements, limits and output.</dd></div>
-          <div><dt>Design sources</dt><dd>Figma REST renders selected frames and preserves image fills/export-marked nodes. Stitch-only mode opens localized HTML, screenshot, assets and <code>DESIGN.md</code> without a second model. URL inspection captures browser-computed design evidence and three responsive screenshots. Credentials are capture-only.</dd></div>
+          <div><dt>Design sources</dt><dd>Figma can preview REST-rendered frames before a model call and reuse them for generation. Built Storybook reads only fixed metadata JSON from files/folder/ZIP/public HTTPS. Stitch-only opens localized output without another provider. URL inspection scrolls bounded lazy content and returns full-page responsive evidence with real dimensions and blank/truncation state.</dd></div>
           <div><dt>Model choice</dt><dd>Pick models from GitHub Copilot, OpenAI, Anthropic and Google Gemini in Settings or beside the composer. One option per selected model; tick nothing to leave it automatic.</dd></div>
-          <div><dt>Your own endpoint</dt><dd>An optional Copilot SDK BYOK connection — OpenAI-compatible, Azure OpenAI or Anthropic — with its own key or bearer token and no Copilot subscription. Its models are separate selections, so a model and its BYOK counterpart can run in the same generation and be compared, and several models from one endpoint can be selected independently.</dd></div>
+          <div><dt>Your own endpoint</dt><dd>An optional Copilot SDK BYOK connection — OpenAI-compatible, Azure OpenAI or Anthropic — with no Copilot subscription. The local Ollama preset fills <code>http://localhost:11434/v1</code>; local inference needs no paid API, but Ollama, hardware and a separately licensed vision-plus-tool-calling model remain yours.</dd></div>
           <div><dt>Signing in</dt><dd>The desktop app runs its own GitHub OAuth device flow: a one-time code, your browser, and no command-line tool to install. It uses a public client id and no client secret, and the token is encrypted by the operating system key store. Disconnecting clears what this app holds and leaves a <code>gh</code> or Copilot CLI session signed in.</dd></div>
           <div><dt>Provider checks</dt><dd>Test OpenAI, Anthropic, Gemini and Replicate individually with one minimal request each, and read the answer as Ready, Out of credit, Key rejected, Rate limited, Access denied, Model unavailable, a configuration problem or unreachable. A test may use a little quota.</dd></div>
         <div><dt>MCP servers</dt><dd>Up to eight servers over stdio, HTTP or SSE, added by hand or from an in-app browser for the official MCP Registry. Installing from the registry creates a disabled, untrusted draft to review, as does the featured Google Stitch entry. Each needs to be enabled <em>and</em> trusted before it starts, stays read-only until write tools are explicitly allowed, and is offered to GitHub Copilot and Copilot SDK BYOK options only.</dd></div>
-          <div><dt>Agent Skills and search</dt><dd>Reusable instruction folders are validated, recorded with their origin and <strong>disabled by default</strong>; scripts are stored but can never execute. Canonical Tavily/Exa search is opt-in, bounded, labels snippets as untrusted and works across native providers and both Copilot runtimes. Copilot built-in search is used only when canonical search is off; built-in whole-page <code>web_fetch</code> remains blocked.</dd></div>
+          <div><dt>Skills and research</dt><dd>Skills stay disabled/inert and reach Copilot runtimes only. Every runtime can separately opt into bounded Tavily/Exa snippets, query-free public-page text through <code>read_web_page</code>, CC0/Public Domain Mark Openverse photos, and fixed-origin sanitized Iconify SVGs. Built-in whole-page <code>web_fetch</code> remains blocked.</dd></div>
+          <div><dt>Chat Tools</dt><dd>The composer inventories project editing, Chromium preview health, research consent, generated-image readiness/provider billing, localized icons, active MCP server write scope and enabled Skills. The inventory enables nothing; every external, paid, trusted or write-capable path keeps its own Settings permission.</dd></div>
           <div><dt>Editing</dt><dd>Multi-file tree, file tabs, a collapsible explorer, select-and-edit from the preview, and a formatter that only ever changes whitespace and refuses component source. <strong>Current code</strong> is editable; a read-only <strong>Export project</strong> view lists the exact files and assets a download will contain.</dd></div>
-          <div><dt>Review</dt><dd>The result rendered at two to four real widths at once — 1440, 768 and 390 by default, 320–1920 for a custom one — with horizontal overflow measured in the running frame and a local source audit beside it. Filter by severity, search the findings, select them in bulk, and apply targeted fixes against the exact version and option that was reviewed. It is an automated source check, not a WCAG conformance assessment.</dd></div>
+          <div><dt>Review</dt><dd>Two to four actual widths in sandboxed frames (1440, 768 and 390 by default; custom 320–1920) combine deterministic source checks with bounded per-frame runtime evidence. Findings have categories and provenance; filters support select-visible without dropping hidden selections; failed frames are isolated; health reports healthy/stale/partial coverage; schema-v2 JSON records viewport evidence. It is not WCAG certification.</dd></div>
           <div><dt>A second opinion</dt><dd>An optional AI review runs on the model that option actually ran on, with no tools, MCP servers, skills or web search attached; it is a real provider request and may use quota, and the local findings stay authoritative. A Design Inspector extracts colours, variables, typography, spacing, radii, shadows and motion, and exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a palette image.</dd></div>
           <div><dt>Layout</dt><dd>On wide windows, drag or keyboard-move the dividers between Chat and the workspace, and between the file tree and the editor. Pane widths, Preview/Code/Review state, preview source/zoom, and native window bounds persist without changing a project version. Coalesced resize handling prevents narrow-window preview flicker.</dd></div>
-          <div><dt>Startup</dt><dd>Core routes come up first; generation, evaluation and project tooling load on first use, and the Chromium and Copilot probes run in the background. The shell requires a genuine health response and gives up after 90 seconds rather than hanging. The bundled browser gets a larger budget on its first launch, because that is when antivirus software scans it.</dd></div>
+          <div><dt>Startup</dt><dd>Core routes come up first; heavy features load on use and optional probes run in the background. The shell requires genuine health, then inspects the top-level renderer: one blank load is reloaded once, and a second blank load gets a static recovery screen while local projects remain stored.</dd></div>
           <div><dt>Menus, help and feedback</dt><dd>A native File, Edit, View, Window and Help menu drives the same commands as the keyboard. <span class="kbd">Ctrl+/</span> opens guides and Support; Help can open diagnostics and submit feedback through an authenticated GitHub CLI or safe copy/download/browser fallbacks. Private app data is never attached automatically.</dd></div>
-          <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts, conversations and retry ancestry, and records the run identity behind each option. It restores the active project/version/file and repairs a cancelled selected option to a completed sibling when possible. It sits outside the installation folder, so an upgrade keeps it.</dd></div>
-          <div><dt>Import and GitHub</dt><dd>Point Import at HTML, a folder, ZIP or selected files, or use GitHub for a public/private repository. The shared scanner parses text only and never executes project configuration or code; bounded repository images enter the local asset store.</dd></div>
-          <div><dt>Preview</dt><dd>A derived, self-contained artifact rendered in an opaque-origin sandbox with a restrictive Content-Security-Policy. At 100% the fixed-width canvas is centred in a neutral frame. Desktop zoom spans 25%–200% with −/+/Fit/100%, scrollable pan and flicker-resistant resize handling. <strong>Stack preview</strong> renders controlled Vite HTML, React and Preact files without running package scripts or project configuration.</dd></div>
-          <div><dt>Assets and images</dt><dd>Generate through Replicate, Cloudflare Workers AI or an OpenAI-compatible image endpoint, with one truthful success/failure result per prompt. Editing is capability-checked and background removal remains Replicate-only. Or opt into Openverse search for locally downloaded CC0/Public Domain Mark images requiring no key. Screenshot-by-URL keeps its separate actionable diagnostics.</dd></div>
+          <div><dt>Project history</dt><dd>Local SQLite keeps projects and every version/option/model/prompt/response/activity/status/timing/error plus retry/branch ancestry. Current-project History expands those records; Full history searches every local project before opening it. The database sits outside the install folder, so upgrades keep it.</dd></div>
+          <div><dt>Import and GitHub</dt><dd>Import accepts HTML/source plus fixed built Storybook JSON without executing stories, bundles or iframes. GitHub uses the same never-execute scanner; blank refinement opens locally, while a non-empty one uses the selected edit models/design system and preserves the detected stack.</dd></div>
+          <div><dt>Preview</dt><dd>A derived opaque-origin sandbox with restrictive CSP. At 100% the fixed-width canvas is centred in a neutral frame. Agent screenshot preview returns full-page desktop/mobile images plus bounded body/element counts, sanitized browser errors and nearly-blank metadata. Stack preview renders controlled Vite HTML/React/Preact without package scripts or project configuration.</dd></div>
+          <div><dt>Assets and images</dt><dd>Provider-billed generation reports one truthful result per prompt and trips a per-run circuit breaker after non-retryable failures. Openverse remains the no-key CC0/Public Domain Mark photo path; ordinary web images are excluded for reuse-rights reasons. Iconify SVGs are SPDX-filtered, sanitized, localized and provenance-tagged.</dd></div>
         </dl>
 
         <div class="features" style="margin-top:1.6rem">
@@ -839,7 +852,7 @@
           </article>
           <article class="workflow">
             <h3>Your own endpoint (BYOK)</h3>
-            <p>An optional Copilot SDK BYOK connection reaches an <strong>OpenAI-compatible</strong>, <strong>Azure OpenAI</strong> or <strong>Anthropic</strong> endpoint of your own. <strong>No Copilot subscription is required</strong> — it is the SDK, not your entitlement. <strong>OpenAI-compatible</strong> means any endpoint that speaks that wire format — a vendor API, a gateway, a self-hosted server or one your organisation runs — over any <code>https://</code> URL, or <code>http://</code> on <code>localhost</code>. It carries its own API key or bearer token; your direct OpenAI and Anthropic keys are never borrowed for it, and only an OpenAI-compatible endpoint on <code>localhost</code> may run without one. Models the catalogue does not know are discovered from the endpoint or typed by hand, and appear as one honest option. There is no Gemini equivalent, because the SDK has no Gemini provider.</p>
+            <p>An optional Copilot SDK BYOK connection reaches an <strong>OpenAI-compatible</strong>, <strong>Azure OpenAI</strong> or <strong>Anthropic</strong> endpoint of your own. <strong>No Copilot subscription is required.</strong> It uses its own API key or bearer token; direct OpenAI/Anthropic keys are never borrowed for it, only an OpenAI-compatible endpoint on <code>localhost</code> may run without one, and there is no Gemini equivalent. <strong>Configure local Ollama</strong> fills <code>http://localhost:11434/v1</code>. shot2code does not install Ollama or a model: local inference needs no paid API, but uses your hardware and a separately licensed model with image input and tool calling. Native providers are never rerouted.</p>
             <a href="./docs/user-guide/#using-your-own-endpoint-copilot-sdk-byok">BYOK guide</a>
           </article>
           <article class="workflow">
@@ -851,7 +864,7 @@
         <p class="scope-note"><strong>Choosing models is part of Settings, not a Copilot-only extra.</strong> <strong>Settings → Models</strong> — and the compact picker beside the composer — group every model you can currently use under <strong>GitHub Copilot</strong>, <strong>OpenAI</strong>, <strong>Anthropic</strong>, <strong>Google Gemini</strong> and, when you configure one, <strong>Copilot SDK (BYOK)</strong>. Tick as many as you like, across providers, and each run produces one option per selected model, up to 4 for a first generation and 2 for an update or a video; tick nothing and the choice stays automatic. Models that cannot read the input you gave — video in particular — are filtered out rather than offered and failed, deprecated models stay hidden unless you ask for them or already picked one, and a saved model that can no longer run is reported and skipped instead of silently deleted. A provider only appears once the app can actually see a credential for it.</p>
         <p class="scope-note"><strong>A BYOK option is its own selection, not a redirect.</strong> Each model your endpoint can serve is listed separately as <code>sdk-byok/&lt;provider&gt;/&lt;model&gt;</code>, so you can tick a model <em>and</em> its BYOK counterpart and get both results from one generation — at the same reasoning effort, side by side. The four native groups are untouched by it: each still needs its own key or sign-in, and a native pick always runs on its native provider. History records the identity each option actually ran as, so a retry repeats the same runtime. An incomplete or switched-off connection is reported as a notice and never blocks a direct generation.</p>
         <p class="scope-note"><strong>MCP servers extend the SDK runtimes only.</strong> Up to eight servers over <strong>stdio</strong>, <strong>HTTP</strong> or <strong>SSE</strong>, added by hand or found through the in-app browser for the <strong>official MCP Registry</strong> — where installing an entry creates a <strong>disabled, untrusted draft</strong> for you to review, as does the featured <strong>Google Stitch</strong> server. Figma MCP endpoints are filtered because Figma restricts them to catalog-listed clients. A server must be <strong>enabled</strong> <em>and</em> explicitly <strong>trusted</strong>, stays read-only until write tools are allowed, a local server is spawned as an argument vector rather than through a shell, and a remote one must use <code>https://</code> unless it is on <code>localhost</code>. Its tools reach Copilot/BYOK options only; a native OpenAI, Anthropic or Gemini option never sees them.</p>
-        <p class="scope-note"><strong>Skills remain SDK-only; canonical search does not.</strong> Agent Skills are validated, stored as inert resources and disabled until enabled. The separate Tavily/Exa <code>search_web</code> tool works across native providers and both Copilot runtimes, with fixed endpoints, domain and snippet limits, call budgets and an untrusted-content warning. Copilot built-in search is used only when canonical search is off, and whole-page <code>web_fetch</code> is blocked.</p>
+        <p class="scope-note"><strong>Skills remain SDK-only; canonical research does not.</strong> Search snippets, separately consented bounded page reading, Openverse photos and Iconify icons reach every runtime. The Chat Tools inventory reports their state, generated-image billing/readiness, MCP write scope and enabled Skills without turning anything on. Iconify's public API is currently keyless but has no fixed quota/SLA; built-in <code>web_fetch</code> stays blocked because its whole result cannot be inspected before the model receives it.</p>
       </div>
     </section>
 
@@ -860,32 +873,32 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="whats-new-h">Recently improved</h2>
-          <p>The latest stable release expands shot2code into a design-source workspace: reusable Figma assets, direct Stitch projects, public-site <code>DESIGN.md</code> inspection, safe GitHub import, pasted chat screenshots, restart-safe assets and a new Windows identity.</p>
+          <p>The latest stable release closes the gaps around local models, bounded research, design-system inputs, complete history, runtime Review and fail-closed recovery.</p>
         </div>
         <div class="features">
           <div class="feature">
-            <h3><span class="tick">✓</span> Sign in without installing anything</h3>
-            <p>The desktop app now runs <strong>its own GitHub OAuth device flow</strong>: a one-time code, your browser, and no GitHub CLI or Copilot CLI required. It uses a <strong>public client id and no client secret</strong>, because a desktop app cannot keep one, and the token it receives is encrypted by the operating system's key store and refreshed for you. <strong>Disconnect GitHub from shot2code</strong> clears only what this app holds — a <code>gh</code> or Copilot CLI session on the same machine stays signed in.</p>
+            <h3><span class="tick">✓</span> Local Ollama and bounded page reading</h3>
+            <p>The existing BYOK card can configure <code>http://localhost:11434/v1</code>. Local inference needs no paid API, but Ollama, hardware and a separately licensed vision-plus-tool-calling model remain yours. A separate <code>read_web_page</code> permission reads public query-free pages inside byte/text/call budgets; runtime-owned <code>web_fetch</code> stays blocked.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Bounded search and image tools</h3>
-            <p>Native and Copilot runtimes share one Tavily/Exa search tool with strict query, domain, result and call budgets. Image generation supports Replicate, Cloudflare and OpenAI-compatible endpoints with truthful per-prompt outcomes, while separate Openverse search safely downloads CC0/Public Domain Mark assets with no key.</p>
+            <h3><span class="tick">✓</span> Full history and explicit GitHub refinement</h3>
+            <p><strong>Full history</strong> searches every local project and expands models, options, prompts, responses, activity, statuses and retry/branch ancestry. The GitHub tab now makes local open versus selected-model first refinement explicit, includes a design-system choice, and preserves the detected repository stack.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Figma and direct Stitch projects</h3>
-            <p>Figma REST now keeps rendered frames, original image fills and export-marked nodes as reusable local assets. Stitch-only mode opens localized HTML, screenshots, images, stylesheets, fonts and <code>DESIGN.md</code> directly; conversion through the selected stack and models is a separate explicit action.</p>
+            <h3><span class="tick">✓</span> Storybook, Figma and full-page URL evidence</h3>
+            <p>Built Storybook import reads only fixed JSON metadata from local files/folder/ZIP/public HTTPS and never executes stories, bundles or iframes. Figma frames can be previewed before the model call and reused. URL inspection scrolls bounded lazy content and reports real dimensions plus blank/truncation state, capped at 40,000px and 36 million pixels.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Inspect generated code or a public site</h3>
-            <p><strong>Review</strong> keeps its local source audit and exact-version fixes. Its Design Inspector exports <code>DESIGN.md</code>, <code>SKILL.md</code> and a palette image from generated source, while the URL tab can inspect a public site's browser-computed design and capture desktop, tablet and mobile evidence. Neither route is a WCAG certification or a claim to recover original source.</p>
+            <h3><span class="tick">✓</span> Honest Chat Tools, photos and icons</h3>
+            <p>The Chat inventory reports consent, generated-image billing/readiness, MCP write scope and enabled Skills without enabling anything. Openverse remains the no-key CC0/Public Domain Mark photo path because general web-image results grant no reuse right. Iconify SVGs are fixed-origin, SPDX-filtered, sanitized, localized and provenance-tagged; its currently-keyless public access has no fixed quota or SLA.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> GitHub import and chat screenshots</h3>
-            <p>A dedicated GitHub tab opens public repositories without a token or private repositories with a separate least-privilege token. Source and bounded image assets enter the editable project without executing repository code. PNG, JPEG and WebP screenshots can also be pasted directly into refinement Chat.</p>
+            <h3><span class="tick">✓</span> Review health and preview diagnostics</h3>
+            <p>Review combines source findings with bounded per-frame runtime evidence, categories, filtered select-all, isolated frame failures and explicit healthy/stale/partial coverage. Schema-v2 reports are not WCAG certification. Agent screenshot preview now returns nearly-blank state plus bounded console/page diagnostics.</p>
           </div>
           <div class="feature">
-            <h3><span class="tick">✓</span> Assets that survive restart and export</h3>
-            <p>Imported design and repository assets use restart-safe local references across History, retries and later chat. Binary files remain previewable and export as real bytes, malformed pseudo-image tokens degrade safely, and the refreshed app icon is synchronized across the Windows packages and web UI.</p>
+            <h3><span class="tick">✓</span> Fail-closed provider and renderer recovery</h3>
+            <p>Non-retryable image-provider failures trip a per-generation circuit breaker instead of repeating paid calls. At the application level, a truly blank renderer is reloaded once and then replaced with a static recovery screen while local project data remains intact.</p>
           </div>
         </div>
         <p class="dl-note">Every version, its notes and all its files are on the <a href="./releases/">releases page</a>. The full history lives in the <a href="./docs/changelog/">changelog</a>.</p>
@@ -955,15 +968,15 @@
         <div class="callouts">
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Local by default</h3>
-            <p>Screenshots, generated code and project history stay on the device. The generation request goes to the provider you configured. Figma and Stitch credentials are capture-only; private repository import uses a separate fine-grained token rather than broadening Copilot sign-in. None enters a model request, AI review, project history or export. Validating a BYOK connection or MCP server and running the local Review audit contact nothing.</p>
+            <p>Screenshots, generated code and Full history stay on the device. A generation goes only to the selected provider. Figma/Stitch/private-repository credentials remain capture-only. Local Ollama uses your own machine. Validating BYOK/MCP, opening Chat Tools and running source/runtime Review contact nothing; page/photo/icon research leaves the device only after its separate opt-in and a model call.</p>
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg> No telemetry</h3>
-            <p>There is no analytics SDK in the app; nothing about your usage is collected. The remaining background call is the update check on per-user installs. Everything else is an action you take: a registry search, a design import, an AI review, opt-in web search, or CodePen sharing, which only ever happens when you confirm it.</p>
+            <p>There is no analytics SDK. The remaining background call is the per-user update check. Everything else is an action you take: registry/design/Storybook import, AI review, web search, bounded page reading, Openverse/Iconify lookup, provider-billed image generation or confirmed CodePen sharing.</p>
           </div>
           <div class="callout">
             <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Untrusted input, treated as such</h3>
-            <p>Imported projects and GitHub archives are parsed, never executed. Stitch and public-site resources pass pinned public-address and bounded-download checks, and all imported design text remains untrusted evidence. Previews run in an opaque origin with a restrictive CSP. MCP servers require enablement plus trust and remain read-only until writes are allowed; imported skills start disabled and their scripts cannot run.</p>
+            <p>Imported projects/GitHub archives are parsed, never executed; Built Storybook reads only fixed JSON and never stories, bundles or iframes. Public pages, Openverse and Iconify pass public-address/type/size/sanitization bounds and remain untrusted evidence. Previews use an opaque origin plus restrictive CSP. MCP needs enablement and trust, writes need another switch, and Skill scripts cannot run.</p>
           </div>
         </div>
         <div class="docs-grid" style="margin-top:1.4rem">

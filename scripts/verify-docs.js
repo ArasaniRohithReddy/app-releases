@@ -110,6 +110,30 @@ async function main() {
           check(!broken.length, `${entry.label}: broken native links: ${broken.join(', ')}`);
           check(await page.locator('.doc-content a[href*="github.com/ArasaniRohithReddy/app-releases/blob/main/"]').count() === 0,
             `${entry.label}: a guide link still bounces to the repository`);
+          const nativeScreenshots = page.locator('.doc-content img[src*="/img/"]');
+          for (const image of await nativeScreenshots.all()) {
+            await image.scrollIntoViewIfNeeded();
+            await image.evaluate(element => element.decode());
+          }
+          const screenshotLayout = await nativeScreenshots.evaluateAll(images => images.map(image => {
+              const box = image.getBoundingClientRect();
+              const parent = image.parentElement.getBoundingClientRect();
+              const style = getComputedStyle(image);
+              return {
+                inside: box.left >= parent.left - 1 && box.right <= parent.right + 1,
+                centered: Math.abs((box.left - parent.left) - (parent.right - box.right)) <= 1,
+                borderStyle: style.borderTopStyle,
+                borderWidth: parseFloat(style.borderTopWidth),
+                radius: parseFloat(style.borderTopLeftRadius),
+                ratioPreserved: image.naturalWidth > 0 && image.naturalHeight > 0 &&
+                  Math.abs((box.width / box.height) -
+                    (image.naturalWidth / image.naturalHeight)) <= .015
+              };
+            }));
+          check(screenshotLayout.every(image =>
+            image.inside && image.centered && image.borderStyle === 'solid' &&
+            image.borderWidth >= 1 && image.radius >= 8 && image.ratioPreserved),
+          `${entry.label}/${theme}: native screenshots are not aligned in a consistent evidence frame`);
           const screenContrast = await textContrast(page);
           check(screenContrast.checked > 0 && !screenContrast.issues.length,
             `${entry.label}/${theme}: text contrast failures: ${screenContrast.issues.join('; ')}`);

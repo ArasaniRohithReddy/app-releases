@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/THIRD-PARTY-NOTICES.md (normalized SHA-256 d06ade1ebe7e478659e90aff819081f97e26dc9bc83732c8eba5b5ddd96f0ff3). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/THIRD-PARTY-NOTICES.md (normalized SHA-256 16df7a379f38b339251ba08eb9bc0caa699e43c302b6b6d5eaa9e36139bb30de). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/THIRD-PARTY-NOTICES.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#bundled-runtimes">Bundled runtimes</a></li><li><a href="#backend--principal-direct-dependencies">Backend — principal direct dependencies</a></li><li><a href="#frontend--principal-direct-dependencies">Frontend — principal direct dependencies</a></li><li><a href="#desktop-shell">Desktop shell</a></li><li><a href="#build--and-test-time-only-not-distributed">Build- and test-time only (not distributed)</a></li><li><a href="#code-that-shot2code-generates">Code that shot2code generates</a></li><li><a href="#authoritative-manifests">Authoritative manifests</a></li><li><a href="#obtaining-license-texts">Obtaining license texts</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#bundled-runtimes">Bundled runtimes</a></li><li><a href="#backend--principal-direct-dependencies">Backend — principal direct dependencies</a></li><li><a href="#frontend--principal-direct-dependencies">Frontend — principal direct dependencies</a></li><li><a href="#desktop-shell">Desktop shell</a></li><li><a href="#external-services-metadata-formats-and-optional-local-software">External services, metadata formats and optional local software</a></li><li><a href="#build--and-test-time-only-not-distributed">Build- and test-time only (not distributed)</a></li><li><a href="#code-that-shot2code-generates">Code that shot2code generates</a></li><li><a href="#authoritative-manifests">Authoritative manifests</a></li><li><a href="#obtaining-license-texts">Obtaining license texts</a></li></ul></nav></details>
         <div class="doc-content"><p>shot2code incorporates the third-party components listed below. This file is provided for
 license-compliance review. shot2code itself is licensed under the
 <a href="https://github.com/ArasaniRohithReddy/shot2code/blob/main/LICENSE" rel="noopener noreferrer">MIT License</a>; the
@@ -337,8 +337,42 @@ than the direct references below.</p>
 <p>The shipped shell is built on <strong>Electron 44.4.3</strong> with <strong>electron-updater 6.8.9</strong>, packaged by
 <strong>electron-builder 26.15.3</strong>. <code>npm audit --omit=dev</code> reports <strong>0 vulnerabilities</strong> for the
 dependencies that are actually distributed.</p>
-<h2 id="build--and-test-time-only-not-distributed" tabindex="-1">Build- and test-time only (not distributed)</h2>
+<h2 id="external-services-metadata-formats-and-optional-local-software" tabindex="-1">External services, metadata formats and optional local software</h2>
+<p>These are integrations or inputs, not bundled dependencies. Their own terms,
+availability and content licences apply when you choose to use them.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Third-Party Notices table 5"><table>
+<thead>
+<tr>
+<th scope="col">Service or format</th>
+<th scope="col">How shot2code uses it</th>
+<th scope="col">Boundary and source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Iconify public API</strong></td>
+<td>Optional canonical <code>search_icons</code> queries and SVG retrieval from the fixed <code>https://api.iconify.design</code> origin</td>
+<td>Iconify's public API accepted requests without an account or key when checked 2026-10-04, but Iconify publishes no fixed public quota or SLA; availability can change. Automatic results are restricted to a permissive SPDX allowlist, sanitized and localized with provenance. Upstream metadata can be wrong, and a copyright licence does not grant trademark rights. <a href="https://iconify.design/docs/api/" rel="noopener noreferrer">API documentation</a> · <a href="https://icon-sets.iconify.design/" rel="noopener noreferrer">icon sets</a></td>
+</tr>
+<tr>
+<td><strong>Openverse</strong></td>
+<td>Optional <code>search_free_images</code> discovery of photographs, followed by a bounded local download</td>
+<td>No shot2code credential is sent. Only CC0 and Public Domain Mark records with source/licence links survive local checks; Openverse aggregates third-party metadata, so verify the source before commercial use. Anonymous access and provider limits can change. <a href="https://openverse.org/terms" rel="noopener noreferrer">Terms</a> · <a href="https://api.openverse.org/v1/" rel="noopener noreferrer">API</a></td>
+</tr>
+<tr>
+<td><strong>Ollama</strong></td>
+<td>Optional local OpenAI-compatible endpoint through the existing Copilot SDK BYOK connection</td>
+<td>Ollama and every model are installed separately and are not redistributed. Local inference needs no paid API, but uses the user's hardware; model capabilities and licences vary, and Ollama cloud services are separate. <a href="https://docs.ollama.com/api/openai-compatibility" rel="noopener noreferrer">OpenAI compatibility</a></td>
+</tr>
+<tr>
+<td><strong>Built Storybook metadata</strong></td>
+<td>Reads a built <code>index.json</code> plus optional <code>manifests/components.json</code> and <code>manifests/docs.json</code> as compact design/component context</td>
+<td>shot2code does not bundle or run Storybook. Stories, CSF, bundles, addons, loaders, play functions and <code>iframe.html</code> are never loaded or executed. <a href="https://storybook.js.org/docs" rel="noopener noreferrer">Storybook documentation</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="build--and-test-time-only-not-distributed" tabindex="-1">Build- and test-time only (not distributed)</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Third-Party Notices table 6"><table>
 <thead>
 <tr>
 <th scope="col">Component</th>
@@ -388,7 +422,7 @@ folder declares them as ordinary dependencies that your own package manager reso
 listed here. Generated code is model output: review its licensing, correctness and security
 before you use it, as noted in <a href="../security/">SECURITY.md</a>.</p>
 <h2 id="authoritative-manifests" tabindex="-1">Authoritative manifests</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Third-Party Notices table 6"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Third-Party Notices table 7"><table>
 <thead>
 <tr>
 <th scope="col">Layer</th>

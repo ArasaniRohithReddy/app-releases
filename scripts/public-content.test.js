@@ -478,6 +478,12 @@ test('the shot2code third-party notice is high level, sourced and not an exhaust
       `THIRD-PARTY-NOTICES.md does not link ${manifest}`);
   // Stack libraries are referenced by generated projects; claiming to redistribute them is wrong.
   assert.match(notices, /referenced by generated projects\*{0,2}, not redistributed/i);
+  // Optional services/formats are named as external, with their real caveats rather than as bundled code.
+  assert.match(notices, /External services, metadata formats and optional local software/);
+  assert.match(notices, /Iconify[\s\S]{0,500}no fixed public quota or SLA/i);
+  assert.match(notices, /Ollama[\s\S]{0,300}not redistributed[\s\S]{0,250}hardware/i);
+  assert.match(notices, /Built Storybook[\s\S]{0,300}never loaded or executed/i);
+  assert.match(notices, /Openverse[\s\S]{0,300}CC0 and Public Domain Mark/i);
   // Same correction route as the other product's notice.
   assert.match(notices, /issues\/new\/choose/);
 });
@@ -531,43 +537,111 @@ test('the shot2code guides describe the shipped build', () => {
     assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
 });
 
-test('the shot2code guides describe the v0.5.2 release', () => {
+test('the shot2code guides describe the v0.6.1 product and safety contract', () => {
+  const overview = read('products/shot2code/README.md');
   const guide = read('products/shot2code/USER-GUIDE.md');
+  const input = read('products/shot2code/INPUT-TABS.md');
+  const faq = read('products/shot2code/FAQ.md');
+  const runbook = read('products/shot2code/TROUBLESHOOTING.md');
+  const architecture = read('products/shot2code/ARCHITECTURE.md');
   const changelog = read('products/shot2code/CHANGELOG.md');
   const security = read('products/shot2code/SECURITY.md');
   const data = read('products/shot2code/DATA-HANDLING.md');
+  const releasing = read('products/shot2code/RELEASING.md');
   const copy = visibleText(shot2code);
 
-  assert.match(changelog, /^## \[0\.5\.2\] — 2026-09-28$/m);
-  assert.match(changelog, /v0\.5\.1[\s\S]{0,160}no GitHub\s+Release was published/i);
+  assert.match(changelog, /^## \[0\.6\.1\] — 2026-10-05$/m);
+  assert.match(changelog, /app-releases\/releases\/tag\/shot2code-v0\.6\.1/);
+  assert.match(changelog, /shot2code\/releases\/tag\/v0\.6\.1/);
+  assert.match(changelog, /discovery waits five seconds after core startup/i);
+  assert.match(runbook, /discovery starts five seconds after core startup/i);
+  assert.match(
+    architecture,
+    /Chromium and Copilot discovery[\s\S]{0,20}waits five[\s\S]{0,10}seconds/i
+  );
 
-  for (const provider of ['Replicate', 'Cloudflare Workers AI', 'OpenAI-compatible'])
-    assert.ok(guide.includes(provider), `USER-GUIDE.md does not name the image provider ${provider}`);
-  assert.match(guide, /Generated X of N/);
-  assert.match(guide, /Openverse/);
-  assert.match(guide, /CC0\/Public Domain Mark/);
-  assert.match(guide, /Tavily/);
-  assert.match(guide, /Exa/);
-  assert.match(guide, /built-in `web_fetch`[\s\S]{0,80}(?:disabled|blocked)/i);
-  assert.match(guide, /Figma MCP Catalog/);
-  assert.match(guide, /cancelled or failed option[\s\S]{0,100}completed sibling/i);
-  assert.match(guide, /25% to 200%/);
-  assert.match(guide, /\*\*Help → Send feedback\*\*/);
+  // Local Ollama is a preset over the existing BYOK path, not bundled or silently free compute.
+  assert.match(guide, /Configure local Ollama[\s\S]{0,180}http:\/\/localhost:11434\/v1/);
+  assert.match(guide, /no paid API[\s\S]{0,260}(?:hardware|RAM\/VRAM)[\s\S]{0,260}licen[cs]e/i);
+  assert.match(guide, /image input and tool calling/);
+  assert.match(guide, /docs\.ollama\.com\/api\/openai-compatibility/);
 
-  assert.match(security, /Canonical web search is opt-in, bounded and provider-neutral/);
-  assert.match(security, /Free image search is separate and hostile-input bounded/);
-  assert.match(data, /Tavily or Exa/);
-  assert.match(data, /Openverse and the selected image host/);
-  assert.match(data, /logs, prompts, screenshots, history, project files and credentials are never attached automatically/i);
+  // Search and page reading remain separate, and the unbounded SDK built-in remains unavailable.
+  assert.match(guide, /Separately consented bounded page reading/);
+  assert.match(guide, /read_web_page/);
+  assert.match(guide, /512 KB[\s\S]{0,120}16,000[\s\S]{0,180}two reads per turn[\s\S]{0,80}five per generation/i);
+  assert.match(guide, /built-in `web_fetch` remains blocked/i);
+  assert.match(security, /^## Bounded public-page reading$/m);
+  assert.match(data, /A public page selected by a model/);
 
-  assert.match(copy, /OpenAI-compatible image endpoint/);
-  assert.match(copy, /Openverse/);
-  assert.match(copy, /whole-page web_fetch remains blocked/);
-  assert.match(copy, /Coalesced resize handling prevents narrow-window preview flicker/);
+  // Every new design/context surface keeps its no-execution or bounded evidence contract.
+  assert.match(input, /Built Storybook[\s\S]{0,220}index\.json[\s\S]{0,180}manifests\/components\.json[\s\S]{0,100}manifests\/docs\.json/);
+  assert.match(input, /Story files, bundles, CSF[\s\S]{0,160}iframe\.html[\s\S]{0,80}never loaded or executed/i);
+  assert.match(input, /Preview Figma frames[\s\S]{0,180}reused/);
+  assert.match(input, /lazy-content[\s\S]{0,320}40,000px[\s\S]{0,120}36 million/i);
+  assert.match(input, /blank\/truncation/);
+  assert.match(architecture, /\/api\/storybook-context/);
 
-  const currentDocs = ['README.md', 'USER-GUIDE.md', 'INPUT-TABS.md', 'FAQ.md', 'DATA-HANDLING.md',
-    'SECURITY.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md']
-    .map(name => read(`products/shot2code/${name}`)).join('\n');
+  // GitHub is explicit about local open versus the selected-model/design-system edit.
+  assert.match(input, /Leave \*\*First refinement instruction\*\* blank[\s\S]{0,100}no model request/);
+  assert.match(input, /model selector[\s\S]{0,180}selected design system/);
+  assert.match(input, /detected frontend stack is preserved/);
+
+  // Full history exposes the persisted detail and ancestry instead of the compact recent list only.
+  assert.match(guide, /Recent projects and Full history/);
+  assert.match(guide, /requested[\s\S]{0,20}models[\s\S]{0,220}attachment count[\s\S]{0,100}agent activity[\s\S]{0,120}parent\/retry ancestry/i);
+  assert.match(guide, /Full history[\s\S]{0,520}retry\/branch history/i);
+  assert.match(architecture, /500-project pages/);
+
+  // Iconify copy stays fixed-origin, hedged and licence/trademark aware.
+  assert.match(guide, /https:\/\/api\.iconify\.design/);
+  assert.match(guide, /permissive SPDX allowlist/);
+  assert.match(guide, /currently accepts requests without an account or API key[\s\S]{0,160}no fixed public quota or SLA/i);
+  assert.match(guide, /foreignObject[\s\S]{0,180}external references[\s\S]{0,120}removed/i);
+  assert.match(guide, /retrieval-date provenance/);
+  assert.match(guide, /trademark rights/);
+  assert.match(security, /^## Localized icon search$/m);
+
+  // Chat exposes an inventory, with the runtime and write/cost boundaries still intact.
+  assert.match(guide, /Tools available to this Chat/);
+  assert.match(guide, /provider\s+billing\s+applies|generated-image\s+readiness/i);
+  assert.match(guide, /MCP[\s\S]{0,160}write tools[\s\S]{0,200}enabled Agent Skills/i);
+  assert.match(guide, /MCP and Skills remain Copilot\s+SDK-only/i);
+
+  // Public-domain photos remain the safe keyless photo path; arbitrary web images are excluded.
+  assert.match(guide, /Openverse[\s\S]{0,180}CC0 or Public Domain Mark/);
+  assert.match(guide, /Google, Bing or web-image[\s\S]{0,160}reuse right/i);
+
+  // Failures are bounded rather than retried blindly.
+  for (const body of [overview, guide, runbook, architecture, copy])
+    assert.match(body, /circuit breaker/i);
+  assert.match(guide, /credential, billing, quota, permission, model or[\s\S]{0,40}configuration failure/i);
+  assert.match(guide, /nearly_blank|nearly blank/);
+  assert.match(guide, /console errors[\s\S]{0,80}page errors/i);
+  assert.match(architecture, /reloaded exactly once[\s\S]{0,220}static\s+recovery\s+screen/i);
+
+  // Review now records source plus isolated runtime evidence and schema-v2 health.
+  assert.match(guide, /Accessibility, Structure, Responsive[\s\S]{0,40}Document/);
+  assert.match(guide, /Select filtered[\s\S]{0,160}preserves selections/i);
+  assert.match(guide, /partial runtime coverage/);
+  assert.match(guide, /schemaVersion: 2/);
+  assert.match(guide, /not WCAG certification/i);
+
+  // Planned screenshots can be documented without creating broken public references.
+  for (const image of ['ollama-settings-light.png', 'page-reader-settings-dark.png',
+    'iconify-settings-light.png', 'chat-tools-light.png', 'full-history-light.png',
+    'history-expanded-light.png']) {
+    assert.ok(releasing.includes(image), `${image}: missing from the versionless capture contract`);
+    assert.ok(!shot2code.includes(`img/${image}`), `${image}: product page references a PNG that does not exist`);
+  }
+
+  assert.match(copy, /Local Ollama and bounded page reading/);
+  assert.match(copy, /Full history and explicit GitHub refinement/);
+  assert.match(copy, /Storybook, Figma and full-page URL evidence/);
+  assert.match(copy, /Review health and preview diagnostics/);
+
+  const currentDocs = [overview, guide, input, faq, data, security, runbook, architecture].join('\n');
+  assert.doesNotMatch(currentDocs, /(?:permanently free|always free|free forever|unlimited)/i);
   assert.doesNotMatch(currentDocs, /(?:featured|use)[^.\n]*Figma (?:Desktop|Remote) MCP|Replicate[^.\n]*source runs only/i);
 });
 
@@ -590,6 +664,10 @@ test('the shot2code input-tab guide documents every current entry path', () => {
     /never\s+loads configuration modules or runs install\/build\/application code/i,
     /file_content:read/,
     /fine-grained token[\s\S]{0,80}Contents: read/i,
+    /Built Storybook[\s\S]{0,420}iframe\.html[\s\S]{0,120}never loaded or executed/i,
+    /Preview Figma frames[\s\S]{0,180}reused/i,
+    /First refinement instruction[\s\S]{0,180}model selector[\s\S]{0,180}design system/i,
+    /40,000px[\s\S]{0,120}36 million\s+pixels/i,
     /Stitch only[\s\S]{0,160}No second AI provider is called/i
   ]) assert.match(guide, requirement);
 });
@@ -787,32 +865,25 @@ test('the shot2code guides describe the MCP trust model and its scope', () => {
   assert.match(data, /MCP environment values and request headers are treated as secrets/i);
 });
 
-test('the shot2code guides describe the Review workspace without claiming certification', () => {
+test('the shot2code guides describe source and runtime Review without claiming certification', () => {
   const guide = read('products/shot2code/USER-GUIDE.md');
   assert.match(guide, /^## The Review workspace$/m);
-  // Frame count and the real widths.
-  assert.match(guide, /\*\*two to four widths simultaneously\*\*/);
   for (const width of ['1440', '768', '390', '320', '1920'])
     assert.ok(guide.includes(width), `USER-GUIDE.md: the Review width ${width} is not documented`);
-  assert.match(guide, /not a scaled-down screenshot/i);
-  // Overflow is measured, not inferred.
-  assert.match(guide, /\*\*measured in the running frame\*\*/);
-  // The audit, and the limit of the claim.
-  assert.match(guide, /\*\*deterministic, local pass over the\s+generated source\*\*/);
-  assert.match(guide, /It is not a WCAG conformance\s+assessment/);
-  // Findings reach the composer, not the model.
-  assert.match(guide, /does \*\*not\*\* send\s+them for you/);
-  // Stale binding.
-  assert.match(guide, /marked \*\*stale\*\*/);
-  // The report is safe to share.
-  assert.match(guide, /no credential of any kind[\s\S]{0,120}is included/);
+  assert.match(guide, /actual\s+CSS widths/i);
+  assert.match(guide, /horizontal overflow/);
+  assert.match(guide, /deterministic source checks[\s\S]{0,200}bounded runtime evidence/i);
+  assert.match(guide, /Accessibility, Structure, Responsive[\s\S]{0,40}Document/);
+  assert.match(guide, /Select filtered[\s\S]{0,180}preserves selections/i);
+  assert.match(guide, /timed-out or failed[\s\S]{0,100}isolated/i);
+  assert.match(guide, /partial runtime coverage/);
+  assert.match(guide, /schemaVersion: 2/);
+  assert.match(guide, /no tools, MCP servers, Skills, web search or writes/i);
 
   // The certification disclaimer appears everywhere the audit is described.
-  // Line wrapping is a formatting detail, so whitespace is tolerated.
   for (const name of ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'DATA-HANDLING.md', 'SECURITY.md', 'TROUBLESHOOTING.md'])
-    assert.match(read(`products/shot2code/${name}`), /not\s+\*{0,2}a\s+WCAG|NOT\s+a\s+WCAG/i,
+    assert.match(read(`products/shot2code/${name}`), /not\s+\*{0,2}a\s+WCAG|not\s+WCAG\s+certification|NOT\s+a\s+WCAG/i,
       `${name}: describes the audit without disclaiming WCAG conformance`);
-  // And nothing claims conformance anywhere.
   for (const name of ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'DATA-HANDLING.md', 'SECURITY.md'])
     assert.doesNotMatch(read(`products/shot2code/${name}`), /WCAG[- ](?:AA|AAA|2\.[12])\s*(?:compliant|conformant|certified)/i,
       `${name}: claims WCAG conformance`);
@@ -1017,7 +1088,7 @@ test('the shot2code page describes BYOK, MCP, Review and the menu', () => {
   for (const width of ['1440', '768', '390', '320', '1920'])
     assert.ok(copy.includes(width), `the product page does not name the Review width ${width}`);
   assert.match(copy, /horizontal overflow/i);
-  assert.match(copy, /not a WCAG conformance assessment/i);
+  assert.match(copy, /not (?:a WCAG conformance assessment|WCAG certification)/i);
 
   // The menu, and that it cannot drift from the keyboard.
   for (const menu of ['File', 'Edit', 'View', 'Window', 'Help'])
@@ -1028,7 +1099,7 @@ test('the shot2code page describes BYOK, MCP, Review and the menu', () => {
   const featureList = JSON.parse(shot2code.match(/<script type="application\/ld\+json" id="structured-data">([\s\S]*?)<\/script>/)[1]).featureList.join(' ');
   assert.match(featureList, /Copilot SDK BYOK/);
   assert.match(featureList, /requiring no Copilot subscription/i);
-  assert.match(featureList, /not a WCAG conformance assessment/i);
+  assert.match(featureList, /not (?:a WCAG conformance assessment|WCAG certification)/i);
   assert.doesNotMatch(featureList, /code[- ]signed|telemetry|cloud|hosted service|sync/i);
 });
 

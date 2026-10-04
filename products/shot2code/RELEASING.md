@@ -117,16 +117,31 @@ All dimensions below are required PNG pixel dimensions.
 | `input-upload.png` | `1426 × 893`, light | Upload selected; empty screenshot/video drop zone and generation controls visible |
 | `input-url.png` | `1426 × 893`, light | URL selected with `https://example.com`; before inspection/capture |
 | `input-text.png` | `1426 × 893`, light | Text selected; empty prompt, examples, stack and model controls visible |
-| `input-import.png` | `1426 × 893`, light | Import selected; HTML mode plus folder/ZIP/source-files choice visible |
-| `input-figma.png` | `1426 × 893`, light | Figma selected; scoped REST requirement and MCP Catalog limitation visible |
-| `input-github.png` | `1426 × 893`, light | GitHub selected with the public `octocat/Spoon-Knife` URL and permission guidance |
+| `input-import.png` | `1426 × 893`, light | Import selected; HTML/project modes plus Built Storybook entry visible |
+| `input-figma.png` | `1426 × 893`, light | Figma selected; scoped REST requirement, preview action and MCP Catalog limitation visible |
+| `input-github.png` | `1426 × 893`, light | GitHub selected with `octocat/Spoon-Knife`; local-open versus first-refinement copy, model picker and design-system choice visible |
 | `input-stitch.png` | `1426 × 893`, light | Stitch selected; Stitch only and Convert to selected stack modes visible |
-| `url-design-inspection.png` | `1426 × 893`, light | Completed `example.com` inspection with DESIGN.md actions visible |
+| `url-design-inspection.png` | `1426 × 893`, light | Completed `example.com` inspection with full-page responsive dimensions, blank/truncation state and DESIGN.md actions visible |
 | `github-imported-project.png` | `1426 × 893`, light | Public Spoon-Knife project open in the editable Preview/Chat workspace |
-| `review-workspace-og-light.png` | `1920 × 1008`, light | Northwind Analytics open; Review complete with preview and local findings visible |
+| `review-workspace-og-light.png` | `1920 × 1008`, light | Northwind Analytics open; source/runtime Review, category filters and health state visible |
 | `mcp-menu-light.png` | `1440 × 900`, light | MCP settings showing the synthetic server disabled, untrusted and write-disabled |
 | `byok-settings-dark.png` | `1440 × 900`, dark | BYOK settings switched off; additive/separate credential explanation visible |
 | `review-workspace-tablet.png` | `768 × 1024`, light | Completed Review in the shipped tablet/single-column navigation |
+
+### Planned additions
+
+These versionless filenames belong to the capture contract, but must not be
+referenced from `docs/shot2code/index.html` or generated guides until the exact
+PNG exists and has passed the same dimension, secret and responsive checks:
+
+| File | Dimensions / theme | Required state |
+| --- | --- | --- |
+| `ollama-settings-light.png` | `1440 × 900`, light | BYOK card after **Configure local Ollama**, with localhost endpoint and install/hardware/model caveats visible |
+| `page-reader-settings-dark.png` | `1440 × 900`, dark | Separate bounded page-reading consent, limits and blocked built-in `web_fetch` explanation |
+| `iconify-settings-light.png` | `1440 × 900`, light | Iconify opt-in, fixed origin, currently-keyless caveat, SPDX policy and trademark warning |
+| `chat-tools-light.png` | `1440 × 900`, light | Chat Tools inventory showing consent, provider cost, MCP write scope and enabled Skills honestly |
+| `full-history-light.png` | `1440 × 900`, light | Cross-project Full history search with project/version totals |
+| `history-expanded-light.png` | `1440 × 900`, light | Expanded version showing requested models, options, prompts, activity and retry/branch ancestry |
 
 The lead uses `1920 × 1008` because it is exactly **40:21**, the same ratio as a
 `1200 × 630` social card. It can therefore be scaled by an Open Graph consumer

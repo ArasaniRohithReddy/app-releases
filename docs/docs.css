@@ -96,6 +96,13 @@ code { font-family:var(--mono); font-size:.875em; hyphens:none; }
 .doc-content th { color:var(--ink); background:var(--surface-2); font-weight:650; }
 .doc-content tbody tr:last-child td { border-bottom:0; }
 .doc-content img { display:block; max-width:100%; height:auto; margin:1rem 0; }
+.doc-content p:has(> img[src*="/img/"]:only-child) {
+  max-width:none; margin:1.4rem 0 1.8rem;
+}
+.doc-content img[src*="/img/"] {
+  width:100%; margin-inline:auto; border:1px solid var(--line);
+  border-radius:var(--radius); background:var(--surface-2);
+}
 .image-alt { font-size:.875rem; }
 .doc-bottom { display:flex; flex-wrap:wrap; gap:.6rem 1.5rem; padding-top:1.4rem; margin-top:2.5rem; border-top:1px solid var(--line); font-size:.9375rem; }
 footer.site { border-top:1px solid var(--line); color:var(--muted); font-size:.875rem; padding-block:1.7rem; }

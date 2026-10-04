@@ -37,8 +37,10 @@ tree that Windows may still be scanning:
    history are imported before the server starts answering.
 2. **Heavy routers on first use.** Generation, evaluation and the project tools
    are imported the first time a request needs them, not during startup.
-3. **Optional probes in the background.** Chromium and Copilot discovery run as
-   bounded background work; neither can delay `/api/health`.
+3. **Core-health head start.** Chromium and Copilot discovery waits five
+   seconds, then runs as bounded background work. This lets the shell receive
+   initial health before Windows antivirus scans newly written browser/SDK
+   processes.
 
 The shell's readiness check is strict rather than optimistic: it requires
 HTTP 200 *and* a genuine `{"ok": true}` body, aborts at once if the backend
@@ -52,6 +54,13 @@ after it has actually launched, and it is closed during backend shutdown. Its
 **first** launch is given a longer budget than later ones, because that is when
 antivirus software scans a newly written tree.
 
+After `did-finish-load`, `desktop/renderer-health.js` waits for the renderer to
+settle and inspects `readyState`, root-child count and body text length. A truly
+blank top-level renderer is reloaded exactly once. If it is still empty after the
+second load, the shell logs the outcome and replaces it with a static recovery
+screen whose manual reload button needs no React bundle; project data remains in
+the separate SQLite store.
+
 A generation started during that window is not lost: the deferred-route
 middleware **accepts the WebSocket handshake before the generation graph has
 finished importing** and replays the connect event to the application once it
@@ -64,7 +73,8 @@ The backend runs an agent loop rather than a single prompt:
 1. The request (images, URL, description or recording, plus the chosen stack and
    models) is turned into a prompt.
 2. The model calls tools — `create_file`, `edit_file`, `extract_assets`,
-   `screenshot_preview`, and the image tools.
+   `screenshot_preview`, image generation/editing, canonical web/page/photo/icon
+   research, and (for Copilot runtimes) enabled MCP/Skill capabilities.
 3. shot2code executes each tool **locally** and feeds the result back.
 4. The loop ends with a project: a set of files and a declared entry point.
 
@@ -124,11 +134,10 @@ its own planning loop, while shot2code's engine also owns a loop. The provider
 bridges the two: each Copilot tool invocation is parked and handed back to the
 shot2code engine, which resolves it once the tool has actually run. Copilot's own
 file and shell tools are excluded — only shot2code's canonical tools are exposed,
-plus the MCP servers and Agent Skills the user has turned on. Canonical
-`search_web`, `search_free_images` and image tools are provider-neutral
-definitions wrapped by each runtime. Their availability is derived from the
-validated request configuration, so a model is never offered a tool the build
-cannot run.
+plus the MCP servers and Agent Skills the user has turned on. Canonical `search_web`, `read_web_page`, `search_free_images`, `search_icons`
+and image tools are provider-neutral definitions wrapped by each runtime. Their
+availability is derived from validated request configuration, so a model is
+never offered a tool the build cannot run or the user did not consent to.
 
 ### Copilot SDK BYOK
 
@@ -163,6 +172,13 @@ catalogue names against someone else's model would be untrue.
 would, using the same validator, and nothing else: no endpoint is contacted, no
 server is started, and the response carries presence flags, a host name and
 diagnostics rather than any credential.
+
+The local Ollama action is a renderer preset over this same connection, not a
+sixth provider. It writes the OpenAI-compatible loopback URL
+`http://localhost:11434/v1`, clears stale remote credentials/model ids and relies
+on the existing localhost no-credential exception. Ollama/model installation,
+hardware, licences and vision/tool-call support remain outside shot2code; native
+provider routing is unchanged.
 
 ### Live provider checks
 
@@ -249,47 +265,59 @@ Nothing here is on the critical path for a direct generation: an invalid,
 incomplete or switched-off integration becomes a diagnostic that travels with
 the response, not an error that stops the run.
 
+The renderer's Chat **Tools** popover joins request settings with live local
+capability/Skill reads. It reports project editing, Chromium preview readiness,
+web/page/photo/icon consent, generated-image readiness/cost, active MCP server
+count/write scope and enabled Skills. It mutates nothing; **Manage tools** is the
+only path from the inventory to Settings.
+
 ### Design sources
 
 The renderer exposes seven input tabs — Upload, URL, Text, Import, Figma,
 GitHub and Stitch — but they all converge on the same project/history contract.
 The [input-tab guide](INPUT-TABS.md) describes their user-facing behavior.
 
-`/api/figma` parses a Figma URL into a file key and optional node ids, asks the
-REST API for rendered images, original image-fill URLs and explicitly
-export-marked nodes. Downloads stream under per-file and aggregate budgets and
-become durable local assets. Optional asset failures remain partial-success so
-they do not discard frames already imported. It talks to
-`https://api.figma.com` and nothing else, authenticated only with the personal
-access token supplied in the request. Exported SVG files are rasterised in the
-app before they are sent, so a model always receives a picture rather than
-markup it might mis-read.
+`/api/figma` parses a Figma URL into a file key and optional node ids, requests
+rendered images, original image-fill URLs and export-marked nodes, and streams
+assets under per-file/aggregate budgets. The renderer can hold that response as
+an optional frame preview before generation; the later generate action reuses
+the same rendered evidence rather than fetching it twice. Optional asset errors
+remain partial-success. Only `https://api.figma.com` receives the scoped PAT.
 
-Google Stitch is reached two ways: as an ordinary MCP server, or through
-`@google/stitch-sdk` bundled in the Electron package and driven over the shell's
-own IPC — key validation, prompt-to-screen generation and project or screen
-import. The default Stitch-only route directly opens localized HTML, screenshot,
-images, stylesheets, nested CSS assets/fonts, `srcset` and available
-`DESIGN.md`; conversion through an LLM is a separate explicit action.
-`desktop/stitch-assets.js` pins public DNS answers, revalidates redirects,
-enforces file/aggregate budgets and MIME/magic agreement, and rewrites accepted
-resources to local assets. Rejected resources fail closed instead of remaining
-as live URLs. The SDK is published by Google Labs and is explicitly not an
-officially supported Google product, so it is treated as experimental.
+`/api/storybook-context` accepts four source kinds: selected JSON files, a built
+folder, a ZIP or a public HTTPS root. Every route normalizes to only
+`index.json`, `manifests/components.json` and `manifests/docs.json` with supported
+schema, duplicate-key, path/case-collision, symlink/encryption, count, byte and
+text bounds. URL import derives those fixed resource paths from the public root,
+uses the same public-only page resolver and revalidates redirects; it never asks
+for `iframe.html`, stories, CSF, bundles, addons, loaders or play functions. The
+output is compact untrusted component context, never executable code.
+
+Google Stitch is reached as an ordinary trusted MCP server or through the
+bundled experimental `@google/stitch-sdk` over Electron IPC. Stitch-only opens
+localized HTML, screenshot, images, stylesheets, nested CSS assets/fonts,
+`srcset` and available `DESIGN.md`; LLM conversion is explicit. The asset
+localizer pins public DNS, revalidates redirects, checks MIME/magic and byte/file
+budgets, sanitizes SVG and fails closed instead of retaining rejected hotlinks.
 
 `/api/github-repository` downloads public archives without a token or private
-archives with a separate fine-grained repository token. The archive enters the
-existing never-execute text scanner, while bounded PNG/JPEG/GIF/WebP files take
-a separate validated binary path into the editable project. Copilot OAuth is
-not broadened or reused.
+archives with a separate fine-grained repository token. Text enters the
+never-execute scanner and bounded PNG/JPEG/GIF/WebP enters the binary project
+path. The renderer first opens that project locally. A blank instruction stops
+there; a non-empty instruction starts an update run with the tab's selected
+models and design system. Stack detection is preserved and falls back to the
+current default only when no frontend stack is found. Copilot OAuth is never
+broadened or reused.
 
-`/api/url-design-inspector` runs a fresh local Chromium context but does not let
-Chromium fetch the network directly. Every HTTP(S) request is fulfilled through
-an aiohttp connector with a public-only pinned resolver; unsafe schemes and
-addresses, WebSocket/EventSource/service workers, media and non-GET/HEAD
-requests are blocked, and request/resource/total/deadline/element budgets apply.
-It emits computed design evidence plus 1440×900, 768×1024 and 390×844
-screenshots — rendered evidence, not recovered original source.
+`/api/url-design-inspector` runs local Chromium while every HTTP(S) request is
+fulfilled through a pinned public-only resolver. Unsafe schemes/addresses,
+WebSocket/EventSource/service workers, media and non-GET/HEAD requests are
+blocked under request/resource/total/deadline/element budgets. It scrolls lazy
+content in bounded steps and captures full-page desktop/tablet/mobile evidence.
+Each viewport returns actual document/capture dimensions plus `blank`,
+`truncated` and `fullPage` metadata; capture height is capped at 40,000px and
+area at 36 million pixels. The result is computed evidence, not recovered source
+or asset rights.
 
 All capture credentials are stripped from generation/history/export payloads.
 All design text is wrapped as untrusted evidence, and imported binary references
@@ -298,63 +326,72 @@ rebound to the current backend origin on restore.
 
 ### Web and image tools
 
-`backend/web_search/` owns one canonical `search_web` definition. Tavily and Exa
-adapters use fixed HTTPS endpoints, explicit timeouts and no redirects; domain
-filters are sent upstream and enforced again locally. Results are normalized to
-bounded snippets and prefixed with an untrusted-content warning. One
-`WebSearchRuntime` per engine tracks per-turn and per-generation budgets, and a
-failed outbound request still spends its allowance.
+`backend/web_search/` owns two independent canonical tools. `search_web` uses
+fixed Tavily/Exa HTTPS endpoints, no redirects, local domain re-filtering,
+bounded snippets and a `WebSearchRuntime` budget of three calls/turn and ten per
+generation. `read_web_page` has separate consent and budget state: public
+query-free HTTP(S), standard ports, public-only pinned DNS, up to three
+revalidated redirects, no cookies/auth/subresources, HTML/text/Markdown/JSON
+only, 512 KB input and 16,000 extracted untrusted characters, two calls/turn and
+five/generation. Failed outbound attempts spend budget. Copilot built-in
+`web_fetch` stays denied because the runtime hands its unbounded result to the
+model before application policy can inspect it.
 
-`backend/image_generation/` separates catalogue, request validation,
-provider-specific calls, response normalization and per-prompt outcomes.
-Replicate remains default-compatible; Cloudflare Workers AI and
-OpenAI-compatible endpoints are additive and use independent credentials.
-Every provider response passes `normalize_image_result`, which keeps a safe
-public URL or persists validated bytes/base64/data URLs as local assets.
+`backend/free_images/` owns `search_free_images`. Openverse results are locally
+restricted to CC0/Public Domain Mark and require source/licence URLs. Every DNS
+answer, redirect, MIME/magic pair, byte count and decoded pixel count is checked
+before local persistence. It does not call generic web search because a web
+result says nothing about reuse rights.
 
-`backend/free_images/` owns the separate `search_free_images` tool. Openverse
-results are locally restricted to CC0/Public Domain Mark and require source and
-licence URLs. The download boundary resolves and checks every DNS address,
-revalidates redirects, agrees MIME with magic bytes, limits transferred bytes
-and decoded pixels, and persists the image locally. The package intentionally
-does not import or call web search: a generic search result says nothing about
-reuse rights.
+`backend/icon_search/` owns `search_icons`. The origin is fixed to
+`https://api.iconify.design`; no credential, cookies, environment proxy or
+redirect is accepted. Search and SVG bodies have independent budgets. Automatic
+results must name a permissive SPDX licence. Bounded XML sanitization removes
+entities, scripts, event handlers, style/foreignObject/animation/media and
+external URL references. A deterministic local SVG embeds collection, author,
+source, licence and retrieval provenance plus brand/trademark state.
+
+`backend/image_generation/` separates catalogue, settings, provider calls,
+normalization and per-prompt outcomes. Replicate remains default-compatible;
+Cloudflare Workers AI and OpenAI-compatible endpoints are additive. Every
+response passes the same URL/byte/data normalization boundary. An all-failed
+batch is a real tool failure. Non-network credential, billing, quota,
+permission, model or configuration failures trip `AgentToolRuntime`'s
+per-generation circuit breaker immediately; two failed batches also block
+unknown/network repeats. The block returns a safe alternative action rather
+than repeatedly calling a provider that cannot succeed.
 
 ## Reviewing generated output
 
-The Review workspace renders the preview artifact into two to four frames at
-their **actual** CSS widths (320–1920, defaults 1440/768/390), so layout is
-exercised rather than simulated, and measures horizontal overflow inside each
-running frame.
+The Review workspace renders two to four sandboxed frames at actual CSS widths
+(320–1920; defaults 1440/768/390) and runs two evidence paths.
 
-The source audit is a deterministic pass in the renderer over the generated
-source: a small tolerant HTML parser produces a node tree, and a fixed set of
-rules reports semantic and accessibility findings with evidence, the affected
-file and guidance. It is a source check, not a conformance assessment, and it
-makes no network call.
+The deterministic source audit produces findings with severity, one of
+Accessibility/Structure/Responsive/Document categories, evidence, guidance and
+safe file labels. Each frame independently runs bounded browser inspection for
+horizontal overflow, accessible names, custom focus visibility, 24px target-size
+advisories, image alternatives/load failures, headings and main landmarks. It
+stops at 2,500 elements and 32 findings per viewport. A frame error is isolated;
+source and other viewport results survive.
 
-A result is bound to the commit, the variant index, a hash of the source it read
-and the widths it ran at. Any change to those marks the result stale rather than
-letting it be read as current. Findings can be filtered by severity, searched and
-selected in bulk; selected findings are grouped by rule into an instruction that
-is placed in the composer for the user to send, or applied directly by **Fix
-selected findings**, which addresses the **exact commit and variant that was
-reviewed** rather than the current selection. The JSON report reduces file paths
-to a leaf name and carries no credential of any kind.
+Filters combine severity, category and query. Filtered select-all operates only
+on visible ids and preserves hidden selections. The health reducer distinguishes
+not-run, stale, error/warning/advisory, partial and healthy states and names
+ready/failed/pending runtime coverage. The binding includes commit, variant,
+source hash and viewport widths, so any changed dimension makes the run stale.
 
-An optional **AI review** runs against the model recorded on that variant, with
-`canonical_tools_override=[]` — no tools, no MCP servers, no skills, no web
-search, no shell and no file writes. Its findings are kept in a separate list;
-the deterministic local pass remains authoritative. A variant with no recorded
-model identity cannot be AI-reviewed, and the UI says so rather than guessing a
-model.
+Selected findings can be composed for user review or applied against the exact
+bound commit/variant. Optional AI review uses the recorded model with an empty
+canonical tool set — no MCP, Skills, web, shell or writes — and remains separate
+from deterministic evidence. Schema-v2 JSON includes binding, category counts,
+runtime coverage and per-viewport metadata with safe relative labels and no
+credential. It explicitly states that automated evidence is not WCAG
+certification.
 
-The **Design Inspector** is a second local pass over the composed source. It
-counts repeated colours, CSS variables, typography, spacing, radii, shadows,
-motion and semantic components, and renders them as `DESIGN.md`, `SKILL.md` and
-a palette PNG. It reads the source the project declares rather than a browser's
-computed styles. The URL inspector described above is the complementary
-browser-computed path for a public site before generation.
+The Design Inspector remains a second local pass over composed source and emits
+`DESIGN.md`, `SKILL.md` and a palette PNG. The URL inspector is the complementary
+browser-computed path before generation; Figma preview is the rendered-frame path
+before a model call.
 
 ## Workspace layout state
 
@@ -380,37 +417,31 @@ single keystroke does not zoom twice.
 
 ## Project history
 
-Projects, versions (commits), variants, prompts and variant messages are stored in
-a local **SQLite** database with a versioned schema and tracked migrations, served
-over an `/api/history` route group (list, load, rename, append version, update
-selection, delete).
+Projects, commits, variants, prompts, messages and activity are stored in local
+SQLite behind `/api/history` list/load/rename/append/select/delete routes.
 
 - Windows: `%LOCALAPPDATA%\shot2code\history.sqlite3`
-- macOS (source runs): `~/Library/Application Support/shot2code/`
-- Linux (source runs): `$XDG_DATA_HOME/shot2code/` or `~/.local/share/shot2code/`
-- Override with `SHOT2CODE_DATA_DIR` or `SHOT2CODE_HISTORY_DB_PATH`
+- macOS source runs: `~/Library/Application Support/shot2code/`
+- Linux source runs: `$XDG_DATA_HOME/shot2code/` or `~/.local/share/shot2code/`
+- Override: `SHOT2CODE_DATA_DIR` or `SHOT2CODE_HISTORY_DB_PATH`
 
-Commits record both a parent and, for a retry, the commit they re-roll, so retry
-ancestry is explicit; ancestry walks detect and reject cycles. A retry reuses the
-provider and model choices its source generation used, and each variant stores
-the concrete run identity behind it, which is what the UI displays and what a
-retry replays. Saves are debounced.
+Commits record parent and optional retry source; ancestry walks reject cycles.
+Variants record requested/concrete model identities, option status/timing/error,
+messages and saved agent activity. The renderer expands the current-project
+History into requested models, all saved options, prompts/responses, attachment
+counts, activity and branch/retry navigation.
 
-The database uses WAL, foreign keys and versioned, idempotent migrations, and it
-lives **outside the installation directory**. The NSIS package sets
-`deleteAppDataOnUninstall: false` explicitly, so replacing or removing the
-installed program leaves projects, versions and prompts intact.
+Full history reuses the list endpoint in 500-project pages and loads one complete
+project only when selected. The dialog searches project summaries and exposes
+every version/option/model/prompt/response/attachment/activity/status/timing/error
+and ancestry record before **Open project**. It is read-only until opening and
+creates no second data store.
 
-The chat panel reconstructs the **active branch** from that store in
-chronological order: prompts, attached images or recordings, selected-element
-context, the run identity, generation state, and the persisted assistant
-responses — shown in expandable blocks rather than reduced to a ready-state
-summary. History remains the durable cross-branch timeline.
-
-Restore validates the selected variant. When it points at a cancelled or failed
-option but a completed sibling exists, the first completed sibling is selected
-and the repair is persisted. The renderer also restores the active project,
-version and file instead of opening a stale cancelled option.
+The database uses WAL, foreign keys and idempotent migrations outside the
+installation directory; NSIS leaves app data in place. Saves are debounced. Chat
+reconstructs the active branch chronologically, including assistant responses.
+Restore validates the selected variant and repairs a failed/cancelled selection
+to a completed sibling when available, then restores project/version/file.
 
 ## Preview
 
@@ -438,6 +469,12 @@ Security properties of a preview document:
   list denying camera, microphone, geolocation and display capture;
 - select-and-edit uses a per-preview message bridge — messages are accepted only
   when the channel and a random per-preview nonce match, and payloads are capped.
+
+The agent-facing `screenshot_preview` tool captures full-page desktop/mobile
+images and returns the image plus bounded body-text/rendered-element counts,
+sanitized console/page errors and `nearly_blank` metadata. Problematic previews
+remain successful image captures but explicitly tell the model to repair runtime
+failures before declaring the page complete.
 
 **Stack preview** is an additional view over the same sandbox: instead of the
 composed document it renders the generated project's controlled Vite HTML, React
@@ -529,9 +566,10 @@ write to `%TEMP%\shot2code-installer-preinstall.log`.
 ```
 
 Backend startup, renderer load failures, crashes and console errors all land
-there. It is the first thing to read for a blank window or a backend that never
-becomes ready. An install that refuses to replace a running backend leaves its
-own trail in `%TEMP%\shot2code-installer-preinstall.log`.
+there. Renderer-health entries distinguish the one automatic reload from the
+static recovery screen. It is the first thing to read for a blank window or a
+backend that never becomes ready. An install that refuses to replace a running
+backend leaves its own trail in `%TEMP%\shot2code-installer-preinstall.log`.
 
 Console diagnostics — the prompt preview in particular — are encoded for whatever
 the active output stream can represent, including a strict cp1252 Windows

@@ -92,6 +92,18 @@ The shipped shell is built on **Electron 44.4.3** with **electron-updater 6.8.9*
 **electron-builder 26.15.3**. `npm audit --omit=dev` reports **0 vulnerabilities** for the
 dependencies that are actually distributed.
 
+## External services, metadata formats and optional local software
+
+These are integrations or inputs, not bundled dependencies. Their own terms,
+availability and content licences apply when you choose to use them.
+
+| Service or format | How shot2code uses it | Boundary and source |
+| --- | --- | --- |
+| **Iconify public API** | Optional canonical `search_icons` queries and SVG retrieval from the fixed `https://api.iconify.design` origin | Iconify's public API accepted requests without an account or key when checked 2026-10-04, but Iconify publishes no fixed public quota or SLA; availability can change. Automatic results are restricted to a permissive SPDX allowlist, sanitized and localized with provenance. Upstream metadata can be wrong, and a copyright licence does not grant trademark rights. [API documentation](https://iconify.design/docs/api/) · [icon sets](https://icon-sets.iconify.design/) |
+| **Openverse** | Optional `search_free_images` discovery of photographs, followed by a bounded local download | No shot2code credential is sent. Only CC0 and Public Domain Mark records with source/licence links survive local checks; Openverse aggregates third-party metadata, so verify the source before commercial use. Anonymous access and provider limits can change. [Terms](https://openverse.org/terms) · [API](https://api.openverse.org/v1/) |
+| **Ollama** | Optional local OpenAI-compatible endpoint through the existing Copilot SDK BYOK connection | Ollama and every model are installed separately and are not redistributed. Local inference needs no paid API, but uses the user's hardware; model capabilities and licences vary, and Ollama cloud services are separate. [OpenAI compatibility](https://docs.ollama.com/api/openai-compatibility) |
+| **Built Storybook metadata** | Reads a built `index.json` plus optional `manifests/components.json` and `manifests/docs.json` as compact design/component context | shot2code does not bundle or run Storybook. Stories, CSF, bundles, addons, loaders, play functions and `iframe.html` are never loaded or executed. [Storybook documentation](https://storybook.js.org/docs) |
+
 ## Build- and test-time only (not distributed)
 
 | Component | Role | Declared license |

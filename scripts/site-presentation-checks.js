@@ -269,6 +269,8 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
           const inputLayout = await product.locator('#inputs').evaluate((section, viewportWidth) => {
             const rect = element => element.getBoundingClientRect();
             const figures = [...section.querySelectorAll('figure')];
+            const gallery = rect(section.querySelector('.input-gallery'));
+            const galleryFigures = [...section.querySelectorAll('.input-gallery .input-shot')];
             const frames = figures.map(figure => {
               const frame = figure.querySelector('.shot-frame');
               const image = frame.querySelector('img');
@@ -285,11 +287,28 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
                 captionBelow: rect(figure.querySelector('figcaption')).top >= box.bottom
               };
             });
+            const galleryItems = galleryFigures.map(figure => ({
+              figure: rect(figure),
+              frame: rect(figure.querySelector('.shot-frame')),
+              caption: rect(figure.querySelector('figcaption'))
+            }));
+            const wide = galleryItems[0];
+            const pair = galleryItems.slice(1, 3);
+            const pairSharesRow = pair.length === 2 &&
+              Math.abs(pair[0].frame.top - pair[1].frame.top) <= 1;
             return {
               framesInside: frames.every(frame => frame.left >= -1 && frame.right <= viewportWidth + 1),
               ratios: frames.map(frame => frame.ratio),
               uncropped: frames.every(frame => frame.uncropped),
-              captionsBelow: frames.every(frame => frame.captionBelow)
+              captionsBelow: frames.every(frame => frame.captionBelow),
+              wideAligned: wide &&
+                Math.abs(wide.frame.left - gallery.left) <= 1 &&
+                Math.abs(wide.frame.right - gallery.right) <= 1,
+              pairAligned: !pairSharesRow || (
+                Math.abs(pair[0].frame.width - pair[1].frame.width) <= 1 &&
+                Math.abs(pair[0].caption.top - pair[1].caption.top) <= 1 &&
+                Math.abs(pair[0].figure.height - pair[1].figure.height) <= 1
+              )
             };
           }, width);
           const inputLabel = `shot2code inputs/${theme}@${width}, ${textPercent}% text`;
@@ -298,6 +317,8 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
             `${inputLabel}: an input screenshot lost its 16:10 stage`);
           check(inputLayout.uncropped, `${inputLabel}: an input screenshot would be cropped`);
           check(inputLayout.captionsBelow, `${inputLabel}: a caption overlaps its screenshot`);
+          check(inputLayout.wideAligned, `${inputLabel}: the lead input frame is not aligned to the gallery`);
+          check(inputLayout.pairAligned, `${inputLabel}: paired input frames/captions lose their shared baseline`);
         }
       }
 

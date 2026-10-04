@@ -72,8 +72,8 @@ lists every path and every network destination.
 | Symptom | Cause and fix |
 | --- | --- |
 | First launch sits on the splash screen for a few seconds | Expected. The splash stays until the frozen Python backend answers its health check — normally about 5–11 seconds from 0.3.3. A fresh portable copy or the first launch after an update takes longer (around 40 seconds) while Windows scans the newly written tree. |
-| The splash screen never clears | The shell gives up after 90 seconds and logs how long readiness took. Read `shot2code-backend.log`: it records whether the backend exited, failed to spawn, or answered health with something other than `{"ok": true}`. Startup no longer waits on Chromium or Copilot, so a missing optional capability is not the cause. |
-| The window is blank, or never appears at all | Read `shot2code-backend.log`. It records backend startup, `did-fail-load`, renderer crashes and console errors, which is the difference between "the backend never came up" and "the UI failed to load". In the packaged app, **Help → Support → Open diagnostic logs** opens that folder for you. |
+| The splash screen never clears | The shell gives up after 90 seconds and logs how long readiness took. Read `shot2code-backend.log`: it records whether the backend exited, failed to spawn, or answered health with something other than `{"ok": true}`. Optional Chromium/Copilot discovery starts five seconds after core startup, so first-run scanning cannot race the initial health response. |
+| The window is blank, or never appears at all | Read `shot2code-backend.log`. The shell checks for a completely loaded but empty renderer, reloads it once, then shows a static recovery screen if it stays blank; projects remain local. The log records that recovery plus startup, `did-fail-load`, crashes and console errors. |
 | "Backend did not become ready in time" | Usually a partially replaced install: an older updater could overwrite files while the backend was still running, leaving native modules missing. Download the newest installer from the releases page and run it manually (right-click → **Properties** → **Unblock** first). |
 | Generation fails on a backend that reported healthy earlier | A deferred feature failed to load. Those routers are imported on first use; if one cannot load, the request returns an error and health starts failing too, so the log will show it. Restart the app and read `shot2code-backend.log`. |
 | The app starts, but everything says no provider | Nothing is wrong with the app. Go to [Providers and the model catalogue](#providers-and-the-model-catalogue). |
@@ -97,8 +97,10 @@ Without one, generation fails immediately and says so.
 | No models at all in video mode | In video mode the list is filtered to models that can read video. Everything else would fail on the input. BYOK options are not offered for video either. |
 | The image-generation tool is not offered | Configure Replicate, Cloudflare Workers AI, or an OpenAI-compatible image endpoint in Settings. Replicate remains the only background-removal provider. |
 | Image generation says 401, 402 or 429 | 401 means the credential was rejected, 402 means billing or balance is required, and 429 means quota/rate limiting. The failed tile preserves the provider's actionable reason; fix the account or wait for the stated reset before retrying. |
-| The activity says fewer images were generated than requested | v0.5.2 counts successful images, not prompts or output tiles. Open failed tiles for each per-prompt reason. |
-| A free image was not returned | Free image search is a separate opt-in Openverse tool. It accepts only CC0/Public Domain Mark records with source and licence links, and can also reject an unsafe URL, MIME mismatch, oversized image or excessive decoded dimensions. |
+| The activity says fewer images were generated than requested | It counts successful images, not prompts or output tiles. Open failed tiles for each per-prompt reason. |
+| More image calls are blocked for this generation | A credential, billing, quota, permission, model or configuration failure tripped the per-generation circuit breaker. Fix Settings and start a new run, or use Openverse photos, Iconify icons, extracted assets, CSS or SVG. |
+| A free image was not returned | Free image search is a separate opt-in Openverse tool. It accepts only CC0/Public Domain Mark records with source and licence links, and can also reject an unsafe URL, MIME mismatch, oversized image or excessive decoded dimensions. Ordinary Google/Bing/web image results are not inserted because search visibility grants no reuse right. |
+| Iconify returned no icon | The query may match only excluded/unknown licences, the currently-keyless public API may be rate-limiting, or SVG sanitization may reject candidates. Try a broader query; verify upstream licence metadata and trademark rights. |
 
 Keys are stored on the device you entered them on and are sent only to the
 provider they belong to. Desktop Settings supports Replicate, Cloudflare and
@@ -147,6 +149,7 @@ incomplete connection is reported as a notice and skipped.
 | --- | --- |
 | No **Copilot SDK (BYOK)** group in **Settings → Models** | The connection is switched off or not usable yet. The card states the reason — *switched off*, *needs its own API key or bearer token*, or *needs the endpoint URL of your Azure OpenAI resource*. |
 | "Add a dedicated API key…" although OpenAI already works | That is intended. BYOK carries its own credential; the direct OpenAI and Anthropic keys are never borrowed for it. Only an **OpenAI-compatible** endpoint on `localhost` may run without one. |
+| The local Ollama preset is configured but no model appears | The preset only fills `http://localhost:11434/v1`; shot2code does not install Ollama or pull a model. Start Ollama, download a model, then use **Test model access**. Local inference needs no paid API but uses your hardware, the model licence applies, and the model must support image input plus tool calling. |
 | "must use https:// unless it points at localhost" | Plain `http://` is only accepted for a loopback host. Use `https://`, or point the base URL at `localhost`/`127.0.0.1`. |
 | Azure refuses to validate | Azure needs the endpoint URL of your resource **and** its own credential. The `api-version` field applies to Azure only. |
 | You want a Gemini BYOK option | There is none. The Copilot SDK has no Gemini provider, so Gemini models always use the Gemini API key directly. The app reports this as a notice. |
@@ -170,7 +173,7 @@ incomplete connection is reported as a notice and skipped.
 | A server is configured but no tools appear | A server needs **both** switches: **Enabled** *and* **Trusted**. Until then the picker reports *"'‹name›' is not marked trusted, so shot2code will not start it or approve its tools."* |
 | You installed one from the **MCP Registry** and nothing started | That is the design: a registry install is a **disabled, untrusted draft**. Review its URL and headers, then enable and trust it yourself. |
 | The registry list is empty, or will not load | The browser queries the official registry over the network; a proxy or firewall will stop it. Only remote `https://` entries are listed, so a local-only server will never appear there — add it by hand. |
-| Tools appear for one option but not another | MCP and Agent Skills reach the SDK runtimes only. The canonical Tavily/Exa `search_web` tool reaches native OpenAI, Anthropic and Gemini as well as Copilot and BYOK. |
+| Tools appear for one option but not another | MCP and Agent Skills reach Copilot subscription/BYOK runtimes only. Canonical web search, bounded page reading, Openverse and Iconify reach every runtime when their separate switches are enabled. |
 | A tool that should change something does nothing | Servers are read-only by default. Turn on **Allow write tools** for that server — it is the switch that permits changing files, data or remote state. |
 | "Use https:// unless the server runs on localhost" | An `http://` URL is accepted only for a loopback host. |
 | "A local server needs a command to run" | A `stdio` server needs its command. Arguments go **one per line**, because the command is spawned as an argument vector rather than through a shell. |
@@ -183,7 +186,8 @@ incomplete connection is reported as a notice and skipped.
 | A GitHub skill imported with empty files | Fixed in 0.5.1: the Contents API does not return file bodies in a directory listing, so each file is now fetched individually. Update and import it again. |
 | A skill's script did not run | It cannot. Script files are stored as inert resources; shot2code exposes no shell tool and no unrestricted host-filesystem tool to any model. |
 | Web search produced nothing | **Web search** is off by default. Select Tavily or Exa and provide the credential that provider requires; Tavily's keyless trial must be chosen explicitly. Queries leave the device, and domain/result/turn/generation limits may reject a call that exceeds the configured budget. |
-| The model tried to fetch a whole URL | `web_fetch` is intentionally blocked for both Copilot runtimes. The current SDK cannot let shot2code inspect, truncate, label or budget a full-page result before it reaches the model. Use bounded search snippets instead. |
+| The model tried to fetch a whole URL | Turn on **Read public pages (all models)** if the page is public HTTP(S), on a standard port and has no credentials/query string. The canonical `read_web_page` tool is capped at 512 KB, 16,000 characters, two reads/turn and five/generation. Built-in `web_fetch` stays blocked because its whole result reaches the model before shot2code can inspect or budget it. |
+| Chat Tools says a feature is off | The menu is an inventory, not a switch. Use **Manage tools** and grant that feature's own consent. Generated images may cost provider quota; MCP write access and enabled Skills are reported separately. |
 
 ## Figma and Google Stitch
 
@@ -193,7 +197,7 @@ incomplete connection is reported as a notice and skipped.
 | A Figma REST import is rejected | The token needs the `file_content:read` scope, and the URL has to be a Figma file URL — shot2code reads the file and node ids out of it. |
 | Figma REST returns 429 | Respect the displayed retry interval. v0.5.2 preserves Figma's plan tier and limit type and links the upgrade documentation; Tier 1 endpoints can have low limits on Starter/View/Collab access. |
 | A Figma import brought in the wrong frames | Without node ids in the URL, the top-level renderable frames are imported. Select the frame in Figma and copy its link so the URL carries the node id. |
-| A Figma frame imported but some assets did not | Optional image fills/export-marked nodes are partial-success. A rate-limited or invalid optional asset is reported without discarding usable rendered frames. |
+| A Figma frame imported but some assets did not | Optional image fills/export-marked nodes are partial-success. A rate-limited or invalid optional asset is reported without discarding usable rendered frames. Use **Preview Figma frames** before a model call; generation reuses the rendered evidence. |
 | You expected Figma application source code | Figma REST exposes file structure, rendered nodes and original image fills, not the production source of an application. Import the repository separately if you own and need its code. |
 | An exported SVG looks different in the result | SVGs are rasterised locally before they are sent, so the model sees a picture. Export a PNG at the size you care about if the raster is not faithful enough. |
 | Stitch actions do nothing | The bundled SDK is part of the **desktop app** and needs a Stitch API key in Settings. It is experimental — Google Labs states it is not an officially supported Google product. |
@@ -201,7 +205,7 @@ incomplete connection is reported as a notice and skipped.
 | Stitch unexpectedly called a model | Use **Stitch only**, the default, to open localized Stitch HTML/assets/`DESIGN.md` directly. **Convert to selected stack** is the explicit mode that makes a second provider request. |
 | Your Figma or Stitch credential appeared in a prompt | It should not, and it does not: both are capture-only and are stripped before a generation payload is built. Report it privately if you can reproduce it — see [SECURITY.md](SECURITY.md). |
 | Website inspection refuses a URL | Only public HTTP(S) destinations are accepted. Loopback, private, link-local, metadata and mixed-public/private DNS answers are blocked; use an exported screenshot for an internal site. |
-| Website inspection looks different from the original | It is a bounded render with media, WebSockets, EventSource and service workers disabled. It captures design evidence, not a pixel-identical archival copy or original source. |
+| Website inspection looks different from the original | It is a bounded render with media, WebSockets, EventSource and service workers disabled. It scrolls lazy content within a fixed budget and captures full-page responsive evidence, not a pixel-identical archive or original source. Actual document/capture dimensions plus blank/truncation state are shown; each image is capped at 40,000px and 36 million pixels. |
 
 ## Generation fails or is wrong
 
@@ -244,6 +248,11 @@ it is available, and if it is not, the app skips that tool instead of failing th
 run. Only the headless shell is bundled — full Chromium would add several hundred
 megabytes and the app always launches headless.
 
+Each run returns full-page desktop/mobile images plus bounded rendered-element
+and body-text counts, sanitized console/page errors and a `nearly_blank` flag.
+When a render is blank or errors, the model is told to fix those diagnostics
+before treating the preview as complete.
+
 When Settings reports it unavailable, **Check again** re-probes the backend, so
 you can fix the cause and confirm it without restarting shot2code. The advice
 depends on how you are running it:
@@ -270,7 +279,9 @@ Import reads a folder, a ZIP or individual source files. It parses text — it
 | The import was rejected outright | Unsafe or malformed input — traversal paths in an archive, for example — is refused rather than sanitised. |
 | You wanted the files, not a summary | **Use as design context** keeps only a compact summary. Choose **Open editable project** to hand the normalized files to the editor instead. |
 | A private GitHub repository returns 404/401 | Add a separate fine-grained token restricted to that repository with **Contents: read**. The Copilot sign-in token is deliberately not reused for repository access. |
+| Importing GitHub unexpectedly called a model | Leave **First refinement instruction** blank for a local open. A non-empty instruction intentionally reveals the update-model picker and design-system choice, then edits after opening while preserving the detected repository stack. |
 | A public repository says no supported source files were found | The scanner recognises supported frontend/source extensions and ignores extensionless or unsupported files. Point it at a repository that contains supported source, or download only the relevant folder/files. |
+| Built Storybook metadata is refused | Select a built root containing `index.json`, optionally `manifests/components.json` and `manifests/docs.json`. Only those fixed JSON files are accepted from local files/folder/ZIP/public HTTPS. Stories, bundles, `iframe.html`, traversal, links, encryption, duplicate paths and unsupported/oversized schemas are refused. |
 
 ## Preview, export and CodePen
 
@@ -299,6 +310,7 @@ separate destination on narrow windows.
 | A project is gone from **Recent projects** | Deleting a project removes it and all of its versions from the device. There is no cloud copy and no undo. |
 | Recent work is missing after reinstalling | Projects live in `%LOCALAPPDATA%\shot2code\history.sqlite3`, outside the installation directory, and an upgrade leaves it alone. Only an uninstall that also removed that folder removes the history. |
 | Chat shows the prompts but not the answers | It should show both. The panel reconstructs the whole branch, and persisted assistant responses sit in expandable blocks. If an old version shows only a ready-state line, it was generated before the 0.5 line and has no stored response to show. |
+| Recent projects does not show enough history | Choose **Full history** from Recent projects or project History. Search every local project and expand versions for requested models, options/statuses, prompts/responses, attachments, saved activity, errors and retry/branch ancestry before opening one. |
 
 ## The workspace layout
 
@@ -340,8 +352,9 @@ Include, and a fix gets much faster:
 4. **Which provider and which model** were selected — Copilot, OpenAI, Anthropic,
    Gemini or a BYOK endpoint — the exact run identity History records for the
    option, and whether the failure also happens with a different one. Say too
-   whether an MCP server, an Agent Skill, web/free-image search, an image
-   provider, a Figma import or the Google Stitch integration was involved.
+   whether an MCP server, an Agent Skill, web/page/free-image/icon search, an
+   image provider, Built Storybook, a Figma import or the Google Stitch
+   integration was involved.
 5. **The tail of `shot2code-backend.log`** — **Help → Support → Open diagnostic
    logs** finds it for you — and
    `%TEMP%\shot2code-installer-preinstall.log` for an install or update problem.
