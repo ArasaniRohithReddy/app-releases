@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CONTRIBUTING.md (normalized SHA-256 39043e2b7e4d6281b2798a22e9c56c706c11f459617751a46aab3ba6cedc410f). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CONTRIBUTING.md (normalized SHA-256 e5ac6d1776a884f3a7876b5de67923fe00f81145a9eaed403dd6de5c03f4a99d). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="./" aria-current="page">Contributing</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../input-tabs/">Input tabs</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="./" aria-current="page">Contributing</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -125,6 +125,13 @@ build does not actually support.</p>
 <p><strong>Describe the published build.</strong> These pages are read by people deciding
 whether to install an unsigned binary. Do not document behaviour that only
 exists in source, and do not promise something the current release does not do.</p>
+</li>
+<li>
+<p><strong>Keep input docs visual and synchronized.</strong> A change to Upload, URL, Text,
+Import, Figma, GitHub or Stitch must update <code>INPUT-TABS.md</code>, the product-page
+caption/copy and the matching packaged-app PNG under
+<code>docs/shot2code/img/</code>. Never stage a screenshot with a real credential,
+private repository, account name or local path.</p>
 </li>
 <li>
 <p><strong>Keep the links and the checks green.</strong> The product page, this guide set and

@@ -35,7 +35,7 @@ const products = [
     kinds: ['setup', 'msi', 'portable', 'checksums'],
     recommendedKind: 'setup',
     fallback: 'https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&expanded=true',
-    requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md',
+    requiredGuides: ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'INPUT-TABS.md', 'FAQ.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md',
       'DATA-HANDLING.md', 'RELEASING.md', 'CHANGELOG.md', 'SECURITY.md', 'CONTRIBUTING.md', 'THIRD-PARTY-NOTICES.md']
   }
 ];
@@ -47,6 +47,7 @@ const products = [
 const shot2codeHelp = [
   { guide: 'INSTALL.md', onPage: true },
   { guide: 'USER-GUIDE.md', onPage: true },
+  { guide: 'INPUT-TABS.md', onPage: true },
   { guide: 'FAQ.md', onPage: true },
   { guide: 'TROUBLESHOOTING.md', onPage: true },
   { guide: 'ARCHITECTURE.md', onPage: true },
@@ -525,7 +526,7 @@ test('the shot2code guides describe the shipped build', () => {
   assert.match(changelog, /could start a second installer/);
 
   // The hub documents the product; it does not re-host the source.
-  for (const name of ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'FAQ.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md',
+  for (const name of ['README.md', 'INSTALL.md', 'USER-GUIDE.md', 'INPUT-TABS.md', 'FAQ.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md',
     'DATA-HANDLING.md', 'RELEASING.md', 'SECURITY.md', 'CONTRIBUTING.md', 'THIRD-PARTY-NOTICES.md'])
     assert.match(read(`products/shot2code/${name}`), /ArasaniRohithReddy\/(shot2code|app-releases)/, name);
 });
@@ -564,10 +565,33 @@ test('the shot2code guides describe the v0.5.2 release', () => {
   assert.match(copy, /whole-page web_fetch remains blocked/);
   assert.match(copy, /Coalesced resize handling prevents narrow-window preview flicker/);
 
-  const currentDocs = ['README.md', 'USER-GUIDE.md', 'FAQ.md', 'DATA-HANDLING.md',
+  const currentDocs = ['README.md', 'USER-GUIDE.md', 'INPUT-TABS.md', 'FAQ.md', 'DATA-HANDLING.md',
     'SECURITY.md', 'TROUBLESHOOTING.md', 'ARCHITECTURE.md']
     .map(name => read(`products/shot2code/${name}`)).join('\n');
   assert.doesNotMatch(currentDocs, /(?:featured|use)[^.\n]*Figma (?:Desktop|Remote) MCP|Replicate[^.\n]*source runs only/i);
+});
+
+test('the shot2code input-tab guide documents every current entry path', () => {
+  const guide = read('products/shot2code/INPUT-TABS.md');
+  for (const tab of ['Upload', 'URL', 'Text', 'Import', 'Figma', 'GitHub', 'Stitch'])
+    assert.match(guide, new RegExp(`^## ${tab}$`, 'm'), `${tab}: no dedicated guide section`);
+  for (const image of [
+    'input-upload.png', 'input-url.png', 'input-text.png', 'input-import.png',
+    'input-figma.png', 'input-github.png', 'input-stitch.png',
+    'url-design-inspection.png', 'github-imported-project.png'
+  ]) {
+    assert.ok(guide.includes(`../../docs/shot2code/img/${image}`), `${image}: not used in the guide`);
+    assert.ok(exists(`docs/shot2code/img/${image}`), `${image}: public image missing`);
+  }
+  for (const requirement of [
+    /There is no separate Video tab/i,
+    /No key for design inspection/i,
+    /ScreenshotOne only for screenshot capture/i,
+    /never\s+loads configuration modules or runs install\/build\/application code/i,
+    /file_content:read/,
+    /fine-grained token[\s\S]{0,80}Contents: read/i,
+    /Stitch only[\s\S]{0,160}No second AI provider is called/i
+  ]) assert.match(guide, requirement);
 });
 
 test('the shot2code changelog documents every published release it claims to cover', () => {
@@ -1054,23 +1078,31 @@ test('the next shot2code screenshot capture has a versionless, secrets-safe cont
   assert.ok(section, 'RELEASING.md has no final screenshot capture contract');
   const plan = section[1];
   const captures = [
-    ['review-workspace-og-light.png', '1920 × 1008', 'workspace-full-hd.png'],
-    ['mcp-menu-light.png', '1440 × 900', 'code-workspace.png'],
-    ['byok-settings-dark.png', '1440 × 900', 'code-workspace-dark.png'],
-    ['review-workspace-tablet.png', '768 × 1024', 'chat-tablet.png']
+    ['input-upload.png', '1426 × 893'],
+    ['input-url.png', '1426 × 893'],
+    ['input-text.png', '1426 × 893'],
+    ['input-import.png', '1426 × 893'],
+    ['input-figma.png', '1426 × 893'],
+    ['input-github.png', '1426 × 893'],
+    ['input-stitch.png', '1426 × 893'],
+    ['url-design-inspection.png', '1426 × 893'],
+    ['github-imported-project.png', '1426 × 893'],
+    ['review-workspace-og-light.png', '1920 × 1008'],
+    ['mcp-menu-light.png', '1440 × 900'],
+    ['byok-settings-dark.png', '1440 × 900'],
+    ['review-workspace-tablet.png', '768 × 1024']
   ];
-  for (const [filename, dimensions, replaced] of captures) {
+  for (const [filename, dimensions] of captures) {
     assert.ok(plan.includes('`' + filename + '`'), `${filename} is not named`);
     assert.ok(plan.includes(dimensions), `${filename}: ${dimensions} is not specified`);
-    assert.ok(plan.includes('`' + replaced + '`'), `${filename}: replacement target ${replaced} is not named`);
   }
   for (const requirement of [
     /device scale factor: \*\*1\*\*/i,
-    /OpenAI BYOK configured/i,
-    /\*\*Automatic\*\* model selection \(zero manually selected models\)/i,
+    /no real provider account or key/i,
+    /connection[\s\S]{0,80}switched off/i,
     /Demo component library/i,
-    /fully masked key/i,
-    /revoke the credential/i,
+    /disabled and untrusted/i,
+    /no live credential is permitted/i,
     /`object-fit: contain`/i,
     /Never switch[^.]+`cover`/i,
     /Point `og:image` at `review-workspace-og-light\.png`/i
@@ -1169,7 +1201,15 @@ test('no page hard-codes a release version that the release feed should supply',
 
 test('shot2code screenshots are published with the page', () => {
   const images = [...shot2code.matchAll(/<img src="(img\/[^"]+)"/g)].map(match => match[1]);
-  assert.equal(new Set(images).size, 4);
+  const expected = [
+    'img/input-upload.png', 'img/input-url.png', 'img/input-text.png',
+    'img/input-import.png', 'img/input-figma.png', 'img/input-github.png',
+    'img/input-stitch.png', 'img/url-design-inspection.png',
+    'img/github-imported-project.png', 'img/review-workspace-og-light.png',
+    'img/mcp-menu-light.png', 'img/byok-settings-dark.png',
+    'img/review-workspace-tablet.png'
+  ];
+  assert.deepEqual([...new Set(images)].sort(), expected.sort());
   for (const image of new Set(images)) assert.ok(exists(`docs/shot2code/${image}`), image);
   for (const match of shot2code.matchAll(/<img[^>]*>/g)) assert.match(match[0], /alt="[^"]{25,}"/);
 });
@@ -1179,7 +1219,8 @@ test('shot2code screenshot markup matches the files and the alternative text des
   // screenshot with different dimensions silently reintroduces a layout shift. The alternative
   // text names those dimensions too, so both are checked against the file on disk.
   const tags = [...shot2code.matchAll(/<img[^>]*src="(img\/[^"]+)"[^>]*>/g)];
-  assert.equal(tags.length, 5, 'the hero re-uses one screenshot and the gallery shows four');
+  assert.equal(tags.length, 14,
+    'the hero, seven tabs, two input outcomes and four workspace screenshots must be present');
   for (const [tag, src] of tags) {
     const png = fs.readFileSync(path.join(root, 'docs/shot2code', src));
     assert.equal(png.readUInt32BE(12), 0x49484452, `${src}: not a PNG`);
@@ -1193,20 +1234,26 @@ test('shot2code screenshot markup matches the files and the alternative text des
     // The screenshots were retaken for the current build: they must describe it, not the old one.
     assert.doesNotMatch(alt, /\bVersions\b/, `${src}: the alternative text still says "Versions"`);
   }
-  const gallery = tags.slice(1).map(([, src]) => src);
-  assert.deepEqual(new Set(gallery).size, 4, 'each gallery figure shows a different screenshot');
-  // Between them the screenshots have to show Review, model options, provider
-  // configuration and the native desktop command surface.
+  assert.equal(new Set(tags.map(([, src]) => src)).size, 13,
+    'only the Review lead may be reused between hero and gallery');
+  // Between them the screenshots have to document every input and the key
+  // project/settings surfaces.
   const alts = tags.map(([tag]) => tag.match(/alt="([^"]+)"/)[1]).join(' ');
-  for (const subject of [/Review/, /generated options/, /OpenAI-compatible endpoint/, /native View menu/])
+  for (const subject of [
+    /Upload tab/, /URL tab/, /Text tab/, /Import tab/, /Figma tab/,
+    /GitHub tab/, /Stitch tab/, /DESIGN\.md/, /Review workspace/,
+    /MCP Servers/, /Copilot SDK BYOK/
+  ])
     assert.match(alts, subject, `the screenshots do not describe ${subject}`);
 
   const frames = [...shot2code.matchAll(/<a class="shot-frame ([^"]+)"[^>]*>\s*<img/g)]
     .map(match => match[1]);
   assert.deepEqual(frames, [
-    'shot-frame--og', 'shot-frame--og',
+    'shot-frame--og',
+    ...Array(9).fill('shot-frame--detail'),
+    'shot-frame--og',
     'shot-frame--detail', 'shot-frame--detail', 'shot-frame--portrait'
-  ], 'the hero and gallery do not use their intended aspect wrappers');
+  ], 'the hero, input atlas and workspace gallery do not use their intended aspect wrappers');
   assert.match(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*contain;/s);
   assert.doesNotMatch(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*cover;/s);
   assert.match(shot2code, /\.shot-frame--og\s*\{\s*aspect-ratio:\s*40\s*\/\s*21;/);
@@ -1214,10 +1261,22 @@ test('shot2code screenshot markup matches the files and the alternative text des
   assert.match(shot2code, /\.shot-frame--detail\s*\{\s*aspect-ratio:\s*16\s*\/\s*10;/);
   assert.match(shot2code, /\.shot-frame--portrait\s*\{\s*aspect-ratio:\s*3\s*\/\s*4;/);
 
-  const figures = [...shot2code.matchAll(/<figure class="shot[^"]*"[\s\S]*?<\/figure>/g)]
+  const inputSection = shot2code.match(/<section id="inputs"[\s\S]*?<\/section>/)?.[0] || '';
+  const inputFigures = [...inputSection.matchAll(/<figure class="shot[^"]*"[\s\S]*?<\/figure>/g)]
     .map(match => match[0]);
-  assert.equal(figures.length, 4);
-  for (const figure of figures) {
+  assert.equal(inputFigures.length, 9);
+  for (const figure of inputFigures) {
+    assert.match(figure, /<figcaption>[\s\S]+<\/figcaption>/,
+      'an input screenshot has no explanatory caption');
+    assert.match(figure, /aria-label="[^"]+ at \d+ by \d+"/,
+      'an input screenshot link does not name its source dimensions');
+  }
+
+  const screenSection = shot2code.match(/<section id="screens"[\s\S]*?<\/section>/)?.[0] || '';
+  const screenFigures = [...screenSection.matchAll(/<figure class="shot[^"]*"[\s\S]*?<\/figure>/g)]
+    .map(match => match[0]);
+  assert.equal(screenFigures.length, 4);
+  for (const figure of screenFigures) {
     assert.match(figure, /<figcaption><strong>[^<]+ · \d+×\d+\.<\/strong>[^<]+<\/figcaption>/,
       'a gallery caption does not have a stable title and accurate dimensions');
     assert.match(figure, /aria-label="[^"]+ at \d+ by \d+"/,

@@ -37,8 +37,9 @@ const products = [
     url: '/shot2code/',
     prefix: 'shot2code-v',
     versionChip: 'shot2code-version',
-    sections: ['what', 'screens', 'how', 'features', 'stacks', 'providers', 'whats-new', 'download', 'privacy', 'docs'],
+    sections: ['what', 'inputs', 'screens', 'how', 'features', 'stacks', 'providers', 'whats-new', 'download', 'privacy', 'docs'],
     screenshots: 4,
+    inputScreenshots: 9,
     steps: 4,
     kinds: ['setup', 'msi', 'portable', 'checksums'],
     recommended: asset => /-x64\.exe$/.test(asset.name),
@@ -626,6 +627,9 @@ async function main() {
         check(await page.locator(`#${id}`).count() === 1, `${product.name}: missing section ${id}`);
       check(await page.locator('#screens img').count() === product.screenshots,
         `${product.name}: expected ${product.screenshots} full screenshots`);
+      if (product.inputScreenshots)
+        check(await page.locator('#inputs img').count() === product.inputScreenshots,
+          `${product.name}: expected ${product.inputScreenshots} input screenshots`);
       check(await page.locator('#how .steps li').count() === product.steps,
         `${product.name}: expected ${product.steps} explanation steps`);
 

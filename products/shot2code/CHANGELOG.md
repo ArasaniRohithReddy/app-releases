@@ -39,6 +39,9 @@ local-first design-source workspace.
   with duplicate, count and size controls.
 - A new capture-to-code application identity ships across the EXE, NSIS, MSI,
   portable build, shortcuts, sidebar and browser favicons.
+- Public documentation includes a current packaged-app screenshot and detailed
+  usage guidance for every input tab: Upload, URL, Text, Import, Figma, GitHub
+  and Stitch.
 
 ### Changed
 

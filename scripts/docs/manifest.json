@@ -29,6 +29,7 @@
     { "source": "products/shot2code/README.md", "route": "/shot2code/docs/", "label": "Overview", "group": "Product guides" },
     { "source": "products/shot2code/INSTALL.md", "route": "/shot2code/docs/install/", "label": "Install", "group": "Product guides" },
     { "source": "products/shot2code/USER-GUIDE.md", "route": "/shot2code/docs/user-guide/", "label": "User guide", "group": "Product guides" },
+    { "source": "products/shot2code/INPUT-TABS.md", "route": "/shot2code/docs/input-tabs/", "label": "Input tabs", "group": "Product guides" },
     { "source": "products/shot2code/FAQ.md", "route": "/shot2code/docs/faq/", "label": "FAQ", "group": "Product guides" },
     { "source": "products/shot2code/TROUBLESHOOTING.md", "route": "/shot2code/docs/troubleshooting/", "label": "Troubleshooting", "group": "Product guides" },
     { "source": "products/shot2code/DATA-HANDLING.md", "route": "/shot2code/docs/data-handling/", "label": "Data handling & privacy", "group": "Product guides" },

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/README.md (normalized SHA-256 361fc0ddd9105c1bbca956bd3ca59e2fa19284f7765577f1572e2fd59a1d6296). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/README.md (normalized SHA-256 bbc8856ad1395e6914f6ba98638fcb05d7380ba000d3d930145ad3a35a337c86). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>shot2code — shot2code documentation</title>
-  <meta name="description" content="Turn a screenshot into working code — on your own machine." />
+  <meta name="description" content="Turn the reference you have into an editable web project — on your own machine." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="shot2code — App Releases" />
-  <meta property="og:description" content="Turn a screenshot into working code — on your own machine." />
+  <meta property="og:description" content="Turn the reference you have into an editable web project — on your own machine." />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shot2code","description":"Turn a screenshot into working code — on your own machine.","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"shot2code","description":"Turn the reference you have into an editable web project — on your own machine.","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="./" aria-current="page">Overview</a></li><li><a href="install/">Install</a></li><li><a href="user-guide/">User guide</a></li><li><a href="faq/">FAQ</a></li><li><a href="troubleshooting/">Troubleshooting</a></li><li><a href="data-handling/">Data handling &amp; privacy</a></li><li><a href="security/">Product security</a></li><li><a href="architecture/">Architecture</a></li><li><a href="third-party-notices/">Third-party notices</a></li><li><a href="releasing/">Release process</a></li><li><a href="changelog/">Changelog</a></li><li><a href="contributing/">Contributing</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="./" aria-current="page">Overview</a></li><li><a href="install/">Install</a></li><li><a href="user-guide/">User guide</a></li><li><a href="input-tabs/">Input tabs</a></li><li><a href="faq/">FAQ</a></li><li><a href="troubleshooting/">Troubleshooting</a></li><li><a href="data-handling/">Data handling &amp; privacy</a></li><li><a href="security/">Product security</a></li><li><a href="architecture/">Architecture</a></li><li><a href="third-party-notices/">Third-party notices</a></li><li><a href="releasing/">Release process</a></li><li><a href="changelog/">Changelog</a></li><li><a href="contributing/">Contributing</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../help/">Support</a></li><li><a href="../../help/security/">Security policy</a></li><li><a href="../../help/license/">License</a></li><li><a href="../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -62,8 +62,8 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/README.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#image-generation-and-free-images">Image generation and free images</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
-        <div class="doc-content"><p><strong>Turn a screenshot into working code — on your own machine.</strong></p>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#what-you-need">What you need</a></li><li><a href="#the-seven-input-tabs">The seven input tabs</a></li><li><a href="#what-you-can-do">What you can do</a></li><li><a href="#output-stacks">Output stacks</a></li><li><a href="#model-providers">Model providers</a></li><li><a href="#mcp-servers-skills-and-web-search">MCP servers, skills and web search</a></li><li><a href="#design-sources-figma-and-google-stitch">Design sources: Figma and Google Stitch</a></li><li><a href="#image-generation-and-free-images">Image generation and free images</a></li><li><a href="#reviewing-what-was-generated">Reviewing what was generated</a></li><li><a href="#what-it-does-not-do">What it does not do</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#license">License</a></li></ul></nav></details>
+        <div class="doc-content"><p><strong>Turn the reference you have into an editable web project — on your own machine.</strong></p>
 <p><a href="../releases/"><span class="image-alt">Latest release</span></a></p>
 <p>shot2code is a <strong>Windows desktop app</strong>. Start with screenshots, a public
 website's computed design, Figma assets, a direct Google Stitch project, a
@@ -74,7 +74,8 @@ history and normalized imported assets stay local, while credentials go only
 to the integration they belong to.</p>
 <p><strong><a href="../">Product site</a></strong>
 <strong><a href="../releases/">Downloads</a></strong>
-<strong><a href="install/">Install</a></strong> <strong><a href="user-guide/">User guide</a></strong> <strong><a href="faq/">FAQ</a></strong>
+<strong><a href="install/">Install</a></strong> <strong><a href="user-guide/">User guide</a></strong>
+<strong><a href="input-tabs/">Input tabs</a></strong> <strong><a href="faq/">FAQ</a></strong>
 <strong><a href="troubleshooting/">Troubleshooting</a></strong></p>
 <p>Source code, issues about the code itself, and the upstream release notes live in
 the project repository: <strong><a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">https://github.com/ArasaniRohithReddy/shot2code</a></strong>.
@@ -107,8 +108,66 @@ model and cannot generate anything on its own.</p>
 <p>Signing in to GitHub Copilot needs <strong>nothing installed</strong>: the desktop app runs
 its own GitHub OAuth device flow, shows a one-time code and opens your browser.
 The <code>gh auth login</code> / <code>copilot</code> ladder and a pasted token still work.</p>
-<h2 id="what-you-can-do" tabindex="-1">What you can do</h2>
+<h2 id="the-seven-input-tabs" tabindex="-1">The seven input tabs</h2>
+<p>Every screenshot below comes from the packaged v0.6.0 app. The
+<a href="input-tabs/">input-tab guide</a> explains prerequisites, limits, privacy and
+output for each path.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 2"><table>
+<thead>
+<tr>
+<th scope="col">Upload</th>
+<th scope="col">URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../img/input-upload.png" alt="Light-theme shot2code Upload tab with a screenshot or video drop zone and generation controls." loading="lazy" decoding="async"></td>
+<td><img src="../img/input-url.png" alt="shot2code URL tab with example.com entered and public-site inspection controls." loading="lazy" decoding="async"></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 3"><table>
+<thead>
+<tr>
+<th scope="col">Text</th>
+<th scope="col">Import</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../img/input-text.png" alt="shot2code Text tab with a prompt field, stack selection and model controls." loading="lazy" decoding="async"></td>
+<td><img src="../img/input-import.png" alt="shot2code Import tab showing HTML paste and safe project import modes." loading="lazy" decoding="async"></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 4"><table>
+<thead>
+<tr>
+<th scope="col">Figma</th>
+<th scope="col">GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../img/input-figma.png" alt="shot2code Figma tab explaining scoped REST import and MCP catalog restrictions." loading="lazy" decoding="async"></td>
+<td><img src="../img/input-github.png" alt="shot2code GitHub tab with a public repository URL and permission guidance." loading="lazy" decoding="async"></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 5"><table>
+<thead>
+<tr>
+<th scope="col">Stitch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../img/input-stitch.png" alt="shot2code Stitch tab showing direct Stitch-only and explicit conversion modes." loading="lazy" decoding="async"></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="what-you-can-do" tabindex="-1">What you can do</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 6"><table>
 <thead>
 <tr>
 <th scope="col">Task</th>
@@ -257,7 +316,7 @@ Bulma · Material 3 · htmx + Tailwind</p>
 download builds rather than being a plausible-looking scaffold. See
 <a href="user-guide/#exporting-a-project">USER-GUIDE.md</a>.</p>
 <h2 id="model-providers" tabindex="-1">Model providers</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 3"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 7"><table>
 <thead>
 <tr>
 <th scope="col">Provider</th>
@@ -364,7 +423,7 @@ bound a whole-page result before the model receives it. See
 <h2 id="design-sources-figma-and-google-stitch" tabindex="-1">Design sources: Figma and Google Stitch</h2>
 <p>Besides screenshots, a URL, a description or a recording, shot2code can start
 from a design tool:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 4"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 8"><table>
 <thead>
 <tr>
 <th scope="col">Source</th>
@@ -452,7 +511,7 @@ It is model output: review it before running it outside the sandboxed preview.</
 on first run. Verify the SHA-256 checksum instead — see <a href="security/">SECURITY.md</a>.</li>
 </ul>
 <h2 id="documentation" tabindex="-1">Documentation</h2>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 5"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code table 9"><table>
 <thead>
 <tr>
 <th scope="col">Guide</th>
@@ -467,6 +526,10 @@ on first run. Verify the SHA-256 checksum instead — see <a href="security/">SE
 <tr>
 <td><a href="user-guide/">USER-GUIDE.md</a></td>
 <td>First run, providers, sign-in, BYOK, MCP/skills, Figma/Stitch, public-site inspection, GitHub import, pasted chat screenshots, Review, History and export</td>
+</tr>
+<tr>
+<td><a href="input-tabs/">INPUT-TABS.md</a></td>
+<td>Every input tab with current screenshots, prerequisites, steps, limits, privacy boundaries and output</td>
 </tr>
 <tr>
 <td><a href="faq/">FAQ.md</a></td>

@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
-  <title>shot2code — turn screenshots into working code on your own machine</title>
+  <title>shot2code — seven ways into an editable web project</title>
   <meta name="description" content="A local-first Windows app that turns screenshots, public-site design evidence, Figma and direct Google Stitch projects, GitHub frontends, descriptions and recordings into editable web code. Includes GitHub Copilot or BYOK models, MCP and Agent Skills, responsive Review, DESIGN.md inspection, 12 output stacks and local history." />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/" />
   <!-- No-FOUC theme: apply the saved choice before first paint -->
@@ -20,7 +20,7 @@
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
   <meta property="og:image:width" content="1920" />
   <meta property="og:image:height" content="1008" />
-  <meta property="og:image:alt" content="The shot2code responsive Review workspace showing a Northwind Analytics preview, local source-audit findings and generated options." />
+  <meta property="og:image:alt" content="The shot2code Review workspace showing Chat context, a Northwind Analytics preview and local source-audit findings." />
   <meta property="og:site_name" content="App Releases" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
@@ -42,6 +42,7 @@
     "description": "A Windows desktop app that turns screenshots, public-site design evidence, Figma and direct Google Stitch projects, GitHub frontends, text descriptions and recordings into editable web code. Generation runs from your machine against GitHub Copilot, your own API key or your own Copilot SDK endpoint, while projects, conversations and restart-safe imported assets stay in local history. The published Windows binaries are not code-signed.",
     "featureList": [
       "Generates or opens an editable project from screenshots, public-site evidence, a description, a recording, Figma, direct Google Stitch output or a GitHub frontend",
+      "Seven dedicated input tabs: Upload, URL, Text, Import, Figma, GitHub and Stitch",
       "Twelve output stacks, including HTML + Tailwind, React, Vue, Preact, Bootstrap and Material 3",
       "Model selection across GitHub Copilot, OpenAI, Anthropic and Google Gemini, with one option generated per selected model",
       "Optional Copilot SDK BYOK connection to any OpenAI-compatible, Azure OpenAI or Anthropic endpoint with its own credential, requiring no Copilot subscription",
@@ -84,7 +85,7 @@
   </script>
 
   <!-- Inline SVG favicon: a screen turning into code brackets -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Crect x='6' y='8' width='20' height='14' rx='2.5' fill='none' stroke='white' stroke-width='2'/%3E%3Cpath d='M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="img/app-icon.png" />
 
   <style>
     /* The header is sticky, so an anchor jump would land the target underneath it and hide the very
@@ -228,6 +229,7 @@
     .brand { display: inline-flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--ink); font-size: 1.06rem; letter-spacing: -.01em; white-space: nowrap; flex: none; }
     .brand:hover { text-decoration: none; }
     .brand .mark { width: 28px; height: 28px; flex: none; }
+    .brand .mark--shot2code { border-radius: 7px; background: url("img/app-icon.png") center / cover no-repeat; }
     .nav .spacer { flex: 1; }
     .nav-links { display: flex; align-items: center; gap: .3rem; flex: none; }
     .nav-links a:not(.btn) { color: var(--ink-2); font-weight: 500; padding: .5rem .7rem; border-radius: 8px; font-size: var(--step--1); }
@@ -313,6 +315,35 @@
     .shot-lead figcaption { max-width: 62ch; }
     .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.8rem; align-items: stretch; }
     .shot-grid .shot { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+    .input-jump {
+      display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 2rem; padding: 0;
+      list-style: none;
+    }
+    .input-jump a {
+      display: inline-flex; align-items: center; min-height: 40px; padding: .45rem .8rem;
+      border: 1px solid var(--line); border-radius: 9px; background: var(--surface);
+      color: var(--ink-2); font-size: var(--step--1); font-weight: 650;
+    }
+    .input-jump a:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .input-gallery {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem 1.6rem; align-items: start;
+    }
+    .input-shot { min-width: 0; padding-top: 1rem; border-top: 1px solid var(--line); }
+    .input-shot--wide { grid-column: 1 / -1; }
+    .input-shot--wide .shot-frame { width: min(100%, 920px); }
+    .input-shot .shot-frame { aspect-ratio: 16 / 10; }
+    .input-shot figcaption { max-width: 62ch; }
+    .input-shot .input-name {
+      display: inline-block; margin-right: .4rem; color: var(--ink);
+      font-weight: 720; letter-spacing: -.01em;
+    }
+    .outcome-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.6rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line);
+    }
+    .outcome-grid .shot { min-width: 0; }
+    .outcome-grid .shot-frame { aspect-ratio: 16 / 10; }
     /* The tablet capture gets a centred row and a fixed pixel ceiling. Root-font enlargement
        therefore improves its caption without turning the portrait image into a page-height wall. */
     .shot-portrait {
@@ -342,8 +373,9 @@
     .workflow p { color: var(--ink-2); margin: 0; max-width: 62ch; }
     .workflow a { font-weight: 600; padding-block: .25rem; }
     @media (max-width: 760px) {
-      .coverage-list, .workflow { grid-template-columns: 1fr; }
+      .coverage-list, .workflow, .input-gallery, .outcome-grid { grid-template-columns: 1fr; }
       .workflow { gap: .6rem; }
+      .input-shot--wide { grid-column: auto; }
     }
     @media (max-width: 460px) { :root { --step--1: .875rem; } }
     @media (prefers-reduced-motion: reduce) {
@@ -419,11 +451,12 @@
         <span class="bl-text">All apps</span>
       </a>
       <a class="brand" href="#top" aria-label="shot2code — home">
-        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="#fff" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="mark mark--shot2code" aria-hidden="true"></span>
         <span class="brand-text">shot2code</span>
       </a>
       <div class="spacer"></div>
       <nav class="nav-links secondary" aria-label="Primary">
+        <a href="#inputs">Input tabs</a>
         <a href="#how">How it works</a>
         <a href="#features">Capabilities</a>
         <a href="#stacks">Stacks</a>
@@ -451,14 +484,14 @@
       <div class="wrap hero-grid">
         <div>
           <span class="eyebrow"><span class="dot"></span> Windows desktop app <span class="eb-more">· runs on your machine</span></span>
-          <h1 class="title">Turn a screenshot into working code.</h1>
-          <p class="lede">Drop in a screenshot, a set of screens, a URL, a description, a screen recording, or a Figma or Google Stitch design. shot2code generates a working page, then you refine it by saying what to change.</p>
+          <h1 class="title">Turn the reference you have into an editable web project.</h1>
+          <p class="lede">Upload screenshots, inspect a public website, describe a UI, import existing code, render Figma frames, open a GitHub frontend, or use Google Stitch directly. Every path lands in the same local Preview, Code, Review, Chat and History workspace.</p>
           <div class="cta-row">
             <a class="btn btn-primary" id="hero-download" href="https://github.com/ArasaniRohithReddy/app-releases/releases?q=shot2code&amp;expanded=true">
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.75.75 0 01.75.75v7.19l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V1.75A.75.75 0 018 1zM2.75 13a.75.75 0 000 1.5h10.5a.75.75 0 000-1.5H2.75z"/></svg>
               Download for Windows
             </a>
-            <a class="btn btn-secondary" href="#how">See how it works</a>
+            <a class="btn btn-secondary" href="#inputs">See every input tab</a>
           </div>
           <p class="download-hint">Installer <code>.exe</code> recommended. Sign in to GitHub Copilot from the app — no command-line tool needed — or bring one API key or your own endpoint.</p>
           <div class="meta-line">
@@ -471,16 +504,17 @@
         <figure class="hero-proof">
           <a class="shot-frame shot-frame--og" href="#screens" aria-label="See the responsive Review screenshots at a larger size">
             <img src="img/review-workspace-og-light.png" width="1920" height="1008" fetchpriority="high" decoding="async"
-                 alt="The shot2code responsive Review workspace at 1920 by 1008: Chat and two generated options sit beside a real-width Northwind Analytics frame and the local automated source audit with selected findings." />
+                 alt="The shot2code Review workspace at 1920 by 1008 in the light theme, with Chat context on the left, a Northwind Analytics preview in the center, and local source-audit findings on the right." />
           </a>
           <figcaption>
-            Compare real responsive widths, inspect overflow and turn selected
-            local audit findings into an editable Chat instruction.
+            Review the imported project at real CSS widths, inspect overflow and
+            turn selected local findings into an editable Chat instruction.
           </figcaption>
         </figure>
       </div>
       <div class="wrap">
         <ul class="trust-strip" aria-label="What you get">
+          <li>7 focused input tabs</li>
           <li>12 output stacks</li>
           <li>Local SQLite project history</li>
           <li>No telemetry</li>
@@ -498,8 +532,8 @@
         </div>
         <div class="pillars">
           <article class="pillar">
-            <h3>Start from what you already have</h3>
-            <p>One screenshot, several related screens, a URL, a plain-text description, a screen recording, or a design straight out of <strong>Figma</strong> or <strong>Google Stitch</strong>. With multiple screenshots you choose how they relate: separate pages, responsive views, UI states, or supporting references. Upload and Import also take a first instruction, so the opening attempt follows what you actually want.</p>
+            <h3>Seven focused ways in</h3>
+            <p><strong>Upload, URL, Text, Import, Figma, GitHub and Stitch</strong> each expose the controls and safety boundaries that input needs. Multiple screenshots can become separate pages, responsive views, UI states or supporting references; website inspection creates <code>DESIGN.md</code>; imports and repositories can open without a model call.</p>
           </article>
           <article class="pillar">
             <h3>Edit it like a project</h3>
@@ -522,46 +556,142 @@
       </div>
     </section>
 
+    <!-- Input tabs -->
+    <section id="inputs" aria-labelledby="inputs-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="inputs-h">Every input tab, captured from the current packaged interface.</h2>
+          <p>Choose the path that matches the evidence you already have. The dedicated <a href="./docs/input-tabs/">input-tab guide</a> covers credentials, limits, privacy and output in detail.</p>
+        </div>
+
+        <ul class="input-jump" aria-label="Jump to an input tab">
+          <li><a href="#input-upload">Upload</a></li>
+          <li><a href="#input-url">URL</a></li>
+          <li><a href="#input-text">Text</a></li>
+          <li><a href="#input-import">Import</a></li>
+          <li><a href="#input-figma">Figma</a></li>
+          <li><a href="#input-github">GitHub</a></li>
+          <li><a href="#input-stitch">Stitch</a></li>
+        </ul>
+
+        <div class="input-gallery">
+          <figure class="shot input-shot input-shot--wide" id="input-upload">
+            <a class="shot-frame shot-frame--detail" href="img/input-upload.png" aria-label="Open the Upload tab screenshot at 1426 by 893">
+              <img src="img/input-upload.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="Light-theme shot2code Upload tab at 1426 by 893, with a screenshot or video drop zone and React plus Tailwind generation controls." />
+            </a>
+            <figcaption><span class="input-name">Upload.</span> Add up to five related screenshots, an exported SVG, or one short video. Choose the multi-image relationship, models, stack, first instruction and optional Gemini asset extraction.</figcaption>
+          </figure>
+
+          <figure class="shot input-shot" id="input-url">
+            <a class="shot-frame shot-frame--detail" href="img/input-url.png" aria-label="Open the URL tab screenshot at 1426 by 893">
+              <img src="img/input-url.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code URL tab at 1426 by 893 with example.com entered, bundled Chromium design-inspection guidance, and ScreenshotOne capture controls." />
+            </a>
+            <figcaption><span class="input-name">URL.</span> Inspect a public site's computed design locally with no capture key, or use ScreenshotOne to capture the page before generation.</figcaption>
+          </figure>
+
+          <figure class="shot input-shot" id="input-text">
+            <a class="shot-frame shot-frame--detail" href="img/input-text.png" aria-label="Open the Text tab screenshot at 1426 by 893">
+              <img src="img/input-text.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code Text tab at 1426 by 893 with a UI description field, example prompts, stack selection, model choice, and generation actions." />
+            </a>
+            <figcaption><span class="input-name">Text.</span> Start from a written brief, select the output stack and models, and optionally use Stitch as a first design pass before conversion.</figcaption>
+          </figure>
+
+          <figure class="shot input-shot" id="input-import">
+            <a class="shot-frame shot-frame--detail" href="img/input-import.png" aria-label="Open the Import tab screenshot at 1426 by 893">
+              <img src="img/input-import.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code Import tab at 1426 by 893 showing HTML paste mode, project-file import, stack selection, a first-edit instruction, and model controls." />
+            </a>
+            <figcaption><span class="input-name">Import.</span> Paste HTML or safely inspect a folder, ZIP or selected source files. Open normalized code directly, or keep only compact design context.</figcaption>
+          </figure>
+
+          <figure class="shot input-shot" id="input-figma">
+            <a class="shot-frame shot-frame--detail" href="img/input-figma.png" aria-label="Open the Figma tab screenshot at 1426 by 893">
+              <img src="img/input-figma.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code Figma tab at 1426 by 893 explaining scoped REST frame import, reusable assets, and Figma MCP catalog restrictions." />
+            </a>
+            <figcaption><span class="input-name">Figma.</span> Render selected frames through scoped REST access, preserve image fills and export-marked nodes, then implement the design in the selected stack.</figcaption>
+          </figure>
+
+          <figure class="shot input-shot" id="input-github">
+            <a class="shot-frame shot-frame--detail" href="img/input-github.png" aria-label="Open the GitHub tab screenshot at 1426 by 893">
+              <img src="img/input-github.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code GitHub tab at 1426 by 893 with the public Spoon-Knife repository URL, permission guidance, and the Inspect and Open Repository action." />
+            </a>
+            <figcaption><span class="input-name">GitHub.</span> Open public repositories with no token, or use a separate repository-limited <code>Contents: read</code> token for private source. Nothing is executed.</figcaption>
+          </figure>
+
+          <figure class="shot input-shot" id="input-stitch">
+            <a class="shot-frame shot-frame--detail" href="img/input-stitch.png" aria-label="Open the Stitch tab screenshot at 1426 by 893">
+              <img src="img/input-stitch.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code Stitch tab at 1426 by 893 with a design prompt and separate Stitch only and Convert to selected stack modes." />
+            </a>
+            <figcaption><span class="input-name">Stitch.</span> Keep Stitch's localized HTML, screenshot, assets and <code>DESIGN.md</code> directly, or explicitly convert that evidence through selected models.</figcaption>
+          </figure>
+        </div>
+
+        <div class="outcome-grid" aria-label="Examples of local-first input results">
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/url-design-inspection.png" aria-label="Open the completed website design inspection screenshot at 1426 by 893">
+              <img src="img/url-design-inspection.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="Completed example.com design inspection at 1426 by 893 showing extracted colors, summary metrics, and actions to use screenshots plus DESIGN.md, download, or copy." />
+            </a>
+            <figcaption><strong>Website inspection result.</strong> Browser-computed evidence and three responsive screenshots can be copied, downloaded, or used for generation without ScreenshotOne.</figcaption>
+          </figure>
+
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/github-imported-project.png" aria-label="Open the imported GitHub project screenshot at 1426 by 893">
+              <img src="img/github-imported-project.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="Imported Spoon-Knife project at 1426 by 893 open in shot2code with editable Chat suggestions, Preview controls, History, and the desktop page preview." />
+            </a>
+            <figcaption><strong>Public repository opened locally.</strong> Safe source files and bounded image assets enter the normal Preview, Code, Review, Chat, History and export workflow.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <!-- Screenshots -->
     <section id="screens" aria-labelledby="screens-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="screens-h">What it looks like</h2>
-          <p>The responsive Review workspace, MCP permissions with the native menu, masked BYOK settings, and Review at tablet width. The same trust rules shown here apply to servers installed from the MCP Registry and to imported Agent Skills. Select any screenshot to open its original pixels.</p>
+          <h2 id="screens-h">After an input becomes a project</h2>
+          <p>Current packaged-app captures of responsive Review, MCP safety controls, additive BYOK settings and the tablet layout. Select any screenshot to open its original pixels.</p>
         </div>
 
         <figure class="shot shot-lead">
           <a class="shot-frame shot-frame--og" href="img/review-workspace-og-light.png" aria-label="Open the responsive Review workspace screenshot at 1920 by 1008">
             <img src="img/review-workspace-og-light.png" width="1920" height="1008" loading="lazy" decoding="async"
-                 alt="shot2code Review at 1920 by 1008: Chat and two generated options sit beside a real-width Northwind Analytics desktop frame and the local automated source audit with warning counts and selected findings." />
+                 alt="shot2code Review workspace at 1920 by 1008 in the light theme, with Chat context, a Northwind Analytics preview, and local source-audit findings." />
           </a>
-          <figcaption><strong>Responsive Review · 1920×1008.</strong> The generated page renders at a real labeled width while the local source audit stays bound to the current version, option, code and viewport set.</figcaption>
+          <figcaption><strong>Responsive Review · 1920×1008.</strong> The imported project renders at a real labeled width while the local source audit stays bound to the current version, option, code and viewport set.</figcaption>
         </figure>
 
         <div class="shot-grid">
           <figure class="shot">
-            <a class="shot-frame shot-frame--detail" href="img/mcp-menu-light.png" aria-label="Open the light-theme MCP and native View menu screenshot at 1440 by 900">
+            <a class="shot-frame shot-frame--detail" href="img/mcp-menu-light.png" aria-label="Open the light-theme MCP safety screenshot at 1440 by 900">
               <img src="img/mcp-menu-light.png" width="1440" height="900" loading="lazy" decoding="async"
-                   alt="shot2code Settings at 1440 by 900 in the light theme: the Demo component library MCP server is active and read-only with Enabled and Trusted on, while the native View menu shows workspace and zoom commands." />
+                   alt="shot2code MCP Servers settings at 1440 by 900 in the light theme, showing a disabled and untrusted Demo component library draft with write tools off and safety guidance visible." />
             </a>
-            <figcaption><strong>MCP permissions and native menu · 1440×900.</strong> Servers need Enabled and Trusted, remain read-only until write tools are allowed, and the native menu uses the same guarded commands as the keyboard.</figcaption>
+            <figcaption><strong>MCP permissions · 1440×900.</strong> Registry/manual entries start inert, need Enabled plus Trusted before launch, and remain read-only until write tools are separately allowed.</figcaption>
           </figure>
 
           <figure class="shot">
             <a class="shot-frame shot-frame--detail" href="img/byok-settings-dark.png" aria-label="Open the dark-theme Copilot SDK BYOK settings screenshot at 1440 by 900">
               <img src="img/byok-settings-dark.png" width="1440" height="900" loading="lazy" decoding="async"
-                   alt="shot2code Settings at 1440 by 900 in the dark theme: GitHub Copilot SDK BYOK is enabled for a generic OpenAI-compatible endpoint with a synthetic base URL, a fully masked dedicated key and a custom endpoint model." />
+                   alt="shot2code Settings at 1440 by 900 in the dark theme, showing Copilot SDK BYOK switched off and described as separate from direct provider keys." />
             </a>
-            <figcaption><strong>Copilot SDK BYOK · 1440×900.</strong> A dedicated endpoint credential stays separate from native provider keys, with model discovery or manual model entry and an Automatic wire API.</figcaption>
+            <figcaption><strong>Copilot SDK BYOK · 1440×900.</strong> The optional connection is additive, carries its own endpoint and credential, and leaves direct OpenAI, Anthropic, Gemini and Replicate settings untouched.</figcaption>
           </figure>
         </div>
 
         <figure class="shot shot-portrait">
           <a class="shot-frame shot-frame--portrait" href="img/review-workspace-tablet.png" aria-label="Open the tablet-width Review workspace screenshot at 768 by 1024">
             <img src="img/review-workspace-tablet.png" width="768" height="1024" loading="lazy" decoding="async"
-                 alt="shot2code Review at 768 by 1024: Preview, Chat and History remain separate top destinations while the Review controls, real-width Northwind Analytics frame and automated source-audit panel reflow into one column." />
+                 alt="shot2code Review at 768 by 1024, with compact navigation, responsive Review controls, the local audit summary, and warning findings reflowed into one column." />
           </a>
-          <figcaption><strong>Tablet-width Review · 768×1024.</strong> Review, Preview, Code and History remain identifiable while the viewport comparison and audit stack without page-level horizontal overflow.</figcaption>
+          <figcaption><strong>Tablet-width Review · 768×1024.</strong> Preview, Chat, History, Review and Code remain identifiable while the audit controls and findings stack without page-level horizontal overflow.</figcaption>
         </figure>
       </div>
     </section>
@@ -570,7 +700,7 @@
     <section class="alt" id="how" aria-labelledby="how-h">
       <div class="wrap">
         <div class="sec-head">
-          <h2 id="how-h">How a screenshot becomes a project</h2>
+          <h2 id="how-h">How any input becomes a project</h2>
           <p>An agent loop with real tools, running from your machine against the provider you configured.</p>
         </div>
 
@@ -578,7 +708,7 @@
           <li>
             <span class="step-n">1</span>
             <h3>Give it a reference</h3>
-            <p>Upload screenshots, paste a URL, describe the screen, record it, or bring a Figma or Google Stitch design. Pick the output stack, write an optional first instruction, and optionally tick the models you want to try — from GitHub Copilot, OpenAI, Anthropic, Google Gemini or your own endpoint.</p>
+            <p>Choose Upload, URL, Text, Import, Figma, GitHub or Stitch. Pick the output stack where one applies, add an optional first instruction, and select models only when the path needs generation or conversion.</p>
           </li>
           <li>
             <span class="step-n">2</span>
@@ -601,7 +731,7 @@
           Generation streams over a local WebSocket from a bundled FastAPI backend; the desktop shell
           starts it on a free port. The only outbound traffic is to the model provider you chose, the
           update check, and the integrations you switch on and use — an MCP server you trusted, a
-          Figma or Google Stitch import, opt-in web or free-image search, an image provider,
+          Figma, Stitch or GitHub import, public-site inspection, opt-in web or free-image search, an image provider,
           feedback you explicitly submit, or anything you explicitly share.
         </p>
       </div>
@@ -615,8 +745,8 @@
           <p>What the app does today — and which capabilities need an extra key.</p>
         </div>
         <dl class="coverage-list">
-          <div><dt>Inputs</dt><dd>Screenshots, multiple related screenshots, a URL, a text description, or a screen recording. Video input needs a Gemini key. Upload and Import take an optional first instruction before anything is generated.</dd></div>
-          <div><dt>Design sources</dt><dd>Figma through exported screenshots, exported SVG rasterised locally, or REST import with your own scoped access token. Figma MCP is not offered because Figma restricts both transports to catalog-listed clients. Google Stitch works through its MCP endpoint or an experimental bundled SDK that validates a key, reports real phases, generates a screen, or imports a project. Both credentials are capture-only.</dd></div>
+          <div><dt>Input tabs</dt><dd>Seven dedicated paths: Upload, URL, Text, Import, Figma, GitHub and Stitch. Video/recording lives under Upload; the <a href="./docs/input-tabs/">input-tab guide</a> documents each path's requirements, limits and output.</dd></div>
+          <div><dt>Design sources</dt><dd>Figma REST renders selected frames and preserves image fills/export-marked nodes. Stitch-only mode opens localized HTML, screenshot, assets and <code>DESIGN.md</code> without a second model. URL inspection captures browser-computed design evidence and three responsive screenshots. Credentials are capture-only.</dd></div>
           <div><dt>Model choice</dt><dd>Pick models from GitHub Copilot, OpenAI, Anthropic and Google Gemini in Settings or beside the composer. One option per selected model; tick nothing to leave it automatic.</dd></div>
           <div><dt>Your own endpoint</dt><dd>An optional Copilot SDK BYOK connection — OpenAI-compatible, Azure OpenAI or Anthropic — with its own key or bearer token and no Copilot subscription. Its models are separate selections, so a model and its BYOK counterpart can run in the same generation and be compared, and several models from one endpoint can be selected independently.</dd></div>
           <div><dt>Signing in</dt><dd>The desktop app runs its own GitHub OAuth device flow: a one-time code, your browser, and no command-line tool to install. It uses a public client id and no client secret, and the token is encrypted by the operating system key store. Disconnecting clears what this app holds and leaves a <code>gh</code> or Copilot CLI session signed in.</dd></div>
@@ -630,7 +760,7 @@
           <div><dt>Startup</dt><dd>Core routes come up first; generation, evaluation and project tooling load on first use, and the Chromium and Copilot probes run in the background. The shell requires a genuine health response and gives up after 90 seconds rather than hanging. The bundled browser gets a larger budget on its first launch, because that is when antivirus software scans it.</dd></div>
           <div><dt>Menus, help and feedback</dt><dd>A native File, Edit, View, Window and Help menu drives the same commands as the keyboard. <span class="kbd">Ctrl+/</span> opens guides and Support; Help can open diagnostics and submit feedback through an authenticated GitHub CLI or safe copy/download/browser fallbacks. Private app data is never attached automatically.</dd></div>
           <div><dt>Project history</dt><dd>A local SQLite database keeps projects, versions, prompts, conversations and retry ancestry, and records the run identity behind each option. It restores the active project/version/file and repairs a cancelled selected option to a completed sibling when possible. It sits outside the installation folder, so an upgrade keeps it.</dd></div>
-          <div><dt>Import</dt><dd>Point at a folder, ZIP or selected source files. The scanner parses text only — it never executes the project's configuration or code — then offers design context or an editable project.</dd></div>
+          <div><dt>Import and GitHub</dt><dd>Point Import at HTML, a folder, ZIP or selected files, or use GitHub for a public/private repository. The shared scanner parses text only and never executes project configuration or code; bounded repository images enter the local asset store.</dd></div>
           <div><dt>Preview</dt><dd>A derived, self-contained artifact rendered in an opaque-origin sandbox with a restrictive Content-Security-Policy. At 100% the fixed-width canvas is centred in a neutral frame. Desktop zoom spans 25%–200% with −/+/Fit/100%, scrollable pan and flicker-resistant resize handling. <strong>Stack preview</strong> renders controlled Vite HTML, React and Preact files without running package scripts or project configuration.</dd></div>
           <div><dt>Assets and images</dt><dd>Generate through Replicate, Cloudflare Workers AI or an OpenAI-compatible image endpoint, with one truthful success/failure result per prompt. Editing is capability-checked and background removal remains Replicate-only. Or opt into Openverse search for locally downloaded CC0/Public Domain Mark images requiring no key. Screenshot-by-URL keeps its separate actionable diagnostics.</dd></div>
         </dl>
@@ -855,6 +985,7 @@
         <div class="docs-grid">
           <a class="doc-link" href="./docs/install/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Install<span class="arrow">→</span></a>
           <a class="doc-link" href="./docs/user-guide/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> User guide<span class="arrow">→</span></a>
+          <a class="doc-link" href="./docs/input-tabs/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M13 4v5M18 4v5"/></svg> Input tabs<span class="arrow">→</span></a>
           <a class="doc-link" href="./docs/faq/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg> FAQ<span class="arrow">→</span></a>
           <a class="doc-link" href="./docs/troubleshooting/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg> Troubleshooting<span class="arrow">→</span></a>
           <a class="doc-link" href="./releases/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> All releases<span class="arrow">→</span></a>
@@ -871,7 +1002,7 @@
     <div class="wrap foot-grid">
       <div>
         <a class="brand" href="#top" style="font-size:1rem">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><rect x="6" y="8" width="20" height="14" rx="2.5" fill="none" stroke="#fff" stroke-width="2"/><path d="M13.5 12.5L11 15.5l2.5 3M18.5 12.5L21 15.5l-2.5 3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="mark mark--shot2code" aria-hidden="true"></span>
           shot2code
         </a>
         <div style="margin-top:.5rem">Docs &amp; release assets are MIT-licensed.</div>

@@ -1,6 +1,6 @@
 # shot2code
 
-**Turn a screenshot into working code — on your own machine.**
+**Turn the reference you have into an editable web project — on your own machine.**
 
 [![Latest release](https://img.shields.io/github/v/release/ArasaniRohithReddy/app-releases?filter=shot2code-*&label=latest&color=4F46E5)](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)
 
@@ -14,7 +14,8 @@ to the integration they belong to.
 
 **[Product site](https://arasanirohithreddy.github.io/app-releases/shot2code/)**
 **[Downloads](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/)**
-**[Install](INSTALL.md)** **[User guide](USER-GUIDE.md)** **[FAQ](FAQ.md)**
+**[Install](INSTALL.md)** **[User guide](USER-GUIDE.md)**
+**[Input tabs](INPUT-TABS.md)** **[FAQ](FAQ.md)**
 **[Troubleshooting](TROUBLESHOOTING.md)**
 
 Source code, issues about the code itself, and the upstream release notes live in
@@ -35,6 +36,28 @@ model and cannot generate anything on its own.
 Signing in to GitHub Copilot needs **nothing installed**: the desktop app runs
 its own GitHub OAuth device flow, shows a one-time code and opens your browser.
 The `gh auth login` / `copilot` ladder and a pasted token still work.
+
+## The seven input tabs
+
+Every screenshot below comes from the packaged v0.6.0 app. The
+[input-tab guide](INPUT-TABS.md) explains prerequisites, limits, privacy and
+output for each path.
+
+| Upload | URL |
+| --- | --- |
+| ![Light-theme shot2code Upload tab with a screenshot or video drop zone and generation controls.](../../docs/shot2code/img/input-upload.png) | ![shot2code URL tab with example.com entered and public-site inspection controls.](../../docs/shot2code/img/input-url.png) |
+
+| Text | Import |
+| --- | --- |
+| ![shot2code Text tab with a prompt field, stack selection and model controls.](../../docs/shot2code/img/input-text.png) | ![shot2code Import tab showing HTML paste and safe project import modes.](../../docs/shot2code/img/input-import.png) |
+
+| Figma | GitHub |
+| --- | --- |
+| ![shot2code Figma tab explaining scoped REST import and MCP catalog restrictions.](../../docs/shot2code/img/input-figma.png) | ![shot2code GitHub tab with a public repository URL and permission guidance.](../../docs/shot2code/img/input-github.png) |
+
+| Stitch |
+| --- |
+| ![shot2code Stitch tab showing direct Stitch-only and explicit conversion modes.](../../docs/shot2code/img/input-stitch.png) |
 
 ## What you can do
 
@@ -238,6 +261,7 @@ they belong to. See [DATA-HANDLING.md](DATA-HANDLING.md).
 | --- | --- |
 | [INSTALL.md](INSTALL.md) | Downloads, checksum verification, SmartScreen, updates, uninstall |
 | [USER-GUIDE.md](USER-GUIDE.md) | First run, providers, sign-in, BYOK, MCP/skills, Figma/Stitch, public-site inspection, GitHub import, pasted chat screenshots, Review, History and export |
+| [INPUT-TABS.md](INPUT-TABS.md) | Every input tab with current screenshots, prerequisites, steps, limits, privacy boundaries and output |
 | [FAQ.md](FAQ.md) | Common questions, in the order people ask them |
 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Symptom-first runbook: startup, providers, Figma/Stitch, website/GitHub import, Chromium, Preview/export, updates and logs |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the app, backend, agent loop and packaging fit together |

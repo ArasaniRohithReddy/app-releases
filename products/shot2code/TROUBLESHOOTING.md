@@ -2,7 +2,8 @@
 
 A symptom-first runbook for the published Windows build. If you are looking for
 *what a feature does* rather than *why it is not working*, start with the
-[FAQ](FAQ.md) or the [user guide](USER-GUIDE.md).
+[FAQ](FAQ.md), the [user guide](USER-GUIDE.md), or the screenshot-led
+[input-tab guide](INPUT-TABS.md).
 
 Everything here is local: shot2code has no service to check and no status page.
 Almost every failure is answered by one of three things — the backend log, the

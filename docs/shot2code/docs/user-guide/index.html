@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 121fad353b7edecb6876dd9363b570fb5d5ba69051874261e7017fb1aceb8886). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 92f842c4428de89cef10f54252b4136e1040849d48d6f810e88cdd4fc5a1f2e6). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="./" aria-current="page">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="./" aria-current="page">User guide</a></li><li><a href="../input-tabs/">Input tabs</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -62,7 +62,7 @@
           <p class="source-note">Public repository documentation · <a class="view-source" href="https://github.com/ArasaniRohithReddy/app-releases/blob/main/products/shot2code/USER-GUIDE.md">View source on GitHub</a></p>
 
         </header>
-        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#first-run">First run</a></li><li><a href="#choosing-a-model-provider">Choosing a model provider</a></li><li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li><li><a href="#choosing-which-models-run">Choosing which models run</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-and-web-search">Agent Skills and web search</a></li><li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li><li><a href="#generating-your-first-page">Generating your first page</a></li><li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li><li><a href="#refining-the-result">Refining the result</a></li><li><a href="#the-code-tab">The Code tab</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#sizing-the-workspace">Sizing the workspace</a></li><li><a href="#history-and-retries">History and retries</a></li><li><a href="#recent-projects">Recent projects</a></li><li><a href="#importing-an-existing-project">Importing an existing project</a></li><li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li><li><a href="#exporting-a-project">Exporting a project</a></li><li><a href="#the-menu-bar">The menu bar</a></li><li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li><li><a href="#the-help-centre">The Help centre</a></li><li><a href="#settings">Settings</a></li><li><a href="#when-something-goes-wrong">When something goes wrong</a></li></ul></nav></details>
+        <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#first-run">First run</a></li><li><a href="#the-seven-input-tabs">The seven input tabs</a></li><li><a href="#choosing-a-model-provider">Choosing a model provider</a></li><li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li><li><a href="#choosing-which-models-run">Choosing which models run</a></li><li><a href="#mcp-servers">MCP servers</a></li><li><a href="#agent-skills-and-web-search">Agent Skills and web search</a></li><li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li><li><a href="#generating-your-first-page">Generating your first page</a></li><li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li><li><a href="#refining-the-result">Refining the result</a></li><li><a href="#the-code-tab">The Code tab</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#sizing-the-workspace">Sizing the workspace</a></li><li><a href="#history-and-retries">History and retries</a></li><li><a href="#recent-projects">Recent projects</a></li><li><a href="#importing-an-existing-project">Importing an existing project</a></li><li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li><li><a href="#exporting-a-project">Exporting a project</a></li><li><a href="#the-menu-bar">The menu bar</a></li><li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li><li><a href="#the-help-centre">The Help centre</a></li><li><a href="#settings">Settings</a></li><li><a href="#when-something-goes-wrong">When something goes wrong</a></li></ul></nav></details>
         <div class="doc-content"><p>Everything below describes the published Windows build. If something here does
 not match what you see, check the version in <strong>Settings</strong> against
 <a href="../changelog/">CHANGELOG.md</a>. If something is failing rather than merely
@@ -71,6 +71,7 @@ runbook. The application itself is developed at
 <a href="https://github.com/ArasaniRohithReddy/shot2code" rel="noopener noreferrer">ArasaniRohithReddy/shot2code</a>.</p>
 <ul>
 <li><a href="#first-run">First run</a></li>
+<li><a href="#the-seven-input-tabs">The seven input tabs</a></li>
 <li><a href="#choosing-a-model-provider">Choosing a model provider</a></li>
 <li><a href="#using-your-own-endpoint-copilot-sdk-byok">Using your own endpoint (Copilot SDK BYOK)</a></li>
 <li><a href="#choosing-which-models-run">Choosing which models run</a></li>
@@ -78,21 +79,6 @@ runbook. The application itself is developed at
 <li><a href="#agent-skills-and-web-search">Agent Skills and web search</a></li>
 <li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li>
 <li><a href="#generating-your-first-page">Generating your first page</a></li>
-<li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li>
-<li><a href="#refining-the-result">Refining the result</a></li>
-<li><a href="#the-code-tab">The Code tab</a></li>
-<li><a href="#the-review-workspace">The Review workspace</a></li>
-<li><a href="#sizing-the-workspace">Sizing the workspace</a></li>
-<li><a href="#history-and-retries">History and retries</a></li>
-<li><a href="#recent-projects">Recent projects</a></li>
-<li><a href="#importing-an-existing-project">Importing an existing project</a></li>
-<li><a href="#preview-codepen-and-sharing">Preview, CodePen and sharing</a></li>
-<li><a href="#exporting-a-project">Exporting a project</a></li>
-<li><a href="#the-menu-bar">The menu bar</a></li>
-<li><a href="#keyboard-shortcuts">Keyboard shortcuts</a></li>
-<li><a href="#the-help-centre">The Help centre</a></li>
-<li><a href="#settings">Settings</a></li>
-<li><a href="#when-something-goes-wrong">When something goes wrong</a></li>
 <li><a href="#using-more-than-one-screenshot">Using more than one screenshot</a></li>
 <li><a href="#refining-the-result">Refining the result</a></li>
 <li><a href="#the-code-tab">The Code tab</a></li>
@@ -131,6 +117,60 @@ Copilot sign-in or a key in <code>backend/.env</code>.</li>
 <p>It never claims a provider is connected or verified, because that is only proved
 by a real request. The callout's actions are <strong>Add a key in Settings</strong> and
 <strong>Setup guide</strong>.</p>
+<h2 id="the-seven-input-tabs" tabindex="-1">The seven input tabs</h2>
+<p>The New-project screen is organized by the evidence you already have:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 1"><table>
+<thead>
+<tr>
+<th scope="col">Tab</th>
+<th scope="col">Best starting point</th>
+<th scope="col">What it creates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Upload</strong></td>
+<td>Screenshots, exported SVG, video, or screen recording</td>
+<td>Generated options in the selected stack</td>
+</tr>
+<tr>
+<td><strong>URL</strong></td>
+<td>A public website</td>
+<td>A local <code>DESIGN.md</code> inspection, or a captured screenshot generation</td>
+</tr>
+<tr>
+<td><strong>Text</strong></td>
+<td>A written brief</td>
+<td>Generated options in the selected stack</td>
+</tr>
+<tr>
+<td><strong>Import</strong></td>
+<td>HTML, folder, ZIP, or source files</td>
+<td>Design context or an editable imported project</td>
+</tr>
+<tr>
+<td><strong>Figma</strong></td>
+<td>A Figma file/frame URL</td>
+<td>Rendered frames/assets, then generated implementation</td>
+</tr>
+<tr>
+<td><strong>GitHub</strong></td>
+<td>A public/private frontend repository</td>
+<td>A safely scanned editable project</td>
+</tr>
+<tr>
+<td><strong>Stitch</strong></td>
+<td>A Stitch prompt or project/screen</td>
+<td>Direct localized Stitch project, or explicit stack conversion</td>
+</tr>
+</tbody>
+</table></div>
+<p>Video is part of <strong>Upload</strong>, not a separate tab. Public-site design inspection
+needs no ScreenshotOne key, public GitHub repositories need no token, and
+Import/GitHub/Stitch-only projects can open without a code-generation request.</p>
+<p>The dedicated <strong><a href="../input-tabs/">Input tabs guide</a></strong> includes current screenshots
+of every tab and documents exact credentials, steps, limits, privacy boundaries,
+and outputs.</p>
 <h2 id="choosing-a-model-provider" tabindex="-1">Choosing a model provider</h2>
 <p>You need <strong>one</strong> provider.</p>
 <h3 id="github-copilot-no-api-key" tabindex="-1">GitHub Copilot (no API key)</h3>
@@ -178,7 +218,7 @@ token from the in-app sign-in reaches the backend</li>
 stored on this device and sent with the generation request to that provider only.
 Every key field is masked as you type.</p>
 <p>Two capabilities need a specific provider:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 1"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 2"><table>
 <thead>
 <tr>
 <th scope="col">Capability</th>
@@ -223,7 +263,7 @@ configuration instead, so you can check that too.</li>
 checked against its account endpoint, so it starts no prediction.</li>
 </ul>
 <p>The answer is always something you can act on:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 2"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 3"><table>
 <thead>
 <tr>
 <th scope="col">Result</th>
@@ -277,7 +317,7 @@ and you can leave it off forever without missing anything.</p>
 runtime — not your Copilot entitlement.</p>
 <h3 id="configuring-the-connection" tabindex="-1">Configuring the connection</h3>
 <p>There is one connection, with its own settings:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 3"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 4"><table>
 <thead>
 <tr>
 <th scope="col">Field</th>
@@ -324,7 +364,7 @@ made to your endpoint, and the response never contains your credential.
 <strong>Test model access</strong> is the opposite: it contacts the endpoint, and it says so.</p>
 <h3 id="the-wire-api-is-chosen-for-you" tabindex="-1">The wire API is chosen for you</h3>
 <p><strong>Automatic</strong> is the default and is usually right:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 4"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 5"><table>
 <thead>
 <tr>
 <th scope="col">Your connection</th>
@@ -424,7 +464,7 @@ unaffected.</p>
 <p>Model selection is not a Copilot-only feature. <strong>Settings → Models</strong>, and the
 compact picker beside the composer, show every model you can currently use,
 grouped by provider:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 5"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 6"><table>
 <thead>
 <tr>
 <th scope="col">Group</th>
@@ -470,7 +510,7 @@ side by side.</li>
 </ul>
 <h3 id="how-many-options-you-actually-get" tabindex="-1">How many options you actually get</h3>
 <p>One option is generated per selected model, capped by the per-run limit:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 6"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 7"><table>
 <thead>
 <tr>
 <th scope="col">Run</th>
@@ -521,7 +561,7 @@ Protocol servers you configure — a component-library lookup, a design-token
 service, an internal documentation index. Up to <strong>eight</strong> can be configured.</p>
 <h3 id="which-options-actually-get-the-tools" tabindex="-1">Which options actually get the tools</h3>
 <p>MCP is a Copilot SDK feature, so it reaches the runtimes that use the SDK:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 7"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 8"><table>
 <thead>
 <tr>
 <th scope="col">Option</th>
@@ -558,7 +598,7 @@ switches as any other server. A registry listing is not an endorsement, and
 shot2code treats it as untrusted input.</p>
 <p>Google Stitch is offered as a featured draft with the right transport and
 endpoint already set:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 8"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 9"><table>
 <thead>
 <tr>
 <th scope="col">Featured</th>
@@ -576,7 +616,7 @@ endpoint already set:</p>
 the Figma MCP Catalog. shot2code therefore filters those endpoints from registry
 results, disables migrated entries, and uses the documented REST/PAT workflow.</p>
 <h3 id="adding-a-server" tabindex="-1">Adding a server</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 9"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 10"><table>
 <thead>
 <tr>
 <th scope="col">Field</th>
@@ -673,7 +713,7 @@ tools.&quot;</em> — and the generation proceeds without it. An incomplete MCP 
 <p><strong>Settings → Agent Skills</strong> holds reusable instruction folders — a house style
 guide, a component convention, a checklist — that a Copilot run can follow.</p>
 <h3 id="importing-a-skill" tabindex="-1">Importing a skill</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 10"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 11"><table>
 <thead>
 <tr>
 <th scope="col">From</th>
@@ -719,7 +759,7 @@ result before the model receives it.</p>
 <p>A screenshot is not the only starting point. shot2code can take a design
 straight from Figma or Google Stitch.</p>
 <h3 id="figma" tabindex="-1">Figma</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 11"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 12"><table>
 <thead>
 <tr>
 <th scope="col">Route</th>
@@ -757,7 +797,7 @@ not discard frames that were already imported.</p>
 <p>Your Figma token is <strong>capture-only</strong>: it is sent to <code>api.figma.com</code> and nowhere
 else, and it is never part of a generation request, project history or an export.</p>
 <h3 id="google-stitch-two-ways" tabindex="-1">Google Stitch, two ways</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 12"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 13"><table>
 <thead>
 <tr>
 <th scope="col">Route</th>
@@ -813,7 +853,7 @@ the results back. See <a href="../architecture/">ARCHITECTURE.md</a>.</p>
 <h2 id="using-more-than-one-screenshot" tabindex="-1">Using more than one screenshot</h2>
 <p>When you upload more than one screenshot, shot2code asks how they relate. The
 answer changes what the model is required to produce:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 13"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 14"><table>
 <thead>
 <tr>
 <th scope="col">Mode</th>
@@ -883,7 +923,7 @@ also drag the divider between the tree and the editor — see
 </ul>
 <h3 id="current-code-and-export-project" tabindex="-1">Current code and Export project</h3>
 <p>Two views sit side by side:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 14"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 15"><table>
 <thead>
 <tr>
 <th scope="col">View</th>
@@ -914,7 +954,7 @@ generated page at once: <em>does it hold together at the widths I care about</em
 <p>The page is rendered at <strong>two to four widths simultaneously</strong>, each in a frame
 of that actual width — not a scaled-down screenshot, so a layout that breaks at
 390px breaks visibly in the 390px frame.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 15"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 16"><table>
 <thead>
 <tr>
 <th scope="col">Default</th>
@@ -949,7 +989,7 @@ that only misbehaves once it is actually laid out.</p>
 <h3 id="the-local-source-audit" tabindex="-1">The local source audit</h3>
 <p>Alongside the frames, shot2code runs a <strong>deterministic, local pass over the
 generated source</strong> and reports semantic and accessibility problems by severity:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 16"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 17"><table>
 <thead>
 <tr>
 <th scope="col">Checks include</th>
@@ -1019,7 +1059,7 @@ audit is free, deterministic and offline.</p>
 <p>The Design Inspector reads the generated source and reports the design decisions
 inside it: repeated colours, CSS variables, typography, spacing, radii, shadows,
 motion, and counts of the semantic components it found. It exports:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 17"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 18"><table>
 <thead>
 <tr>
 <th scope="col">Artifact</th>
@@ -1068,7 +1108,7 @@ notice that it is an automated source audit rather than certification.</p>
 <h2 id="sizing-the-workspace" tabindex="-1">Sizing the workspace</h2>
 <p>On wide windows (≥ 1280px) you decide how the width is shared. Two dividers do
 this:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 18"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 19"><table>
 <thead>
 <tr>
 <th scope="col">Divider</th>
@@ -1087,7 +1127,7 @@ this:</p>
 </tbody>
 </table></div>
 <p>Drag either one, or focus it and use the keyboard:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 19"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 20"><table>
 <thead>
 <tr>
 <th scope="col">Key</th>
@@ -1255,7 +1295,7 @@ broken scaffold.</p>
 <p>The desktop app has a native Windows menu bar — <strong>File</strong>, <strong>Edit</strong>, <strong>View</strong>,
 <strong>Window</strong> and <strong>Help</strong> — driving exactly the same commands as the keyboard, so
 the two can never disagree.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 20"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 21"><table>
 <thead>
 <tr>
 <th scope="col">Menu</th>
@@ -1291,7 +1331,7 @@ accelerators shown in the menu are the shortcuts documented below.</p>
 <h2 id="keyboard-shortcuts" tabindex="-1">Keyboard shortcuts</h2>
 <p>Press <strong>Ctrl+/</strong> (or <strong>Help</strong> in the rail) to open the <a href="#the-help-centre">Help centre</a>,
 which carries the complete reference.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 21"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 22"><table>
 <thead>
 <tr>
 <th scope="col">Shortcut</th>
@@ -1350,7 +1390,7 @@ which carries the complete reference.</p>
 </tbody>
 </table></div>
 <p>In the <strong>desktop app</strong> only, zoom is explicit:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 22"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 23"><table>
 <thead>
 <tr>
 <th scope="col">Shortcut</th>
@@ -1378,7 +1418,7 @@ editor input, AltGr and IME composition alone.</p>
 <p>Navigation shortcuts pause while you are typing or while a dialog is open.</p>
 <h2 id="the-help-centre" tabindex="-1">The Help centre</h2>
 <p><strong>Ctrl+/</strong>, or <strong>Help</strong> in the rail, opens four sections:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 23"><table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="shot2code user guide table 24"><table>
 <thead>
 <tr>
 <th scope="col">Section</th>

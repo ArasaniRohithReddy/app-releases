@@ -126,10 +126,11 @@ alt text, and nothing that should stay on one line wrapping onto two.
 Products are declared once, in the `products` array at the top of the file: tag prefix, expected
 sections, screenshot and step counts, download kinds, which asset the hero must select, and the
 static fallback link. Adding an application means adding an entry, not copying assertions. The
-per-product checks assert that a page still has all of its sections, its four screenshots and its
-four steps, that the hero selects the recommended package, that every `data-dl` kind resolves to a
-real asset in that product's release snapshot, and that the version chips show the version from
-that snapshot rather than one typed into the page.
+per-product checks assert that a page still has all of its sections, its declared screenshot
+sets and explanation steps, that the hero selects the recommended package, that every `data-dl`
+kind resolves to a real asset in that product's release snapshot, and that the version chips show
+the version from that snapshot rather than one typed into the page. shot2code separately declares
+four workspace screenshots and nine input/outcome screenshots.
 
 Because the repository publishes more than one application, the GitHub API is mocked with **all**
 products' snapshots merged into one release list, and a request to any endpoint other than the
@@ -146,10 +147,11 @@ section, that every screenshot in the gallery links to a file that exists, and t
 the structured data and the SHA-256 verification command are all filled in from the resolved
 release rather than hard-coded.
 
-`site-presentation-checks.js` owns the visual regressions for the mixed shot2code gallery and the
-two live portal cards. It checks PNG natural dimensions against markup, explicit 16:9/16:10/3:4
-frames, the documented `object-fit: contain` policy, opaque stages and borders, aligned detail
-captions, the centred 640px-high portrait ceiling, and geometry before/after delayed image decode.
+`site-presentation-checks.js` owns the visual regressions for the shot2code input atlas, its mixed
+workspace gallery and the two live portal cards. It checks PNG natural dimensions against markup,
+explicit 16:10/40:21/3:4 frames, the documented `object-fit: contain` policy, opaque stages and
+borders, captions below every frame, aligned detail captions, the centred 640px-high portrait
+ceiling, and geometry before/after delayed image decode.
 For the portal it checks the icon/title/status grid, equal heights and footer baselines whenever
 the cards share a row, contained tag wrapping, independent resolved version chips, and the
 single-column 320px/200%-text reflow. These checks run in light and dark at the full presentation

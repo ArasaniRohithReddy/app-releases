@@ -20,9 +20,9 @@ test('only the current public guide allowlist is generated, with deterministic o
   const shot2codeSources = fs.readdirSync(path.join(root, 'products/shot2code'))
     .filter(name => name.endsWith('.md')).map(name => 'products/shot2code/' + name).sort();
   assert.deepEqual(docs.manifest.documents.filter(doc => doc.source.startsWith('products/shot2code/')).map(doc => doc.source).sort(), shot2codeSources);
-  assert.equal(built.documents.length, 34);
+  assert.equal(built.documents.length, 35);
   assert.deepEqual([...built.outputs], [...docs.buildSite().outputs]);
-  assert.deepEqual(docs.checkOrWrite(root, true), { pages: 34, changed: 0 });
+  assert.deepEqual(docs.checkOrWrite(root, true), { pages: 35, changed: 0 });
 });
 
 test('development sources, traversing paths and duplicate routes are rejected', () => {
@@ -200,7 +200,7 @@ test('drift checks are read-only, fail on edited output, and recover by determin
     assert.throws(() => docs.checkOrWrite(temporary, true), /drift/);
     assert.equal(fs.readFileSync(target, 'utf8'), changed, 'Check must never rewrite output');
     docs.checkOrWrite(temporary, false);
-    assert.deepEqual(docs.checkOrWrite(temporary, true), { pages: 34, changed: 0 });
+    assert.deepEqual(docs.checkOrWrite(temporary, true), { pages: 35, changed: 0 });
     const unapproved = path.join(temporary, 'docs/threat-model-reviewer/docs/development-preview.md');
     fs.writeFileSync(unapproved, '# Unreleased preview fixture');
     assert.throws(() => docs.checkOrWrite(temporary, true), /Unmapped generated pages/);

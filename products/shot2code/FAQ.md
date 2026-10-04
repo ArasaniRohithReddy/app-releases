@@ -102,6 +102,13 @@ It records backend startup, renderer load failures, crashes and console errors.
 
 ## Generating
 
+**Which input tab should I use?**
+Use **Upload** for screenshots/video, **URL** for public-site inspection or
+capture, **Text** for a written brief, **Import** for code on disk, **Figma** for
+a Figma file/frame, **GitHub** for repository source, and **Stitch** for direct
+Stitch output or a Stitch-first conversion. The
+[input-tab guide](INPUT-TABS.md) shows every tab and its exact prerequisites.
+
 **"No API key found and no GitHub Copilot credentials detected".**
 You need one of:
 

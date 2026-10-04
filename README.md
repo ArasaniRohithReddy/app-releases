@@ -50,10 +50,11 @@ Start with the [synthetic sample and quick-start guide](products/threat-model-re
 
 ### 🖼️ shot2code
 
-Turn **screenshots, mockups, URLs, written descriptions, screen recordings, or Figma and
-Google Stitch designs** into editable web code, on your own machine. Twelve output stacks,
-a multi-file project editor, local SQLite project **History**, a sandboxed preview, and
-single-HTML or Vite project export.
+Use seven dedicated tabs — **Upload, URL, Text, Import, Figma, GitHub and
+Stitch** — to turn visual references, public-site design evidence, written
+briefs, existing code and repository source into editable web projects on your
+own machine. Twelve output stacks, a multi-file editor, local SQLite
+**History**, sandboxed Preview/Review and single-HTML or Vite project export.
 
 shot2code ships **no model**: you bring a GitHub Copilot sign-in (no API key and no
 command-line tool needed), a Gemini, Anthropic or OpenAI key, or your own endpoint through a
@@ -69,7 +70,7 @@ SHA-256 checksums.
 | --- | --- |
 | **Website** | [Product page](https://arasanirohithreddy.github.io/app-releases/shot2code/) |
 | **Download** | [Releases](https://arasanirohithreddy.github.io/app-releases/shot2code/releases/) — every mirrored version, its notes and the files it actually carries |
-| **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [FAQ](products/shot2code/FAQ.md) · [Troubleshooting](products/shot2code/TROUBLESHOOTING.md) · [Changelog](products/shot2code/CHANGELOG.md) |
+| **Documentation** | [Overview](products/shot2code/) · [Install](products/shot2code/INSTALL.md) · [User guide](products/shot2code/USER-GUIDE.md) · [Input tabs](products/shot2code/INPUT-TABS.md) · [FAQ](products/shot2code/FAQ.md) · [Troubleshooting](products/shot2code/TROUBLESHOOTING.md) · [Changelog](products/shot2code/CHANGELOG.md) |
 | **For reviewers** | [Data handling & privacy](products/shot2code/DATA-HANDLING.md) · [Security](products/shot2code/SECURITY.md) · [Architecture](products/shot2code/ARCHITECTURE.md) · [Product license](https://github.com/ArasaniRohithReddy/shot2code/blob/main/LICENSE) · [Third-party notices](products/shot2code/THIRD-PARTY-NOTICES.md) |
 | **Contributing** | [Where issues, docs fixes and code changes go](products/shot2code/CONTRIBUTING.md) |
 | **Source** | [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code) — the canonical `vX.Y.Z` history and the updater feed |

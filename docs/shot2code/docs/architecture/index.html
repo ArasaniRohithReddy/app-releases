@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 e265704ba616db8b8eaad7013e425ad13060f42f95db940454fcf8e089f27f29). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 7a96e2b5480fb9c7c310d5ccf228fefd17967ece03455954069f00a44eca0813). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="./" aria-current="page">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../input-tabs/">Input tabs</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="./" aria-current="page">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -295,6 +295,9 @@ projection, so they cannot reach a log line, a diagnostic or an API response.</p
 incomplete or switched-off integration becomes a diagnostic that travels with
 the response, not an error that stops the run.</p>
 <h3 id="design-sources" tabindex="-1">Design sources</h3>
+<p>The renderer exposes seven input tabs — Upload, URL, Text, Import, Figma,
+GitHub and Stitch — but they all converge on the same project/history contract.
+The <a href="../input-tabs/">input-tab guide</a> describes their user-facing behavior.</p>
 <p><code>/api/figma</code> parses a Figma URL into a file key and optional node ids, asks the
 REST API for rendered images, original image-fill URLs and explicitly
 export-marked nodes. Downloads stream under per-file and aggregate budgets and

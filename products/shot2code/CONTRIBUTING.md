@@ -49,6 +49,11 @@ Two rules make a documentation change mergeable:
 - **Describe the published build.** These pages are read by people deciding
   whether to install an unsigned binary. Do not document behaviour that only
   exists in source, and do not promise something the current release does not do.
+- **Keep input docs visual and synchronized.** A change to Upload, URL, Text,
+  Import, Figma, GitHub or Stitch must update `INPUT-TABS.md`, the product-page
+  caption/copy and the matching packaged-app PNG under
+  `docs/shot2code/img/`. Never stage a screenshot with a real credential,
+  private repository, account name or local path.
 - **Keep the links and the checks green.** The product page, this guide set and
   the hub's tests are validated together:
 

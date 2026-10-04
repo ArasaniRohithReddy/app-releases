@@ -74,11 +74,9 @@ Then mirror the same summary into [CHANGELOG.md](CHANGELOG.md) here.
 
 ## Final screenshot capture contract
 
-This is the capture plan for the forthcoming BYOK, MCP, application-menu and
-Review presentation. It is deliberately **versionless**: do not put a release
-number in a filename, caption or screenshot-only page claim. The existing four
-PNGs remain published until the source integration and visible labels are final.
-Do not capture or replace them early.
+This is the capture plan for the public input-tab atlas and the supporting
+Review/Settings presentation. It is deliberately **versionless**: do not put a
+release number in a filename, caption or screenshot-only page claim.
 
 ### One reproducible capture environment
 
@@ -90,18 +88,18 @@ Use the release-candidate desktop build with a new, capture-only profile:
 - output: sRGB PNG, one image pixel per CSS pixel
 - capture target: the app content viewport only — no desktop, taskbar, window
   shadow or post-capture crop
-- project: the synthetic **Northwind Analytics** fixture used by the current
-  public screenshots; no customer code, URLs, repository names or local paths
-- provider state: **OpenAI BYOK configured** — the **GitHub Copilot SDK BYOK**
-  card switched on with the **OpenAI-compatible** provider — all other
-  providers disconnected, and
-  **Automatic** model selection (zero manually selected models)
-- key handling: use a short-lived capture-only credential, keep every key field
-  masked, inspect the final PNGs at 400%, then revoke the credential and delete
-  the capture profile
+- project/evidence: the synthetic **Northwind Analytics** fixture,
+  `https://example.com`, and `octocat/Spoon-Knife` only; no customer code,
+  private URL/repository, account name or local path
+- provider state: no real provider account or key. Input-tab captures may show
+  the honest disabled/unconfigured state. Use only explicitly fake endpoint
+  values when a settings field must be demonstrated, and keep the connection
+  switched off so no network call occurs
+- key handling: no live credential is permitted. Inspect final PNGs at 400% and
+  delete the isolated capture profile
 - MCP state: one unauthenticated local fixture named **Demo component library**,
-  enabled and trusted so it displays the shipped state **Active · read-only**;
-  no remote tenant or account
+  left disabled and untrusted with write tools off, so the safe installation
+  default is visible; no remote tenant or account
 
 Wait for fonts, preview rendering and Review results to settle. Dismiss update
 notices, toasts, tooltips and permission prompts. Move the pointer outside the
@@ -110,37 +108,44 @@ recompress the resulting PNG. If a final UI label differs from this plan, use
 the shipped label and update the page's alt text and caption in the same change;
 never stage a screenshot of placeholder UI.
 
-### The four replacement files
+### The current screenshot set
 
-All dimensions below are **CSS viewport dimensions and required PNG pixel
-dimensions**.
+All dimensions below are required PNG pixel dimensions.
 
-| File | Viewport and theme | Exact app state | Pane widths | Replaces / published role |
-| --- | --- | --- | --- | --- |
-| `review-workspace-og-light.png` | `1920 × 1008`, light | Northwind Analytics open; the final **Review** destination selected; review complete with its summary and the generated preview visible; no loading or empty state | 64px rail, 320px Chat pane, remaining 1536px workspace including its dividers | `workspace-full-hd.png` in the hero/gallery, and the current `og:image` |
-| `mcp-menu-light.png` | `1440 × 900`, light | Generated project open; **Settings → MCP servers** showing **Demo component library** as **Active · read-only**, with the native **View** menu expanded over it so the shared commands and the menu bar are both legible; no hover-only tooltip | 64px rail; Settings owns the remaining 1376px, with no hidden Chat pane | `code-workspace.png`, the first detail |
-| `byok-settings-dark.png` | `1440 × 900`, dark | **Settings → GitHub Copilot SDK BYOK** open and switched on; the **OpenAI-compatible** provider selected with a fully masked key; Copilot signed out and the OpenAI/Anthropic/Gemini fields in **API Keys** empty; model selection shown as **Automatic** | 64px rail; Settings owns the remaining 1376px, with no hidden Chat pane | `code-workspace-dark.png`, the second detail |
-| `review-workspace-tablet.png` | `768 × 1024`, light | The same completed synthetic Review in the shipped tablet/single-column navigation; Review, Preview/Code and History destinations remain identifiable | No desktop rail or draggable split; one 768px content viewport | `chat-tablet.png`, the centred portrait detail |
+| File | Dimensions / theme | Required state |
+| --- | --- | --- |
+| `input-upload.png` | `1426 × 893`, light | Upload selected; empty screenshot/video drop zone and generation controls visible |
+| `input-url.png` | `1426 × 893`, light | URL selected with `https://example.com`; before inspection/capture |
+| `input-text.png` | `1426 × 893`, light | Text selected; empty prompt, examples, stack and model controls visible |
+| `input-import.png` | `1426 × 893`, light | Import selected; HTML mode plus folder/ZIP/source-files choice visible |
+| `input-figma.png` | `1426 × 893`, light | Figma selected; scoped REST requirement and MCP Catalog limitation visible |
+| `input-github.png` | `1426 × 893`, light | GitHub selected with the public `octocat/Spoon-Knife` URL and permission guidance |
+| `input-stitch.png` | `1426 × 893`, light | Stitch selected; Stitch only and Convert to selected stack modes visible |
+| `url-design-inspection.png` | `1426 × 893`, light | Completed `example.com` inspection with DESIGN.md actions visible |
+| `github-imported-project.png` | `1426 × 893`, light | Public Spoon-Knife project open in the editable Preview/Chat workspace |
+| `review-workspace-og-light.png` | `1920 × 1008`, light | Northwind Analytics open; Review complete with preview and local findings visible |
+| `mcp-menu-light.png` | `1440 × 900`, light | MCP settings showing the synthetic server disabled, untrusted and write-disabled |
+| `byok-settings-dark.png` | `1440 × 900`, dark | BYOK settings switched off; additive/separate credential explanation visible |
+| `review-workspace-tablet.png` | `768 × 1024`, light | Completed Review in the shipped tablet/single-column navigation |
 
 The lead uses `1920 × 1008` because it is exactly **40:21**, the same ratio as a
 `1200 × 630` social card. It can therefore be scaled by an Open Graph consumer
 without cropping the app toolbar or Review result. When these files land:
 
-1. Replace the four gallery sources in this order: Review lead, MCP/menu, BYOK
-   Settings, tablet Review.
+1. Keep all seven input tabs visible in the product page's Input tabs section,
+   with the URL inspection and GitHub imported-project outcomes directly below.
 2. Point `og:image` at `review-workspace-og-light.png`, set its declared size to
    `1920 × 1008`, and write alt text for only what is visibly present.
-3. Give the lead a `40 / 21` aspect wrapper; keep both desktop details on the
-   shared `16 / 10` wrapper and the tablet image on `3 / 4`.
+3. Give the lead a `40 / 21` aspect wrapper, input/outcome/desktop-detail images
+   a `16 / 10` wrapper, and the tablet image a `3 / 4` wrapper.
 4. Keep the site's documented `object-fit: contain` policy and neutral frame.
    Never switch a product screenshot to `cover`: letterboxing is acceptable,
    loss of UI is not.
 5. Update each `<img width height>`, link label, alt and caption with the same
-   commit. Remove the four superseded PNGs only after no HTML, metadata or test
-   references them.
+   commit. Every alt must describe the visible state and the true dimensions.
 6. From the `app-releases` repository, run `npm test`; it includes the
    dimension, aspect, reflow and Open Graph checks. Then inspect the light/dark
-   gallery and 320px/200%-text portal captures.
+   galleries and 320px/200%-text portal captures.
 
 Before approval, inspect every image for exposed keys or tokens, account names,
 email addresses, avatars, filesystem paths, repository names, clipboard

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 23e080e00a17aaa435d4b2242cc504ba68d23e0e3073816099167ba89b9e655a). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 e66ba977a5060515d44971d4dc56923839c1d171b1d95775dc65cd0ab144671b). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,18 +8,18 @@
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
   <title>Troubleshooting shot2code — shot2code documentation</title>
-  <meta name="description" content="A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ or the user guide." />
+  <meta name="description" content="A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ, the user guide, or the sc" />
   <link rel="canonical" href="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Troubleshooting shot2code — App Releases" />
-  <meta property="og:description" content="A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ or the user guide." />
+  <meta property="og:description" content="A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ, the user guide, or the sc" />
   <meta property="og:url" content="https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/" />
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/img/social-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml" />
   <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../../../docs.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Troubleshooting shot2code","description":"A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ or the user guide.","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Troubleshooting shot2code","description":"A symptom-first runbook for the published Windows build. If you are looking for what a feature does rather than why it is not working, start with the FAQ, the user guide, or the sc","url":"https://arasanirohithreddy.github.io/app-releases/shot2code/docs/troubleshooting/","isPartOf":{"@type":"WebSite","name":"App Releases","url":"https://arasanirohithreddy.github.io/app-releases/"}}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="./" aria-current="page">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../input-tabs/">Input tabs</a></li><li><a href="../faq/">FAQ</a></li><li><a href="./" aria-current="page">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="../releasing/">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -65,7 +65,8 @@
         <details class="doc-toc" id="doc-toc"><summary>On this page</summary><nav aria-label="On this page"><ul><li><a href="#start-here">Start here</a></li><li><a href="#where-the-logs-and-data-live">Where the logs and data live</a></li><li><a href="#the-app-will-not-start">The app will not start</a></li><li><a href="#providers-and-the-model-catalogue">Providers and the model catalogue</a></li><li><a href="#signing-in-to-github-copilot">Signing in to GitHub Copilot</a></li><li><a href="#copilot-sdk-byok">Copilot SDK BYOK</a></li><li><a href="#mcp-servers-the-registry-and-skills">MCP servers, the registry and skills</a></li><li><a href="#figma-and-google-stitch">Figma and Google Stitch</a></li><li><a href="#generation-fails-or-is-wrong">Generation fails or is wrong</a></li><li><a href="#the-review-workspace">The Review workspace</a></li><li><a href="#screenshot-preview-chromium-and-screen-recording">Screenshot preview, Chromium and screen recording</a></li><li><a href="#importing-a-project">Importing a project</a></li><li><a href="#preview-export-and-codepen">Preview, export and CodePen</a></li><li><a href="#history-and-recent-projects">History and recent projects</a></li><li><a href="#the-workspace-layout">The workspace layout</a></li><li><a href="#installing-and-updating">Installing and updating</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav></details>
         <div class="doc-content"><p>A symptom-first runbook for the published Windows build. If you are looking for
 <em>what a feature does</em> rather than <em>why it is not working</em>, start with the
-<a href="../faq/">FAQ</a> or the <a href="../user-guide/">user guide</a>.</p>
+<a href="../faq/">FAQ</a>, the <a href="../user-guide/">user guide</a>, or the screenshot-led
+<a href="../input-tabs/">input-tab guide</a>.</p>
 <p>Everything here is local: shot2code has no service to check and no status page.
 Almost every failure is answered by one of three things — the backend log, the
 provider credential the app can actually see, or a process that did not exit.</p>

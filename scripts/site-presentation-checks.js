@@ -123,7 +123,7 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
 
       const product = await context.newPage();
       await visit(product, base + '/shot2code/');
-      for (const image of await product.locator('.hero-proof img, #screens img').all()) {
+      for (const image of await product.locator('.hero-proof img, #inputs img, #screens img').all()) {
         await image.scrollIntoViewIfNeeded();
         await image.evaluate(element => element.decode());
       }
@@ -157,6 +157,39 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
         const label = `shot2code/${theme} screenshot ${index + 1}`;
         check(image.classes.split(/\s+/).includes(expectedClasses[index]),
           `${label}: missing ${expectedClasses[index]} aspect wrapper`);
+        check(image.width === image.naturalWidth && image.height === image.naturalHeight,
+          `${label}: markup ${image.width}x${image.height} differs from PNG ${image.naturalWidth}x${image.naturalHeight}`);
+        check(image.objectFit === 'contain', `${label}: object-fit must be contain, not ${image.objectFit}`);
+        check(image.background !== 'rgba(0, 0, 0, 0)' &&
+          image.borderWidth >= 1 && image.borderStyle === 'solid' && image.overflow === 'hidden',
+        `${label}: frame background/border/overflow policy is missing`);
+        check(image.alt.trim().length >= 25, `${label}: alternative text is missing or uninformative`);
+      });
+
+      const inputIntrinsic = await product.locator('#inputs .shot-frame')
+        .evaluateAll(frames => frames.map(frame => {
+          const image = frame.querySelector('img');
+          const style = getComputedStyle(frame);
+          return {
+            classes: frame.className,
+            width: Number(image.getAttribute('width')),
+            height: Number(image.getAttribute('height')),
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            objectFit: getComputedStyle(image).objectFit,
+            background: style.backgroundColor,
+            borderWidth: parseFloat(style.borderTopWidth),
+            borderStyle: style.borderTopStyle,
+            overflow: style.overflow,
+            alt: image.getAttribute('alt') || ''
+          };
+        }));
+      check(inputIntrinsic.length === 9,
+        `shot2code/${theme}: expected seven input tabs and two completed outcomes`);
+      inputIntrinsic.forEach((image, index) => {
+        const label = `shot2code/${theme} input screenshot ${index + 1}`;
+        check(image.classes.split(/\s+/).includes('shot-frame--detail'),
+          `${label}: missing the 16:10 detail wrapper`);
         check(image.width === image.naturalWidth && image.height === image.naturalHeight,
           `${label}: markup ${image.width}x${image.height} differs from PNG ${image.naturalWidth}x${image.naturalHeight}`);
         check(image.objectFit === 'contain', `${label}: object-fit must be contain, not ${image.objectFit}`);
@@ -232,6 +265,39 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
             `${label}: detail frames/captions lose their shared rhythm`);
           check(layout.portraitCentered && layout.portraitHeight <= 642,
             `${label}: portrait is not centred or exceeds its 640px content-height ceiling`);
+
+          const inputLayout = await product.locator('#inputs').evaluate((section, viewportWidth) => {
+            const rect = element => element.getBoundingClientRect();
+            const figures = [...section.querySelectorAll('figure')];
+            const frames = figures.map(figure => {
+              const frame = figure.querySelector('.shot-frame');
+              const image = frame.querySelector('img');
+              const box = rect(frame);
+              const innerWidth = Math.max(0, box.width - 2);
+              const innerHeight = Math.max(0, box.height - 2);
+              const scale = Math.min(innerWidth / image.naturalWidth, innerHeight / image.naturalHeight);
+              return {
+                left: box.left,
+                right: box.right,
+                ratio: box.width / box.height,
+                uncropped: image.naturalWidth * scale <= innerWidth + .5 &&
+                  image.naturalHeight * scale <= innerHeight + .5,
+                captionBelow: rect(figure.querySelector('figcaption')).top >= box.bottom
+              };
+            });
+            return {
+              framesInside: frames.every(frame => frame.left >= -1 && frame.right <= viewportWidth + 1),
+              ratios: frames.map(frame => frame.ratio),
+              uncropped: frames.every(frame => frame.uncropped),
+              captionsBelow: frames.every(frame => frame.captionBelow)
+            };
+          }, width);
+          const inputLabel = `shot2code inputs/${theme}@${width}, ${textPercent}% text`;
+          check(inputLayout.framesInside, `${inputLabel}: screenshot frame overflows`);
+          check(inputLayout.ratios.every(ratio => Math.abs(ratio - 16 / 10) <= .015),
+            `${inputLabel}: an input screenshot lost its 16:10 stage`);
+          check(inputLayout.uncropped, `${inputLabel}: an input screenshot would be cropped`);
+          check(inputLayout.captionsBelow, `${inputLabel}: a caption overlaps its screenshot`);
         }
       }
 
@@ -241,6 +307,9 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
           await product.setViewportSize({ width, height: 900 });
           await product.locator('#screens').screenshot({
             path: path.join(process.env.SITE_SCREENSHOTS, `shot2code-gallery-${theme}-${size}.png`)
+          });
+          await product.locator('#inputs').screenshot({
+            path: path.join(process.env.SITE_SCREENSHOTS, `shot2code-inputs-${theme}-${size}.png`)
           });
         }
       }

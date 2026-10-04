@@ -251,6 +251,10 @@ the response, not an error that stops the run.
 
 ### Design sources
 
+The renderer exposes seven input tabs — Upload, URL, Text, Import, Figma,
+GitHub and Stitch — but they all converge on the same project/history contract.
+The [input-tab guide](INPUT-TABS.md) describes their user-facing behavior.
+
 `/api/figma` parses a Figma URL into a file key and optional node ids, asks the
 REST API for rendered images, original image-fill URLs and explicitly
 export-marked nodes. Downloads stream under per-file and aggregate budgets and

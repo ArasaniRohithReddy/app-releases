@@ -8,6 +8,7 @@ runbook. The application itself is developed at
 [ArasaniRohithReddy/shot2code](https://github.com/ArasaniRohithReddy/shot2code).
 
 - [First run](#first-run)
+- [The seven input tabs](#the-seven-input-tabs)
 - [Choosing a model provider](#choosing-a-model-provider)
 - [Using your own endpoint (Copilot SDK BYOK)](#using-your-own-endpoint-copilot-sdk-byok)
 - [Choosing which models run](#choosing-which-models-run)
@@ -15,21 +16,6 @@ runbook. The application itself is developed at
 - [Agent Skills and web search](#agent-skills-and-web-search)
 - [Figma and Google Stitch](#figma-and-google-stitch)
 - [Generating your first page](#generating-your-first-page)
-- [Using more than one screenshot](#using-more-than-one-screenshot)
-- [Refining the result](#refining-the-result)
-- [The Code tab](#the-code-tab)
-- [The Review workspace](#the-review-workspace)
-- [Sizing the workspace](#sizing-the-workspace)
-- [History and retries](#history-and-retries)
-- [Recent projects](#recent-projects)
-- [Importing an existing project](#importing-an-existing-project)
-- [Preview, CodePen and sharing](#preview-codepen-and-sharing)
-- [Exporting a project](#exporting-a-project)
-- [The menu bar](#the-menu-bar)
-- [Keyboard shortcuts](#keyboard-shortcuts)
-- [The Help centre](#the-help-centre)
-- [Settings](#settings)
-- [When something goes wrong](#when-something-goes-wrong)
 - [Using more than one screenshot](#using-more-than-one-screenshot)
 - [Refining the result](#refining-the-result)
 - [The Code tab](#the-code-tab)
@@ -71,6 +57,28 @@ can actually see from the window:
 It never claims a provider is connected or verified, because that is only proved
 by a real request. The callout's actions are **Add a key in Settings** and
 **Setup guide**.
+
+## The seven input tabs
+
+The New-project screen is organized by the evidence you already have:
+
+| Tab | Best starting point | What it creates |
+| --- | --- | --- |
+| **Upload** | Screenshots, exported SVG, video, or screen recording | Generated options in the selected stack |
+| **URL** | A public website | A local `DESIGN.md` inspection, or a captured screenshot generation |
+| **Text** | A written brief | Generated options in the selected stack |
+| **Import** | HTML, folder, ZIP, or source files | Design context or an editable imported project |
+| **Figma** | A Figma file/frame URL | Rendered frames/assets, then generated implementation |
+| **GitHub** | A public/private frontend repository | A safely scanned editable project |
+| **Stitch** | A Stitch prompt or project/screen | Direct localized Stitch project, or explicit stack conversion |
+
+Video is part of **Upload**, not a separate tab. Public-site design inspection
+needs no ScreenshotOne key, public GitHub repositories need no token, and
+Import/GitHub/Stitch-only projects can open without a code-generation request.
+
+The dedicated **[Input tabs guide](INPUT-TABS.md)** includes current screenshots
+of every tab and documents exact credentials, steps, limits, privacy boundaries,
+and outputs.
 
 ## Choosing a model provider
 

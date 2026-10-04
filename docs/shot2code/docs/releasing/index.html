@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/RELEASING.md (normalized SHA-256 9b5cc6a973c69910a33eceedbf2bd7f8341db55648b6ab60728144f43c67c331). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/RELEASING.md (normalized SHA-256 0285e05dc1f164fb69bb5c029b2345483763d505ccca52ed7562be8f48a9e767). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -44,7 +44,7 @@
     <aside class="doc-sidebar">
       <details id="guide-navigation" class="guide-navigation" open>
         <summary>Browse guides</summary>
-        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="./" aria-current="page">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
+        <nav aria-label="Documentation"><div><p class="nav-group">Product guides</p><ul><li><a href="../">Overview</a></li><li><a href="../install/">Install</a></li><li><a href="../user-guide/">User guide</a></li><li><a href="../input-tabs/">Input tabs</a></li><li><a href="../faq/">FAQ</a></li><li><a href="../troubleshooting/">Troubleshooting</a></li><li><a href="../data-handling/">Data handling &amp; privacy</a></li><li><a href="../security/">Product security</a></li><li><a href="../architecture/">Architecture</a></li><li><a href="../third-party-notices/">Third-party notices</a></li><li><a href="./" aria-current="page">Release process</a></li><li><a href="../changelog/">Changelog</a></li><li><a href="../contributing/">Contributing</a></li></ul></div>
 <div><p class="nav-group">Help &amp; policy</p><ul><li><a href="../../../help/">Support</a></li><li><a href="../../../help/security/">Security policy</a></li><li><a href="../../../help/license/">License</a></li><li><a href="../../../help/conduct/">Code of conduct</a></li></ul></div></nav>
       </details>
     </aside>
@@ -156,11 +156,9 @@ full notes. Keep them accurate about:</p>
 </ul>
 <p>Then mirror the same summary into <a href="../changelog/">CHANGELOG.md</a> here.</p>
 <h2 id="final-screenshot-capture-contract" tabindex="-1">Final screenshot capture contract</h2>
-<p>This is the capture plan for the forthcoming BYOK, MCP, application-menu and
-Review presentation. It is deliberately <strong>versionless</strong>: do not put a release
-number in a filename, caption or screenshot-only page claim. The existing four
-PNGs remain published until the source integration and visible labels are final.
-Do not capture or replace them early.</p>
+<p>This is the capture plan for the public input-tab atlas and the supporting
+Review/Settings presentation. It is deliberately <strong>versionless</strong>: do not put a
+release number in a filename, caption or screenshot-only page claim.</p>
 <h3 id="one-reproducible-capture-environment" tabindex="-1">One reproducible capture environment</h3>
 <p>Use the release-candidate desktop build with a new, capture-only profile:</p>
 <ul>
@@ -170,18 +168,18 @@ Do not capture or replace them early.</p>
 <li>output: sRGB PNG, one image pixel per CSS pixel</li>
 <li>capture target: the app content viewport only — no desktop, taskbar, window
 shadow or post-capture crop</li>
-<li>project: the synthetic <strong>Northwind Analytics</strong> fixture used by the current
-public screenshots; no customer code, URLs, repository names or local paths</li>
-<li>provider state: <strong>OpenAI BYOK configured</strong> — the <strong>GitHub Copilot SDK BYOK</strong>
-card switched on with the <strong>OpenAI-compatible</strong> provider — all other
-providers disconnected, and
-<strong>Automatic</strong> model selection (zero manually selected models)</li>
-<li>key handling: use a short-lived capture-only credential, keep every key field
-masked, inspect the final PNGs at 400%, then revoke the credential and delete
-the capture profile</li>
+<li>project/evidence: the synthetic <strong>Northwind Analytics</strong> fixture,
+<code>https://example.com</code>, and <code>octocat/Spoon-Knife</code> only; no customer code,
+private URL/repository, account name or local path</li>
+<li>provider state: no real provider account or key. Input-tab captures may show
+the honest disabled/unconfigured state. Use only explicitly fake endpoint
+values when a settings field must be demonstrated, and keep the connection
+switched off so no network call occurs</li>
+<li>key handling: no live credential is permitted. Inspect final PNGs at 400% and
+delete the isolated capture profile</li>
 <li>MCP state: one unauthenticated local fixture named <strong>Demo component library</strong>,
-enabled and trusted so it displays the shipped state <strong>Active · read-only</strong>;
-no remote tenant or account</li>
+left disabled and untrusted with write tools off, so the safe installation
+default is visible; no remote tenant or account</li>
 </ul>
 <p>Wait for fonts, preview rendering and Review results to settle. Dismiss update
 notices, toasts, tooltips and permission prompts. Move the pointer outside the
@@ -189,47 +187,81 @@ capture, stop caret/selection blinking where possible, and never edit or
 recompress the resulting PNG. If a final UI label differs from this plan, use
 the shipped label and update the page's alt text and caption in the same change;
 never stage a screenshot of placeholder UI.</p>
-<h3 id="the-four-replacement-files" tabindex="-1">The four replacement files</h3>
-<p>All dimensions below are <strong>CSS viewport dimensions and required PNG pixel
-dimensions</strong>.</p>
+<h3 id="the-current-screenshot-set" tabindex="-1">The current screenshot set</h3>
+<p>All dimensions below are required PNG pixel dimensions.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Releasing shot2code to this hub table 3"><table>
 <thead>
 <tr>
 <th scope="col">File</th>
-<th scope="col">Viewport and theme</th>
-<th scope="col">Exact app state</th>
-<th scope="col">Pane widths</th>
-<th scope="col">Replaces / published role</th>
+<th scope="col">Dimensions / theme</th>
+<th scope="col">Required state</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><code>input-upload.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Upload selected; empty screenshot/video drop zone and generation controls visible</td>
+</tr>
+<tr>
+<td><code>input-url.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>URL selected with <code>https://example.com</code>; before inspection/capture</td>
+</tr>
+<tr>
+<td><code>input-text.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Text selected; empty prompt, examples, stack and model controls visible</td>
+</tr>
+<tr>
+<td><code>input-import.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Import selected; HTML mode plus folder/ZIP/source-files choice visible</td>
+</tr>
+<tr>
+<td><code>input-figma.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Figma selected; scoped REST requirement and MCP Catalog limitation visible</td>
+</tr>
+<tr>
+<td><code>input-github.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>GitHub selected with the public <code>octocat/Spoon-Knife</code> URL and permission guidance</td>
+</tr>
+<tr>
+<td><code>input-stitch.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Stitch selected; Stitch only and Convert to selected stack modes visible</td>
+</tr>
+<tr>
+<td><code>url-design-inspection.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Completed <code>example.com</code> inspection with DESIGN.md actions visible</td>
+</tr>
+<tr>
+<td><code>github-imported-project.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Public Spoon-Knife project open in the editable Preview/Chat workspace</td>
+</tr>
+<tr>
 <td><code>review-workspace-og-light.png</code></td>
 <td><code>1920 × 1008</code>, light</td>
-<td>Northwind Analytics open; the final <strong>Review</strong> destination selected; review complete with its summary and the generated preview visible; no loading or empty state</td>
-<td>64px rail, 320px Chat pane, remaining 1536px workspace including its dividers</td>
-<td><code>workspace-full-hd.png</code> in the hero/gallery, and the current <code>og:image</code></td>
+<td>Northwind Analytics open; Review complete with preview and local findings visible</td>
 </tr>
 <tr>
 <td><code>mcp-menu-light.png</code></td>
 <td><code>1440 × 900</code>, light</td>
-<td>Generated project open; <strong>Settings → MCP servers</strong> showing <strong>Demo component library</strong> as <strong>Active · read-only</strong>, with the native <strong>View</strong> menu expanded over it so the shared commands and the menu bar are both legible; no hover-only tooltip</td>
-<td>64px rail; Settings owns the remaining 1376px, with no hidden Chat pane</td>
-<td><code>code-workspace.png</code>, the first detail</td>
+<td>MCP settings showing the synthetic server disabled, untrusted and write-disabled</td>
 </tr>
 <tr>
 <td><code>byok-settings-dark.png</code></td>
 <td><code>1440 × 900</code>, dark</td>
-<td><strong>Settings → GitHub Copilot SDK BYOK</strong> open and switched on; the <strong>OpenAI-compatible</strong> provider selected with a fully masked key; Copilot signed out and the OpenAI/Anthropic/Gemini fields in <strong>API Keys</strong> empty; model selection shown as <strong>Automatic</strong></td>
-<td>64px rail; Settings owns the remaining 1376px, with no hidden Chat pane</td>
-<td><code>code-workspace-dark.png</code>, the second detail</td>
+<td>BYOK settings switched off; additive/separate credential explanation visible</td>
 </tr>
 <tr>
 <td><code>review-workspace-tablet.png</code></td>
 <td><code>768 × 1024</code>, light</td>
-<td>The same completed synthetic Review in the shipped tablet/single-column navigation; Review, Preview/Code and History destinations remain identifiable</td>
-<td>No desktop rail or draggable split; one 768px content viewport</td>
-<td><code>chat-tablet.png</code>, the centred portrait detail</td>
+<td>Completed Review in the shipped tablet/single-column navigation</td>
 </tr>
 </tbody>
 </table></div>
@@ -237,21 +269,20 @@ dimensions</strong>.</p>
 <code>1200 × 630</code> social card. It can therefore be scaled by an Open Graph consumer
 without cropping the app toolbar or Review result. When these files land:</p>
 <ol>
-<li>Replace the four gallery sources in this order: Review lead, MCP/menu, BYOK
-Settings, tablet Review.</li>
+<li>Keep all seven input tabs visible in the product page's Input tabs section,
+with the URL inspection and GitHub imported-project outcomes directly below.</li>
 <li>Point <code>og:image</code> at <code>review-workspace-og-light.png</code>, set its declared size to
 <code>1920 × 1008</code>, and write alt text for only what is visibly present.</li>
-<li>Give the lead a <code>40 / 21</code> aspect wrapper; keep both desktop details on the
-shared <code>16 / 10</code> wrapper and the tablet image on <code>3 / 4</code>.</li>
+<li>Give the lead a <code>40 / 21</code> aspect wrapper, input/outcome/desktop-detail images
+a <code>16 / 10</code> wrapper, and the tablet image a <code>3 / 4</code> wrapper.</li>
 <li>Keep the site's documented <code>object-fit: contain</code> policy and neutral frame.
 Never switch a product screenshot to <code>cover</code>: letterboxing is acceptable,
 loss of UI is not.</li>
 <li>Update each <code>&lt;img width height&gt;</code>, link label, alt and caption with the same
-commit. Remove the four superseded PNGs only after no HTML, metadata or test
-references them.</li>
+commit. Every alt must describe the visible state and the true dimensions.</li>
 <li>From the <code>app-releases</code> repository, run <code>npm test</code>; it includes the
 dimension, aspect, reflow and Open Graph checks. Then inspect the light/dark
-gallery and 320px/200%-text portal captures.</li>
+galleries and 320px/200%-text portal captures.</li>
 </ol>
 <p>Before approval, inspect every image for exposed keys or tokens, account names,
 email addresses, avatars, filesystem paths, repository names, clipboard
