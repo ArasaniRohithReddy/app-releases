@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 45646bd42ffebe0429146613ab60c2b751f940f65ff1f2d1d23927fc456de48f). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 e06afc84ff931622541f6248c0de7d427b54fb2ff75b7f68f9bf3c0e9d0e57b7). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -165,7 +165,7 @@ lists every path and every network destination.</p>
 </tr>
 <tr>
 <td>The splash screen never clears</td>
-<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Optional discovery starts five seconds after core startup, and Chromium warming runs on a worker event loop so first-run scanning cannot freeze Health, History or Settings.</td>
+<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Optional discovery starts five seconds after core startup; Chromium and Copilot process discovery run on worker event loops so first-run scanning cannot freeze Health, History or Settings.</td>
 </tr>
 <tr>
 <td>The window is blank, or never appears at all</td>

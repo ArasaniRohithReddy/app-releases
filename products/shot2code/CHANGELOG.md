@@ -80,9 +80,9 @@ third-party content behind the existing never-execute boundaries.
   window once, then shows a static recovery screen while preserving local
   projects if the renderer remains empty.
 - Optional discovery waits five seconds after core startup, and Chromium
-  warming runs on an isolated worker event loop, so first-run antivirus
-  scanning cannot freeze Health, History or Settings or create a false
-  90-second backend timeout.
+  warming plus Copilot authentication/model discovery run on isolated worker
+  event loops, so first-run process scanning cannot freeze Health, History or
+  Settings or create a false backend timeout.
 
 ### Documentation
 

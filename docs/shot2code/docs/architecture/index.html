@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 4941ebb45518d8cb629469cf78c028698260d5fbd1f7df528f3391f2e4d0fc03). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 64317841f7104871d4b43579f845f421d7dfdb5ab65cb5a78d3219f981cacb94). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -115,9 +115,10 @@ history are imported before the server starts answering.</li>
 <li><strong>Heavy routers on first use.</strong> Generation, evaluation and the project tools
 are imported the first time a request needs them, not during startup.</li>
 <li><strong>Core-health head start.</strong> Optional discovery waits five seconds, then runs
-as bounded background work. Playwright availability is warmed on an isolated
-worker event loop, so Windows antivirus scanning a newly written browser
-process cannot monopolize FastAPI's health, History or Settings loop.</li>
+as bounded background work. Playwright availability and Copilot
+authentication/model discovery run on isolated worker event loops, so
+process startup and antivirus scanning cannot monopolize FastAPI's health,
+History or Settings loop.</li>
 </ol>
 <p>The shell's readiness check is strict rather than optimistic: it requires
 HTTP 200 <em>and</em> a genuine <code>{&quot;ok&quot;: true}</code> body, aborts at once if the backend

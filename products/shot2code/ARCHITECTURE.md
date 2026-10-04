@@ -38,9 +38,10 @@ tree that Windows may still be scanning:
 2. **Heavy routers on first use.** Generation, evaluation and the project tools
    are imported the first time a request needs them, not during startup.
 3. **Core-health head start.** Optional discovery waits five seconds, then runs
-   as bounded background work. Playwright availability is warmed on an isolated
-   worker event loop, so Windows antivirus scanning a newly written browser
-   process cannot monopolize FastAPI's health, History or Settings loop.
+   as bounded background work. Playwright availability and Copilot
+   authentication/model discovery run on isolated worker event loops, so
+   process startup and antivirus scanning cannot monopolize FastAPI's health,
+   History or Settings loop.
 
 The shell's readiness check is strict rather than optimistic: it requires
 HTTP 200 *and* a genuine `{"ok": true}` body, aborts at once if the backend
