@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 480261344c61e0ce21a93fd20d50e8e6f160abfc45fee2c4892213cb238af0aa). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/ARCHITECTURE.md (normalized SHA-256 4941ebb45518d8cb629469cf78c028698260d5fbd1f7df528f3391f2e4d0fc03). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -114,10 +114,10 @@ tree that Windows may still be scanning:</p>
 history are imported before the server starts answering.</li>
 <li><strong>Heavy routers on first use.</strong> Generation, evaluation and the project tools
 are imported the first time a request needs them, not during startup.</li>
-<li><strong>Core-health head start.</strong> Chromium and Copilot discovery waits five
-seconds, then runs as bounded background work. This lets the shell receive
-initial health before Windows antivirus scans newly written browser/SDK
-processes.</li>
+<li><strong>Core-health head start.</strong> Optional discovery waits five seconds, then runs
+as bounded background work. Playwright availability is warmed on an isolated
+worker event loop, so Windows antivirus scanning a newly written browser
+process cannot monopolize FastAPI's health, History or Settings loop.</li>
 </ol>
 <p>The shell's readiness check is strict rather than optimistic: it requires
 HTTP 200 <em>and</em> a genuine <code>{&quot;ok&quot;: true}</code> body, aborts at once if the backend

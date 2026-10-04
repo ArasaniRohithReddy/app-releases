@@ -553,11 +553,11 @@ test('the shot2code guides describe the v0.6.1 product and safety contract', () 
   assert.match(changelog, /^## \[0\.6\.1\] — 2026-10-05$/m);
   assert.match(changelog, /app-releases\/releases\/tag\/shot2code-v0\.6\.1/);
   assert.match(changelog, /shot2code\/releases\/tag\/v0\.6\.1/);
-  assert.match(changelog, /discovery waits five seconds after core startup/i);
-  assert.match(runbook, /discovery starts five seconds after core startup/i);
+  assert.match(changelog, /warming runs on an isolated worker event loop/i);
+  assert.match(runbook, /warming runs on a worker event loop/i);
   assert.match(
     architecture,
-    /Chromium and Copilot discovery[\s\S]{0,20}waits five[\s\S]{0,10}seconds/i
+    /Playwright availability[\s\S]{0,80}isolated[\s\S]{0,10}worker event loop/i
   );
 
   // Local Ollama is a preset over the existing BYOK path, not bundled or silently free compute.

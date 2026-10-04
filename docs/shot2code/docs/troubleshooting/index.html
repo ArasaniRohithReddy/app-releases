@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 c33ec4cc6d36d6b87a3fb75c9f2c204296ffbfa43f5f7263a010a1aa5cf519ff). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/TROUBLESHOOTING.md (normalized SHA-256 45646bd42ffebe0429146613ab60c2b751f940f65ff1f2d1d23927fc456de48f). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -165,7 +165,7 @@ lists every path and every network destination.</p>
 </tr>
 <tr>
 <td>The splash screen never clears</td>
-<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Optional Chromium/Copilot discovery starts five seconds after core startup, so first-run scanning cannot race the initial health response.</td>
+<td>The shell gives up after 90 seconds and logs how long readiness took. Read <code>shot2code-backend.log</code>: it records whether the backend exited, failed to spawn, or answered health with something other than <code>{&quot;ok&quot;: true}</code>. Optional discovery starts five seconds after core startup, and Chromium warming runs on a worker event loop so first-run scanning cannot freeze Health, History or Settings.</td>
 </tr>
 <tr>
 <td>The window is blank, or never appears at all</td>

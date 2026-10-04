@@ -79,8 +79,9 @@ third-party content behind the existing never-execute boundaries.
 - The Electron shell inspects a top-level renderer after load, reloads one blank
   window once, then shows a static recovery screen while preserving local
   projects if the renderer remains empty.
-- Optional Chromium/Copilot discovery waits five seconds after core startup, so
-  first-run antivirus scanning cannot starve `/api/health` and create a false
+- Optional discovery waits five seconds after core startup, and Chromium
+  warming runs on an isolated worker event loop, so first-run antivirus
+  scanning cannot freeze Health, History or Settings or create a false
   90-second backend timeout.
 
 ### Documentation

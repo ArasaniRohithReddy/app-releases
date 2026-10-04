@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 81f318800bc9650d9dbed1d2cf95260a4f2a1dc93faac8b1eb904a36b0c9bc92). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 91e1f4fef06f6a58e92b74e24725b044fef66ed35ee3832016f42d2d1ad6fefd). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -136,8 +136,9 @@ treating an empty screenshot as success.</li>
 <li>The Electron shell inspects a top-level renderer after load, reloads one blank
 window once, then shows a static recovery screen while preserving local
 projects if the renderer remains empty.</li>
-<li>Optional Chromium/Copilot discovery waits five seconds after core startup, so
-first-run antivirus scanning cannot starve <code>/api/health</code> and create a false
+<li>Optional discovery waits five seconds after core startup, and Chromium
+warming runs on an isolated worker event loop, so first-run antivirus
+scanning cannot freeze Health, History or Settings or create a false
 90-second backend timeout.</li>
 </ul>
 <h3 id="documentation" tabindex="-1">Documentation</h3>
