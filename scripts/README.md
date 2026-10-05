@@ -130,7 +130,7 @@ per-product checks assert that a page still has all of its sections, its declare
 sets and explanation steps, that the hero selects the recommended package, that every `data-dl`
 kind resolves to a real asset in that product's release snapshot, and that the version chips show
 the version from that snapshot rather than one typed into the page. shot2code separately declares
-four workspace screenshots and nine input/outcome screenshots.
+ten workspace screenshots and ten input/outcome screenshots.
 
 Because the repository publishes more than one application, the GitHub API is mocked with **all**
 products' snapshots merged into one release list, and a request to any endpoint other than the

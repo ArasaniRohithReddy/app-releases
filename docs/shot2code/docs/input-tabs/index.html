@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/INPUT-TABS.md (normalized SHA-256 15bc0fe22902bee5937e2e28648d08509efefdf7273ae72fe86d0719933625d9). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/INPUT-TABS.md (normalized SHA-256 fed727c19f6fed9793337a8cb74292d6e52191bd1fdf18940d96a9fbeff1e071). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -194,6 +194,7 @@ JSON files, ZIP, or public HTTPS build. It parses only <code>index.json</code> p
 optional <code>manifests/components.json</code> and <code>manifests/docs.json</code> into compact
 component-library context. Story files, bundles, CSF, addons, decorators,
 loaders, play functions and <code>iframe.html</code> are never loaded or executed.</p>
+<p><img src="../../img/import-storybook.png" alt="shot2code Built Storybook import mode with built-folder, selected-JSON, ZIP, and public-HTTPS choices plus the fixed JSON-only execution boundary." loading="lazy" decoding="async"></p>
 <p>The scanner parses text only. It rejects traversal paths, ignores dependency
 and build-output directories, enforces file/archive/text limits, and never
 loads configuration modules or runs install/build/application code.</p>
@@ -265,7 +266,10 @@ runtimes.</p>
 stylesheets, nested CSS assets/fonts, <code>srcset</code>, and available <code>DESIGN.md</code>
 directly. No second AI provider is called.</li>
 <li><strong>Convert to selected stack</strong> sends the imported Stitch evidence through the
-selected shot2code model lineup. Provider quota may apply.</li>
+selected shot2code model lineup. The tab shows a labelled <strong>Models for
+conversion</strong> picker, filters the catalog to image-capable choices, and keeps a
+<strong>Configure models</strong> control visible when no provider is ready. Provider quota
+may apply.</li>
 </ul>
 <p>The bundled SDK needs a Stitch API key in Settings. The key is capture-only and
 does not enter model prompts or project History. Downloaded assets pass public

@@ -59,13 +59,31 @@ output for each path.
 | --- |
 | ![shot2code Stitch tab showing direct Stitch-only and explicit conversion modes.](../../docs/shot2code/img/input-stitch.png) |
 
+Built Storybook is visible inside Import as its own inert metadata path:
+
+![shot2code Built Storybook import mode showing built-folder, selected-JSON, ZIP, and public-HTTPS sources plus the fixed JSON-only safety boundary.](../../docs/shot2code/img/import-storybook.png)
+
+## Current integrations and history
+
+| Local Ollama preset | Bounded page reading |
+| --- | --- |
+| ![shot2code Settings showing the local Ollama preset inside the additive Copilot SDK BYOK card.](../../docs/shot2code/img/ollama-settings-light.png) | ![shot2code dark Settings showing separately consented bounded page reading and its public-only URL, byte, text, call, and timeout limits.](../../docs/shot2code/img/page-reader-settings-dark.png) |
+
+| Localized icons | Chat tool inventory |
+| --- | --- |
+| ![shot2code Settings showing the Iconify add-on, fixed origin, SVG sanitization, licence policy, provenance, and trademark warning.](../../docs/shot2code/img/iconify-settings-light.png) | ![Tools available to this Chat in shot2code, showing editing, preview, web, image, Iconify, MCP, and Agent Skills readiness without enabling them implicitly.](../../docs/shot2code/img/chat-tools-light.png) |
+
+| Full history | Expanded project History |
+| --- | --- |
+| ![shot2code Full history showing searchable local projects and a read-only version summary.](../../docs/shot2code/img/full-history-light.png) | ![shot2code project History showing the saved model identity and selected version before returning to Chat.](../../docs/shot2code/img/history-expanded-light.png) |
+
 ## What you can do
 
 | Task | Where | Result |
 | --- | --- | --- |
 | Generate from a reference | Upload a screenshot, paste a URL, describe a screen, or record one | A working page in the stack you chose, usually as several parallel options |
 | Start from a Figma design | **Figma** — exported screenshots or SVG, or a REST import with your own access token | Rendered frames plus original image fills and export-marked nodes as reusable local assets; Figma REST does not provide application source code |
-| Start from a Google Stitch screen | **Stitch** — the official MCP server, or the bundled experimental SDK with your Stitch API key | **Stitch only** opens localized HTML, screenshot, images, stylesheets, fonts and `DESIGN.md` directly; conversion to another stack is optional |
+| Start from a Google Stitch screen | **Stitch** — the official MCP server, or the bundled experimental SDK with your Stitch API key | **Stitch only** opens localized HTML, screenshot, images, stylesheets, fonts and `DESIGN.md` directly; conversion exposes its own model picker and filters it to image-capable choices |
 | Inspect a public website | **URL → Inspect design** | Bounded local-Chromium evidence, lazy-content scrolling, full-page responsive previews with actual blank/truncation metadata, and an editable/exportable `DESIGN.md`; screenshots stop at 40,000px or 36 million pixels |
 | Open a GitHub frontend | **GitHub** tab | Leave the first instruction blank for a local open, or choose edit models plus a design system for an immediate refinement; the detected repository stack is preserved |
 | Say what you want up front | The instruction box on **Upload** and **Import** | The first generation follows your instruction instead of guessing |

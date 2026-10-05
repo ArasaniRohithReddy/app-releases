@@ -62,6 +62,9 @@ third-party content behind the existing never-execute boundaries.
 - The GitHub tab now distinguishes a fully local open from an optional
   model-assisted first refinement, exposes the edit-model lineup and design
   system for that refinement, and preserves the detected repository stack.
+- Stitch conversion now exposes a labelled model picker in the tab, keeps the
+  control visible while provider setup is incomplete, and offers only
+  image-capable models for the generated Stitch screenshot.
 - Review now combines deterministic source findings with bounded per-frame
   runtime evidence, categories, filtered select-all, per-frame failure
   isolation, explicit healthy/stale/partial coverage and schema-v2 JSON reports.
@@ -83,6 +86,9 @@ third-party content behind the existing never-execute boundaries.
   warming plus Copilot authentication/model discovery run on isolated worker
   event loops, so first-run process scanning cannot freeze Health, History or
   Settings or create a false backend timeout.
+- Full history now includes the separately persisted active draft, so a first
+  local HTML/project import remains one version with its saved options before
+  and after a renderer restart.
 
 ### Documentation
 

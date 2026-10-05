@@ -20,7 +20,7 @@
   <meta property="og:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
   <meta property="og:image:width" content="1920" />
   <meta property="og:image:height" content="1008" />
-  <meta property="og:image:alt" content="The shot2code Review workspace showing Chat context, a Northwind Analytics preview and local source-audit findings." />
+  <meta property="og:image:alt" content="The shot2code Review workspace showing Chat context, the imported Spoon-Knife preview and a completed local source-and-runtime audit." />
   <meta property="og:site_name" content="App Releases" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://arasanirohithreddy.github.io/app-releases/shot2code/img/review-workspace-og-light.png" />
@@ -312,6 +312,7 @@
     .shot-frame--16x9 { aspect-ratio: 16 / 9; }
     .shot-frame--detail { aspect-ratio: 16 / 10; }
     .shot-frame--portrait { aspect-ratio: 3 / 4; }
+    .shot-frame--compact { aspect-ratio: 225 / 256; }
     .shot-frame img {
       display: block; width: 100%; height: 100%; min-width: 0;
       object-fit: contain; background: transparent;
@@ -516,7 +517,7 @@
         <figure class="hero-proof">
           <a class="shot-frame shot-frame--og" href="#screens" aria-label="See the responsive Review screenshots at a larger size">
             <img src="img/review-workspace-og-light.png" width="1920" height="1008" fetchpriority="high" decoding="async"
-                 alt="The shot2code Review workspace at 1920 by 1008 in the light theme, with Chat context on the left, a Northwind Analytics preview in the center, and local source-audit findings on the right." />
+                 alt="The shot2code Review workspace at 1920 by 1008 in the light theme, with Chat context on the left, the imported Spoon-Knife preview in the center, and a completed local audit on the right." />
           </a>
           <figcaption>
             Review the imported project at real CSS widths, inspect overflow and
@@ -660,6 +661,14 @@
             </a>
             <figcaption><strong>Public repository opened locally.</strong> Safe source files and bounded image assets enter the normal Preview, Code, Review, Chat, History and export workflow.</figcaption>
           </figure>
+
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/import-storybook.png" aria-label="Open the Built Storybook import screenshot at 1426 by 893">
+              <img src="img/import-storybook.png" width="1426" height="893" loading="lazy" decoding="async"
+                   alt="shot2code Built Storybook import mode at 1426 by 893 showing built-folder, selected-JSON, ZIP, and public-HTTPS sources plus the fixed JSON-only safety boundary." />
+            </a>
+            <figcaption><strong>Built Storybook metadata.</strong> Add compact component-library context from fixed JSON paths without executing stories, bundles, addons, loaders, play functions or <code>iframe.html</code>.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -669,15 +678,15 @@
       <div class="wrap">
         <div class="sec-head">
           <h2 id="screens-h">After an input becomes a project</h2>
-          <p>Current packaged-app captures of responsive Review, MCP safety controls, additive BYOK settings and the tablet layout. Select any screenshot to open its original pixels.</p>
+          <p>Current packaged-app captures of Review, permissioned integrations, provider-neutral tools, Chat inventory and local History. Select any screenshot to open its original pixels.</p>
         </div>
 
         <figure class="shot shot-lead">
           <a class="shot-frame shot-frame--og" href="img/review-workspace-og-light.png" aria-label="Open the responsive Review workspace screenshot at 1920 by 1008">
             <img src="img/review-workspace-og-light.png" width="1920" height="1008" loading="lazy" decoding="async"
-                 alt="shot2code Review workspace at 1920 by 1008 in the light theme, with Chat context, a Northwind Analytics preview, and local source-audit findings." />
+                 alt="shot2code Review workspace at 1920 by 1008 in the light theme, with Chat context, the Spoon-Knife preview, and a completed local audit with runtime coverage." />
           </a>
-          <figcaption><strong>Responsive Review · 1920×1008.</strong> The imported project renders at a real labeled width while the local source audit stays bound to the current version, option, code and viewport set.</figcaption>
+          <figcaption><strong>Responsive Review · 1920×1008.</strong> The imported project renders at real labelled widths while the completed source/runtime audit stays bound to the current version, option, code and viewport set.</figcaption>
         </figure>
 
         <div class="shot-grid">
@@ -699,12 +708,66 @@
         </div>
 
         <figure class="shot shot-portrait">
-          <a class="shot-frame shot-frame--portrait" href="img/review-workspace-tablet.png" aria-label="Open the tablet-width Review workspace screenshot at 768 by 1024">
-            <img src="img/review-workspace-tablet.png" width="768" height="1024" loading="lazy" decoding="async"
-                 alt="shot2code Review at 768 by 1024, with compact navigation, responsive Review controls, the local audit summary, and warning findings reflowed into one column." />
+          <a class="shot-frame shot-frame--compact" href="img/review-workspace-tablet.png" aria-label="Open the compact Review workspace screenshot at 900 by 1024">
+            <img src="img/review-workspace-tablet.png" width="900" height="1024" loading="lazy" decoding="async"
+                 alt="shot2code Review at 900 by 1024, with compact navigation, responsive Review controls, a completed local audit, and warning findings reflowed into one column." />
           </a>
-          <figcaption><strong>Tablet-width Review · 768×1024.</strong> Preview, Chat, History, Review and Code remain identifiable while the audit controls and findings stack without page-level horizontal overflow.</figcaption>
+          <figcaption><strong>Compact Review · 900×1024.</strong> The shipped desktop minimum keeps Preview, Chat, History, Review and Code identifiable while the audit controls and findings stack without page-level horizontal overflow.</figcaption>
         </figure>
+
+        <div class="shot-grid">
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/ollama-settings-light.png" aria-label="Open the local Ollama settings screenshot at 1440 by 900">
+              <img src="img/ollama-settings-light.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code Settings at 1440 by 900 showing the local Ollama preset inside the additive Copilot SDK BYOK card with install, hardware, model capability, and licence caveats." />
+            </a>
+            <figcaption><strong>Local Ollama preset · 1440×900.</strong> The localhost OpenAI-compatible path is additive and does not reroute native OpenAI, Anthropic, Gemini or Copilot selections.</figcaption>
+          </figure>
+
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/page-reader-settings-dark.png" aria-label="Open the bounded page-reading settings screenshot at 1440 by 900">
+              <img src="img/page-reader-settings-dark.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code Settings at 1440 by 900 in the dark theme showing separately consented bounded page reading and its public-only URL, redirect, byte, text, call, and timeout limits." />
+            </a>
+            <figcaption><strong>Bounded page reading · 1440×900.</strong> Search consent never implies a page read; the shot2code-owned tool caps public URLs, redirects, bytes, text, calls and time while Copilot's unbounded built-in remains blocked.</figcaption>
+          </figure>
+        </div>
+
+        <div class="shot-grid">
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/iconify-settings-light.png" aria-label="Open the Iconify design add-on screenshot at 1440 by 900">
+              <img src="img/iconify-settings-light.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code Settings at 1440 by 900 showing the Iconify design add-on, fixed origin, SVG sanitization, permissive licence policy, provenance, and trademark warning." />
+            </a>
+            <figcaption><strong>Localized Iconify assets · 1440×900.</strong> SVGs come from one fixed origin, are sanitized and stored locally, and carry source/licence provenance plus an explicit trademark boundary.</figcaption>
+          </figure>
+
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/chat-tools-light.png" aria-label="Open the Chat tools inventory screenshot at 1440 by 900">
+              <img src="img/chat-tools-light.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="Tools available to this Chat at 1440 by 900 in shot2code, showing editing, preview, web, image, Iconify, MCP, and Agent Skills readiness without enabling paid, external, trusted, or write-capable tools implicitly." />
+            </a>
+            <figcaption><strong>Tools available to this Chat · 1440×900.</strong> The inventory reports readiness, cost, trust and write scope honestly; it is not a master permission switch.</figcaption>
+          </figure>
+        </div>
+
+        <div class="shot-grid">
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/full-history-light.png" aria-label="Open the Full history screenshot at 1440 by 900">
+              <img src="img/full-history-light.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code Full history at 1440 by 900 showing searchable local projects and a read-only project version summary before Open project is selected." />
+            </a>
+            <figcaption><strong>Cross-project Full history · 1440×900.</strong> Search local projects and inspect their complete saved version lineage before choosing to open one.</figcaption>
+          </figure>
+
+          <figure class="shot">
+            <a class="shot-frame shot-frame--detail" href="img/history-expanded-light.png" aria-label="Open the expanded project History screenshot at 1440 by 900">
+              <img src="img/history-expanded-light.png" width="1440" height="900" loading="lazy" decoding="async"
+                   alt="shot2code project History at 1440 by 900 showing the saved synthetic model identity, selected create version, and a Back to chat action beside the project preview." />
+            </a>
+            <figcaption><strong>Expanded project History · 1440×900.</strong> Saved model identity, option, status and ancestry stay attached to the version that produced the current project.</figcaption>
+          </figure>
+        </div>
       </div>
     </section>
 

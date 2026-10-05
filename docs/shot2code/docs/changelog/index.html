@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 43e4f2ef45ce303df8f89e8f6f615a6c36cf5f034a8b25d8ad8aab7432595490). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/CHANGELOG.md (normalized SHA-256 4a976306a03cc1353aff75d826c1b396ec7c748cfac7ae6370870ee07f5e3664). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -119,6 +119,9 @@ reuse the same evidence for generation.</li>
 <li>The GitHub tab now distinguishes a fully local open from an optional
 model-assisted first refinement, exposes the edit-model lineup and design
 system for that refinement, and preserves the detected repository stack.</li>
+<li>Stitch conversion now exposes a labelled model picker in the tab, keeps the
+control visible while provider setup is incomplete, and offers only
+image-capable models for the generated Stitch screenshot.</li>
 <li>Review now combines deterministic source findings with bounded per-frame
 runtime evidence, categories, filtered select-all, per-frame failure
 isolation, explicit healthy/stale/partial coverage and schema-v2 JSON reports.
@@ -140,6 +143,9 @@ projects if the renderer remains empty.</li>
 warming plus Copilot authentication/model discovery run on isolated worker
 event loops, so first-run process scanning cannot freeze Health, History or
 Settings or create a false backend timeout.</li>
+<li>Full history now includes the separately persisted active draft, so a first
+local HTML/project import remains one version with its saved options before
+and after a renderer restart.</li>
 </ul>
 <h3 id="documentation" tabindex="-1">Documentation</h3>
 <ul>

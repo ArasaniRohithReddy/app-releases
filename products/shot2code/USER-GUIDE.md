@@ -308,6 +308,8 @@ Use **Test model access** to read `/models`, but confirm capabilities and licenc
 with the model publisher. See
 [Ollama's OpenAI-compatibility documentation](https://docs.ollama.com/api/openai-compatibility).
 
+![shot2code Settings at 1440 by 900 showing the local Ollama preset inside the additive Copilot SDK BYOK card.](../../docs/shot2code/img/ollama-settings-light.png)
+
 ### BYOK models are separate selections
 
 Every model the connection can serve appears in **Settings → Models** under
@@ -479,6 +481,8 @@ data or remote state require **Allow write tools** as well, which is labelled as
 the risk it is. Each row shows its current state — *Off*, *Not trusted — will
 not start*, *Active · read-only* or *Active · write tools allowed*.
 
+![shot2code MCP Servers settings at 1440 by 900 showing a disabled and untrusted Demo component library with write tools off.](../../docs/shot2code/img/mcp-menu-light.png)
+
 ### How a local server is launched
 
 The command is spawned as an **argument vector, never through a shell**, so
@@ -557,6 +561,8 @@ result reaches the model before the SDK lets shot2code inspect it, so it cannot
 be truncated, labelled untrusted, URL-scoped or counted against these budgets.
 It is never a fallback for `read_web_page`.
 
+![shot2code Settings at 1440 by 900 in the dark theme showing separately consented bounded page reading and its public-only URL, byte, text, call, and timeout limits.](../../docs/shot2code/img/page-reader-settings-dark.png)
+
 ### Public-domain photos and localized icons
 
 **Free image search** is a separate opt-in `search_free_images` tool using
@@ -583,6 +589,8 @@ permissive copyright licence does not grant trademark rights for brand icons.
 See the [Iconify API documentation](https://iconify.design/docs/api/) and
 [browse its icon sets](https://icon-sets.iconify.design/).
 
+![shot2code Settings at 1440 by 900 showing the Iconify design add-on, fixed origin, SVG sanitization, licence filtering, provenance, and trademark warning.](../../docs/shot2code/img/iconify-settings-light.png)
+
 ### Tools available to this Chat
 
 The **Tools** control beside the composer is an inventory, not a master switch.
@@ -599,6 +607,8 @@ It shows:
 Nothing paid, external, trusted or write-capable is activated merely because its
 row is visible. **Manage tools** opens Settings. MCP and Skills remain Copilot
 SDK-only; search, page reading, Openverse and Iconify are provider-neutral.
+
+![Tools available to this Chat at 1440 by 900 in shot2code, showing project editing, preview verification, web, image, Iconify, MCP, and Agent Skills readiness without enabling them implicitly.](../../docs/shot2code/img/chat-tools-light.png)
 
 ## Figma and Google Stitch
 
@@ -858,6 +868,8 @@ On wide windows History opens from the rail or preview toolbar. On narrow
 windows Preview, Chat and History remain separate labelled destinations. The
 options strip appears only when a version has more than one option.
 
+![shot2code project History at 1440 by 900 showing the saved model identity and selected version before returning to Chat.](../../docs/shot2code/img/history-expanded-light.png)
+
 ## Recent projects and Full history
 
 Projects, versions and prompts live in the local SQLite database at
@@ -873,6 +885,8 @@ keeps the database. Deleting a project removes it and all versions from this
 device; there is no cloud copy. The desktop also restores the last active saved
 project/version/option/file and repairs a failed selected option to a completed
 sibling when possible.
+
+![shot2code Full history at 1440 by 900 showing searchable local projects and a read-only project version summary.](../../docs/shot2code/img/full-history-light.png)
 
 ## Importing an existing project
 
@@ -897,6 +911,8 @@ JSON files, ZIP or public HTTPS build, but reads only fixed metadata paths:
 CSF, JavaScript bundles, addons, decorators, loaders, play functions,
 `iframe.html` and arbitrary JSON are never loaded or executed. Remote imports
 must stay on public HTTPS and redirects must preserve the fixed JSON path.
+
+![shot2code Built Storybook import mode at 1426 by 893 showing built-folder, selected-JSON, ZIP, and public-HTTPS sources plus the fixed JSON-only safety boundary.](../../docs/shot2code/img/import-storybook.png)
 
 Raw source is held only for that active handoff; it is never written into
 persisted project context. The active context is shown above every input tab and

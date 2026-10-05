@@ -627,12 +627,13 @@ test('the shot2code guides describe the v0.6.1 product and safety contract', () 
   assert.match(guide, /schemaVersion: 2/);
   assert.match(guide, /not WCAG certification/i);
 
-  // Planned screenshots can be documented without creating broken public references.
+  // The current capture contract is published, not left as a future promise.
   for (const image of ['ollama-settings-light.png', 'page-reader-settings-dark.png',
     'iconify-settings-light.png', 'chat-tools-light.png', 'full-history-light.png',
     'history-expanded-light.png']) {
     assert.ok(releasing.includes(image), `${image}: missing from the versionless capture contract`);
-    assert.ok(!shot2code.includes(`img/${image}`), `${image}: product page references a PNG that does not exist`);
+    assert.ok(shot2code.includes(`img/${image}`), `${image}: missing from the product page`);
+    assert.ok(exists(`docs/shot2code/img/${image}`), `${image}: product-page PNG does not exist`);
   }
 
   assert.match(copy, /Local Ollama and bounded page reading/);
@@ -1158,10 +1159,17 @@ test('the next shot2code screenshot capture has a versionless, secrets-safe cont
     ['input-stitch.png', '1426 × 893'],
     ['url-design-inspection.png', '1426 × 893'],
     ['github-imported-project.png', '1426 × 893'],
+    ['import-storybook.png', '1426 × 893'],
     ['review-workspace-og-light.png', '1920 × 1008'],
     ['mcp-menu-light.png', '1440 × 900'],
     ['byok-settings-dark.png', '1440 × 900'],
-    ['review-workspace-tablet.png', '768 × 1024']
+    ['ollama-settings-light.png', '1440 × 900'],
+    ['page-reader-settings-dark.png', '1440 × 900'],
+    ['iconify-settings-light.png', '1440 × 900'],
+    ['chat-tools-light.png', '1440 × 900'],
+    ['full-history-light.png', '1440 × 900'],
+    ['history-expanded-light.png', '1440 × 900'],
+    ['review-workspace-tablet.png', '900 × 1024']
   ];
   for (const [filename, dimensions] of captures) {
     assert.ok(plan.includes('`' + filename + '`'), `${filename} is not named`);
@@ -1276,8 +1284,12 @@ test('shot2code screenshots are published with the page', () => {
     'img/input-upload.png', 'img/input-url.png', 'img/input-text.png',
     'img/input-import.png', 'img/input-figma.png', 'img/input-github.png',
     'img/input-stitch.png', 'img/url-design-inspection.png',
-    'img/github-imported-project.png', 'img/review-workspace-og-light.png',
+    'img/github-imported-project.png', 'img/import-storybook.png',
+    'img/review-workspace-og-light.png',
     'img/mcp-menu-light.png', 'img/byok-settings-dark.png',
+    'img/ollama-settings-light.png', 'img/page-reader-settings-dark.png',
+    'img/iconify-settings-light.png', 'img/chat-tools-light.png',
+    'img/full-history-light.png', 'img/history-expanded-light.png',
     'img/review-workspace-tablet.png'
   ];
   assert.deepEqual([...new Set(images)].sort(), expected.sort());
@@ -1290,8 +1302,8 @@ test('shot2code screenshot markup matches the files and the alternative text des
   // screenshot with different dimensions silently reintroduces a layout shift. The alternative
   // text names those dimensions too, so both are checked against the file on disk.
   const tags = [...shot2code.matchAll(/<img[^>]*src="(img\/[^"]+)"[^>]*>/g)];
-  assert.equal(tags.length, 14,
-    'the hero, seven tabs, two input outcomes and four workspace screenshots must be present');
+  assert.equal(tags.length, 21,
+    'the hero, seven tabs, three input outcomes and ten workspace screenshots must be present');
   for (const [tag, src] of tags) {
     const png = fs.readFileSync(path.join(root, 'docs/shot2code', src));
     assert.equal(png.readUInt32BE(12), 0x49484452, `${src}: not a PNG`);
@@ -1305,7 +1317,7 @@ test('shot2code screenshot markup matches the files and the alternative text des
     // The screenshots were retaken for the current build: they must describe it, not the old one.
     assert.doesNotMatch(alt, /\bVersions\b/, `${src}: the alternative text still says "Versions"`);
   }
-  assert.equal(new Set(tags.map(([, src]) => src)).size, 13,
+  assert.equal(new Set(tags.map(([, src]) => src)).size, 20,
     'only the Review lead may be reused between hero and gallery');
   // Between them the screenshots have to document every input and the key
   // project/settings surfaces.
@@ -1313,7 +1325,9 @@ test('shot2code screenshot markup matches the files and the alternative text des
   for (const subject of [
     /Upload tab/, /URL tab/, /Text tab/, /Import tab/, /Figma tab/,
     /GitHub tab/, /Stitch tab/, /DESIGN\.md/, /Review workspace/,
-    /MCP Servers/, /Copilot SDK BYOK/
+    /Built Storybook/, /MCP Servers/, /Copilot SDK BYOK/, /local Ollama preset/,
+    /bounded page reading/, /Iconify design add-on/, /Tools available to this Chat/,
+    /Full history/, /project History/
   ])
     assert.match(alts, subject, `the screenshots do not describe ${subject}`);
 
@@ -1321,9 +1335,10 @@ test('shot2code screenshot markup matches the files and the alternative text des
     .map(match => match[1]);
   assert.deepEqual(frames, [
     'shot-frame--og',
-    ...Array(9).fill('shot-frame--detail'),
+    ...Array(10).fill('shot-frame--detail'),
     'shot-frame--og',
-    'shot-frame--detail', 'shot-frame--detail', 'shot-frame--portrait'
+    'shot-frame--detail', 'shot-frame--detail', 'shot-frame--compact',
+    ...Array(6).fill('shot-frame--detail')
   ], 'the hero, input atlas and workspace gallery do not use their intended aspect wrappers');
   assert.match(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*contain;/s);
   assert.doesNotMatch(shot2code, /\.shot-frame img\s*\{[^}]*object-fit:\s*cover;/s);
@@ -1331,11 +1346,12 @@ test('shot2code screenshot markup matches the files and the alternative text des
   assert.match(shot2code, /\.shot-frame--16x9\s*\{\s*aspect-ratio:\s*16\s*\/\s*9;/);
   assert.match(shot2code, /\.shot-frame--detail\s*\{\s*aspect-ratio:\s*16\s*\/\s*10;/);
   assert.match(shot2code, /\.shot-frame--portrait\s*\{\s*aspect-ratio:\s*3\s*\/\s*4;/);
+  assert.match(shot2code, /\.shot-frame--compact\s*\{\s*aspect-ratio:\s*225\s*\/\s*256;/);
 
   const inputSection = shot2code.match(/<section id="inputs"[\s\S]*?<\/section>/)?.[0] || '';
   const inputFigures = [...inputSection.matchAll(/<figure class="shot[^"]*"[\s\S]*?<\/figure>/g)]
     .map(match => match[0]);
-  assert.equal(inputFigures.length, 9);
+  assert.equal(inputFigures.length, 10);
   for (const figure of inputFigures) {
     assert.match(figure, /<figcaption>[\s\S]+<\/figcaption>/,
       'an input screenshot has no explanatory caption');
@@ -1346,7 +1362,7 @@ test('shot2code screenshot markup matches the files and the alternative text des
   const screenSection = shot2code.match(/<section id="screens"[\s\S]*?<\/section>/)?.[0] || '';
   const screenFigures = [...screenSection.matchAll(/<figure class="shot[^"]*"[\s\S]*?<\/figure>/g)]
     .map(match => match[0]);
-  assert.equal(screenFigures.length, 4);
+  assert.equal(screenFigures.length, 10);
   for (const figure of screenFigures) {
     assert.match(figure, /<figcaption><strong>[^<]+ · \d+×\d+\.<\/strong>[^<]+<\/figcaption>/,
       'a gallery caption does not have a stable title and accurate dimensions');

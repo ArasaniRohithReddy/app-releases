@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 766cdb27d804f0302076597e2891c51b7fbe478b96103a9eb9fc8fe68e67be6a). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/USER-GUIDE.md (normalized SHA-256 2f3bfe667b9e2c4982cef95893eaa437ba3fa79ebc47c2709f47da6bd65afcc4). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -451,6 +451,7 @@ and availability vary; Ollama cloud services are separate from local inference.
 Use <strong>Test model access</strong> to read <code>/models</code>, but confirm capabilities and licence
 with the model publisher. See
 <a href="https://docs.ollama.com/api/openai-compatibility" rel="noopener noreferrer">Ollama's OpenAI-compatibility documentation</a>.</p>
+<p><img src="../../img/ollama-settings-light.png" alt="shot2code Settings at 1440 by 900 showing the local Ollama preset inside the additive Copilot SDK BYOK card." loading="lazy" decoding="async"></p>
 <h3 id="byok-models-are-separate-selections" tabindex="-1">BYOK models are separate selections</h3>
 <p>Every model the connection can serve appears in <strong>Settings → Models</strong> under
 <strong>Copilot SDK (BYOK)</strong> as its own entry, with the run identity:</p>
@@ -703,6 +704,7 @@ this device</strong>.</li>
 data or remote state require <strong>Allow write tools</strong> as well, which is labelled as
 the risk it is. Each row shows its current state — <em>Off</em>, <em>Not trusted — will
 not start</em>, <em>Active · read-only</em> or <em>Active · write tools allowed</em>.</p>
+<p><img src="../../img/mcp-menu-light.png" alt="shot2code MCP Servers settings at 1440 by 900 showing a disabled and untrusted Demo component library with write tools off." loading="lazy" decoding="async"></p>
 <h3 id="how-a-local-server-is-launched" tabindex="-1">How a local server is launched</h3>
 <p>The command is spawned as an <strong>argument vector, never through a shell</strong>, so
 nothing in the command or its arguments is re-interpreted by <code>cmd</code> or
@@ -765,6 +767,7 @@ call because the network request may already have left the device.</li>
 result reaches the model before the SDK lets shot2code inspect it, so it cannot
 be truncated, labelled untrusted, URL-scoped or counted against these budgets.
 It is never a fallback for <code>read_web_page</code>.</p>
+<p><img src="../../img/page-reader-settings-dark.png" alt="shot2code Settings at 1440 by 900 in the dark theme showing separately consented bounded page reading and its public-only URL, byte, text, call, and timeout limits." loading="lazy" decoding="async"></p>
 <h3 id="public-domain-photos-and-localized-icons" tabindex="-1">Public-domain photos and localized icons</h3>
 <p><strong>Free image search</strong> is a separate opt-in <code>search_free_images</code> tool using
 Openverse. No shot2code credential is sent. Results are restricted and locally
@@ -787,6 +790,7 @@ and availability can change. Metadata is supplied by upstream projects, and a
 permissive copyright licence does not grant trademark rights for brand icons.
 See the <a href="https://iconify.design/docs/api/" rel="noopener noreferrer">Iconify API documentation</a> and
 <a href="https://icon-sets.iconify.design/" rel="noopener noreferrer">browse its icon sets</a>.</p>
+<p><img src="../../img/iconify-settings-light.png" alt="shot2code Settings at 1440 by 900 showing the Iconify design add-on, fixed origin, SVG sanitization, licence filtering, provenance, and trademark warning." loading="lazy" decoding="async"></p>
 <h3 id="tools-available-to-this-chat" tabindex="-1">Tools available to this Chat</h3>
 <p>The <strong>Tools</strong> control beside the composer is an inventory, not a master switch.
 It shows:</p>
@@ -802,6 +806,7 @@ allowed write tools;</li>
 <p>Nothing paid, external, trusted or write-capable is activated merely because its
 row is visible. <strong>Manage tools</strong> opens Settings. MCP and Skills remain Copilot
 SDK-only; search, page reading, Openverse and Iconify are provider-neutral.</p>
+<p><img src="../../img/chat-tools-light.png" alt="Tools available to this Chat at 1440 by 900 in shot2code, showing project editing, preview verification, web, image, Iconify, MCP, and Agent Skills readiness without enabling them implicitly." loading="lazy" decoding="async"></p>
 <h2 id="figma-and-google-stitch" tabindex="-1">Figma and Google Stitch</h2>
 <p>A screenshot is not the only starting point. shot2code can take a design
 straight from Figma or Google Stitch.</p>
@@ -1120,6 +1125,7 @@ keyboard-operable.</p>
 <p>On wide windows History opens from the rail or preview toolbar. On narrow
 windows Preview, Chat and History remain separate labelled destinations. The
 options strip appears only when a version has more than one option.</p>
+<p><img src="../../img/history-expanded-light.png" alt="shot2code project History at 1440 by 900 showing the saved model identity and selected version before returning to Chat." loading="lazy" decoding="async"></p>
 <h2 id="recent-projects-and-full-history" tabindex="-1">Recent projects and Full history</h2>
 <p>Projects, versions and prompts live in the local SQLite database at
 <code>%LOCALAPPDATA%\shot2code\history.sqlite3</code>, outside the installation directory.
@@ -1133,6 +1139,7 @@ keeps the database. Deleting a project removes it and all versions from this
 device; there is no cloud copy. The desktop also restores the last active saved
 project/version/option/file and repairs a failed selected option to a completed
 sibling when possible.</p>
+<p><img src="../../img/full-history-light.png" alt="shot2code Full history at 1440 by 900 showing searchable local projects and a read-only project version summary." loading="lazy" decoding="async"></p>
 <h2 id="importing-an-existing-project" tabindex="-1">Importing an existing project</h2>
 <p><strong>Import → Folder, ZIP or source files</strong> takes a project folder, a ZIP archive, or
 individual source files.</p>
@@ -1153,6 +1160,7 @@ JSON files, ZIP or public HTTPS build, but reads only fixed metadata paths:
 CSF, JavaScript bundles, addons, decorators, loaders, play functions,
 <code>iframe.html</code> and arbitrary JSON are never loaded or executed. Remote imports
 must stay on public HTTPS and redirects must preserve the fixed JSON path.</p>
+<p><img src="../../img/import-storybook.png" alt="shot2code Built Storybook import mode at 1426 by 893 showing built-folder, selected-JSON, ZIP, and public-HTTPS sources plus the fixed JSON-only safety boundary." loading="lazy" decoding="async"></p>
 <p>Raw source is held only for that active handoff; it is never written into
 persisted project context. The active context is shown above every input tab and
 can be cleared.</p>

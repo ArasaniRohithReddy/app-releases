@@ -149,10 +149,11 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
         }));
       const expectedClasses = [
         'shot-frame--og', 'shot-frame--og',
-        'shot-frame--detail', 'shot-frame--detail', 'shot-frame--portrait'
+        'shot-frame--detail', 'shot-frame--detail', 'shot-frame--compact',
+        ...Array(6).fill('shot-frame--detail')
       ];
       check(intrinsic.length === expectedClasses.length,
-        `shot2code/${theme}: expected the hero plus four framed screenshots`);
+        `shot2code/${theme}: expected the hero plus ten framed screenshots`);
       intrinsic.forEach((image, index) => {
         const label = `shot2code/${theme} screenshot ${index + 1}`;
         check(image.classes.split(/\s+/).includes(expectedClasses[index]),
@@ -184,8 +185,8 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
             alt: image.getAttribute('alt') || ''
           };
         }));
-      check(inputIntrinsic.length === 9,
-        `shot2code/${theme}: expected seven input tabs and two completed outcomes`);
+      check(inputIntrinsic.length === 10,
+        `shot2code/${theme}: expected seven input tabs and three completed outcomes`);
       inputIntrinsic.forEach((image, index) => {
         const label = `shot2code/${theme} input screenshot ${index + 1}`;
         check(image.classes.split(/\s+/).includes('shot-frame--detail'),
@@ -255,7 +256,8 @@ module.exports = async function presentationChecks({ browser, base, check, mockR
           check(layout.overflow <= 0 && layout.framesInside, `${label}: screenshot frame overflows`);
           check(layout.ratios.every(frame => frame.uncropped), `${label}: a source image would be cropped or distorted`);
           for (const frame of layout.ratios) {
-            const expected = frame.classes.includes('shot-frame--portrait') ? 3 / 4 :
+            const expected = frame.classes.includes('shot-frame--compact') ? 225 / 256 :
+              frame.classes.includes('shot-frame--portrait') ? 3 / 4 :
               frame.classes.includes('shot-frame--detail') ? 16 / 10 :
                 frame.classes.includes('shot-frame--og') ? 40 / 21 : 16 / 9;
             check(Math.abs(frame.ratio - expected) <= .015,

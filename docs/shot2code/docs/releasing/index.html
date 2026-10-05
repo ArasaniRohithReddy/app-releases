@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Generated from products/shot2code/RELEASING.md (normalized SHA-256 44f7631f9bf2207e4199222d988824cf5f653864fac4d33ad9b93db565a107d7). Edit the public source and run npm run build:docs. -->
+<!-- Generated from products/shot2code/RELEASING.md (normalized SHA-256 7a05a5688a313ecb51952ae814392a50331ab76275489a80dc69933cbd05d8f3). Edit the public source and run npm run build:docs. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -231,7 +231,7 @@ never stage a screenshot of placeholder UI.</p>
 <tr>
 <td><code>input-stitch.png</code></td>
 <td><code>1426 × 893</code>, light</td>
-<td>Stitch selected; Stitch only and Convert to selected stack modes visible</td>
+<td>Stitch selected; Convert to selected stack active with the labelled model picker visible</td>
 </tr>
 <tr>
 <td><code>url-design-inspection.png</code></td>
@@ -244,9 +244,14 @@ never stage a screenshot of placeholder UI.</p>
 <td>Public Spoon-Knife project open in the editable Preview/Chat workspace</td>
 </tr>
 <tr>
+<td><code>import-storybook.png</code></td>
+<td><code>1426 × 893</code>, light</td>
+<td>Built Storybook selected; fixed JSON paths and non-execution boundary visible</td>
+</tr>
+<tr>
 <td><code>review-workspace-og-light.png</code></td>
 <td><code>1920 × 1008</code>, light</td>
-<td>Northwind Analytics open; source/runtime Review, category filters and health state visible</td>
+<td>Public Spoon-Knife project open; completed source/runtime Review and health state visible</td>
 </tr>
 <tr>
 <td><code>mcp-menu-light.png</code></td>
@@ -258,26 +263,6 @@ never stage a screenshot of placeholder UI.</p>
 <td><code>1440 × 900</code>, dark</td>
 <td>BYOK settings switched off; additive/separate credential explanation visible</td>
 </tr>
-<tr>
-<td><code>review-workspace-tablet.png</code></td>
-<td><code>768 × 1024</code>, light</td>
-<td>Completed Review in the shipped tablet/single-column navigation</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="planned-additions" tabindex="-1">Planned additions</h3>
-<p>These versionless filenames belong to the capture contract, but must not be
-referenced from <code>docs/shot2code/index.html</code> or generated guides until the exact
-PNG exists and has passed the same dimension, secret and responsive checks:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Releasing shot2code to this hub table 4"><table>
-<thead>
-<tr>
-<th scope="col">File</th>
-<th scope="col">Dimensions / theme</th>
-<th scope="col">Required state</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td><code>ollama-settings-light.png</code></td>
 <td><code>1440 × 900</code>, light</td>
@@ -308,6 +293,11 @@ PNG exists and has passed the same dimension, secret and responsive checks:</p>
 <td><code>1440 × 900</code>, light</td>
 <td>Expanded version showing requested models, options, prompts, activity and retry/branch ancestry</td>
 </tr>
+<tr>
+<td><code>review-workspace-tablet.png</code></td>
+<td><code>900 × 1024</code>, light</td>
+<td>Completed Review at the shipped desktop minimum width, reflowed into a single column</td>
+</tr>
 </tbody>
 </table></div>
 <p>The lead uses <code>1920 × 1008</code> because it is exactly <strong>40:21</strong>, the same ratio as a
@@ -315,11 +305,13 @@ PNG exists and has passed the same dimension, secret and responsive checks:</p>
 without cropping the app toolbar or Review result. When these files land:</p>
 <ol>
 <li>Keep all seven input tabs visible in the product page's Input tabs section,
-with the URL inspection and GitHub imported-project outcomes directly below.</li>
+with the URL inspection, GitHub imported-project and Built Storybook outcomes
+directly below.</li>
 <li>Point <code>og:image</code> at <code>review-workspace-og-light.png</code>, set its declared size to
 <code>1920 × 1008</code>, and write alt text for only what is visibly present.</li>
 <li>Give the lead a <code>40 / 21</code> aspect wrapper, input/outcome/desktop-detail images
-a <code>16 / 10</code> wrapper, and the tablet image a <code>3 / 4</code> wrapper.</li>
+a <code>16 / 10</code> wrapper, and the compact Review image its exact <code>225 / 256</code>
+wrapper.</li>
 <li>Keep the site's documented <code>object-fit: contain</code> policy and neutral frame.
 Never switch a product screenshot to <code>cover</code>: letterboxing is acceptable,
 loss of UI is not.</li>
